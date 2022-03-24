@@ -1,0 +1,56 @@
+[keycloak/admin/user]
+Type = String
+Required = True
+Show = Install
+ShowReadOnly = Settings
+InitialValue = admin
+Scope = outside
+Description = Name of the initial admin user (password file is /etc/keycloak.secret)
+Description[de] = Name of the initial admin user (password file is /etc/keycloak.secret)
+Group = Administration
+Group[de] = Administration
+
+[keycloak/url/prefix]
+Type = String
+Required = True
+Show = Install
+ShowReadOnly = Settings
+InitialValue = keycloak
+Scope = outside
+Description = Prefix for the URL (e.g. login.$FQDN)
+Description[de] = Prefix for the URL (e.g. login.$FQDN)
+Group = Administration
+Group[de] = Administration
+
+[keycloak/log/level]
+Type = List
+Required = True
+Description = Keycloak log level
+Show = Install, Settings
+Values = ALL, DEBUG, ERROR, FATAL, INFO, OFF, TRACE, WARN
+Labels = ALL, DEBUG, ERROR, FATAL, INFO, OFF, TRACE, WARN
+InitialValue = INFO
+Scope = outside
+Group = Administration
+Group[de] = Administration
+
+[keycloak/java/opts]
+Type = String
+Required = True
+Show = Install, Settings
+InitialValue = -server -Xms1024m -Xmx1024m
+Scope = outside
+Description = Java options for keycloak
+Group = Administration
+Group[de] = Administration
+
+[keycloak/ucs/setup]
+Type = Bool
+Required = True
+Show = Install, Settings
+ShowReadOnly = Settings
+InitialValue = true
+Scope = outside
+Description = Configure UCS as LDAP backend for Keycloak and setup a SAML Client for the UMC
+Group = Integration
+Group[de] = Integration
