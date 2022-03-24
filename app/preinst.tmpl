@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -e
+
+# create password
+pwdfile="/etc/keycloak.secret"
+[ -e "$pwdfile" ] || makepasswd --chars 20 > "$pwdfile"
+
+# install jq TODO remove
+command -v jq || {
+    apt-get -qq update
+    apt-get -qq -y install jq
+}
+
+## example: this way we can install files on the host:
+
+# management tool
+keycloak_management_script=/usr/sbin/univention-keycloak-config
+echo "Installing Keycloak management script"
+	cat << EOF >"$keycloak_management_script"
+%KEYCLOAK-MANAGEMENT-SCRIPT%
+EOF
+chmod 755 "$keycloak_management_script"
+
+exit 0

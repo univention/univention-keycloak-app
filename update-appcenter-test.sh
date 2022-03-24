@@ -33,13 +33,11 @@ die () {
 ## * https://git.knut.univention.de/univention/components/dashboard/admin-dashboard
 ## * https://git.knut.univention.de/univention/components/oidc-provider
 
-## Some apps like to use some "generic" templates for frequently used components, e.g.:
-# cp app/configure_host.tmpl configure_host
-# cp app/setup.tmpl setup
-# cp app/preinst.tmpl preinst
+## Some apps use templates to install additional files, e.g.:
+cp app/preinst.tmpl app/preinst
 
 ## Then they simply teplace the some keywords by the actual files like:
-# sed -i -e "/%UNIVENTION-DASHBOARD-MANAGEMENT%/r files/univention-dashboard-management" -e "/%UNIVENTION-DASHBOARD-MANAGEMENT%/d" preinst
+sed -i -e "/%KEYCLOAK-MANAGEMENT-SCRIPT%/r files/univention-keycloak-config" -e "/%KEYCLOAK-MANAGEMENT-SCRIPT%/d" app/preinst
 
 ## Now we can upload the files for the app to the provider-portal:
 ## The order of the arguments doesn't matter, the univention-appcenter-control script recongnizes the filenames and file extensions.
@@ -49,6 +47,4 @@ selfservice upload "$APP_VERSION" app/compose app/settings app/preinst app/confi
 # selfservice upload "$APP_VERSION" app/compose app/settings app/preinst app/configure_host app/inst app/uinst app/env app/test app/setup README_*
 
 ## And finally they clean the working directory after upload
-# rm -f configure_host
-# rm -f setup
-# rm -f preinst
+rm -f app/preinst
