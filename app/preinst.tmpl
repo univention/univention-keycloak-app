@@ -12,6 +12,12 @@ command -v jq || {
     apt-get -qq -y install jq
 }
 
+pip3 install requests==2.25.1 urllib3==1.26.5 python-jose # For some reason the python module doesn't work with some version
+wget "https://github.com/marcospereirampj/python-keycloak/archive/refs/tags/0.27.0.tar.gz" # TODO: Is there another way?
+tar  -xzf "0.27.9.tar.gz"
+python3 "python-keycloak-0.27.0/setup.py" install
+
+
 ## example: this way we can install files on the host:
 
 # management tool
