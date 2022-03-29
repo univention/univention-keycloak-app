@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-import argparse
-
 from keycloak import KeycloakAdmin
 from univention.config_registry import ConfigRegistry
 from univention.config_registry.frontend import ucr_update
@@ -29,8 +27,6 @@ if __name__ == "__main__":
 	ucr.load()
 	hostname = ucr.get("hostname")
 	domain = ucr.get("domainname")
-
-	parser = argparse.ArgumentParser(description='Keycloak Autoconfig')
 
 	pwdfile = "/etc/keycloak.secret"
 	with open(pwdfile, 'r') as fd:
