@@ -61,7 +61,7 @@ ucr set \
   ucs/web/overview/entries/admin/$app_id/icon="/univention/js/dijit/themes/umc/icons/scalable/apps-$COMPONENT_ID.svg" \
   ucs/web/overview/entries/admin/$app_id/link-target='newwindow'
 
-univention-keycloak-config
+univention-keycloak-config "$@"
 
 joinscript_save_current_version
 

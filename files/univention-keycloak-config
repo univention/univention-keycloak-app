@@ -1,17 +1,14 @@
 #!/usr/bin/python3
 
+import argparse
 from keycloak import KeycloakAdmin
 from univention.config_registry import ConfigRegistry
 from univention.config_registry.frontend import ucr_update
-from univention.udm import UDM
-
-UDM_VERSION = 2
 
 
 def check_and_create_component(kc_client, name, prov_id, payload_):
 	ldap_component_filter = {'name': name, 'providerId': prov_id}
 	ldap_component_list = kc_client.get_components(ldap_component_filter)
-	print(ldap_component_list)
 	if not ldap_component_list:
 		kc_client.create_component(payload=payload_)
 		ldap_component_list = kc_client.get_components(ldap_component_filter)
@@ -21,22 +18,37 @@ def check_and_create_component(kc_client, name, prov_id, payload_):
 
 
 if __name__ == "__main__":
+	parser = argparse.ArgumentParser(description='Keycloak Autoconfig')
+
+	parser.add_argument("--binddn", default="Administrator")
+	parser.add_argument("--bindpwdfile", default="univention")
+
+	args = parser.parse_args()
 
 	# load UCR
 	ucr = ConfigRegistry()
 	ucr.load()
 	hostname = ucr.get("hostname")
 	domain = ucr.get("domainname")
+	locales_ucr = ucr.get("locale").split()
+	locales_format = [locale[:locale.index("_")] for locale in locales_ucr]
+	default_locale_ucr = ucr.get("locale/default")
+	default_locale = default_locale_ucr[:default_locale_ucr.index("_")]
 
-	pwdfile = "/etc/keycloak.secret"
-	with open(pwdfile, 'r') as fd:
-		pwd = fd.read().strip()
+	role = ucr.get("server/role")
+	if role == "domaincontroller_master":
+		pwdfile = "/etc/idp-ldap-user.secret"
+		with open(pwdfile, 'r') as fd:
+			kc_service_pass = fd.read().strip()
+		kc_service_user = "sys-idp-user"
+	else:
+		kc_service_user = args.binddn
+		kc_service_pass = args.bindpwdfile
 
 	kc_admin_user = "admin"
-	kc_admin_pass = pwd
-
-	kc_service_user = "Administrator"  # TODO: Use dedicated user
-	kc_service_pass = "univention"  # TODO: Get password
+	pwdfile = "/etc/keycloak.secret"
+	with open(pwdfile, 'r') as fd:
+		kc_admin_pass = fd.read().strip()
 
 	# realm config #
 	realm_name = "ucs"
@@ -51,10 +63,6 @@ if __name__ == "__main__":
 	ucs_ldap_pass = ""
 	ucs_bind_dn = ""
 	ucs_ldap_url = "ldap://{}.{}:7389".format(hostname, domain)  # "ldap://{FQDN}:{port}"
-
-	# udm credentials
-	udm_admin_user = "Administrator"
-	udm_admin_pass = "univention"
 
 	# saml descriptor location #
 	saml_descriptor_location = "/realms/{}/protocol/saml/descriptor".format(realm_name)
@@ -95,8 +103,8 @@ if __name__ == "__main__":
 		"realm": default_realm,
 		"enabled": True,
 		"internationalizationEnabled": True,
-		"supportedLocales": ["de", "en"],  # TODO: Load from UCS locales
-		"defaultLocale": "en"
+		"supportedLocales": locales_format,
+		"defaultLocale": default_locale
 	}
 	kc_admin.update_realm(default_realm, payload=realm_payload)
 
@@ -195,9 +203,6 @@ if __name__ == "__main__":
 	}
 	kc_admin.create_client(payload=client_payload, skip_exists=True)
 
-	# connect to UDM #
-	user_mod = UDM.credentials(udm_admin_user, udm_admin_pass).version(UDM_VERSION).get('users/user')
-
 	# user federation ldap provider payload#
 	ldap_federation_payload = {
 		"name": "ldap-provider",
@@ -210,7 +215,8 @@ if __name__ == "__main__":
 			"startTls": ["false"],
 			"connectionPooling": ["true"],
 			"usersDn": [user_dn],
-			"cachePolicy": ["DEFAULT"],
+			"cachePolicy": ["MAX_LIFESPAN"],
+			"maxLifespan": ["300000"],
 			"useKerberosForPasswordAuthentication": ["false"],
 			"importEnabled": ["false"],
 			"enabled": ["true"],
@@ -274,13 +280,12 @@ if __name__ == "__main__":
 	# Admins federation ldap provider payload #
 	ldap_federation_payload["name"] = "ldap-master-admin"
 	ldap_federation_payload["parentId"] = default_realm
-	ldap_federation_payload["config"]["fullSyncPeriod"] = ["604800"]
-	ldap_federation_payload["config"]["changedSyncPeriod"] = ["86400"]
-	ldap_federation_payload["config"]["customUserSearchFilter"] = ["(memberOf=cn=Domain Admins,cn=groups,dc=jtorres,dc=org)"]
+	ldap_federation_payload["config"]["customUserSearchFilter"] = ["(memberOf=cn=Domain Admins,cn=groups,{dn})".format(dn=user_dn)]
 
 	# find existing ldap provider & delete or just create if none exists #
 	ldap_component_id = check_and_create_component(kc_admin, 'ldap-master-admin', 'ldap', ldap_federation_payload)
 	print("LDAP Domain Admins Federation Added: {}".format(ucs_ldap_url))
+	print("Filter: {}".format(ldap_federation_payload["config"]["customUserSearchFilter"]))
 
 	payload_ldap_mapper["name"] = "admin-role"
 	payload_ldap_mapper["parentId"] = ldap_component_id
