@@ -1,7 +1,8 @@
-# Keycloak app
+## Introduction
 
-TODO: Latest documentation. Write here how to setup the app correctly.
+This repository contains the components of the Keycloak App for the UCS Appcenter.
 
+## Development
 # App base
 
 The app uses [Keycloak](https://www.keycloak.org/docs/17.0/) to provide a SAML and OpenID Connect provider.
@@ -10,9 +11,15 @@ The docker image used in the app is [keycloak](https://quay.io/repository/keyclo
 
 # LDAP User Federation
 
+TODO: Anything to explain here?
+
 # SAML Support
 
+TODO: Anything to explain here?
+
 # OIDC Support
+
+TODO: Anything to explain here?
 
 # Configuration
 
