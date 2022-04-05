@@ -44,6 +44,7 @@ ucs_addServiceToLocalhost "$app_id" "$@"
 
 domainname="$(ucr get domainname)"
 hostname="$(ucr get hostname)"
+ldap_base="$(ucr get ldap/base)"
 
 url_prefix="$(ucr get keycloak/url/prefix)"
 if [ -n "$url_prefix" ]; then
@@ -60,6 +61,12 @@ ucr set \
   ucs/web/overview/entries/admin/$app_id/link="https://keycloak.$hostname.$domainname/admin/" \
   ucs/web/overview/entries/admin/$app_id/icon="/univention/js/dijit/themes/umc/icons/scalable/apps-$COMPONENT_ID.svg" \
   ucs/web/overview/entries/admin/$app_id/link-target='newwindow'
+
+## Only make the portal tile for the Keycloak App visible once a Domain Admin is logged in on the portal
+domain_admins_dn=$(univention-ldapsearch -LLL "(&(cn=Domain Admins)(objectClass=univentionGroup))" 1.1 | ldapsearch-decode64 | sed -n 's/^dn: //p')
+udm portals/entry modify "$@" \
+	--dn "cn=keycloak,cn=entry,cn=portals,cn=univention,$ldap_base" \
+	--append allowedGroups="$domain_admins_dn" || die
 
 univention-keycloak-config "$@"
 
