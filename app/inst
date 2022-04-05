@@ -57,7 +57,7 @@ ucr set \
   ucs/web/overview/entries/admin/$app_id/description/de="Keycloak" \
   ucs/web/overview/entries/admin/$app_id/description="Keycloak" \
   ucs/web/overview/entries/admin/$app_id/label="Keycloak" \
-  ucs/web/overview/entries/admin/$app_id/link="https://keycloak.$hostname.$domainname/" \
+  ucs/web/overview/entries/admin/$app_id/link="https://keycloak.$hostname.$domainname/admin/" \
   ucs/web/overview/entries/admin/$app_id/icon="/univention/js/dijit/themes/umc/icons/scalable/apps-$COMPONENT_ID.svg" \
   ucs/web/overview/entries/admin/$app_id/link-target='newwindow'
 
