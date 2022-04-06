@@ -38,6 +38,8 @@ cp app/preinst.tmpl app/preinst
 
 ## Then they simply teplace the some keywords by the actual files like:
 sed -i -e "/%KEYCLOAK-MANAGEMENT-SCRIPT%/r files/univention-keycloak-config" -e "/%KEYCLOAK-MANAGEMENT-SCRIPT%/d" app/preinst
+tar cjf - -C files/themes UCS | base64 >> files/tmp_base64
+sed -i -e "/%ARCHIVE_CONTENT%/r files/tmp_base64" -e "/%ARCHIVE_CONTENT%/d" app/preinst
 
 ## Now we can upload the files for the app to the provider-portal:
 ## The order of the arguments doesn't matter, the univention-appcenter-control script recongnizes the filenames and file extensions.
@@ -47,4 +49,4 @@ selfservice upload "$APP_VERSION" app/compose app/settings app/preinst app/confi
 # selfservice upload "$APP_VERSION" app/compose app/settings app/preinst app/configure_host app/inst app/uinst app/env app/test app/setup README_*
 
 ## And finally they clean the working directory after upload
-rm -f app/preinst
+rm -f app/preinst files/tmp_base64

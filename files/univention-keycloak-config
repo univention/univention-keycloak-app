@@ -104,7 +104,11 @@ if __name__ == "__main__":
 		"enabled": True,
 		"internationalizationEnabled": True,
 		"supportedLocales": locales_format,
-		"defaultLocale": default_locale
+		"defaultLocale": default_locale,
+		"adminTheme": "keycloak",  # TODO: Set to UCS
+		"accountTheme": "keycloak",
+		"emailTheme": "keycloak",
+		"loginTheme": "UCS"
 	}
 	kc_admin.update_realm(default_realm, payload=realm_payload)
 

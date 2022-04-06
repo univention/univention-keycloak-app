@@ -31,4 +31,10 @@ echo "Installing Keycloak management script"
 EOF
 chmod 755 "$keycloak_management_script"
 
+# theme
+echo "Installing Keycloak UCS theme"
+base64 -d <<%EOF  | tar xjf - --one-top-level=/var/lib/univention-appcenter/apps/keycloak/conf/
+%ARCHIVE_CONTENT%
+%EOF
+
 exit 0

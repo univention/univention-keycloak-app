@@ -1,0 +1,45 @@
+:root {
+    --pf-global--primary-color--100: #5e881d;
+    --pf-global--primary-color--200: #567d1b;
+    --pf-global--primary-color--dark-100: #7ab51d;
+    --default-background-color: #333331;
+    --pf-c-form__label--Color: #fff;
+    --pf-global--BackgroundColor--100: #333331;
+    --link-hover-color: #575755;
+
+
+}
+
+.login-pf body {
+    background-image: none;
+    background-color: var(--default-background-color);
+}
+
+.login-pf a:hover {
+    color: var(--link-hover-color);
+    text-decoration: none;
+}
+
+.card-pf{
+	background: #1e1e1d;
+}
+
+.login-pf-page .login-pf-header h1{
+	color: var(--pf-c-form__label--Color);
+}
+
+.login-pf-page .login-pf-header {
+	background-image: url("../img/login_logo.svg");
+    background-repeat:no-repeat;
+    background-position: left;
+}
+
+#kc-locale-dropdown a{
+	color: var(--pf-c-form__label--Color)
+}
+
+.pf-c-form-control {
+    --pf-global--primary-color--200: unset;
+    background-color: var(--default-background-color);
+    color: var(--pf-c-form__label--Color);
+}
