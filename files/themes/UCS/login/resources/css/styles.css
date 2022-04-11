@@ -16,12 +16,12 @@
     --pf-c-button--disabled--BorderColor: transparent;
 }
 
-.required{
+.required {
     color: var(--pf-global--danger-color--100);
 }
 
-.pf-c-dropdown__menu-item:hover{
-       --pf-c-dropdown__menu-item--BackgroundColor: var(--pf-global--primary-color--dark-100);
+.pf-c-dropdown__menu-item:hover {
+    --pf-c-dropdown__menu-item--BackgroundColor: var(--pf-global--primary-color--dark-100);
 }
 
 .login-pf body {

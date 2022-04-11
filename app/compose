@@ -1,18 +1,6 @@
 version: '3.1'
 
 services:
-
-  postgres:
-    container_name: postgres
-    image: postgres:9.6.23
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak
-    volumes:
-      - /var/lib/univention-appcenter/apps/keycloak/data/postgres-data:/var/lib/postgresql/data
-
   keycloak:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:17.0.0
@@ -21,8 +9,12 @@ services:
     restart: unless-stopped
     environment:
       KC_DB_URL_HOST: postgres
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: keycloak
+      KC_DB_USERNAME: keycloak_db
+      KC_DB_PASSWORD: @!@
+import os
+pwdfile="/etc/postgres-keycloak.secret"
+with open(pwdfile, 'r') as fd:
+    print(fd.read().strip())@!@
       KC_HTTPS_KEY_STORE_PASSWORD: univention
       KEYCLOAK_ADMIN: @%@keycloak/admin/user@%@
       KEYCLOAK_ADMIN_PASSWORD: @!@
@@ -41,6 +33,4 @@ with open(pwdfile, 'r') as fd:
     ports:
       # does not work, see https://forge.univention.org/bugzilla/show_bug.cgi?id=53878
       # - 127.0.0.1:8080:8080
-    - 8080:8080
-    depends_on:
-      - postgres
+      - 8080:8080
