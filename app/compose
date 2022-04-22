@@ -10,11 +10,6 @@ services:
     environment:
       KC_DB_URL_HOST: postgres
       KC_DB_USERNAME: keycloak_db
-      KC_DB_PASSWORD: @!@
-import os
-pwdfile="/etc/postgres-keycloak.secret"
-with open(pwdfile, 'r') as fd:
-    print(fd.read().strip())@!@
       KC_HTTPS_KEY_STORE_PASSWORD: univention
       KEYCLOAK_ADMIN: @%@keycloak/admin/user@%@
       KEYCLOAK_ADMIN_PASSWORD: @!@
