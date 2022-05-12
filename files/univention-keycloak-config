@@ -9,22 +9,19 @@ from univention.config_registry.frontend import ucr_update
 def check_and_create_component(kc_client, name, prov_id, payload_):
 	ldap_component_filter = {'name': name, 'providerId': prov_id}
 	ldap_component_list = kc_client.get_components(ldap_component_filter)
-	print(name, prov_id, len(ldap_component_list), "\n")
-	print(ldap_component_list)
 	if not ldap_component_list:
 		kc_client.create_component(payload=payload_)
 		ldap_component_list = kc_client.get_components(ldap_component_filter)
 
 	ldap_component = ldap_component_list.pop()
-	print(ldap_component.get("id"))
 	return ldap_component.get("id")
 
 
 def get_realm_id(kc_client, name):
 	ldap_realms_list = kc_client.get_realms()
-	# search for "name"
+	# search for realm "name"
 	realm_info = list(filter(lambda realm: realm["realm"] == name, ldap_realms_list))
-	# return master id
+	# return realm id
 	return realm_info[0]["id"]
 
 
@@ -116,7 +113,7 @@ if __name__ == "__main__":
 		"internationalizationEnabled": True,
 		"supportedLocales": locales_format,
 		"defaultLocale": default_locale,
-		"adminTheme": "keycloak",  # TODO: Set to UCS
+		"adminTheme": "keycloak",
 		"accountTheme": "keycloak",
 		"emailTheme": "keycloak",
 		"loginTheme": "UCS"
@@ -259,7 +256,7 @@ if __name__ == "__main__":
 		}
 	}
 
-	# find existing ldap provider & delete or just create if none exists #
+	# find existing ldap provider or just create if none exists #
 	ldap_component_id = check_and_create_component(kc_admin, ldap_federation_payload["name"], ldap_federation_payload["providerId"], ldap_federation_payload)
 	print("LDAP User Federation Added: {}".format(ucs_ldap_url))
 
@@ -297,7 +294,7 @@ if __name__ == "__main__":
 	ldap_federation_payload["parentId"] = get_realm_id(kc_admin, default_realm)
 	ldap_federation_payload["config"]["customUserSearchFilter"] = ["(memberOf=cn=Domain Admins,cn=groups,{dn})".format(dn=user_dn)]
 
-	# find existing ldap provider & delete or just create if none exists #
+	# find existing ldap provider or just create if none exists #
 	ldap_component_id = check_and_create_component(kc_admin, ldap_federation_payload["name"], ldap_federation_payload["providerId"], ldap_federation_payload)
 	print("LDAP Domain Admins Federation Added: {}".format(ucs_ldap_url))
 	print("Filter: {}".format(ldap_federation_payload["config"]["customUserSearchFilter"]))
