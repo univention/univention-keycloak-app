@@ -1,12 +1,16 @@
+@import "/var/www/univention/theme.css";
+@import "../../../../../../theme.css";
+/* The file needs to be inside the container. Symlink doesn't work, file inside works */
+
 :root {
-    --pf-global--primary-color--100: #5e881d;
-    --pf-global--primary-color--200: #567d1b;
-    --pf-global--primary-color--dark-100: #7ab51d;
-    --default-background-color: #333331;
-    --pf-c-form__label--Color: #fff;
-    --pf-global--BackgroundColor--100: #333331;
-    --link-hover-color: #575755;
-    --pf-global--danger-color--100: #b8233e;
+    --pf-global--primary-color--100: var(--button-primary-bgc);
+    --pf-global--primary-color--200: var(--button-primary-bgc-hover);
+    --pf-global--primary-color--dark-100: var(--color-accent);
+    --default-background-color: var(--bgc-content-body);
+    --pf-c-form__label--Color: var(--font-color-contrast-high);
+    --pf-global--BackgroundColor--100: var(--bgc-content-body);
+    --link-hover-color: var(--button-bgc-hover);
+    --pf-global--danger-color--100: var(--bgc-error);
 }
 
 .pf-c-button {
@@ -35,7 +39,7 @@
 }
 
 .card-pf {
-    background: #1e1e1d;
+    background: var(--serveroverview-tile-hover-color);
 }
 
 .login-pf-page .login-pf-header h1 {
