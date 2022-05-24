@@ -1,5 +1,4 @@
-@import "/var/www/univention/theme.css";
-@import "../../../../../../theme.css";
+@import "./h3.css";
 /* The file needs to be inside the container. Symlink doesn't work, file inside works */
 
 :root {
@@ -39,7 +38,7 @@
 }
 
 .card-pf {
-    background: var(--serveroverview-tile-hover-color);
+    background: var(--bgc-content-container);
 }
 
 .login-pf-page .login-pf-header h1 {
@@ -58,7 +57,7 @@
 
 .pf-c-form-control {
     --pf-global--primary-color--200: unset;
-    background-color: var(--default-background-color);
+    background-color: var(--bgc-inputfield-on-container);
     color: var(--pf-c-form__label--Color);
-    --pf-c-form-control--invalid--Background: var(--default-background-color) var(--pf-c-form-control--invalid--exclamation--Background);
+    --pf-c-form-control--invalid--Background: var(--bgc-inputfield-on-container) var(--pf-c-form-control--invalid--exclamation--Background);
 }
