@@ -116,7 +116,16 @@ if __name__ == "__main__":
 		"adminTheme": "keycloak",
 		"accountTheme": "keycloak",
 		"emailTheme": "keycloak",
-		"loginTheme": "UCS"
+		"loginTheme": "UCS",
+		"browserSecurityHeaders": {
+			"contentSecurityPolicyReportOnly": "",
+			"xContentTypeOptions": "nosniff",
+			"xRobotsTag": "none",
+			"xFrameOptions": "X-Frame-Options",
+			"contentSecurityPolicy": "frame-src 'self'; frame-ancestors 'self' {}/univention; object-src 'none';".format(server_fdnq_with_subdomain),
+			"xXSSProtection": "1; mode=block",
+			"strictTransportSecurity": "max-age=31536000; includeSubDomains"
+		}
 	}
 	kc_admin.update_realm(default_realm, payload=realm_payload)
 
