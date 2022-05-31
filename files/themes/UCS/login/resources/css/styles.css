@@ -1,4 +1,4 @@
-@import "./h3.css";
+@import "./theme.css";
 /* The file needs to be inside the container. Symlink doesn't work, file inside works */
 
 :root {

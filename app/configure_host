@@ -33,14 +33,14 @@ UCS_REALM_CONFIG='{
 }'
 # shellcheck disable=SC2016
 UCS_SAML_CLIENT_CONFIG='{
-    "clientId": "https://${FQDN}/univention/saml/metadata",
+    "clientId": "https://$(ucr get keycloak/url/prefix).${FQDN}/univention/saml/metadata",
     "name": "${UCS_SAML_CLIENT_CONFIG_NAME}",
     "description": "desc",
-    "baseUrl": "https://${FQDN}/univention/",
+    "baseUrl": "https://$(ucr get keycloak/url/prefix).${FQDN}/univention/",
     "enabled": true,
     "alwaysDisplayInConsole": false,
     "redirectUris": [
-      "https://${FQDN}/univention/*"
+      "https://$(ucr get keycloak/url/prefix).${FQDN}/univention/*"
     ],
     "webOrigins": [],
     "notBefore": 0,
@@ -59,7 +59,7 @@ UCS_SAML_CLIENT_CONFIG='{
       "saml.server.signature.keyinfo.ext": "false",
       "saml.client.signature": "false",
       "saml.assertion.signature": "true",
-      "saml_single_logout_service_url_post": "https://${FQDN}/univention/saml/slo/",
+      "saml_single_logout_service_url_post": "https://$(ucr get keycloak/url/prefix).${FQDN}/univention/saml/slo/",
       "saml.encrypt": "false",
       "saml.server.signature": "true",
       "saml.authnstatement": "true",
@@ -316,16 +316,32 @@ ProxyPassReverse / http://127.0.0.1:8080/
 EOF
 }
 
+theme_config() {
+	THEME_DIR="/usr/share/univention-web/themes"
+	THEME_SRC="$THEME_DIR/$(basename "$(ucr get ucs/web/theme)").css"
+	THEME_DST="/var/lib/univention-appcenter/apps/keycloak/conf/UCS/login/resources/css/theme.css"
+	if [ ! -e "$THEME_SRC" ]; then
+        echo "$THEME_SRC does not exist"
+        exit 1
+	fi
+
+	[ -e "$THEME_DST" ] && rm "$THEME_DST"
+	cp "$THEME_SRC" "$THEME_DST"
+}
+
 if [ -n "$action" ] && [ "$action" = "remove" ]; then 
     exit 0
 fi
 
+echo $action
 apache_config
+theme_config
 
 #if is_ucr_true keycloak/ucs/setup; then
 #	setup_ucs
 #fi
 
-if [ "$action" = "settings" ]; then 
+if [ "$action" = "settings" ]; then
+	theme_config
     univention-app reinitialize keycloak
 fi

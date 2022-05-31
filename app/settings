@@ -54,3 +54,10 @@ Scope = outside
 Description = Configure UCS as LDAP backend for Keycloak and setup a SAML Client for the UMC
 Group = Integration
 Group[de] = Integration
+
+[keycloak/theme]
+Type = String
+Show = Install, Settings
+Scope = outside
+Description = Theme color PLACEHOLDER
+Group = Settings
