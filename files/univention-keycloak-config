@@ -89,14 +89,16 @@ if __name__ == "__main__":
 	# derived composite vars #
 	if hostname and not hostname == "unassigned-hostname":
 		server_fdnq_with_subdomain = "https://keycloak.{}.{}".format(hostname, domain)
+		server_fdnq_without_subdomain = "https://{}.{}".format(hostname, domain)
 	else:
 		server_fdnq_with_subdomain = "https://keycloak.{}".format(domain)
+		server_fdnq_without_subdomain = "https://{}".format(domain)
 
 	# valid redirect uris #
 	if valid_redirect_urls:
 		valid_redirect_urls = valid_redirect_urls
 	else:
-		valid_redirect_urls = [server_fdnq_with_subdomain + "/univention/saml/"]
+		valid_redirect_urls = [server_fdnq_without_subdomain + "/univention/saml/"]
 
 	# build kc admin session #
 	kc_admin_auth_url = "{}".format(server_fdnq_with_subdomain)
@@ -121,8 +123,8 @@ if __name__ == "__main__":
 			"contentSecurityPolicyReportOnly": "",
 			"xContentTypeOptions": "nosniff",
 			"xRobotsTag": "none",
-			"xFrameOptions": "X-Frame-Options",
-			"contentSecurityPolicy": "frame-src 'self'; frame-ancestors 'self' {}/univention; object-src 'none';".format(server_fdnq_with_subdomain),
+			"xFrameOptions": "",
+			"contentSecurityPolicy": "frame-src 'self'; frame-ancestors 'self' {}/univention; object-src 'none';".format(server_fdnq_without_subdomain),
 			"xXSSProtection": "1; mode=block",
 			"strictTransportSecurity": "max-age=31536000; includeSubDomains"
 		}
@@ -135,13 +137,13 @@ if __name__ == "__main__":
 	kc_admin.create_realm(payload=realm_payload, skip_exists=True)
 
 	# create client #
-	client_id = server_fdnq_with_subdomain + client_id_location
+	client_id = server_fdnq_without_subdomain + client_id_location
 	print("Client ID: {}".format(client_id))
 
 	# build urls #
-	single_logout_service_url_post = server_fdnq_with_subdomain + "/univention/saml/slo/"
-	single_logout_service_url_redirect = server_fdnq_with_subdomain + "/univention/saml/slo/"
-	assertion_consumer_url_post = server_fdnq_with_subdomain + "/univention/saml/"
+	single_logout_service_url_post = server_fdnq_without_subdomain + "/univention/saml/slo/"
+	single_logout_service_url_redirect = server_fdnq_without_subdomain + "/univention/saml/slo/"
+	assertion_consumer_url_post = server_fdnq_without_subdomain + "/univention/saml/"
 	kc_descriptor_url = server_fdnq_with_subdomain + saml_descriptor_location
 
 	client_payload = {
@@ -316,5 +318,5 @@ if __name__ == "__main__":
 	# find existing mapper or create if none exits #
 	check_and_create_component(kc_admin, payload_ldap_mapper["name"], payload_ldap_mapper["providerId"], payload_ldap_mapper)
 
-	# set umc/saml/idp-server #
-	ucr_update(ucr, {"umc/saml/idp-server": kc_descriptor_url})
+	# set umc/saml/idp-server # TODO: Remove
+#	ucr_update(ucr, {"umc/saml/idp-server": kc_descriptor_url})
