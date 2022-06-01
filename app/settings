@@ -58,6 +58,7 @@ Group[de] = Integration
 [keycloak/theme]
 Type = String
 Show = Install, Settings
+InitialValue = @%@ucs/web/theme@%@
 Scope = outside
 Description = Theme color PLACEHOLDER
 Group = Settings
