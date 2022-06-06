@@ -1,0 +1,236 @@
+#!/usr/bin/python3
+
+
+import os
+import os.path
+import importlib
+import sys
+import subprocess
+import time
+from keycloak import KeycloakAdmin, KeycloakOpenID
+from keycloak.connection import ConnectionManager
+from keycloak.exceptions import KeycloakError
+from univention.config_registry import ConfigRegistry
+from univention.udm import UDM
+
+
+os.environ["UCS_TEST_SELENIUM_IGNORE_CERTS"] = "1"
+test_lib = os.environ.get('UCS_TEST_LIB', 'univention.testing.apptest')
+try:
+	test_lib = importlib.import_module(test_lib)
+except ImportError:
+	print('Could not import {}. Maybe set $UCS_TEST_LIB'.format(test_lib))
+	sys.exit(1)
+
+def __build_keycloak_admin_connection(kc_username, kc_password, is_file=False):
+	# load UCR
+	ucr = ConfigRegistry()
+	ucr.load()
+	hostname = ucr.get("hostname")
+	domain = ucr.get("domainname")
+
+
+	kc_user = kc_username
+	kc_pass = kc_password
+	if is_file:
+		pwdfile = kc_password
+		with open(pwdfile, 'r') as fd:
+			kc_pass = fd.read().strip()
+
+	# derived composite vars #
+	if hostname and not hostname == "unassigned-hostname":
+		server_fqdn_with_subdomain = "https://keycloak.{}.{}".format(hostname, domain)
+	else:
+		server_fqdn_with_subdomain = "https://keycloak.{}".format(domain)
+
+	kc_admin_auth_url = "{}".format(server_fqdn_with_subdomain)
+
+	# log into default realm in case UCS realm doesn't exist yet #
+	kc_admin = KeycloakAdmin(server_url=kc_admin_auth_url, username=kc_user, password=kc_pass, realm_name="master", user_realm_name="master", verify=True)
+	return kc_admin
+
+
+def __build_keycloak_openID_connection():
+	# load UCR
+	ucr = ConfigRegistry()
+	ucr.load()
+	hostname = ucr.get("hostname")
+	domain = ucr.get("domainname")
+
+	# derived composite vars #
+	if hostname and not hostname == "unassigned-hostname":
+		server_fqdn_with_subdomain = "https://keycloak.{}.{}".format(hostname, domain)
+	else:
+		server_fqdn_with_subdomain = "https://keycloak.{}".format(domain)
+
+	kc_admin_auth_url = "{}".format(server_fqdn_with_subdomain)
+
+	# log into default realm in case UCS realm doesn't exist yet #
+	kc_client = KeycloakOpenID(server_url=kc_admin_auth_url, client_id="admin-cli", realm_name="ucs", client_secret_key="secret")
+	return kc_client
+
+
+def _test_keycloak_admin_login(username="Administrator", password="univention"):
+	print("test keycloak admin login")
+	kc_admin = __build_keycloak_admin_connection(username, password)
+
+	assert kc_admin.realm_name == "master", kc_admin.realm_name
+	assert isinstance(kc_admin.connection, ConnectionManager), type(kc_admin.connection)
+	assert kc_admin.client_id == "admin-cli", kc_admin.client_id
+	assert kc_admin.client_secret_key is None, kc_admin.client_secret_key
+	print("Admin login successfully")
+
+
+def _test_keycloak_admin_login_fail(username="nonExistUser", password="univention"):
+	print("test keycloak admin login")
+	try:
+		kc_admin = __build_keycloak_admin_connection(username, password)
+		assert True, "Non existing user should not be able to log in."
+	except KeycloakError:
+		print("Login as a non Admin/existing user fail.")
+
+
+def _test_keycloak_user_login(username="Administrator", password="univention"):
+	print("test keycloak user login")
+	oID_client = __build_keycloak_openID_connection()
+
+	token = oID_client.token(username, password)
+	userinfo = oID_client.userinfo(token['access_token'])
+	assert userinfo["preferred_username"] == username.lower(), "Wrong user login"
+	oID_client.logout(token['refresh_token'])
+	print("User OpenID log in successfully")
+
+
+def _test_keycloak_user_login_fail(username="nonExistUser", password="univention"):
+	print("test keycloak user login fail")
+	oID_client = __build_keycloak_openID_connection()
+	try:
+		token = oID_client.token(username, password)
+		assert True, "Login shouldn't be possible"
+	except KeycloakError:
+		print("Login as a non existing user fail.")
+
+
+def _create_users():
+	print("Creating users ...")
+	# Create ldap users -> 1 domain admin, 1 normal user
+	user_client = UDM.admin().version(2).get("users/user")
+
+	# load UCR
+	ucr = ConfigRegistry()
+	ucr.load()
+	domain = ucr.get("domainname")
+	domain_split = domain.split(".")
+	dn = "dc={},dc={}".format(domain_split[0], domain_split[1])
+
+	obj = user_client.new()
+	obj.props.username = 'userAdminTest'
+	obj.props.lastname = 'test test'
+	obj.props.password = 'univention'
+	obj.props.primaryGroup = 'cn=Domain Admins,cn=groups,{}'.format(dn)
+	obj.props.unixhome = '/home/userAdminTest'
+	obj.save()
+
+	obj = user_client.new()
+	obj.props.username = 'userUserTest'
+	obj.props.lastname = 'test test'
+	obj.props.password = 'univention'
+	obj.props.unixhome = '/home/userUserTest'
+	obj.save()
+
+
+def _delete_users():
+	print("Deleting users ...")
+	# Delete previous created ldap users -> 1 domain admin, 1 normal user
+	user_client = UDM.admin().version(2).get("users/user")
+
+	# load UCR
+	ucr = ConfigRegistry()
+	ucr.load()
+	domain = ucr.get("domainname")
+	domain_split = domain.split(".")
+	dn = "cn=users,dc={},dc={}".format(domain_split[0], domain_split[1])
+
+	obj = user_client.get("uid=userAdminTest,{}".format(dn))
+	obj.delete()
+
+	obj = user_client.get("uid=userUserTest,{}".format(dn))
+	obj.delete()
+
+
+def __activate_idp_keycloak():
+	# load UCR
+	ucr = ConfigRegistry()
+	ucr.load()
+	hostname = ucr.get("hostname")
+	domain = ucr.get("domainname")
+
+	subprocess.call(["ucr", "set", "umc/saml/idp-server=https://keycloak.{}.{}/realms/ucs/protocol/saml/descriptor".format(hostname, domain)])
+	subprocess.call(["udm", "portals/entry", "modify", "--dn", "cn=login-saml,cn=entry,cn=portals,cn=univention, {}".format(ucr.get("ldap/base")), "--set", "activated=TRUE"])
+
+
+def _logout(chrome):
+	chrome.click_element('#header-button-menu')
+	time.sleep(4)
+	chrome.click_element('#loginButton')
+	time.sleep(1)
+
+
+def _do_sso_login(chrome, username="administrator", password="univention"):
+	chrome.goto_portal()
+	chrome.click_portal_tile(u'Login (Single sign-on)')
+	time.sleep(2)
+
+	chrome.enter_input('username', username)
+	chrome.enter_input('password', password)
+	chrome.click_element('#kc-login')
+	time.sleep(10)
+
+
+def _user_login(chrome, username="administrator", password="univention"):
+	_do_sso_login(chrome, username, password)
+	_logout(chrome)
+
+
+def _incorrect_login(chrome, username="administrator", password="univention"):
+
+	_do_sso_login(chrome, username, password)
+	try:
+		# should not work
+		_logout(chrome)
+		raise AssertionError
+	except AssertionError:
+		pass
+
+
+
+def _test_sso(chrome):
+	__activate_idp_keycloak()
+
+	# login as admin FIXME: Is it possible to get the password
+	_user_login(chrome, "administrator", "univention")
+	# login as user
+	_user_login(chrome, "userUserTest", "univention")
+
+	# wrong login
+	_incorrect_login(chrome, "nonExistUser", "Password")
+
+
+def test_keycloak(chrome):
+	_test_keycloak_admin_login()
+	_test_keycloak_user_login()
+	_create_users()
+	_test_keycloak_admin_login("userAdminTest", "univention")
+	_test_keycloak_user_login("userUserTest", "univention")
+
+	_test_keycloak_admin_login_fail()
+	_test_keycloak_user_login_fail()
+
+	with chrome.capture('keycloak_sso'):
+		_test_sso(chrome)
+
+	_delete_users()
+
+
+if __name__ == '__main__':
+	test_lib.run_test_file(__file__)
