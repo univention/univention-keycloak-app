@@ -206,7 +206,7 @@ def _incorrect_login(chrome, username="administrator", password="univention"):
 def _test_sso(chrome):
 	__activate_idp_keycloak()
 
-	# login as admin 
+	# login as admin
 	pwdfile = "/etc/keycloak.secret"
 	with open(pwdfile, 'r') as fd:
 		password = fd.read().strip()
