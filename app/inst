@@ -70,6 +70,56 @@ udm portals/entry modify "$@" \
 
 univention-keycloak-config "$@" || die
 
+ucs_server_sso_fqdn="ucs-sso-ng.$domainname}"
+
+ucr set saml/idp/certificate/privatekey?"/etc/keycloak/${ucs_server_sso_fqdn}-idp-certificate.key" \
+		saml/idp/certificate/certificate?"/etc/keycloak/${ucs_server_sso_fqdn}-idp-certificate.crt" \
+		ucs/server/sso/fqdn?"${ucs_server_sso_fqdn}" ## FIXME: Maybe it should not change now
+
+
+eval "$(ucr shell)"  # as variables were changed we need the new ones
+
+# check if we need to create a new certificate
+if [ "$server_role" = "domaincontroller_master" ]; then
+	if [ -z "$ucs_server_sso_certificate_generation" ] || is_ucr_true ucs/server/sso/certificate/generation; then
+		univention-certificate new -name "${ucs_server_sso_fqdn}" -days "${ssl_default_days:-1825}" || die
+		create_or_download=true
+	fi
+else
+	if [ -z "$ucs_server_sso_certificate_download" ] || is_ucr_true ucs/server/sso/certificate/download; then
+		univention-scp $HOSTPWD "-r $HOSTACCOUNT@$ldap_master:/etc/univention/ssl/${ucs_server_sso_fqdn}/ /etc/univention/ssl/" || die
+		create_or_download=true
+	fi
+fi
+
+if [ "$create_or_download" = true ]; then
+	cp "/etc/univention/ssl/${ucs_server_sso_fqdn}/cert.pem" "${saml_idp_certificate_certificate}" || die
+	cp "/etc/univention/ssl/${ucs_server_sso_fqdn}/private.key" "${saml_idp_certificate_privatekey}" || die
+fi
+
+
+# Re-create Apache configuration after the certificate generation
+# ucr commit /etc/apache2/sites-available/univention-saml.conf
+## FIXME: recreate our univention-keycloak.conf from the file + copy it + restart apache
+
+sso_hostname="$(echo "$ucs_server_sso_fqdn"  | cut -d '.' -f 1)"
+sso_domainname="$(echo "$ucs_server_sso_fqdn"  | cut -d '.' -f 2-)"
+
+if [ -z "$ucs_server_sso_autoregistraton" ] || is_ucr_true ucs/server/sso/autoregistraton; then
+	/usr/share/univention-directory-manager-tools/univention-dnsedit "$@" --ignore-exists \
+		"$sso_domainname" add a "$sso_hostname" "$(get_default_ip_address)" || die
+	if is_localhost_in_admember_mode; then
+		ucs_parseCredentials "$@"
+		if [ -n "$binddn" ] && [ -n "$bindpwdfile" ]; then
+			add_host_record_in_ad "$binddn" "" "$bindpwdfile" \
+				"$ucs_server_sso_fqdn" "$(get_default_ip_address)" || die
+		fi
+	fi
+fi
+
+
+
+
 joinscript_save_current_version
 
 exit 0
