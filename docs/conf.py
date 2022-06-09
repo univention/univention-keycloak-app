@@ -66,10 +66,6 @@ html_context = {
     "pdf_download_filename": "keycloak-app.pdf",
 }
 
-html_theme_options = {
-    "use_download_button": False,
-}
-
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
@@ -95,7 +91,7 @@ if "spelling" in sys.argv:
 if "linkcheck" in sys.argv:
     suppress_warnings = ['git.too_shallow']
 
-root_doc = "contents"
+root_doc = "index"
 
 latex_engine = 'lualatex'
 latex_show_pagerefs = True
