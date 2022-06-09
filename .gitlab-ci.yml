@@ -1,0 +1,121 @@
+stages:
+  - build
+  - deploy
+  - production
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  DOCS_DIR: "docs"
+  SPHINX_DOC: docker-registry.knut.univention.de/sphinx
+
+cache:
+  paths:
+    - .cache/pip
+
+.sphinx-doc:
+  image: $SPHINX_DOC
+  rules:
+    - changes:
+      - "docs/**/*"
+    - if: "$pipeline =~ /skip-doc/"
+      when: never
+    - if: "$pipeline =~ /force-doc/"
+  artifacts:
+    expire_in: 1 week
+
+linkcheck:
+  extends: .sphinx-doc
+  stage: build
+  script:
+    - make -C "$DOCS_DIR" -e SPHINXOPTS="-W --keep-going" linkcheck
+  artifacts:
+    paths:
+      - docs/_build/linkcheck
+
+spelling:
+  extends: .sphinx-doc
+  stage: build
+  script:
+    - make -C "$DOCS_DIR" -e SPHINXOPTS="-W --keep-going" spelling
+  artifacts:
+    paths:
+      - docs/_build/spelling
+
+html:
+  extends: .sphinx-doc
+  stage: build
+  script:
+    - make -C "$DOCS_DIR" html
+  artifacts:
+    paths:
+      - docs/_build/html
+
+pdf:
+  extends: .sphinx-doc
+  stage: build
+  script:
+    - make -C "$DOCS_DIR" latexpdf
+  artifacts:
+    paths:
+      - docs/_build/latex
+
+
+.deploy:
+  needs:
+    - job: linkcheck
+      artifacts: false
+    - job: spelling
+      artifacts: false
+    - job: html
+    - job: pdf
+
+pages:
+  stage: deploy
+  extends: .deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      changes:
+        - "docs/**/*"
+  environment:
+    name: Production
+    url: http://univention.gitpages.knut.univention.de/components/keycloak-app
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 week
+  script:
+    - mkdir -p "$CI_PROJECT_DIR"/public
+    - rsync -av --delete --exclude univention_logo.pdf --exclude *webpack-macros.html --exclude .buildinfo --exclude __pycache__ -- exclude "*py" "$DOCS_DIR"/_build/html/ "$CI_PROJECT_DIR"/public
+    - cp "$DOCS_DIR"/_build/latex/keycloak-app.pdf "$CI_PROJECT_DIR"/public/keycloak-app.pdf
+
+docs-production:
+  stage: production
+  extends: .deploy
+  cache:
+    key: docs-$CI_COMMIT_REF_SLUG
+    paths:
+      - univention-docs
+  interruptible: false
+  variables:
+    GIT_STRATEGY: none
+  tags:
+    - omar
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: manual
+  script:
+    - '[ -d univention-docs ] || git clone --branch master --depth 1 --single-branch https://ucs-docs-deployment:$DOCS_REPO_TOKEN@git.knut.univention.de/univention/docs.univention.de.git univention-docs'
+    - cd univention-docs
+    - git remote set-url origin https://$DOCS_REPO_TOKEN@git.knut.univention.de/univention/docs.univention.de.git
+    - git clean --force -d
+    - git fetch --no-tags origin
+    - git reset --hard origin/master
+    - rsync -av --delete "$CI_PROJECT_DIR"/public/ ./keycloak-app/
+    - git add -- .
+    - git commit -m "Automatic doc deployment by GitLab commit $CI_COMMIT_SHA"
+    - git push
+  environment:
+    name: production
+    url: http://updates.knut.univention.de/download/docs/
+  after_script:
+    - rm -Rf public
