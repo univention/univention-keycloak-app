@@ -30,4 +30,20 @@ base64 -d <<%EOF  | tar xjf - --one-top-level=/var/lib/univention-appcenter/apps
 %ARCHIVE_CONTENT%
 %EOF
 
+# apache template
+keycloak_template_path=/etc/univention/templates/files/etc/apache2/sites-available/univention-keycloak.conf
+echo "Installing univention-keycloak apache template"
+	cat << EOF >"$keycloak_template_path"
+%KEYCLOAK-TEMPLATE-APACHE%
+EOF
+chmod 644 "$keycloak_template_path"
+
+# apache template info
+keycloak_info_path=/etc/univention/templates/info/univention-keycloak.info
+echo "Installing Keycloak apache template info"
+	cat << EOF >"$keycloak_info_path"
+%KEYCLOAK-INFO-APACHE%
+EOF
+chmod 644 "$keycloak_info_path"
+
 exit 0

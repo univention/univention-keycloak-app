@@ -62,3 +62,45 @@ InitialValue = @%@ucs/web/theme@%@
 Scope = outside
 Description = Name of the theme to be applied to the keycloak login interface. Example: "dark" or "light". A CSS file of the same name has to exist in the folder /usr/share/univention-web/themes/.
 Group = Settings
+
+[keycloak/ssl/certificate/privatekey]
+Type = String
+Show = Install, Settings
+Scope = outside
+Description = The path of the certificate key which is used to sign the SAML assertion that is send to the service provider.
+
+[keycloak/ssl/certificate/certificate]
+Type = String
+Show = Install, Settings
+Scope = outside
+Description =  The path of the public certificate which is used to sign the SAML assertion that is send to the service provider.
+
+[keycloak/server/sso/fqdn]
+Type = String
+Show = Install, Settings
+Scope = outside
+Description = Defines the fqdn of the identity provider of this UCS domain.
+
+[keycloak/server/sso/certificate/generation]
+Type = Bool
+Required = True
+Show = Install, Settings
+InitialValue = true
+Scope = outside
+Description =  If this variable is set to 'true', the certificate for the fqdn of the identity provider (keycloak/server/sso/fqdn) is created automatically. (default: true)
+
+[keycloak/server/sso/certificate/download]
+Type = String
+Required = True
+InitialValue = true
+Show = Install, Settings
+Scope = outside
+Description =  If this variable is set to 'true', the certificate for the fqdn of the identity provider (keycloak/server/sso/fqdn) is downloaded automatically. (default: true)
+
+[keycloak/server/sso/autoregistraton]
+Type = Bool
+Required = True
+InitialValue = true
+Show = Install, Settings
+Scope = outside
+Description = If this variable is set to 'true', this UCS system registers its IP address at the fqdn of the identity provider (keycloak/server/sso/fqdn). (default: true)

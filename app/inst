@@ -70,54 +70,63 @@ udm portals/entry modify "$@" \
 
 univention-keycloak-config "$@" || die
 
-ucs_server_sso_fqdn="ucs-sso-ng.$domainname}"
+eval "$(ucr shell)"
 
-ucr set saml/idp/certificate/privatekey?"/etc/keycloak/${ucs_server_sso_fqdn}-idp-certificate.key" \
-		saml/idp/certificate/certificate?"/etc/keycloak/${ucs_server_sso_fqdn}-idp-certificate.crt" \
-		ucs/server/sso/fqdn?"${ucs_server_sso_fqdn}" ## FIXME: Maybe it should not change now
+keycloak_server_sso_fqdn="ucs-sso-ng.$domainname"
 
+ucr set keycloak/ssl/certificate/privatekey?"/etc/keycloak/${keycloak_server_sso_fqdn}-idp-certificate.key" \
+		keycloak/ssl/certificate/certificate?"/etc/keycloak/${keycloak_server_sso_fqdn}idp-certificate.crt" \
+		keycloak/server/sso/fqdn?"${keycloak_server_sso_fqdn}" ## FIXME: change to keycloak/ssl/certificate/...
+													 ## FIXME: change to keycloak/server/sso/fqdn
+													 ## TODO: define UCRV in settings
+													 ## FIXME: ucs/server/sso/certificate/generation +
 
-eval "$(ucr shell)"  # as variables were changed we need the new ones
+eval "$(ucr shell)"
+## as variables were changed we need the new ones
 
 # check if we need to create a new certificate
 if [ "$server_role" = "domaincontroller_master" ]; then
-	if [ -z "$ucs_server_sso_certificate_generation" ] || is_ucr_true ucs/server/sso/certificate/generation; then
-		univention-certificate new -name "${ucs_server_sso_fqdn}" -days "${ssl_default_days:-1825}" || die
+	if [ -z "$keycloak_server_sso_certificate_generation" ] || is_ucr_true keycloak/server/sso/certificate/generation; then
+		univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}" || die
 		create_or_download=true
 	fi
 else
-	if [ -z "$ucs_server_sso_certificate_download" ] || is_ucr_true ucs/server/sso/certificate/download; then
-		univention-scp $HOSTPWD "-r $HOSTACCOUNT@$ldap_master:/etc/univention/ssl/${ucs_server_sso_fqdn}/ /etc/univention/ssl/" || die
+	if [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
+		univention-scp $HOSTPWD "-r $HOSTACCOUNT@$ldap_master:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
 		create_or_download=true
 	fi
 fi
 
 if [ "$create_or_download" = true ]; then
-	cp "/etc/univention/ssl/${ucs_server_sso_fqdn}/cert.pem" "${saml_idp_certificate_certificate}" || die
-	cp "/etc/univention/ssl/${ucs_server_sso_fqdn}/private.key" "${saml_idp_certificate_privatekey}" || die
+	mkdir /etc/keycloak
+	cp "/etc/univention/ssl/${keycloak_server_sso_fqdn}/cert.pem" "${keycloak_ssl_certificate_certificate}" || die
+	cp "/etc/univention/ssl/${keycloak_server_sso_fqdn}/private.key" "${keycloak_ssl_certificate_privatekey}" || die
 fi
-
 
 # Re-create Apache configuration after the certificate generation
 # ucr commit /etc/apache2/sites-available/univention-saml.conf
 ## FIXME: recreate our univention-keycloak.conf from the file + copy it + restart apache
+## TODO: /etc/univention/templates/info/univention-keycloak.info -> info for template and install
+## TODO: [ -x /usr/sbin/univention-config-registry ] && univention-config-registry register univention-keycloak || true ---> register info/service/template
+## TODO: ucr commmit /etc/apache2/sites-available/univention-keycloak.conf
 
-sso_hostname="$(echo "$ucs_server_sso_fqdn"  | cut -d '.' -f 1)"
-sso_domainname="$(echo "$ucs_server_sso_fqdn"  | cut -d '.' -f 2-)"
+[ -x /usr/sbin/univention-config-registry ] && univention-config-registry register univention-keycloak || true
+ucr commit /etc/apache2/sites-available/univention-keycloak.conf
 
-if [ -z "$ucs_server_sso_autoregistraton" ] || is_ucr_true ucs/server/sso/autoregistraton; then
+sso_hostname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 1)"
+sso_domainname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 2-)"
+
+if [ -z "$keycloak_server_sso_autoregistraton" ] || is_ucr_true keycloak/server/sso/autoregistraton; then
 	/usr/share/univention-directory-manager-tools/univention-dnsedit "$@" --ignore-exists \
 		"$sso_domainname" add a "$sso_hostname" "$(get_default_ip_address)" || die
 	if is_localhost_in_admember_mode; then
 		ucs_parseCredentials "$@"
 		if [ -n "$binddn" ] && [ -n "$bindpwdfile" ]; then
 			add_host_record_in_ad "$binddn" "" "$bindpwdfile" \
-				"$ucs_server_sso_fqdn" "$(get_default_ip_address)" || die
+				"$keycloak_server_sso_fqdn" "$(get_default_ip_address)" || die
 		fi
 	fi
 fi
-
-
 
 
 joinscript_save_current_version
