@@ -49,3 +49,49 @@ https://docs.software-univention.de/app-center/5.0/en/configurations.html#instal
 ## App updates
 
 The script update-appcenter-test.sh can be used to build and upload the files from the repo for the latest test app center app version
+
+
+
+# Documentation
+
+## Local build
+
+Requirements:
+
+* Use Python virtual environment for a separated Python environment decoupled
+  from your local Python installation. Install the deb-package on Debian/Ubuntu:
+  `apt install virtualenvwrapper`.
+
+  * Create a new virtual environment with `mkvirtualenv $env_name`.
+  * Enter a virtual environment with `workon $env_name`.
+  * Leave a virtual environment with `deactivate`.
+
+  On other operating systems see the [Virtualenvwrapper
+  documentation](https://virtualenvwrapper.readthedocs.io/en/latest/). See
+  [Controlling the Active
+  Environment](https://virtualenvwrapper.readthedocs.io/en/4.8.4/command_ref.html#controlling-the-active-environment)
+  on how to switch environments. For this project and other Sphinx based
+  projects from Univention, one such virtual environment is enough.
+
+Prepare local Python environment once:
+
+1. Checkout this repository.
+
+1. Install the dependencies:
+
+   ```
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+   ```
+
+With the requirements, [Univention Sphinx Book
+theme](https://git.knut.univention.de/univention/documentation/univention_sphinx_book_theme)
+and [Univention Sphinx
+extension](https://git.knut.univention.de/univention/documentation/univention_sphinx_extension)
+are also installed.
+
+Build the documentation:
+
+1. Change into the `docs` directory.
+1. Run the static build: `make html` or run a live server: `make livehtml`.
+1. Open http://localhost:8000 in your browser.
