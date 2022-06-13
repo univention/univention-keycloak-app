@@ -1,0 +1,6 @@
+.. _deb-admin-handbook-shell: https://www.debian.org/doc/manuals/debian-handbook/short-remedial-course.en.html#sect.shell-and-basic-commands
+.. _keycloak: https://www.keycloak.org/
+.. _keycloak-docs: https://www.keycloak.org/documentation
+.. _w-openid-connect: https://en.wikipedia.org/wiki/OpenID#OpenID_Connect_(OIDC)
+.. _w-saml: https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language
+

@@ -40,6 +40,9 @@ extensions = [
     "univention_sphinx_extension",
     "sphinx_sitemap",
     "sphinx_last_updated_by_git",
+    "sphinx.ext.intersphinx",
+    "sphinxcontrib.bibtex",
+    "sphinx_inline_tabs",
 ]
 
 # For more configuration options of Sphinx-copybutton, see the documentation
@@ -92,6 +95,16 @@ if "linkcheck" in sys.argv:
     suppress_warnings = ['git.too_shallow']
 
 root_doc = "index"
+
+rst_epilog = """
+.. include:: /links.txt
+
+.. include:: /abbreviations.txt
+"""
+
+intersphinx_mapping = {
+    "uv-manual": ("https://docs.software-univention.de/manual/5.0/en", None)
+}
 
 latex_engine = 'lualatex'
 latex_show_pagerefs = True
