@@ -12,8 +12,8 @@ Univention Keycloak app documentation
    update
    configuration/index
    architecture
-   troubleshooting
    limitations
+   troubleshooting
 
 .. The introduction provides the context of the document to the reader what
    knowledge it provides.

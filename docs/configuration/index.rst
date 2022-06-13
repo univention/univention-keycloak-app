@@ -1,8 +1,8 @@
 .. _app-configuration:
 
-**************************
-Keycloak app configuration
-**************************
+*************
+Configuration
+*************
 
 .. toctree::
    :maxdepth: 2

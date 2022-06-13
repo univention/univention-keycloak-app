@@ -1,5 +1,5 @@
 .. _app-architecture:
 
-*************************
-Keycloak app architecture
-*************************
+************
+Architecture
+************

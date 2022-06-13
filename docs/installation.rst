@@ -1,8 +1,8 @@
 .. _app-installation:
 
-************************
-Install the Keycloak app
-************************
+************
+Installation
+************
 
 .. Point out that the testers must read the release notes of future releases
 
