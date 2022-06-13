@@ -8,4 +8,4 @@ Keycloak app configuration
    :maxdepth: 2
 
    settings
-   theming
+   theme
