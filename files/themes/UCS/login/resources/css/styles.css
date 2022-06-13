@@ -8,8 +8,12 @@
     --default-background-color: var(--bgc-content-body);
     --pf-c-form__label--Color: var(--font-color-contrast-high);
     --pf-global--BackgroundColor--100: var(--bgc-content-body);
-    --link-hover-color: var(--button-bgc-hover);
+/*    --link-hover-color: var(--button-bgc-hover); */
     --pf-global--danger-color--100: var(--bgc-error);
+}
+
+.kc-social-gray{
+    color: var(--pf-c-form__label--Color);
 }
 
 .pf-c-button {
