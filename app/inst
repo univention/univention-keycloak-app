@@ -82,6 +82,19 @@ ucr set keycloak/server/sso/fqdn?"${keycloak_server_sso_fqdn}" ## FIXME: change 
 eval "$(ucr shell)"
 ## as variables were changed we need the new ones
 
+# check if we need to create a new certificate
+if [ "$server_role" = "domaincontroller_master" ]; then
+	if [ -z "$ucs_server_sso_certificate_generation" ] || is_ucr_true ucs/server/sso/certificate/generation; then
+		univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}" || die
+		create_or_download=true
+	fi
+else
+	if [ -z "$ucs_server_sso_certificate_download" ] || is_ucr_true ucs/server/sso/certificate/download; then
+		univention-scp $HOSTPWD "-r $HOSTACCOUNT@$ldap_master:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
+		create_or_download=true
+	fi
+fi
+
 
 # Re-create Apache configuration after the certificate generation
 # ucr commit /etc/apache2/sites-available/univention-saml.conf
