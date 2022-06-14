@@ -65,3 +65,7 @@
     color: var(--pf-c-form__label--Color);
     --pf-c-form-control--invalid--Background: var(--bgc-inputfield-on-container) var(--pf-c-form-control--invalid--exclamation--Background);
 }
+
+#kc-form-login {
+    color: var(--pf-c-form__label--Color);
+}
