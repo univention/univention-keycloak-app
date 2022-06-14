@@ -6,7 +6,7 @@
 set -e
 set -x
 
-APP_VERSION="4.4/keycloak=17.0.0"
+APP_VERSION="4.4/keycloak=18.0.0-ucs1"
 
 selfservice () {
 	local uri="https://provider-portal.software-univention.de/appcenter-selfservice/univention-appcenter-control"
