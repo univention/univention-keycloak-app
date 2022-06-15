@@ -50,7 +50,7 @@ improvement.
    :hidden:
 
    installation
-   configuration/index
+   configuration
    architecture
    limitations
    troubleshooting
