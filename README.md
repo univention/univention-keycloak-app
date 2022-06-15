@@ -40,7 +40,9 @@ TODO: Anything special to explain here?
 
 The app can be configured with app settings.
 
-To integrate other services, they often require URIs for the identity provider endpoints, they are available at `https://keycloak.$(hostname -f)/.well-known/openid-configuration`
+To integrate other services, they often require URIs for the identity provider endpoints, they are available at `https://ucs-sso-ng.$(hostname -d)/.well-known/openid-configuration`
+
+TODO: Update the following statement, probably outdated with the change from `keycloak.$(hostname -f)` to `ucs-sso-ng.$(hostname -d)`:
 
 The apache2 reverse proxy config is at `/var/lib/univention-appcenter/apps/keycloak/config/vhost.conf` and there are some UCR variables `apache2/vhosts/.*` set autoamtically during join via the joinscript `/usr/lib/univention-install/50keycloak.inst` installed on the host (uploaded to the [provider-portal](https://provider-portal.software-univention.de) as [app/inst](app/inst) ).
 
