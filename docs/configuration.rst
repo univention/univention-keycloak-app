@@ -1,10 +1,37 @@
+.. _app-configuration:
+
+*************
+Configuration
+*************
+
+The :program:`Keycloak` app offers various configuration options. Some settings
+don't allow changes after installation. Therefore, you must set them carefully
+**before** installation. You find those settings marked with *Only before
+installation* in :ref:`app-settings`. You can change all other settings at any
+time after the installation.
+
+To change settings later after installation, sign in to the UCS management
+system and go to :menuselection:`App Center --> Keyloak --> Manage Installation
+--> App Settings`. On the appearing *Configure Keycloak* page, you can change
+the settings and apply them to the app with a click on :guilabel:`Apply
+Changes`.
+
+The App Center then *reinitializes* the Docker container for the Keycloak app.
+*Reinitilize* means the App Center throws away the running Keycloak Docker
+container and creates a fresh Keycloak Docker container with the just changed
+settings.
+
 .. _app-settings:
 
-********
 Settings
-********
+========
 
-The Keycloak app uses the following settings for configuration:
+The following references shows the available settings within the
+:program:`Keycloak` app.
+
+Keycloak for sure has a lot more possibilities for configuration and
+customization. For more information, consult :cite:t:`keycloak-docs`.
+
 
 .. envvar:: keycloak/admin/user
 
