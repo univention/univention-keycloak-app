@@ -14,7 +14,6 @@ This documentation is for system administrators who operate the
 directory in Univention Corporate Server (UCS). It covers the following topics:
 
 #. :ref:`app-installation`
-#. :ref:`app-update`
 #. :ref:`app-configuration`
 #. :ref:`app-architecture`
 #. :ref:`app-limitations`
@@ -51,7 +50,6 @@ improvement.
    :hidden:
 
    installation
-   update
    configuration/index
    architecture
    limitations

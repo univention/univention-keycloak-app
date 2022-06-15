@@ -19,7 +19,7 @@ from sphinx.locale import _
 
 # -- Project information -----------------------------------------------------
 
-release = "0.0.1"
+release = "18.0.0"
 version = release
 project = "Keycloak app {}".format(release)
 copyright = '{}, Univention GmbH'.format(date.today().year)
