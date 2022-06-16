@@ -7,9 +7,10 @@ import importlib
 import sys
 import subprocess
 import time
+import json
 from keycloak import KeycloakAdmin, KeycloakOpenID
 from keycloak.connection import ConnectionManager
-from keycloak.exceptions import KeycloakError
+from keycloak.exceptions import KeycloakError, KeycloakGetError
 from univention.config_registry import ConfigRegistry
 from univention.udm import UDM
 
@@ -46,7 +47,7 @@ def __build_keycloak_admin_connection(kc_username, kc_password, is_file=False):
 	kc_admin_auth_url = "{}".format(server_fqdn_with_subdomain)
 
 	# log into default realm in case UCS realm doesn't exist yet #
-	kc_admin = KeycloakAdmin(server_url=kc_admin_auth_url, username=kc_user, password=kc_pass, realm_name="master", user_realm_name="master", verify=True)
+	kc_admin = KeycloakAdmin(server_url=kc_admin_auth_url, username=kc_user, password=kc_pass, realm_name="master", user_realm_name="master", verify=True, auto_refresh_token=['get', 'put', 'post', 'delete'])
 	return kc_admin
 
 
@@ -215,7 +216,7 @@ def _test_sso(chrome):
 	_incorrect_login(chrome, "nonExistUser", "Password")
 
 
-def test_keycloak(chrome):
+def _test_keycloak(chrome):
 	# login as admin
 	pwdfile = "/etc/keycloak.secret"
 	with open(pwdfile, 'r') as fd:
@@ -234,6 +235,431 @@ def test_keycloak(chrome):
 		_test_sso(chrome)
 
 	_delete_users()
+
+
+def _create_dummy_realm(kc_admin ):
+	# load UCR
+	ucr = ConfigRegistry()
+	ucr.load()
+	hostname = ucr.get("hostname")
+	domain = ucr.get("domainname")
+	locales_ucr = ucr.get("locale").split()
+	locales_format = [locale[:locale.index("_")] for locale in locales_ucr]
+	default_locale_ucr = ucr.get("locale/default")
+	default_locale = default_locale_ucr[:default_locale_ucr.index("_")]
+
+	# derived composite vars #
+	if hostname and not hostname == "unassigned-hostname":
+		server_fdnq_with_subdomain = "https://keycloak.{}.{}".format(hostname, domain)
+		server_fdnq_without_subdomain = "https://{}.{}".format(hostname, domain)
+	else:
+		server_fdnq_with_subdomain = "https://keycloak.{}".format(domain)
+		server_fdnq_without_subdomain = "https://{}".format(domain)
+
+	# client config #
+	client_id_location = "/realms/dummy"
+	valid_redirect_urls = [server_fdnq_with_subdomain + "/realms/ucs/broker/saml/endpoint"]
+
+	# set locale languages #
+	realm_payload = {
+		"id": "dummy",
+		"realm": "dummy",
+		"enabled": True,
+		"internationalizationEnabled": True,
+		"supportedLocales": locales_format,
+		"defaultLocale": default_locale,
+		"adminTheme": "keycloak",
+		"accountTheme": "keycloak",
+		"emailTheme": "keycloak",
+		"loginTheme": "UCS",
+		"browserSecurityHeaders": {
+			"contentSecurityPolicyReportOnly": "",
+			"xContentTypeOptions": "nosniff",
+			"xRobotsTag": "none",
+			"xFrameOptions": "",
+			"contentSecurityPolicy": "frame-src 'self'; frame-ancestors 'self' {}/univention; object-src 'none';".format(server_fdnq_without_subdomain),
+			"xXSSProtection": "1; mode=block",
+			"strictTransportSecurity": "max-age=31536000; includeSubDomains"
+		}
+	}
+	kc_admin.create_realm(payload=realm_payload, skip_exists=True)
+
+	kc_admin.realm_name = "dummy"
+	# create client #
+	client_id = server_fdnq_with_subdomain + client_id_location
+	print("Client ID: {}".format(client_id))
+
+	client_payload = {
+		"clientId": client_id,
+		"surrogateAuthRequired": False,
+		"enabled": True,
+		"alwaysDisplayInConsole": False,
+		"clientAuthenticatorType": "client-secret",
+		"redirectUris": valid_redirect_urls,
+		"webOrigins": [],
+		"notBefore": 0,
+		"bearerOnly": False,
+		"consentRequired": False,
+		"standardFlowEnabled": True,
+		"implicitFlowEnabled": False,
+		"directAccessGrantsEnabled": True,
+		"serviceAccountsEnabled": False,
+		"publicClient": True,
+		"frontchannelLogout": True,
+		"protocol": "saml",
+		"attributes": {
+			"saml.multivalued.roles": "false",
+			"saml.force.post.binding": "true",
+			"oauth2.device.authorization.grant.enabled": "false",
+			"backchannel.logout.revoke.offline.tokens": "false",
+			"saml.server.signature.keyinfo.ext": "false",
+			"use.refresh.tokens": "true",
+			"oidc.ciba.grant.enabled": "false",
+			"backchannel.logout.session.required": "true",
+			"client_credentials.use_refresh_token": "false",
+			"saml.signature.algorithm": "RSA_SHA256",
+			"saml.client.signature": "false",
+			"require.pushed.authorization.requests": "false",
+			"id.token.as.detached.signature": "false",
+			"saml.assertion.signature": "true",
+			"saml_single_logout_service_url_post": "",
+			"saml.encrypt": "false",
+			"saml_assertion_consumer_url_post": "",
+			"saml.server.signature": "true",
+			"exclude.session.state.from.auth.response": "false",
+			"saml.artifact.binding.identifier": "JOtItQNol3ThXjMMWI3gcbW92sU=",
+			"saml.artifact.binding": "false",
+			"saml_single_logout_service_url_redirect": "",
+			"saml_force_name_id_format": "false",
+			"tls.client.certificate.bound.access.tokens": "false",
+			"acr.loa.map": "{}",
+			"saml.authnstatement": "true",
+			"display.on.consent.screen": "false",
+			"saml.assertion.lifespan": "300",
+			"token.response.type.bearer.lower-case": "false",
+			"saml.onetimeuse.condition": "false",
+			"saml_signature_canonicalization_method": "http://www.w3.org/2001/10/xml-exc-c14n#"
+		},
+		"authenticationFlowBindingOverrides": {},
+		"fullScopeAllowed": True,
+		"nodeReRegistrationTimeout": -1,
+		"protocolMappers": [
+			{
+				"name": "userid_mapper",
+				"protocol": "saml",
+				"protocolMapper": "saml-user-attribute-mapper",
+				"consentRequired": False,
+				"config": {
+					"attribute.nameformat": "URI Reference",
+					"user.attribute": "uid",
+					"friendly.name": "uid",
+					"attribute.name": "urn:oid:0.9.2342.19200300.100.1.1"
+				}
+			}
+		],
+		"defaultClientScopes": [
+			"role_list"
+		],
+		"optionalClientScopes": [],
+		"access": {
+			"view": True,
+			"configure": True,
+			"manage": True
+		}
+	}
+	kc_admin.create_client(payload=client_payload, skip_exists=True)
+
+
+def _create_dummy_users(kc_admin):
+	# Add user and set password
+	new_user = kc_admin.create_user({"email": "test@univention.de",
+		"username": "test_user1",
+		"enabled": True,
+		"firstName": "Test",
+		"lastName": "Example",
+		"credentials": [{"value": "univention", "type": "password", }],
+		"attributes": {
+			"uid": ["test_user1"]
+		}})
+
+	new_user = kc_admin.create_user({"email": "test2@univention.de",
+		"username": "test_user2",
+		"enabled": True,
+		"firstName": "Test",
+		"lastName": "Example",
+		"credentials": [{"value": "univention", "type": "password", }],
+		"attributes": {
+			"uid": ["test_user2"]
+		}})
+
+
+def _create_idp(kc_admin):
+	kc_admin.realm_name = "ucs"
+	# load UCR
+	ucr = ConfigRegistry()
+	ucr.load()
+	hostname = ucr.get("hostname")
+	domain = ucr.get("domainname")
+
+
+	payload_authflow = {
+		"newName": "Univention-Authenticator ad-hoc federation flow"
+	}
+
+	list_flows = kc_admin.get_authentication_flows()
+	flow_fbl = list(filter(lambda flow: flow["alias"] == 'first broker login', list_flows))[0]
+
+	print(flow_fbl)
+	kc_admin.copy_authentication_flow(payload=json.dumps(payload_authflow), flow_alias='first broker login')
+
+	payload_exec_flow = {
+		'provider': "univention-authenticator"
+	}
+	kc_admin.create_authentication_flow_execution(payload=json.dumps(payload_exec_flow), flow_alias='Univention-Authenticator ad-hoc federation flow')
+
+	execution_list = kc_admin.get_authentication_flow_executions("Univention-Authenticator ad-hoc federation flow")
+	ua_execution = list(filter(lambda flow: flow["displayName"] == 'Univention Authenticator', execution_list))[0]
+	print(ua_execution)
+
+	payload_exec_flow = {
+		"id": ua_execution["id"],
+		"requirement": "REQUIRED",
+		"displayName": "Univention Authenticator",
+		"requirementChoices": [
+			"REQUIRED",
+			"DISABLED"
+		],
+		"configurable": "true",
+		"providerId": "univention-authenticator",
+		"level": 0,
+		"index": 2
+	}
+	try:
+		kc_admin.update_authentication_flow_executions(payload=json.dumps(payload_exec_flow), flow_alias='Univention-Authenticator ad-hoc federation flow')
+	except KeycloakError as e:
+		print(e)
+		if e.response_code != 202:  # FIXME: function expected 204 response it gets 202
+			raise e
+
+	# config_id from 'authenticationConfig' in get_authentication_flow_executions
+	config_ua = {
+		"config": {
+			"udm_endpoint": "http://{}.{}/univention/udm".format(hostname, domain),
+			"udm_user": "Administrator",
+			"udm_password": "univention"
+		},
+		"alias": "localhost config"
+	}
+
+	##  https://keycloak.ucs-4445.juanp.bug/admin/realms/ucs/authentication/executions/71ec2ef5-61a0-4227-bad9-c4450292bac4/config
+	##  kc_admin.raw_post(url,payload)
+	##  check raise error
+	data_raw = kc_admin.raw_post("admin/realms/{}/authentication/executions/{}/config".format(kc_admin.realm_name, ua_execution["id"]), json.dumps(config_ua))
+	print("Response code from config Univention-Authenticator: ", data_raw.status_code)
+
+	payload_idp = {
+		"alias": "saml",
+		"providerId": "saml",
+		"enabled": True,
+		"updateProfileFirstLoginMode": "on",
+		"trustEmail": False,
+		"storeToken": False,
+		"addReadTokenRoleOnCreate": False,
+		"authenticateByDefault": False,
+		"linkOnly": False,
+		"firstBrokerLoginFlowAlias": "Univention-Authenticator ad-hoc federation flow",
+		"config": {
+			"allowCreate": "true",
+			"nameIDPolicyFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+			"syncMode": "IMPORT",
+			"authnContextComparisonType": "exact",
+			"entityId": "https://keycloak.{}.{}/realms/dummy".format(hostname, domain),
+			"singleSignOnServiceUrl": "https://keycloak.{}.{}/realms/dummy/protocol/saml".format(hostname, domain),
+			"xmlSigKeyInfoKeyNameTransformer": "KEY_ID",
+			"signatureAlgorithm": "RSA_SHA256",
+			"principalType": "SUBJECT",
+			"useJwksUrl": "true"
+		}
+	}
+	kc_admin.create_idp(payload_idp)
+
+	list_idps = kc_admin.get_idps()
+	new_idp = list(filter(lambda idp: idp["alias"] == 'saml', list_idps))[0]
+	print(new_idp)
+	idp_mapper_payload = {
+		"id": new_idp["internalId"],
+		"name": "uid_importer",
+		"identityProviderAlias": "saml",
+		"identityProviderMapper": "saml-user-attribute-idp-mapper",
+		"config": {
+			"syncMode": "IMPORT",
+			"user.attribute": "uid",
+			"attributes": "[]",
+			"attribute.name": "urn:oid:0.9.2342.19200300.100.1.1"
+		}
+	}
+	kc_admin.add_mapper_to_idp(idp_alias="saml", payload=idp_mapper_payload)
+
+
+	idp_mapper_customer = {
+		"identityProviderAlias": "saml",
+		"config": {
+			"syncMode": "IMPORT",
+			"attributes": "[]",
+			"attribute": "univentionCustomer",
+			"attribute.value": "some univentionCustomer"
+		},
+		"name": "Hardcoded univentionCustomer",
+		"identityProviderMapper": "hardcoded-attribute-idp-mapper"
+	}
+	kc_admin.add_mapper_to_idp(idp_alias="saml", payload=idp_mapper_customer)
+
+	idp_mapper_tenant = {
+		"identityProviderAlias": "saml",
+		"config": {
+			"syncMode": "IMPORT",
+			"attributes": "[]",
+			"attribute": "univentionTenant",
+			"attribute.value": "some univentionTenant"
+		},
+		"name": "Hardcoded univentionTenant",
+		"identityProviderMapper": "hardcoded-attribute-idp-mapper"
+	}
+	kc_admin.add_mapper_to_idp(idp_alias="saml", payload=idp_mapper_tenant)
+
+	idp_mapper_remoteIden = {
+		"identityProviderAlias": "saml",
+		"config": {
+			"syncMode": "IMPORT",
+			"attributes": "[]",
+			"attribute": "univentionRemoteIdentifier",
+			"attribute.value": "some univentionRemoteIdentifier"
+		},
+		"name": "Hardcoded univentionRemoteIdentifier",
+		"identityProviderMapper": "hardcoded-attribute-idp-mapper"
+	}
+	kc_admin.add_mapper_to_idp(idp_alias="saml", payload=idp_mapper_remoteIden)
+
+	idp_mapper_fedlink = {
+		"identityProviderAlias": "saml",
+		"config": {
+			"syncMode": "IMPORT",
+			"attributes": "[]",
+			"attribute": "uTargetFederationLink",
+			"attribute.value": "{{ ldap_federation_id }}"
+		},
+		"name": "Hardcoded univentionTargetFederationLink",
+		"identityProviderMapper": "hardcoded-attribute-idp-mapper"
+	}
+	kc_admin.add_mapper_to_idp(idp_alias="saml", payload=idp_mapper_fedlink)
+
+
+def _sso_adhoc_federation(chrome):
+	__activate_idp_keycloak()
+
+	chrome.goto_portal()
+	chrome.click_portal_tile(u'Login (Single sign-on)')
+	time.sleep(2)
+
+	chrome.click_element('#social-saml')
+	time.sleep(5)
+
+	chrome.enter_input('username', "test_user1")
+	chrome.enter_input('password', "univention")
+	chrome.click_element('#kc-login')
+	time.sleep(7)
+
+	chrome.enter_input('username', "test_user1")
+	chrome.enter_input('email', "test_user1@univention.test")
+	chrome.enter_input('firstName', "test")
+	chrome.enter_input('lastName', "user1")
+	chrome.click_element('.pf-c-button')
+	time.sleep(10)
+
+	_logout(chrome)
+
+
+def _check_federated_user(kc_admin):
+	# Check for shadow federated user
+	user_client = UDM.admin().version(2).get("users/user")
+	# load UCR
+	ucr = ConfigRegistry()
+	ucr.load()
+	domain = ucr.get("domainname")
+	domain_split = domain.split(".")
+	dn = "cn=users,dc={},dc={}".format(domain_split[0], domain_split[1])
+
+	obj = user_client.get("uid=test_user1,{}".format(dn))
+	assert obj.props.username == 'test_user1', "Wrong federated user username in UDM. %s" % obj.props.username
+	assert obj.props.lastname == 'user1', "Wrong federated user lastname in UDM. %s" % obj.props.lastname
+	assert obj.props.firstname == 'test', "Wrong federated user firstname in UDM. %s" % obj.props.firstname
+	assert obj.props.description == 'Shadow copy of user', "Wrong federated user description in UDM. %s" % obj.props.description
+
+	kc_admin.realm_name = "ucs"
+	user_id = kc_admin.get_user_id(username="test_user1")
+	kc_user = kc_admin.get_user(user_id=user_id)
+	assert kc_user["username"] == "test_user1", "Wrong federated user username in Keycloak - UCS realm. %s" % kc_user["username"]
+	assert kc_user["email"] == "test_user1@univention.test", "Wrong federated user email in Keycloak - UCS realm. %s" % kc_user["email"]
+	assert kc_user["firstName"] == "test", "Wrong federated user firstName in Keycloak - UCS realm. %s" % kc_user["firstName"]
+	assert kc_user["lastName"] == "user1", "Wrong federated user lastName in Keycloak - UCS realm. %s" % kc_user["lastName"]
+
+
+def _delete_adhoc_users(kc_admin):
+	print("Deleting federated users ...")
+	# Delete previous created ldap users -> 1 domain admin, 1 normal user
+	user_client = UDM.admin().version(2).get("users/user")
+
+	# load UCR
+	ucr = ConfigRegistry()
+	ucr.load()
+	domain = ucr.get("domainname")
+	domain_split = domain.split(".")
+	dn = "cn=users,dc={},dc={}".format(domain_split[0], domain_split[1])
+
+	obj = user_client.get("uid=test_user1,{}".format(dn))
+	obj.delete()
+
+	kc_admin.realm_name = "ucs"
+	user_id = kc_admin.get_user_id("test_user1")
+	kc_admin.delete_user(user_id)
+
+	kc_admin.delete_idp(idp_alias="saml")
+	kc_admin.delete_realm(realm_name="dummy")
+
+	# function not present in our version, workaround
+	flow_id = [x for x in kc_admin.get_authentication_flows() if x["alias"] == "Univention-Authenticator ad-hoc federation flow"][0]["id"]
+	params_path = {"realm-name": kc_admin.realm_name, "id": flow_id}
+	data_raw = kc_admin.raw_delete("admin/realms/{realm-name}/authentication/flows/{id}".format(**params_path))
+	print("Response code from config Univention-Authenticator: ", data_raw.status_code)
+
+
+def test_adhoc_federation(chrome):
+	# Connect as admin
+	pwdfile = "/etc/keycloak.secret"
+	with open(pwdfile, 'r') as fd:
+		password = fd.read().strip()
+
+	kc_admin = __build_keycloak_admin_connection("admin", password)
+
+	# Create dummy realm
+	# Create client in realm
+	_create_dummy_realm(kc_admin)
+
+	# Create 2 dummy user with uid attribute
+	_create_dummy_users(kc_admin)
+
+	# Create IdP federation
+	_create_idp(kc_admin)
+
+	# Try SSO log in
+	with chrome.capture("keycloak_sso_adhoc"):
+		_sso_adhoc_federation(chrome)
+
+	# Check user in ldap
+	_check_federated_user(kc_admin)
+
+	# Delete kc user and ldap user
+	_delete_adhoc_users(kc_admin)
 
 
 if __name__ == '__main__':

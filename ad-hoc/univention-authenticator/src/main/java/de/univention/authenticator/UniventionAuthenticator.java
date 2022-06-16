@@ -71,7 +71,7 @@ public class UniventionAuthenticator implements Authenticator {
         var firstname = user.getFirstName();
         var lastname = user.getLastName();
         var username = user.getUsername();
-        var email = user.getEmail(); // TODO: NullPointerExeption no mail on the context
+        var email = user.getEmail();
 
 		logger.infof("User:" + firstname);
 		logger.infof("lastname:" + lastname);
@@ -119,7 +119,7 @@ public class UniventionAuthenticator implements Authenticator {
             "e-mail", new String[]{email},
             "description", "Shadow copy of user"
 
-//            "univentionRemoteIdentifier", univentionRemoteIdentifier,
+//            "univentionRemoteIdentifier", univentionRemoteIdentifier, // FIXME: uncommet for phoenix
 //            "univentionCustomer", univentionCustomer,
 //            "univentionTenant", univentionTenant
             );
