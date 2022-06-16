@@ -1,7 +1,6 @@
 #!/usr/bin/python3
+# TODO: License
 
-
-import os
 import os.path
 import importlib
 import sys
@@ -23,13 +22,13 @@ except ImportError:
 	print('Could not import {}. Maybe set $UCS_TEST_LIB'.format(test_lib))
 	sys.exit(1)
 
+
 def __build_keycloak_admin_connection(kc_username, kc_password, is_file=False):
 	# load UCR
 	ucr = ConfigRegistry()
 	ucr.load()
 	hostname = ucr.get("hostname")
 	domain = ucr.get("domainname")
-
 
 	kc_user = kc_username
 	kc_pass = kc_password
@@ -47,7 +46,7 @@ def __build_keycloak_admin_connection(kc_username, kc_password, is_file=False):
 	kc_admin_auth_url = "{}".format(server_fqdn_with_subdomain)
 
 	# log into default realm in case UCS realm doesn't exist yet #
-	kc_admin = KeycloakAdmin(server_url=kc_admin_auth_url, username=kc_user, password=kc_pass, realm_name="master", user_realm_name="master", verify=True, auto_refresh_token=['get', 'put', 'post', 'delete'])
+	kc_admin = KeycloakAdmin(server_url=kc_admin_auth_url, username=kc_user, password=kc_pass, realm_name="master", user_realm_name="master", verify=True)
 	return kc_admin
 
 
@@ -216,7 +215,7 @@ def _test_sso(chrome):
 	_incorrect_login(chrome, "nonExistUser", "Password")
 
 
-def _test_keycloak(chrome):
+def test_keycloak(chrome):
 	# login as admin
 	pwdfile = "/etc/keycloak.secret"
 	with open(pwdfile, 'r') as fd:
@@ -237,7 +236,8 @@ def _test_keycloak(chrome):
 	_delete_users()
 
 
-def _create_dummy_realm(kc_admin ):
+def _create_dummy_realm(kc_admin):
+	print("Creating dummy realm for ad-hoc federation test...")
 	# load UCR
 	ucr = ConfigRegistry()
 	ucr.load()
@@ -371,6 +371,7 @@ def _create_dummy_realm(kc_admin ):
 
 
 def _create_dummy_users(kc_admin):
+	print("Creating users in dummy realm for ad-hoc federation test...")
 	# Add user and set password
 	new_user = kc_admin.create_user({"email": "test@univention.de",
 		"username": "test_user1",
@@ -394,13 +395,13 @@ def _create_dummy_users(kc_admin):
 
 
 def _create_idp(kc_admin):
+	print("Creating federation and setting up the ad-hoc federation test...")
 	kc_admin.realm_name = "ucs"
 	# load UCR
 	ucr = ConfigRegistry()
 	ucr.load()
 	hostname = ucr.get("hostname")
 	domain = ucr.get("domainname")
-
 
 	payload_authflow = {
 		"newName": "Univention-Authenticator ad-hoc federation flow"
@@ -500,7 +501,6 @@ def _create_idp(kc_admin):
 	}
 	kc_admin.add_mapper_to_idp(idp_alias="saml", payload=idp_mapper_payload)
 
-
 	idp_mapper_customer = {
 		"identityProviderAlias": "saml",
 		"config": {
@@ -555,6 +555,7 @@ def _create_idp(kc_admin):
 
 
 def _sso_adhoc_federation(chrome):
+	print("Perform a SSO using the ad-hoc federation test...")
 	__activate_idp_keycloak()
 
 	chrome.goto_portal()
@@ -580,6 +581,7 @@ def _sso_adhoc_federation(chrome):
 
 
 def _check_federated_user(kc_admin):
+	print("Checking new users created by the ad-hoc federation test...")
 	# Check for shadow federated user
 	user_client = UDM.admin().version(2).get("users/user")
 	# load UCR
