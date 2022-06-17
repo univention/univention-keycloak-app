@@ -7,3 +7,7 @@ Variables: domainname
 Variables: hostname
 Variables: keycloak/server/sso/fqdn
 Variables: ucs/server/sso/virtualhost
+Variables: keycloak/apache2/ssl/certificate
+Variables: keycloak/apache2/ssl/key
+Variables: keycloak/apache2/ssl/ca
+Variables: keycloak/apache2/ssl/certificatechain

@@ -105,6 +105,8 @@ fi
 
 [ -x /usr/sbin/univention-config-registry ] && univention-config-registry register univention-keycloak || true
 ucr commit /etc/apache2/sites-available/univention-keycloak.conf
+a2ensite /etc/apache2/sites-available/univention-keycloak.conf
+systemctl restart apache2
 
 sso_hostname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 1)"
 sso_domainname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 2-)"
