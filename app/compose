@@ -18,7 +18,7 @@ import os
 pwdfile="/etc/keycloak.secret"
 with open(pwdfile, 'r') as fd:
     print(fd.read().strip())@!@
-      KEYCLOAK_LOGLEVEL: @%@keycloak/log/level@%@
+      KC_LOG_LEVEL: @%@keycloak/log/level@%@
       PROXY_ADDRESS_FORWARDING: "true"
       JAVA_OPTS: "@%@keycloak/java/opts@%@"
       X509_CA_BUNDLE: "/ca-certificates.crt"
