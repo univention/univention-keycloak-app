@@ -68,6 +68,8 @@ udm portals/entry modify "$@" \
 	--dn "cn=keycloak,cn=entry,cn=portals,cn=univention,$ldap_base" \
 	--append allowedGroups="$domain_admins_dn" || die
 
+## FIXME: change to check container health
+curl --head -X GET --retry 30 --retry-connrefused --retry-delay 2 "https://$url_prefix.$hostname.$domainname/" || die
 univention-keycloak-config "$@" || die
 
 eval "$(ucr shell)"
@@ -75,9 +77,6 @@ eval "$(ucr shell)"
 keycloak_server_sso_fqdn="ucs-sso-ng.$domainname"
 
 ucr set keycloak/server/sso/fqdn?"${keycloak_server_sso_fqdn}" ## FIXME: change to keycloak/ssl/certificate/...
-													 ## FIXME: change to keycloak/server/sso/fqdn
-													 ## TODO: define UCRV in settings
-													 ## FIXME: ucs/server/sso/certificate/generation +
 
 eval "$(ucr shell)"
 ## as variables were changed we need the new ones
