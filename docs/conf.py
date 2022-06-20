@@ -40,6 +40,7 @@ extensions = [
     "univention_sphinx_extension",
     "sphinx_sitemap",
     "sphinx_last_updated_by_git",
+    "sphinxcontrib.inkscapeconverter",
     "sphinx.ext.intersphinx",
     "sphinxcontrib.bibtex",
     "sphinx_inline_tabs",
