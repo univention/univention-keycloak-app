@@ -77,8 +77,8 @@ customization. For more information, consult :cite:t:`keycloak-docs`.
       ``ALL``, ``DEBUG``, ``ERROR``, ``FATAL``, ``INFO``, ``OFF``, ``TRACE``,
       ``WARN``.
 
-   For a detailed description of the log level values, see `Keycloak
-   documentation: Configuring logging <keycloak-docs-root-logging_>`_.
+   For a detailed description of the log level values, see
+   :cite:t:`keycloak-docs-root-logging`.
 
    .. list-table::
       :header-rows: 1

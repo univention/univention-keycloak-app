@@ -21,7 +21,7 @@ directory in Univention Corporate Server (UCS). It covers the following topics:
 
 This documentation doesn't cover the following topics:
 
-* Usage of Keycloak itself, see the `Keycloak documentation <keycloak-docs_>`_.
+* Usage of Keycloak itself, see the :cite:t:`keycloak-docs`.
 * Usage of |UCS|, see :ref:`Univention Corporate Server - Manual for users and
   administrators <uv-manual:introduction>`.
 
