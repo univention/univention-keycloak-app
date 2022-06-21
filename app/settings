@@ -97,7 +97,7 @@ Show = Install, Settings
 Scope = outside
 Description =  If this variable is set to 'true', the certificate for the fqdn of the identity provider (keycloak/server/sso/fqdn) is downloaded automatically. (default: true)
 
-[keycloak/server/sso/autoregistraton]
+[keycloak/server/sso/autoregistration]
 Type = Bool
 Required = True
 InitialValue = true
