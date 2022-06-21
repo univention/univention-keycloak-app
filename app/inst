@@ -69,7 +69,7 @@ udm portals/entry modify "$@" \
 	--append allowedGroups="$domain_admins_dn" || die
 
 ## FIXME: change to check container health
-curl --head -X GET --retry 30 --retry-connrefused --retry-delay 2 "https://127.0.0.1:8180/" || die
+curl --head -X GET --retry 30 --retry-connrefused --retry-delay 2 "http://127.0.0.1:8180/" || die
 univention-keycloak-config "$@" || die
 
 eval "$(ucr shell)"
