@@ -8,6 +8,7 @@ services:
     ## For --proxy edge see https://www.keycloak.org/server/reverseproxy
     restart: unless-stopped
     environment:
+      KC_HTTP_PORT: "8180"
       KC_DB: "postgres"
       KC_DB_URL_HOST: postgres
       KC_DB_USERNAME: keycloak
@@ -29,7 +30,7 @@ with open(pwdfile, 'r') as fd:
     ports:
       # does not work, see https://forge.univention.org/bugzilla/show_bug.cgi?id=53878
       # - 127.0.0.1:8180:8080
-      - 8180:8080
+      - 8180:8180
     healthcheck:
       test: curl https://127.0.0.1:8180/ -k -s -f -o /dev/null || exit 1
       interval: "2s"
