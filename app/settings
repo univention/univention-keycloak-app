@@ -78,6 +78,7 @@ Description =  The path of the public certificate which is used to sign the SAML
 [keycloak/server/sso/fqdn]
 Type = String
 Show = Install, Settings
+InitialValue = ucs-sso-ng.@%@domainname@%@
 Scope = outside
 Description = Defines the fqdn of the identity provider of this UCS domain.
 
