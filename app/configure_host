@@ -311,8 +311,8 @@ SSLProxyCheckPeerCN on
 SSLProxyCheckPeerExpire on
 RequestHeader set X-Forwarded-Proto "https"
 RequestHeader set X-Forwarded-Port "443"
-ProxyPass / http://127.0.0.1:8080/
-ProxyPassReverse / http://127.0.0.1:8080/
+ProxyPass / http://127.0.0.1:8180/
+ProxyPassReverse / http://127.0.0.1:8180/
 EOF
 }
 
