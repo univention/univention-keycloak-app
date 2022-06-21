@@ -31,7 +31,7 @@ with open(pwdfile, 'r') as fd:
       # - 127.0.0.1:8180:8080
       - 8180:8080
     healthcheck:
-      test: curl https://@%@keycloak/url/prefix@%@.@%@hostname@%@.@%@domainname@%@/ -k -s -f -o /dev/null || exit 1
+      test: curl https://127.0.0.1:8180/ -k -s -f -o /dev/null || exit 1
       interval: "2s"
       timeout: "3s"
       retries: 20
