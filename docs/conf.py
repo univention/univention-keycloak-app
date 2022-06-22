@@ -19,7 +19,32 @@ from sphinx.locale import _
 
 # -- Project information -----------------------------------------------------
 
-release = "18.0.0"
+
+def read_version_from_ci() -> str:
+    """Read the version for the documentation from the pipeline definition
+
+    To not maintain the documentation version in different places, just define
+    at one place and use it in different places.
+
+    The documentation version influences the version shown in the content of
+    the document and the path of the published documentation.
+
+    :returns: The version number for the documentation as defined in the CI/CD
+        pipeline.
+
+    :rtype: str
+    """
+
+    import yaml
+
+    with open("../.gitlab-ci.yml", "r") as f:
+        ci = yaml.safe_load(f)
+        return ci.get(
+                "variables", {"DOC_TARGET_VERSION": "18.0.0"}
+                ).get("DOC_TARGET_VERSION")
+
+
+release = read_version_from_ci()
 version = release
 project = "Keycloak app {}".format(release)
 copyright = '{}, Univention GmbH'.format(date.today().year)

@@ -4,7 +4,12 @@ stages:
 
 variables:
   DOCS_DIR: "docs"
-  SPHINX_DOC: docker-registry.knut.univention.de/sphinx
+  CI_REGISTRY: docker-registry.knut.univention.de
+  SPHINX_DOC: $CI_REGISTRY/sphinx
+  LANG: "C.UTF-8"
+  DEBIAN_FRONTEND: noninteractive
+  UNIVENTION_BASECONF: /dev/null
+  DOC_TARGET_VERSION: "18.0.0"
 
 
 .sphinx-doc:
@@ -45,7 +50,8 @@ html:
     - rsync -av --delete --exclude-from "$DOCS_DIR"/pipeline-rsync-exclude.txt "$DOCS_DIR"/_build/html/ "$CI_PROJECT_DIR"/out
   artifacts:
     paths:
-      - $DOCS_DIR/_build/html
+      - docs/_build/html
+      - out
 
 pdf:
   extends: .sphinx-doc
@@ -87,7 +93,7 @@ docs-production:
     - git clean --force -d
     - git fetch --no-tags origin
     - git reset --hard origin/master
-    - rsync -av --delete "$CI_PROJECT_DIR"/out/ ./keycloak-app/
+    - rsync -av --delete "$CI_PROJECT_DIR"/out/ ./keycloak-app/"$DOC_TARGET_VERSION"/
     - git add -- .
     - git commit -m "Automatic doc deployment from $CI_PROJECT_PATH by GitLab commit $CI_COMMIT_SHA"
     - git push
