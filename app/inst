@@ -68,8 +68,7 @@ udm portals/entry modify "$@" \
 	--dn "cn=keycloak,cn=entry,cn=portals,cn=univention,$ldap_base" \
 	--append allowedGroups="$domain_admins_dn" || die
 
-## FIXME: change to check container health
-curl --head -X GET --retry 30 --retry-connrefused --retry-delay 2 "http://127.0.0.1:8180/" || die
+i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
 univention-keycloak-config "$@" || die
 
 eval "$(ucr shell)"
