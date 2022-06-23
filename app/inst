@@ -45,6 +45,7 @@ ucs_addServiceToLocalhost "$app_id" "$@"
 domainname="$(ucr get domainname)"
 hostname="$(ucr get hostname)"
 ldap_base="$(ucr get ldap/base)"
+sso_url="$(ucr get keycloak/server/sso/fqdn)"
 
 url_prefix="$(ucr get keycloak/url/prefix)"
 if [ -n "$url_prefix" ]; then
@@ -58,7 +59,7 @@ ucr set \
   ucs/web/overview/entries/admin/$app_id/description/de="Keycloak" \
   ucs/web/overview/entries/admin/$app_id/description="Keycloak" \
   ucs/web/overview/entries/admin/$app_id/label="Keycloak" \
-  ucs/web/overview/entries/admin/$app_id/link="https://$url_prefix.$hostname.$domainname/admin/" \
+  ucs/web/overview/entries/admin/$app_id/link="https://$sso_url/admin/" \
   ucs/web/overview/entries/admin/$app_id/icon="/univention/js/dijit/themes/umc/icons/scalable/apps-$COMPONENT_ID.svg" \
   ucs/web/overview/entries/admin/$app_id/link-target='newwindow'
 
@@ -68,16 +69,9 @@ udm portals/entry modify "$@" \
 	--dn "cn=keycloak,cn=entry,cn=portals,cn=univention,$ldap_base" \
 	--append allowedGroups="$domain_admins_dn" || die
 
-i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
-univention-keycloak-config "$@" || die
 
 eval "$(ucr shell)"
 
-keycloak_server_sso_fqdn="ucs-sso-ng.$domainname"
-
-ucr set keycloak/server/sso/fqdn?"${keycloak_server_sso_fqdn}" ## FIXME: change to keycloak/ssl/certificate/...
-
-eval "$(ucr shell)"
 ## as variables were changed we need the new ones
 
 # check if we need to create a new certificate
@@ -88,6 +82,8 @@ if [ "$server_role" = "domaincontroller_master" ]; then
 	fi
 else
 	if [ -z "$ucs_server_sso_certificate_download" ] || is_ucr_true ucs/server/sso/certificate/download; then
+		HOSTPWD="/etc/machine.secret"
+		HOSTACCOUNT="$hostname\$"
 		univention-scp $HOSTPWD "-r $HOSTACCOUNT@$ldap_master:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
 		create_or_download=true
 	fi
@@ -121,6 +117,8 @@ if [ -z "$keycloak_server_sso_autoregistration" ] || is_ucr_true keycloak/server
 	fi
 fi
 
+i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
+univention-keycloak-config "$@" || die
 
 joinscript_save_current_version
 

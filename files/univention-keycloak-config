@@ -88,10 +88,10 @@ if __name__ == "__main__":
 
 	# derived composite vars #
 	if hostname and not hostname == "unassigned-hostname":
-		server_fdnq_with_subdomain = "https://keycloak.{}.{}".format(hostname, domain)
+		server_fdnq_with_subdomain = "https://ucs-sso-ng.{}".format(domain)
 		server_fdnq_without_subdomain = "https://{}.{}".format(hostname, domain)
 	else:
-		server_fdnq_with_subdomain = "https://keycloak.{}".format(domain)
+		server_fdnq_with_subdomain = "https://ucs-sso-ng.{}".format(domain)
 		server_fdnq_without_subdomain = "https://{}".format(domain)
 
 	# valid redirect uris #
@@ -101,7 +101,7 @@ if __name__ == "__main__":
 		valid_redirect_urls = [server_fdnq_without_subdomain + "/univention/saml/"]
 
 	# build kc admin session #
-	kc_admin_auth_url = "{}".format(server_fdnq_with_subdomain)
+	kc_admin_auth_url = "http://127.0.0.1:8180"
 	print("Using KC_URL: {}".format(kc_admin_auth_url))
 
 	# log into default realm in case UCS realm doesn't exist yet #

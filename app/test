@@ -39,9 +39,9 @@ def __build_keycloak_admin_connection(kc_username, kc_password, is_file=False):
 
 	# derived composite vars #
 	if hostname and not hostname == "unassigned-hostname":
-		server_fqdn_with_subdomain = "https://keycloak.{}.{}".format(hostname, domain)
+		server_fqdn_with_subdomain = "https://ucs-sso-ng.{}".format(domain)
 	else:
-		server_fqdn_with_subdomain = "https://keycloak.{}".format(domain)
+		server_fqdn_with_subdomain = "https://ucs-sso-ng.{}".format(domain)
 
 	kc_admin_auth_url = "{}".format(server_fqdn_with_subdomain)
 
@@ -59,9 +59,9 @@ def __build_keycloak_openID_connection():
 
 	# derived composite vars #
 	if hostname and not hostname == "unassigned-hostname":
-		server_fqdn_with_subdomain = "https://keycloak.{}.{}".format(hostname, domain)
+		server_fqdn_with_subdomain = "https://ucs-sso-ng.{}".format(domain)
 	else:
-		server_fqdn_with_subdomain = "https://keycloak.{}".format(domain)
+		server_fqdn_with_subdomain = "https://ucs-sso-ng.{}".format(domain)
 
 	kc_admin_auth_url = "{}".format(server_fqdn_with_subdomain)
 
@@ -165,7 +165,7 @@ def __activate_idp_keycloak():
 	hostname = ucr.get("hostname")
 	domain = ucr.get("domainname")
 
-	subprocess.call(["ucr", "set", "umc/saml/idp-server=https://keycloak.{}.{}/realms/ucs/protocol/saml/descriptor".format(hostname, domain)])
+	subprocess.call(["ucr", "set", "umc/saml/idp-server=https://ucs-sso-ng.{}/realms/ucs/protocol/saml/descriptor".format(domain)])
 	subprocess.call(["udm", "portals/entry", "modify", "--dn", "cn=login-saml,cn=entry,cn=portals,cn=univention, {}".format(ucr.get("ldap/base")), "--set", "activated=TRUE"])
 
 
@@ -250,10 +250,10 @@ def _create_dummy_realm(kc_admin):
 
 	# derived composite vars #
 	if hostname and not hostname == "unassigned-hostname":
-		server_fdnq_with_subdomain = "https://keycloak.{}.{}".format(hostname, domain)
+		server_fdnq_with_subdomain = "https://ucs-sso-ng.{}".format(hostname, domain)
 		server_fdnq_without_subdomain = "https://{}.{}".format(hostname, domain)
 	else:
-		server_fdnq_with_subdomain = "https://keycloak.{}".format(domain)
+		server_fdnq_with_subdomain = "https://ucs-sso-ng.{}".format(domain)
 		server_fdnq_without_subdomain = "https://{}".format(domain)
 
 	# client config #
@@ -474,8 +474,8 @@ def _create_idp(kc_admin):
 			"nameIDPolicyFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
 			"syncMode": "IMPORT",
 			"authnContextComparisonType": "exact",
-			"entityId": "https://keycloak.{}.{}/realms/dummy".format(hostname, domain),
-			"singleSignOnServiceUrl": "https://keycloak.{}.{}/realms/dummy/protocol/saml".format(hostname, domain),
+			"entityId": "https://ucs-sso-ng.{}/realms/dummy".format(domain),
+			"singleSignOnServiceUrl": "https://ucs-sso-ng.{}/realms/dummy/protocol/saml".format(domain),
 			"xmlSigKeyInfoKeyNameTransformer": "KEY_ID",
 			"signatureAlgorithm": "RSA_SHA256",
 			"principalType": "SUBJECT",
