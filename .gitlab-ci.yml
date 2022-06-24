@@ -4,6 +4,8 @@ stages:
 
 variables:
   DOCS_DIR: "docs"
+  SPHINX_DOC: docker-registry.knut.univention.de/sphinx
+
 
 .sphinx-doc:
   image: $SPHINX_DOC
@@ -72,7 +74,7 @@ docs-production:
     GIT_COMMITTER_NAME: $GITLAB_USER_NAME
     GIT_COMMITTER_EMAIL: $GITLAB_USER_EMAIL
   resource_group: prod
-  image: docker-registry.knut.univention.de/sphinx
+  image: $SPHINX_DOC
   rules:
     - changes:
       - "$DOCS_DIR/**/*"
