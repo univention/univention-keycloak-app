@@ -1,0 +1,1 @@
+Diese App sollte zur Zeit nur zu Testzwecken installiert werden. Die App kann aktuell nur auf UCS Primary Directory Nodes installiert werden und ist daher noch nicht geeignet für productive Nutzung in Umgebungen, die UCS Backup Directory Nodes haben. Die App erzeugt einen neuen DNS-Namen&nbsp; &lt;tt&gt;ucs-sso-ng.$domainname&lt;/tt&gt;.
