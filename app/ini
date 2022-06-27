@@ -17,25 +17,27 @@ AppCategories = Identity Management, Infrastructure
 DockerMainService = keycloak
 Logo = logo.png
 LongDescription = <div class="col-sm-7 col-xs-12 left-col">
-		<p>
-			Keycloak is a SAML and OpenID Connect Identity Provider solution, offering federation to other protocol compliant identity providers.
-		</p>
-		<p>
-			The app is configured to use the Keycloak feature &quot;User Federation&quot; for authentication of users against OpenLDAP.
-		</p>
-		<p>
-			For more details go to the <a href="https://docs.software-univention.de/keycloak-app/">UCS Keycloak App documentation</a>.
-			<br>
-			&nbsp;
-			<br>
-			&nbsp;
-		</p>
-		<p>
-			NOTE: This App should currently only be installed for testing purposes. It can only be installed on a UCS Primary Directory Node and thus is not suitable yet for productive use in environments that have UCS Backup Directory Nodes. It generates a new DNS name  <tt>ucs-sso-ng.$domainname</tt>.
-		</p>
-	
+	<p>
+	Keycloak is a SAML and OpenID Connect Identity Provider solution, offering federation to other protocol compliant identity providers.
+	</p>
+	<p>
+	The app is configured to use the Keycloak feature &quot;User Federation&quot; for authentication of users against OpenLDAP.
+	</p>
+	<p>
+	For more details go to the <a href="https://docs.software-univention.de/keycloak-app/">UCS Keycloak App documentation</a>.
+	<br>
+	&nbsp;
+	<br>
+	&nbsp;
+	</p>
+	<p>
+	NOTE: This App should currently only be installed for testing purposes. It can only be installed on a UCS Primary Directory Node and thus is not suitable yet for productive use in environments that have UCS Backup Directory Nodes. It generates a new DNS name
+	<tt>
+	ucs-sso-ng.$domainname
+	</tt>
+	.
+	</p>
 	</div>
-	
 PortsExclusive = 8180
 SupportedUcsVersions = 5.0-0
 ServerRole = domaincontroller_master
@@ -49,6 +51,10 @@ DatabaseUser = keycloak
 DatabasePasswordFile = /etc/postgresql-keycloak.secret
 WebsiteMaintainer = https://www.univention.com/
 Maintainer = Univention GmbH
+NotifyVendor = True
+License = free
+Contact = sales@univention.de
+NotificationEmail = appcenter-reporting@univention.de
 
 [de]
 LongDescription = <div class="col-sm-7 col-xs-12 left-col">
@@ -56,7 +62,7 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	Keycloak ist ein Identity Provider für Single Sign On über die Protokolle SAML und OpenID Connect, der auch Föderierung zu anderen Identity Providern ermöglicht.
 	</p>
 	<p>
-	Die App ist so konfiguriert, dass sie das Keycloak Feature "User Federation" verwendet um Benutzer durch OpenLDAP authentifizieren zu lassen..
+	Die App ist so konfiguriert, dass sie das Keycloak Feature &quot;User Federation&quot; verwendet um Benutzer durch OpenLDAP authentifizieren zu lassen..
 	</p>
 	<p>
 	Weitere Details sind in der <a href="https://docs.software-univention.de/keycloak-app/">UCS Keycloak App Dokumentation</a> beschrieben.
@@ -65,9 +71,13 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	<br>
 	&nbsp;
 	</p>
-		<p>
-			NOTE: Diese App sollte zur Zeit nur zu Testzwecken installiert werden. Die App kann aktuell nur auf UCS Primary Directory Nodes installiert werden und ist daher noch nicht geeignet für productive Nutzung in Umgebungen, die UCS Backup Directory Nodes haben. Die App erzeugt einen neuen DNS-Namen  <tt>ucs-sso-ng.$domainname</tt>.
-		</p>
+	<p>
+	NOTE: Diese App sollte zur Zeit nur zu Testzwecken installiert werden. Die App kann aktuell nur auf UCS Primary Directory Nodes installiert werden und ist daher noch nicht geeignet für produktive Nutzung in Umgebungen, die UCS Backup Directory Nodes haben. Die App erzeugt einen neuen DNS-Namen
+	<tt>
+	ucs-sso-ng.$domainname
+	</tt>
+	.
+	</p>
 	</div>
 Description = SAML und OpenID Connect Identity Provider
 Maintainer = Univention GmbH
