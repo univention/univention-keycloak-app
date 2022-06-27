@@ -3,7 +3,6 @@ ID = keycloak
 Code = 3O
 Version = 18.0.0-ucs1
 Name = Keycloak
-Vendor = Univention
 DockerScriptRestoreDataAfterSetup = 
 DockerScriptStoreData = 
 DockerScriptUpdateAvailable = 
@@ -18,20 +17,25 @@ AppCategories = Identity Management, Infrastructure
 DockerMainService = keycloak
 Logo = logo.png
 LongDescription = <div class="col-sm-7 col-xs-12 left-col">
-	<p>
-	Keycloak is a SAML and OpenID Connect Identity Provider solution, offering federation to other protocol compliant identity providers.
-	</p>
-	<p>
-	The app is configured to use the Keycloak feature "User Federation" for authentication of users against OpenLDAP.
-	</p>
-	<p>
-	For more details go to the <a href="https://docs.software-univention.de/keycloak-app/">UCS Keycloak App documentation</a>.
-	<br>
-	&nbsp;
-	<br>
-	&nbsp;
-	</p>
+		<p>
+			Keycloak is a SAML and OpenID Connect Identity Provider solution, offering federation to other protocol compliant identity providers.
+		</p>
+		<p>
+			The app is configured to use the Keycloak feature &quot;User Federation&quot; for authentication of users against OpenLDAP.
+		</p>
+		<p>
+			For more details go to the <a href="https://docs.software-univention.de/keycloak-app/">UCS Keycloak App documentation</a>.
+			<br>
+			&nbsp;
+			<br>
+			&nbsp;
+		</p>
+		<p>
+			NOTE: This App should currently only be installed for testing purposes. It can only be installed on a UCS Primary Directory Node and thus is not suitable yet for productive use in environments that have UCS Backup Directory Nodes. It generates a new DNS name  <tt>ucs-sso-ng.$domainname</tt>.
+		</p>
+	
 	</div>
+	
 PortsExclusive = 8180
 SupportedUcsVersions = 5.0-0
 ServerRole = domaincontroller_master
@@ -43,6 +47,8 @@ DockerEnvDatabasePort = DB_PORT
 DockerEnvDatabaseName = DB_NAME
 DatabaseUser = keycloak
 DatabasePasswordFile = /etc/postgresql-keycloak.secret
+WebsiteMaintainer = https://www.univention.com/
+Maintainer = Univention GmbH
 
 [de]
 LongDescription = <div class="col-sm-7 col-xs-12 left-col">
@@ -59,6 +65,11 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	<br>
 	&nbsp;
 	</p>
+		<p>
+			NOTE: Diese App sollte zur Zeit nur zu Testzwecken installiert werden. Die App kann aktuell nur auf UCS Primary Directory Nodes installiert werden und ist daher noch nicht geeignet für productive Nutzung in Umgebungen, die UCS Backup Directory Nodes haben. Die App erzeugt einen neuen DNS-Namen  <tt>ucs-sso-ng.$domainname</tt>.
+		</p>
 	</div>
 Description = SAML und OpenID Connect Identity Provider
+Maintainer = Univention GmbH
+WebsiteMaintainer = https://www.univention.de/
 
