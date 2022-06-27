@@ -1,0 +1,64 @@
+[Application]
+ID = keycloak
+Code = 3O
+Version = 18.0.0-ucs1
+Name = Keycloak
+Vendor = Univention
+DockerScriptRestoreDataAfterSetup = 
+DockerScriptStoreData = 
+DockerScriptUpdateAvailable = 
+DockerScriptRestoreDataBeforeSetup = 
+DockerScriptUpdatePackages = 
+DockerScriptUpdateAppVersion = 
+DockerScriptUpdateRelease = 
+DockerScriptSetup = 
+LogoDetailPage = logo_detail_page.jpeg
+Description = SAML and OpenID Connect Identity Provider
+AppCategories = Identity Management, Infrastructure
+DockerMainService = keycloak
+Logo = logo.png
+LongDescription = <div class="col-sm-7 col-xs-12 left-col">
+	<p>
+	Keycloak is a SAML and OpenID Connect Identity Provider solution, offering federation to other protocol compliant identity providers.
+	</p>
+	<p>
+	The app is configured to use the Keycloak feature "User Federation" for authentication of users against OpenLDAP.
+	</p>
+	<p>
+	For more details go to the <a href="https://docs.software-univention.de/keycloak-app/">UCS Keycloak App documentation</a>.
+	<br>
+	&nbsp;
+	<br>
+	&nbsp;
+	</p>
+	</div>
+PortsExclusive = 8180
+SupportedUcsVersions = 5.0-0
+ServerRole = domaincontroller_master
+DockerEnvDatabaseHost = KC_DB_URL_HOST
+DockerEnvDatabaseUser = KC_DB_USERNAME
+Database = postgresql
+DockerEnvDatabasePassword = KC_DB_PASSWORD
+DockerEnvDatabasePort = DB_PORT
+DockerEnvDatabaseName = DB_NAME
+DatabaseUser = keycloak
+DatabasePasswordFile = /etc/postgresql-keycloak.secret
+
+[de]
+LongDescription = <div class="col-sm-7 col-xs-12 left-col">
+	<p>
+	Keycloak ist ein Identity Provider für Single Sign On über die Protokolle SAML und OpenID Connect, der auch Föderierung zu anderen Identity Providern ermöglicht.
+	</p>
+	<p>
+	Die App ist so konfiguriert, dass sie das Keycloak Feature "User Federation" verwendet um Benutzer durch OpenLDAP authentifizieren zu lassen..
+	</p>
+	<p>
+	Weitere Details sind in der <a href="https://docs.software-univention.de/keycloak-app/">UCS Keycloak App Dokumentation</a> beschrieben.
+	<br>
+	&nbsp;
+	<br>
+	&nbsp;
+	</p>
+	</div>
+Description = SAML und OpenID Connect Identity Provider
+
