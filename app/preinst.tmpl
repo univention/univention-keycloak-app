@@ -38,6 +38,7 @@ fi
 # create password
 pwdfile="/etc/keycloak.secret"
 [ -e "$pwdfile" ] || makepasswd --chars 20 > "$pwdfile"
+chmod 640 "$pwdfile"
 
 # install jq TODO remove
 command -v jq || {
