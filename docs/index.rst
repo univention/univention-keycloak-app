@@ -22,8 +22,7 @@ directory in Univention Corporate Server (UCS). It covers the following topics:
 This documentation doesn't cover the following topics:
 
 * Usage of Keycloak itself, see the :cite:t:`keycloak-docs`.
-* Usage of |UCS|, see :ref:`Univention Corporate Server - Manual for users and
-  administrators <uv-manual:introduction>`.
+* Usage of |UCS|, see :cite:t:`ucs-manual`.
 
 To understand this documentation, you need to know the following concepts and
 tasks:
@@ -33,7 +32,8 @@ tasks:
   <deb-admin-handbook-shell_>`_ from *The Debian Administrator's Handbook*,
   :cite:t:`deb-admin-handbook-shell`.
 
-* :ref:`Manage an app through Univention App Center <uv-manual:computers-softwareselection>`.
+* :ref:`Manage an app through Univention App Center
+  <uv-manual:computers-softwareselection>` in :cite:t:`ucs-manual`.
 
 * Know the concepts of SAML (`Security Assertion Markup Language
   <w-saml_>`_) and OIDC (`OpenID Connect <w-openid-connect_>`_) and the differences

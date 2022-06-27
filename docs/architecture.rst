@@ -46,9 +46,10 @@ The following list describes the elements in more detail.
       as-is without any changes to the software code.
 
    LDAP
-      *LDAP* is the LDAP directory provided by |UCS| with the OpenLDAP software. In
-      UCS it is the storage for all identity and infrastructure data of the UCS
-      domain. For more information, see :ref:`uv-manual:domain-ldap`.
+      *LDAP* is the LDAP directory provided by |UCS| with the OpenLDAP software.
+      In UCS it is the storage for all identity and infrastructure data of the
+      UCS domain. For more information, see :ref:`uv-manual:domain-ldap` in
+      :cite:t:`ucs-manual`.
 
    SAML IDP
       *SAML IDP* stands for *SAML Identity Provider* and is the |SAML| interface in

@@ -7,7 +7,11 @@ Installation
 .. highlight:: console
 
 You can install the :program:`Keycloak` app like any other app with Univention
-App Center. UCS offers two different ways for app installation:
+App Center. The App Center only allows to install Keycloak on a UCS system with
+the system role *Primary Director Node*. For more information, see
+:ref:`uv-manual:domain-ldap-primary-directory-node` in :cite:t:`ucs-manual`.
+
+UCS offers two different ways for app installation:
 
 * With the web browser in the UCS management system
 
@@ -43,7 +47,8 @@ To install Keycloak from the UCS management system, use the following steps:
    ``Administrator``. User accounts with domain administration rights belong to
    the user group ``Domain Admins``.
 
-   For more information, see :ref:`uv-manual:delegated-administration`.
+   For more information, see :ref:`uv-manual:delegated-administration` in
+   :cite:t:`ucs-manual`.
 
 .. _installation-command-line:
 
@@ -112,7 +117,7 @@ Console*. The URL has the following scheme:
 * :samp:`{hostname}` is the hostname of the UCS system you installed the
   :program:`Keycloak` app.
 
-* :samp:`{domainname}` is your UCS domain's domain name.
+* :samp:`{domainname}` is your UCS domain name.
 
 Example:
    https://keycloak.prime.example.com/admin/
