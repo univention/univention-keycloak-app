@@ -76,15 +76,17 @@ eval "$(ucr shell)"
 
 # check if we need to create a new certificate
 if [ "$server_role" = "domaincontroller_master" ]; then
-	if [ -z "$ucs_server_sso_certificate_generation" ] || is_ucr_true ucs/server/sso/certificate/generation; then
+	if [ -z "$keycloak_server_sso_certificate_generation" ] || is_ucr_true keycloak/server/sso/certificate/generation; then
 		univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}" || die
 		create_or_download=true
 	fi
 else
-	if [ -z "$ucs_server_sso_certificate_download" ] || is_ucr_true ucs/server/sso/certificate/download; then
-		HOSTPWD="/etc/machine.secret"
-		HOSTACCOUNT="$hostname\$"
-		univention-scp $HOSTPWD "-r $HOSTACCOUNT@$ldap_master:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
+	if [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
+		ucs_parseCredentials "$@"
+        NAMETMP=${binddn:4} # Remove uid=
+        HOSTACCOUNT=${NAMETMP%%,*} # remove from first , to end
+#		univention-ssh $bindpwdfile $HOSTACCOUNT@$ldap_master "/usr/sbin/univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}""
+		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$ldap_master:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
 		create_or_download=true
 	fi
 fi

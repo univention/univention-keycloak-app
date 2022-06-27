@@ -44,17 +44,6 @@ Description = Java options for keycloak
 Group = Administration
 Group[de] = Administration
 
-[keycloak/ucs/setup]
-Type = Bool
-Required = True
-Show = Install, Settings
-ShowReadOnly = Settings
-InitialValue = true
-Scope = outside
-Description = Configure UCS as LDAP backend for Keycloak and setup a SAML Client for the UMC
-Group = Integration
-Group[de] = Integration
-
 [keycloak/theme]
 Type = String
 Show = Install, Settings
@@ -62,18 +51,6 @@ InitialValue = @%@ucs/web/theme@%@
 Scope = outside
 Description = Name of the theme to be applied to the keycloak login interface. Example: "dark" or "light". A CSS file of the same name has to exist in the folder /usr/share/univention-web/themes/.
 Group = Settings
-
-[keycloak/ssl/certificate/privatekey]
-Type = String
-Show = Install, Settings
-Scope = outside
-Description = The path of the certificate key which is used to sign the SAML assertion that is send to the service provider.
-
-[keycloak/ssl/certificate/certificate]
-Type = String
-Show = Install, Settings
-Scope = outside
-Description =  The path of the public certificate which is used to sign the SAML assertion that is send to the service provider.
 
 [keycloak/server/sso/fqdn]
 Type = String
