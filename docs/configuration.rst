@@ -10,27 +10,116 @@ don't allow changes after installation. Therefore, you must set them carefully
 installation* in :ref:`app-settings`. You can change all other settings at any
 time after the installation.
 
-To change settings later after installation, sign in to the UCS management
-system and go to :menuselection:`App Center --> Keyloak --> Manage Installation
---> App Settings`. On the appearing *Configure Keycloak* page, you can change
-the settings and apply them to the app with a click on :guilabel:`Apply
-Changes`.
+To change settings after installation, sign in to the UCS management system with
+a username with administration rights and go to :menuselection:`App Center -->
+Keyloak --> Manage Installation --> App Settings`. On the appearing *Configure
+Keycloak* page, you can change the settings and apply them to the app with a
+click on :guilabel:`Apply Changes`.
 
 The App Center then *reinitializes* the Docker container for the Keycloak app.
 *Reinitilize* means the App Center throws away the running Keycloak Docker
 container and creates a fresh Keycloak Docker container with the just changed
 settings.
 
+.. _login-portal:
+
+Use Keycloak for login to UCS Portal
+====================================
+
+The :program:`Keycloak` app can take over the role of the :term:`SAML IDP` for the
+UCS Portal. And the portal can use Keycloak for user authentication.
+
+.. warning::
+
+   After you restart the LDAP server, Keycloak will not recognize SAML tickets
+   that the *simpleSAMLphp* based identity provider issued. Users will
+   experience invalidation of their existing sessions.
+
+   For more information about production use, see
+   :ref:`limitation-primary-node`.
+
+
+To configure the UCS portal to use Keycloak for authentication, run the
+following steps on the system where you installed Keycloak:
+
+#. Set the UCR variable :envvar:`umc/saml/idp-server` to the URL
+   :samp:`https://ucs-sso-ng.{$domainname}/realms/ucs/protocol/saml/descriptor`,
+   for example
+   ``https://ucs-sso-ng.example.org/realms/ucs/protocol/saml/descriptor``. This
+   step tells the portal to use Keycloak as IDP.
+
+   .. tab:: UMC
+
+      Sign in to the UCS management system and then go to :menuselection:`System
+      --> Univention Configuration Registry` and search for the variable
+      :envvar:`umc/saml/idp-server` and set the value as described before.
+
+   .. tab:: Console
+
+      Open a shell on the UCS system as superuser ``root`` where you installed
+      Keycloak and run the following command:
+
+      .. code-block:: console
+
+         $ ucr set \
+         > umc/saml/idp-server=\
+         > "https://ucs-sso-ng.$(hostname -d)/realms/ucs/protocol/saml/descriptor"
+
+#. Modify the portal to use SAML for login:
+
+   .. tab:: UMC
+
+      In the UCS management system go to :menuselection:`Domain --> Portal -->
+      login-saml`. On the tab *General* in the section *Advanced* activate the
+      :guilabel:`Activated` checkbox.
+
+   .. tab:: Console
+
+      Open a shell on the UCS system as superuser ``root`` where you installed
+      Keycloak and run the following command:
+
+      .. code-block:: console
+
+         $ udm portals/entry modify \
+         > --dn "cn=login-saml,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
+         > --set activated=TRUE
+
+#. To activate the changes, restart the LDAP server ``slapd`` within a maintenance
+   window.
+
+   .. tab:: UMC
+
+      In the UCS management system go to :menuselection:`System --> System
+      Services`. Search for ``slapd`` and click to select the service. Then
+      click :guilabel:`Restart`.
+
+   .. tab:: Console
+
+      Open a shell on the UCS system as superuser ``root`` where you installed
+      Keycloak and run the following command:
+
+      .. code-block:: console
+
+         $ service slapd restart
+
+.. note::
+
+   If you don't restart the LDAP server, you will see the following message in
+   :file:`/var/log/syslog`:
+
+   :samp:`slapd[…]: SASL [conn=…] Failure: SAML assertion issuer
+   https://ucs-sso-ng.{$domainname}/realms/ucs is unknown`
+
 .. _app-settings:
 
 Settings
 ========
 
-The following references shows the available settings within the
+The following references show the available settings within the
 :program:`Keycloak` app.
 
-Keycloak for sure has a lot more possibilities for configuration and
-customization. For more information, consult :cite:t:`keycloak-docs`.
+Keycloak has a lot more possibilities for configuration and customization. For
+more information, consult :cite:t:`keycloak-docs`.
 
 
 .. envvar:: keycloak/admin/user
