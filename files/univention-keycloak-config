@@ -62,7 +62,7 @@ if __name__ == "__main__":
 		with open(pwdfile, 'r') as fd:
 			kc_admin_pass = fd.read().strip()
 	else:
-		kc_admin_pass=""
+		kc_admin_pass = args.remotePwd
 	# realm config #
 	realm_name = "ucs"
 	default_realm = "master"
