@@ -166,6 +166,7 @@ def __activate_idp_keycloak():
 	domain = ucr.get("domainname")
 
 	subprocess.call(["ucr", "set", "umc/saml/idp-server=https://ucs-sso-ng.{}/realms/ucs/protocol/saml/descriptor".format(domain)])
+	subprocess.call(["systemctl", "restart", "slapd"])
 	subprocess.call(["udm", "portals/entry", "modify", "--dn", "cn=login-saml,cn=entry,cn=portals,cn=univention, {}".format(ucr.get("ldap/base")), "--set", "activated=TRUE"])
 
 
@@ -207,7 +208,7 @@ def _test_sso(chrome):
 	__activate_idp_keycloak()
 
 	# FIXME: login as administrator, where do I get the password ??
-#	_user_login(chrome, "admin", password)
+	_user_login(chrome, "userAdminTest", "univention")
 	# login as user
 	_user_login(chrome, "userUserTest", "univention")
 
@@ -250,11 +251,11 @@ def _create_dummy_realm(kc_admin):
 
 	# derived composite vars #
 	if hostname and not hostname == "unassigned-hostname":
-		server_fdnq_with_subdomain = "https://ucs-sso-ng.{}".format(hostname, domain)
-		server_fdnq_without_subdomain = "https://{}.{}".format(hostname, domain)
+		server_fdnq_with_subdomain = "https://ucs-sso-ng.{}".format(domain)
+		server_fdnq_without_subdomain = "https://ucs-sso-ng.{}".format(domain)
 	else:
 		server_fdnq_with_subdomain = "https://ucs-sso-ng.{}".format(domain)
-		server_fdnq_without_subdomain = "https://{}".format(domain)
+		server_fdnq_without_subdomain = "https://ucs-sso-ng.{}".format(domain)
 
 	# client config #
 	client_id_location = "/realms/dummy"
@@ -635,7 +636,7 @@ def _delete_adhoc_users(kc_admin):
 	print("Response code from config Univention-Authenticator: ", data_raw.status_code)
 
 
-def test_adhoc_federation(chrome):
+def _test_adhoc_federation(chrome):
 	# Connect as admin
 	pwdfile = "/etc/keycloak.secret"
 	with open(pwdfile, 'r') as fd:
