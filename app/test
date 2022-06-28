@@ -166,8 +166,8 @@ def __activate_idp_keycloak():
 	domain = ucr.get("domainname")
 
 	subprocess.call(["ucr", "set", "umc/saml/idp-server=https://ucs-sso-ng.{}/realms/ucs/protocol/saml/descriptor".format(domain)])
-	subprocess.call(["systemctl", "restart", "slapd"])
 	subprocess.call(["udm", "portals/entry", "modify", "--dn", "cn=login-saml,cn=entry,cn=portals,cn=univention, {}".format(ucr.get("ldap/base")), "--set", "activated=TRUE"])
+	subprocess.call(["systemctl", "restart", "slapd"])
 
 
 def _logout(chrome):
@@ -207,7 +207,6 @@ def _incorrect_login(chrome, username="administrator", password="univention"):
 def _test_sso(chrome):
 	__activate_idp_keycloak()
 
-	# FIXME: login as administrator, where do I get the password ??
 	_user_login(chrome, "userAdminTest", "univention")
 	# login as user
 	_user_login(chrome, "userUserTest", "univention")
@@ -225,8 +224,8 @@ def test_keycloak(chrome):
 	_test_keycloak_admin_login("admin", password)
 	_test_keycloak_user_login()
 	_create_users()
-	_test_keycloak_admin_login("userAdminTest", "univention")
-	_test_keycloak_user_login("userUserTest", "univention")
+	_test_keycloak_admin_login("useradmintest", "univention")
+	_test_keycloak_user_login("userusertest", "univention")
 
 	_test_keycloak_admin_login_fail()
 	_test_keycloak_user_login_fail()
