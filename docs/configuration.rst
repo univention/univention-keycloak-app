@@ -116,7 +116,7 @@ Settings
 ========
 
 The following references show the available settings within the
-:program:`Keycloak` app.
+:program:`Keycloak` app. Univention recommends to keep the default values.
 
 Keycloak has a lot more possibilities for configuration and customization. For
 more information, consult :cite:t:`keycloak-docs`.

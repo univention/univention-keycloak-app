@@ -59,13 +59,13 @@ The following list describes the elements in more detail.
       *SAML SP* stands for *SAML Service Provider* and is the SAML interface in
       Keycloak that outsources its user authentication function to an *IDP*.
 
-   OIDC IDP
-      *OIDC IDP* is short for *OpenID Connect Identity Provider*. In Keycloak this
-      |OIDC| interface offers user authentication as a service.
+   OIDC Provider
+      *OP* is short for *OpenID Connect Provider*. In Keycloak this |OIDC|
+      interface offers user authentication as a service.
 
    OIDC RP
       *OIDC RP* is short for *OpenID Connect Relying Party*. In Keycloak this OIDC
-      interface outsources its user authentication function to an *IDP*.
+      interface outsources its user authentication function to an *OP*.
 
 .. _app-design-decisions:
 
@@ -76,13 +76,12 @@ One goal of the :program:`Keycloak` app is to provide a ready to run Keycloak
 setup for |UCS|. To reach that goal, the Univention team made the following
 decisions.
 
-.. user federation
-
-The :program:`Keycloak` app configures a user federation in the realm *UCS* in
-Keycloak. In general, a user federation synchronizes users from LDAP and Active
-Directory servers to Keycloak. In the Keycloak app, the user federation
-**doesn't** synchronize user accounts from LDAP to Keycloak. A realm manages a
-set of users, credentials, roles, and groups in Keycloak.
+The :program:`Keycloak` app configures a so-called *user federation* in the
+realm *UCS* in Keycloak. In general, a user federation synchronizes users from
+LDAP and Active Directory servers to Keycloak. In the Keycloak app, the user
+federation **doesn't** synchronize user accounts from LDAP to Keycloak, but
+delegates authentication decisions to LDAP. A realm manages a set of users,
+credentials, roles, and groups in Keycloak.
 
 The user federation in the realm *UCS* uses the LDAP |DN|
 :samp:`uid=sys-idp-user,cn=users,{$ldap_base}` to bind to the LDAP directory in
