@@ -73,7 +73,6 @@ docs-production:
       - univention-docs
   interruptible: false
   variables:
-    GIT_STRATEGY: none
     GIT_AUTHOR_NAME: $GITLAB_USER_NAME
     GIT_AUTHOR_EMAIL: $GITLAB_USER_EMAIL
     GIT_COMMITTER_NAME: $GITLAB_USER_NAME
@@ -94,8 +93,7 @@ docs-production:
     - git fetch --no-tags origin
     - git reset --hard origin/master
     - mkdir -p ./keycloak-app/"$DOC_TARGET_VERSION"
-    - ls -lhR "$CI_PROJECT_DIR"
-    - rsync -av --delete --exclude-from "$CI_PROJECT_DIR"/"$DOCS_DIR"/pipeline-rsync-exclude.txt "$CI_PROJECT_DIR"/out/ ./keycloak-app/"$DOC_TARGET_VERSION"/
+    - rsync -av --delete --exclude-from="$CI_PROJECT_DIR"/"$DOCS_DIR"/pipeline-rsync-exclude.txt "$CI_PROJECT_DIR"/out/ ./keycloak-app/"$DOC_TARGET_VERSION"/
     - git add -- .
     - git commit -m "Automatic doc deployment from $CI_PROJECT_PATH by GitLab commit $CI_COMMIT_SHA"
     - git push
