@@ -30,6 +30,9 @@ if __name__ == "__main__":
 
 	parser.add_argument("--binddn", default="Administrator")
 	parser.add_argument("--bindpwdfile", default="univention")
+	parser.add_argument("--keycloak", default="")
+	parser.add_argument("--host", default="")
+	parser.add_argument("--remotePwd", default="")
 
 	args = parser.parse_args()
 
@@ -54,10 +57,12 @@ if __name__ == "__main__":
 		kc_service_pass = args.bindpwdfile
 
 	kc_admin_user = "admin"
-	pwdfile = "/etc/keycloak.secret"
-	with open(pwdfile, 'r') as fd:
-		kc_admin_pass = fd.read().strip()
-
+	if args.remotePwd == "":
+		pwdfile = "/etc/keycloak.secret"
+		with open(pwdfile, 'r') as fd:
+			kc_admin_pass = fd.read().strip()
+	else:
+		kc_admin_pass=""
 	# realm config #
 	realm_name = "ucs"
 	default_realm = "master"
@@ -94,6 +99,10 @@ if __name__ == "__main__":
 		server_fdnq_with_subdomain = "https://ucs-sso-ng.{}".format(domain)
 		server_fdnq_without_subdomain = "https://{}".format(domain)
 
+	if args.host and args.keycloak:
+		server_fdnq_with_subdomain = args.keycloak
+		server_fdnq_without_subdomain = args.host
+
 	# valid redirect uris #
 	if valid_redirect_urls:
 		valid_redirect_urls = valid_redirect_urls
@@ -101,7 +110,10 @@ if __name__ == "__main__":
 		valid_redirect_urls = [server_fdnq_without_subdomain + "/univention/saml/"]
 
 	# build kc admin session #
-	kc_admin_auth_url = "http://127.0.0.1:8180"
+	if args.keycloak:
+		kc_admin_auth_url = args.keycloak
+	else:
+		kc_admin_auth_url = "http://127.0.0.1:8180"
 	print("Using KC_URL: {}".format(kc_admin_auth_url))
 
 	# log into default realm in case UCS realm doesn't exist yet #
