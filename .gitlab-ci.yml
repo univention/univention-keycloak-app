@@ -94,7 +94,7 @@ docs-production:
     - git fetch --no-tags origin
     - git reset --hard origin/master
     - mkdir -p ./keycloak-app/"$DOC_TARGET_VERSION"
-    - ls -lhr "$CI_PROJECT_DIR"
+    - ls -lhR "$CI_PROJECT_DIR"
     - rsync -av --delete --exclude-from "$CI_PROJECT_DIR"/"$DOCS_DIR"/pipeline-rsync-exclude.txt "$CI_PROJECT_DIR"/out/ ./keycloak-app/"$DOC_TARGET_VERSION"/
     - git add -- .
     - git commit -m "Automatic doc deployment from $CI_PROJECT_PATH by GitLab commit $CI_COMMIT_SHA"
