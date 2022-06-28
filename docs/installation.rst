@@ -108,19 +108,14 @@ Sign in to Keycloak Admin Console
 
 After a successful installation, signed in domain administrator users see the
 tile *Keycloak* on the UCS Portal, that directs them to the *Keycloak Admin
-Console*. The URL has the following scheme:
-:samp:`https://{keycloak/url/prefix}.{hostname}.{domainname}/admin/`.
+Console*.
 
-* :samp:`{keycloak/url/prefix}` is the URL prefix defined at installation, see
-  the UCR variable :envvar:`keycloak/url/prefix`.
-
-* :samp:`{hostname}` is the hostname of the UCS system you installed the
-  :program:`Keycloak` app.
-
-* :samp:`{domainname}` is your UCS domain name.
+The URL has the following scheme:
+:samp:`https://ucs-sso-ng.{$domainname}/admin/`. The :samp:`{$domainname}` is your
+UCS domain name.
 
 Example:
-   https://keycloak.prime.example.com/admin/
+   https://ucs-sso-ng.example.com/admin/
 
 The username for login is the *name of the initial admin user* defined during
 installation and saved in the UCR variable :envvar:`keycloak/admin/user`.

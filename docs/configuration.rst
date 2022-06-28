@@ -31,9 +31,9 @@ UCS Portal. And the portal can use Keycloak for user authentication.
 
 .. warning::
 
-   After you restart the LDAP server, Keycloak will not recognize SAML tickets
-   that the *simpleSAMLphp* based identity provider issued. Users will
-   experience invalidation of their existing sessions.
+   The LDAP server will not recognize SAML tickets that the *simpleSAMLphp*
+   based identity provider issued after you restart it. Users will experience
+   invalidation of their existing sessions.
 
    For more information about production use, see
    :ref:`limitation-primary-node`.
@@ -138,23 +138,6 @@ more information, consult :cite:t:`keycloak-docs`.
 
       * - Yes
         - ``admin``
-        - Only before installation
-
-
-.. envvar:: keycloak/url/prefix
-
-   Defines the prefix of the URL where you find your Keycloak instance.
-
-   .. list-table::
-      :header-rows: 1
-      :widths: 2 5 5
-
-      * - Required
-        - Default value
-        - Set
-
-      * - Yes
-        - ``keycloak``
         - Only before installation
 
 

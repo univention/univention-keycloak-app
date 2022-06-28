@@ -41,8 +41,8 @@ The installation might not break anything in production. But, experiments with
 reconfiguration of, for example, UMC and other services so that they use
 Keycloak, may have undesired results. In particular, when you change the UCR
 variable :envvar:`umc/saml/idp-server` to point to your Keycloak installation.
-After you restart the LDAP server, Keycloak will not recognize SAML tickets that
-the *simpleSAMLphp* based identity provider issued. Users will experience
+The LDAP server will not recognize SAML tickets that the *simpleSAMLphp* based
+identity provider issued after you restart it. Users will experience
 invalidation of their existing sessions.
 
 .. TODO : Discuss with SME:

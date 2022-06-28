@@ -126,7 +126,7 @@ if "linkcheck" in sys.argv:
     suppress_warnings = ['git.too_shallow']
 
 linkcheck_ignore = [
-    r'https://keycloak.prime.example.com/admin/',
+    r'https://ucs-sso-ng.example.com/admin/',
 ]
 
 root_doc = "index"
