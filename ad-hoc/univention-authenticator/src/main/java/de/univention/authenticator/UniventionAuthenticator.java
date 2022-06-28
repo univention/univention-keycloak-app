@@ -117,11 +117,11 @@ public class UniventionAuthenticator implements Authenticator {
             "username", username,
             "password", password, // random password ???
             "e-mail", new String[]{email},
-            "description", "Shadow copy of user"
+            "description", "Shadow copy of user",
 
-//            "univentionRemoteIdentifier", univentionRemoteIdentifier, // FIXME: uncommet for phoenix
-//            "univentionCustomer", univentionCustomer,
-//            "univentionTenant", univentionTenant
+            "univentionRemoteIdentifier", univentionRemoteIdentifier, // FIXME: uncommet for phoenix
+            "univentionCustomer", univentionCustomer,
+            "univentionTenant", univentionTenant
             );
 
         // TODO: Review and re-test this whole error handling here,
