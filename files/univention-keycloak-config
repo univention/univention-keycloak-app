@@ -33,6 +33,7 @@ if __name__ == "__main__":
 	parser.add_argument("--keycloak", default="")
 	parser.add_argument("--host", default="")
 	parser.add_argument("--remotePwd", default="")
+	parser.add_argument("--ldap", default="")
 
 	args = parser.parse_args()
 
@@ -57,7 +58,7 @@ if __name__ == "__main__":
 		kc_service_pass = args.bindpwdfile
 
 	kc_admin_user = "admin"
-	if args.remotePwd == "":
+	if args.remotePwd == "":  # TODO: pass pwd file
 		pwdfile = "/etc/keycloak.secret"
 		with open(pwdfile, 'r') as fd:
 			kc_admin_pass = fd.read().strip()
@@ -75,7 +76,10 @@ if __name__ == "__main__":
 	ucs_user_dn = ""
 	ucs_ldap_pass = ""
 	ucs_bind_dn = ""
-	ucs_ldap_url = "ldap://{}.{}:7389".format(hostname, domain)  # "ldap://{FQDN}:{port}"
+	if args.ldap:
+		ucs_ldap_url = args.ldap
+	else:
+		ucs_ldap_url = "ldap://{}.{}:7389".format(hostname, domain)  # "ldap://{FQDN}:{port}"
 
 	# saml descriptor location #
 	saml_descriptor_location = "/realms/{}/protocol/saml/descriptor".format(realm_name)
@@ -112,6 +116,7 @@ if __name__ == "__main__":
 	# build kc admin session #
 	if args.keycloak:
 		kc_admin_auth_url = args.keycloak
+		kc_admin_auth_url.replace("https", "http")
 	else:
 		kc_admin_auth_url = "http://127.0.0.1:8180"
 	print("Using KC_URL: {}".format(kc_admin_auth_url))
