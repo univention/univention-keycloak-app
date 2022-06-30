@@ -37,6 +37,10 @@ import org.openapitools.client.model.UsersUser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Base64;
+import java.nio.ByteBuffer;
+import java.util.UUID;
+import java.io.UnsupportedEncodingException;
 
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
@@ -46,6 +50,7 @@ import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.storage.ldap.idm.store.ldap.LDAPUtil;
 
 // TODO: Make sure that it even makes sense to implement this SPI
 // Since we are not authenticating here,
@@ -73,10 +78,15 @@ public class UniventionAuthenticator implements Authenticator {
         var username = user.getUsername();
         var email = user.getEmail();
 
-		logger.infof("User:" + firstname);
-		logger.infof("lastname:" + lastname);
-		logger.infof("username:" + username);
-		logger.infof("user: "+ user.getAttributes());
+        String remIdGUID_key = System.getenv("keycloak/federation/remote/identifier");
+        String remSourceID_key = System.getenv("keycloak/federation/source/identifier");
+
+        logger.infof("User:" + firstname);
+        logger.infof("lastname:" + lastname);
+        logger.infof("username:" + username);
+        logger.infof("user: " + user.getAttributes());
+        logger.infof("remSourceIden_key: " + remSourceID_key);
+        logger.infof("remObjIden_key: " + remIdGUID_key);
         // The IDP doesn't provide a password attribute,
         // and the KC UserModel doesn't have such field either,
         // but UDM curently needs a non null password, so we generate one
@@ -90,9 +100,8 @@ public class UniventionAuthenticator implements Authenticator {
 
         // TODO: Find out if this is even the right way of handling the Ad-hoc federation data
         // Univention Ad-Hoc Federation specific attributes:
-        var univentionRemoteIdentifier = user.getFirstAttribute("univentionRemoteIdentifier");
-        var univentionCustomer =  user.getFirstAttribute("univentionCustomer");
-        var univentionTenant =  user.getFirstAttribute("univentionTenant");
+        var remIdGUID_value = user.getFirstAttribute("objectGUID");
+        var remSourceID_value =  user.getFirstAttribute(remSourceID_key);
 
         // This attribute is only for Keycloak, this won't be propagated via UDM
         // TODO: Currently it doesn't seem to be possible to set a mapper for this in KC
@@ -101,9 +110,9 @@ public class UniventionAuthenticator implements Authenticator {
         // if it's absolutely certain, that there is no way to simply configure keycloak to set the desired field.
         var univentionTargetFederationLink =  user.getFirstAttribute("univentionTargetFederationLink");
 
-		logger.infof("univentionRemoteID:" + univentionRemoteIdentifier);
-		logger.infof("univentionCustomer:" + univentionCustomer);
-		logger.infof("univentionTenant:" + univentionTenant);
+        logger.infof(remIdGUID_key + ":" + remIdGUID_value);
+        logger.infof(remSourceID_key + ":" + remSourceID_value);
+        //logger.infof("univentionTenant:" + univentionTenant);
         logger.infof("targetFederationLink:" + univentionTargetFederationLink);
         // TODO: Perhaps do some real life performance testing
         // and change this to debug remove if not needed.
@@ -111,6 +120,14 @@ public class UniventionAuthenticator implements Authenticator {
                      firstname, lastname, username, email);
 
         // TODO: When the UDM allows it, avoid passing the password here
+        String decoded_remoteGUID;
+        try{
+            decoded_remoteGUID = LDAPUtil.decodeObjectGUID(Base64.getDecoder().decode(remIdGUID_value.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException e){
+            decoded_remoteGUID = remIdGUID_value;
+            //propagate the error
+            context.failure(AuthenticationFlowError.INTERNAL_ERROR);
+        }
         Map<String, Object> userData = Map.of(
             "firstname", firstname,
             "lastname", lastname,
@@ -119,9 +136,8 @@ public class UniventionAuthenticator implements Authenticator {
             "e-mail", new String[]{email},
             "description", "Shadow copy of user",
 
-            "univentionRemoteIdentifier", univentionRemoteIdentifier,
-            "univentionCustomer", univentionCustomer,
-            "univentionTenant", univentionTenant
+            remIdGUID_key, decoded_remoteGUID,
+            remSourceID_key, remSourceID_value
             );
 
         // TODO: Review and re-test this whole error handling here,
@@ -140,6 +156,7 @@ public class UniventionAuthenticator implements Authenticator {
         var dn = userInUcs.getDn();
         user.setSingleAttribute("LDAP_ID", uuid);
         user.setSingleAttribute("LDAP_ENTRY_DN", dn);
+        user.setSingleAttribute("uid", username);
         user.setFederationLink(univentionTargetFederationLink);
 
         context.success();
@@ -264,19 +281,19 @@ public class UniventionAuthenticator implements Authenticator {
         //    "univentionTenant", univentionTenant
             );
 
-		try{
-    		var listUser = api.udmUsersUserObjectSearch(null, null, "sub", query, true, "", "en_EN", "", "");
-    		var luser = listUser.getEmbedded();
-    		var listUserl = luser.getUdmColonObject();
-			if (listUserl != null && listUserl.size() > 0){
-				logger.infof("Univention Authenticator existsRemoteUser, listUser is greater than 0.");
-				logger.infof("Univention Authenticator existsRemoteUser, %s", listUserl.get(0));
-				return true;
-			}else{
-				logger.infof("Univention Authenticator, listUser is 0 or null.");
-				return false;
-			}
-		} catch(ApiException e) {
+        try {
+            var listUser = api.udmUsersUserObjectSearch(null, null, "sub", query, true, "", "en_EN", "", "");
+            var luser = listUser.getEmbedded();
+            var listUserl = luser.getUdmColonObject();
+            if (listUserl != null && listUserl.size() > 0){
+                logger.infof("Univention Authenticator existsRemoteUser, listUser is greater than 0.");
+                logger.infof("Univention Authenticator existsRemoteUser, %s", listUserl.get(0));
+                return true;
+            } else {
+                logger.infof("Univention Authenticator, listUser is 0 or null.");
+                return false;
+            }
+        } catch(ApiException e) {
             logger.errorf("Failed to get users via UDM: %s", e);
             // TODO: Better error propagation
             return false;

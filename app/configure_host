@@ -9,7 +9,7 @@ action=$1
 apache_config () {
 	# create apache config
 	mkdir -p  /var/lib/univention-appcenter/apps/keycloak/config/
-	cat << %EOF > /var/lib/univention-appcenter/apps/keycloak/config/vhost.conf
+	cat <<%EOF > /var/lib/univention-appcenter/apps/keycloak/config/vhost.conf
 ProxyPreserveHost On
 SSLProxyEngine On
 SSLProxyCheckPeerCN on
@@ -34,7 +34,7 @@ theme_config() {
 	cp "$THEME_SRC" "$THEME_DST"
 }
 
-if [ -n "$action" ] && [ "$action" = "remove" ]; then 
+if [ -n "$action" ] && [ "$action" = "remove" ]; then
 	exit 0
 fi
 

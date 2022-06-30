@@ -69,7 +69,7 @@
     --pf-c-button--BorderRadius: var(--pf-c-button--m-control--BorderRadius);
     --pf-c-button--disabled--BackgroundColor: var(--pf-c-button--m-control--disabled--BackgroundColor);
     --pf-c-button--after--BorderWidth: var(--pf-c-button--m-control--after--BorderWidth);
-    --pf-c-button--after--BorderColor: var(--pf-c-button--m-control--after--BorderTopColor) var(--pf-c-button--m-control--after--BorderRightColor) var(--pf-c-button--m-$
+    --pf-c-button--after--BorderColor: var(--pf-c-button--m-control--after--BorderTopColor) var(--pf-c-button--m-control--after--BorderRightColor) var(--pf-c-button--m-control--after--BorderBottomColor) var(--pf-c-button--m-control--after--BorderLeftColor);
     color: var(--pf-c-form__label--Color);
     background-color: var(--pf-global--primary-color--100);
 }

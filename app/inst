@@ -31,7 +31,7 @@
 
 ## joinscript api: bindpwdfile
 
-VERSION="2"
+VERSION="3"
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
@@ -69,13 +69,17 @@ udm portals/entry modify "$@" \
 	--dn "cn=keycloak,cn=entry,cn=portals,cn=univention,$ldap_base" \
 	--append allowedGroups="$domain_admins_dn" || die
 
+
 eval "$(ucr shell)"
+
+## as variables were changed we need the new ones
 
 # check if we need to create a new certificate
 if [ "$server_role" = "domaincontroller_master" ]; then
 	if [ -z "$keycloak_server_sso_certificate_generation" ] || is_ucr_true keycloak/server/sso/certificate/generation; then
 		univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}" || die
 		create_or_download=true
+		ucr set keycloak/server/sso/certificate/generation='false'
 	fi
 else
 	if [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
@@ -110,6 +114,9 @@ if [ -z "$keycloak_server_sso_autoregistration" ] || is_ucr_true keycloak/server
 		fi
 	fi
 fi
+
+univention-app shell keycloak ../bin/kc.sh build --db=postgres
+univention-app restart keycloak
 
 i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
 univention-keycloak init "$@" || die

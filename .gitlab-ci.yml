@@ -101,3 +101,20 @@ docs-production:
   environment:
     name: production
     url: http://updates.knut.univention.de/download/docs/keycloak-app
+
+image_build:
+  stage: build
+  image: docker:19.03.8
+  variables:
+    MAVEN_STAGE_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app/maven-builder:19.0.1-ucs2"
+    KEYCLOAK_ADHOC_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app/keycloak-adhoc:19.0.1-ucs2"
+  script:
+    - docker login -u $CI_KEYCLOAK_DOCKER_USER -p $CI_KEYCLOAK_DOCKER_PASSWORD gitregistry.knut.univention.de
+    # MVN BUILD
+    - docker pull ${MAVEN_STAGE_IMAGE} || true
+    - docker build --target maven --cache-from ${MAVEN_STAGE_IMAGE} --tag ${MAVEN_STAGE_IMAGE} .
+    - docker push ${MAVEN_STAGE_IMAGE}
+    # build keycloak
+    - docker pull ${KEYCLOAK_ADHOC_IMAGE} || true
+    - docker build --cache-from ${KEYCLOAK_ADHOC_IMAGE} --cache-from ${MAVEN_STAGE_IMAGE} --tag ${KEYCLOAK_ADHOC_IMAGE} .
+    - docker push ${KEYCLOAK_ADHOC_IMAGE}

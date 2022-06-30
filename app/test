@@ -22,6 +22,8 @@ except ImportError:
 	print('Could not import {}. Maybe set $UCS_TEST_LIB'.format(test_lib))
 	sys.exit(1)
 
+SESSION_ID=""
+
 
 def __build_keycloak_admin_connection(kc_username, kc_password, is_file=False):
 	# load UCR
@@ -47,6 +49,8 @@ def __build_keycloak_admin_connection(kc_username, kc_password, is_file=False):
 
 	# log into default realm in case UCS realm doesn't exist yet #
 	kc_admin = KeycloakAdmin(server_url=kc_admin_auth_url, username=kc_user, password=kc_pass, realm_name="master", user_realm_name="master", verify=True)
+	global SESSION_ID
+	SESSION_ID = kc_admin.get_user_id(username=kc_user)
 	return kc_admin
 
 
@@ -79,6 +83,7 @@ def _test_keycloak_admin_login(username="Administrator", password="univention"):
 	assert kc_admin.client_id == "admin-cli", kc_admin.client_id
 	assert kc_admin.client_secret_key is None, kc_admin.client_secret_key
 	print("Admin login successfully")
+	_logout_keycloak_client(kc_admin)
 
 
 def _test_keycloak_admin_login_fail(username="nonExistUser", password="univention"):
@@ -206,6 +211,7 @@ def _incorrect_login(chrome, username="administrator", password="univention"):
 
 def _test_sso(chrome):
 	__activate_idp_keycloak()
+	chrome.goto_portal()
 
 	_user_login(chrome, "userAdminTest", "univention")
 	# login as user
@@ -635,7 +641,7 @@ def _delete_adhoc_users(kc_admin):
 	print("Response code from config Univention-Authenticator: ", data_raw.status_code)
 
 
-def _test_adhoc_federation(chrome):
+def test_adhoc_federation(chrome):
 	# Connect as admin
 	pwdfile = "/etc/keycloak.secret"
 	with open(pwdfile, 'r') as fd:
@@ -653,15 +659,29 @@ def _test_adhoc_federation(chrome):
 	# Create IdP federation
 	_create_idp(kc_admin)
 
+	# Close session
+	_logout_keycloak_client(kc_admin)
+
 	# Try SSO log in
 	with chrome.capture("keycloak_sso_adhoc"):
 		_sso_adhoc_federation(chrome)
 
+	kc_admin = __build_keycloak_admin_connection("admin", password)  # Workaround to session timing out
 	# Check user in ldap
 	_check_federated_user(kc_admin)
 
 	# Delete kc user and ldap user
 	_delete_adhoc_users(kc_admin)
+
+	_logout_keycloak_client(kc_admin)
+
+
+def _logout_keycloak_client(kc_admin):
+	params_path = {"realm-name": "master", "id": SESSION_ID}
+	data_raw = kc_admin.raw_post(
+		"admin/realms/{realm-name}/users/{id}/logout".format(**params_path), data=""
+	)
+	print(data_raw)
 
 
 if __name__ == '__main__':

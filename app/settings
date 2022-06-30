@@ -38,7 +38,7 @@ Group[de] = Administration
 Type = String
 Required = True
 Show = Install, Settings
-InitialValue = -server -Xms1024m -Xmx1024m
+InitialValue = -server
 Scope = outside
 Description = Java options for keycloak
 Group = Administration
@@ -82,3 +82,19 @@ InitialValue = true
 Show = Install, Settings
 Scope = outside
 Description = If this variable is set to 'true', this UCS system registers its IP address at the fqdn of the identity provider (keycloak/server/sso/fqdn). (default: true)
+
+[keycloak/federation/remote/identifier]
+Type = String
+Required = True
+Show = Install, Settings
+InitialValue = univentionObjectIdentifier
+Scope = outside, inside
+Description = UDM property uniquely identifying IAM objects
+
+[keycloak/federation/source/identifier]
+Type = String
+Required = True
+Show = Install, Settings
+InitialValue = univentionSourceIAM
+Scope = outside, inside
+Description = UDM property referencing the source IAM
