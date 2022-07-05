@@ -9,7 +9,7 @@ variables:
   LANG: "C.UTF-8"
   DEBIAN_FRONTEND: noninteractive
   UNIVENTION_BASECONF: /dev/null
-  DOC_TARGET_VERSION: "18.0.0"
+  DOC_TARGET_VERSION: "18.0.2"
 
 
 .sphinx-doc:
@@ -48,7 +48,6 @@ html:
     - make -C "$DOCS_DIR" html
     - mkdir -p "$CI_PROJECT_DIR"/out
     - rsync -av --delete --exclude-from "$DOCS_DIR"/pipeline-rsync-exclude.txt "$DOCS_DIR"/_build/html/ "$CI_PROJECT_DIR"/out
-    - cp "$DOCS_DIR"/pipeline-rsync-exclude.txt "$DOCS_DIR"/_build/html
   artifacts:
     paths:
       - $DOCS_DIR/_build/html
@@ -95,7 +94,7 @@ docs-production:
     - git fetch --no-tags origin
     - git reset --hard origin/master
     - mkdir -p ./keycloak-app/"$DOC_TARGET_VERSION"
-    - rsync -av --delete --exclude-from="$CI_PROJECT_DIR"/"$DOCS_DIR"/_build/html/pipeline-rsync-exclude.txt "$CI_PROJECT_DIR"/out/ ./keycloak-app/"$DOC_TARGET_VERSION"/
+    - rsync -av --delete "$CI_PROJECT_DIR"/out/ ./keycloak-app/"$DOC_TARGET_VERSION"/
     - git add -- .
     - git commit -m "Automatic doc deployment from $CI_PROJECT_PATH by GitLab commit $CI_COMMIT_SHA"
     - git push
