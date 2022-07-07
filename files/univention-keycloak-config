@@ -31,9 +31,10 @@ if __name__ == "__main__":
 	parser.add_argument("--binddn", default="Administrator")
 	parser.add_argument("--bindpwdfile", default="univention")
 	parser.add_argument("--keycloak", default="")
-	parser.add_argument("--host", default="")
+	parser.add_argument("--reverse-proxy-url", default="")
 	parser.add_argument("--remotePwd", default="")
 	parser.add_argument("--ldap", default="")
+	parser.add_argument("--bind-pwd", default="")
 
 	args = parser.parse_args()
 
@@ -57,6 +58,9 @@ if __name__ == "__main__":
 		kc_service_user = args.binddn
 		kc_service_pass = args.bindpwdfile
 
+	if args.bind_pwd:
+		kc_service_pass = args.bind_pwd
+
 	kc_admin_user = "admin"
 	if args.remotePwd == "":  # TODO: pass pwd file
 		pwdfile = "/etc/keycloak.secret"
@@ -64,6 +68,7 @@ if __name__ == "__main__":
 			kc_admin_pass = fd.read().strip()
 	else:
 		kc_admin_pass = args.remotePwd
+
 	# realm config #
 	realm_name = "ucs"
 	default_realm = "master"
@@ -103,9 +108,9 @@ if __name__ == "__main__":
 		server_fdnq_with_subdomain = "https://ucs-sso-ng.{}".format(domain)
 		server_fdnq_without_subdomain = "https://{}".format(domain)
 
-	if args.host and args.keycloak:
+	if args.reverse_proxy_url and args.keycloak:
 		server_fdnq_with_subdomain = args.keycloak
-		server_fdnq_without_subdomain = args.host
+		server_fdnq_without_subdomain = args.reverse_proxy_url
 
 	# valid redirect uris #
 	if valid_redirect_urls:
