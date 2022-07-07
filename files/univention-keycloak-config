@@ -34,6 +34,7 @@ if __name__ == "__main__":
 	parser.add_argument("--reverse-proxy-url", default="")
 	parser.add_argument("--remotePwd", default="")
 	parser.add_argument("--ldap", default="")
+	parser.add_argument("--bind-user", default="")
 	parser.add_argument("--bind-pwd", default="")
 
 	args = parser.parse_args()
@@ -57,6 +58,9 @@ if __name__ == "__main__":
 	else:
 		kc_service_user = args.binddn
 		kc_service_pass = args.bindpwdfile
+
+	if args.bind_user:
+		kc_service_user = args.bind_user
 
 	if args.bind_pwd:
 		kc_service_pass = args.bind_pwd
