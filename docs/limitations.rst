@@ -64,3 +64,15 @@ administrators activate identity providers for user accounts. Therefore, any
 user account can use |SAML| for single sign-on. The behavior is the same as for
 the |OIDC| capability before through the :program:`Kopano Connect` app.
 
+.. _limitation-password-restriction:
+
+Password restriction
+====================
+
+Keycloak offers a password policies feature, see
+:cite:t:`keycloak-password-policies`. Because of the user federation with UCS,
+see :ref:`app-design-decisions`, Keycloak **doesn't** manage the users
+credentials.
+
+UCS takes care of password policy definition and enforcement. For more
+information, see :ref:`uv-manual:domain-ldap` in :cite:t:`ucs-manual`.

@@ -110,6 +110,39 @@ following steps on the system where you installed Keycloak:
    :samp:`slapd[…]: SASL [conn=…] Failure: SAML assertion issuer
    https://ucs-sso-ng.{$domainname}/realms/ucs is unknown`
 
+.. _oidc-sp:
+
+Keycloak as OpenID Connect provider
+===================================
+
+The :program:`Keycloak` app can serve as an OpenID Connect provider
+(:term:`OIDC Provider`). The following steps explain how to configure an |OIDC|
+relying party (:term:`OIDC RP`) to use Keycloak for authentication:
+
+#. :ref:`keycloak-admin-console`.
+
+#. Navigate to :menuselection:`UCS realm --> Clients --> Create`.
+
+#. Specify the ``client-id`` for the client application (:term:`OIDC RP`). Use
+   the same ``client-id`` in the configuration of the client application.
+
+#. Select ``openid-connect`` in the *Client Protocol* drop-down list.
+
+#. Enter the *root URL*, the endpoint URL of the client application (:term:`OIDC
+   RP`).
+
+#. Click :guilabel:`Save`.
+
+#. Finally, the administrator can review the URL settings and customize them, if
+   necessary.
+
+For more information, see :cite:t:`keycloak-clients`.
+
+.. note::
+
+   If the administrator chooses ``Confidential`` as *Access Type* on the client configuration page,
+   Keycloak offers an additional *Credentials* tab with the credentials.
+
 .. _app-settings:
 
 Settings
