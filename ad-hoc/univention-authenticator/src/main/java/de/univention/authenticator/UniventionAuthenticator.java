@@ -119,7 +119,7 @@ public class UniventionAuthenticator implements Authenticator {
             "e-mail", new String[]{email},
             "description", "Shadow copy of user",
 
-            "univentionRemoteIdentifier", univentionRemoteIdentifier, // FIXME: uncommet for phoenix
+            "univentionRemoteIdentifier", univentionRemoteIdentifier,
             "univentionCustomer", univentionCustomer,
             "univentionTenant", univentionTenant
             );
