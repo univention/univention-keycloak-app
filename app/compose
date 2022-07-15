@@ -3,7 +3,7 @@ version: '3.1'
 services:
   keycloak:
     container_name: keycloak
-    image: quay.io/keycloak/keycloak:18.0.2
+    image: quay.io/keycloak/keycloak:19.0.1
     command: start --auto-build --hostname=@%@keycloak/server/sso/fqdn@%@ --http-enabled=true --proxy=edge
     ## TODO: build own container with selected database backend. Running --auto-build takes additonal 15+5 seconds.
     ## For --proxy=edge see https://www.keycloak.org/server/reverseproxy
@@ -26,7 +26,7 @@ with open(pwdfile, 'r') as fd:
       JAVA_OPTS: "@%@keycloak/java/opts@%@"
       X509_CA_BUNDLE: "/ca-certificates.crt"
     volumes:
-      - /etc/ssl/certs/ca-certificates.crt:/ca-certificates.crt:ro
+      - /etc/ssl/certs/ca-certificates.crt:/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
       - /var/lib/univention-appcenter/apps/keycloak/conf/UCS:/opt/keycloak/themes/UCS
       #- /var/lib/univention-appcenter/apps/keycloak/data/development:/opt/jboss/keycloak/standalone/deployments/
     ports:

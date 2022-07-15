@@ -51,11 +51,11 @@ apt-get -qq -y install python3-keycloak
 ## example: this way we can install files on the host:
 
 # management tool
-keycloak_management_script=/usr/sbin/univention-keycloak-config
+keycloak_management_script=/usr/sbin/univention-keycloak
 echo "Installing Keycloak management script"
-	cat << EOF >"$keycloak_management_script"
+base64 -d <<%EOF >"$keycloak_management_script"
 %KEYCLOAK-MANAGEMENT-SCRIPT%
-EOF
+%EOF
 chmod 755 "$keycloak_management_script"
 
 # theme

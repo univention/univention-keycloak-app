@@ -170,7 +170,7 @@ if [ -z "$keycloak_server_sso_autoregistration" ] || is_ucr_true keycloak/server
 fi
 
 i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
-univention-keycloak-config "$@" || die
+univention-keycloak init "$@" || die
 
 joinscript_save_current_version
 
