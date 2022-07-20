@@ -93,11 +93,6 @@ fi
 
 
 # Re-create Apache configuration after the certificate generation
-# ucr commit /etc/apache2/sites-available/univention-saml.conf
-## FIXME: recreate our univention-keycloak.conf from the file + copy it + restart apache
-## TODO: /etc/univention/templates/info/univention-keycloak.info -> info for template and install
-## TODO: [ -x /usr/sbin/univention-config-registry ] && univention-config-registry register univention-keycloak || true ---> register info/service/template
-## TODO: ucr commmit /etc/apache2/sites-available/univention-keycloak.conf
 
 [ -x /usr/sbin/univention-config-registry ] && univention-config-registry register univention-keycloak || true
 ucr commit /etc/apache2/sites-available/univention-keycloak.conf
