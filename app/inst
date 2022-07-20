@@ -69,8 +69,38 @@ udm portals/entry modify "$@" \
 	--dn "cn=keycloak,cn=entry,cn=portals,cn=univention,$ldap_base" \
 	--append allowedGroups="$domain_admins_dn" || die
 
+# Register LDAP schema
+ucs_registerLDAPExtension "$@" \
+  --schema /var/lib/univention-appcenter/apps/$app_id/adhocfederation.schema \
+  || die
+
 
 eval "$(ucr shell)"
+
+
+# Setup schema
+udm settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="univentionRemoteIdentifier" \
+	--set CLIName="univentionRemoteIdentifier" \
+	--set shortDescription="Remote Identifier" \
+	--set translationShortDescription='"de_DE" "Remote Identifizierungszeichen"' \
+	--set longDescription="Ad hoc Federation Remote Identifier" \
+	--set translationLongDescription='"de_DE" "Ad Hoc Föderation Remote Identifizierungszeichen"' \
+	--set tabAdvanced=0 \
+	--set tabName="Ad Hoc Federation" \
+	--set translationTabName='"de_DE" "Ad Hoc Föderation"' \
+	--set tabPosition=1 \
+	--set module="users/user" \
+	--set syntax=string \
+	--set default="" \
+	--set multivalue=0 \
+	--set valueRequired=0 \
+	--set mayChange=1 \
+	--set doNotSearch=0 \
+	--set objectClass=univentionAdHocFederation \
+	--set ldapMapping=univentionRemoteIdentifier \
+	--set deleteObjectClass=1
 
 ## as variables were changed we need the new ones
 
