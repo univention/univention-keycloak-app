@@ -49,19 +49,19 @@ sso_url="$(ucr get keycloak/server/sso/fqdn)"
 
 url_prefix="$(ucr get keycloak/url/prefix)"
 if [ -n "$url_prefix" ]; then
-    univention-add-vhost "$url_prefix.$hostname.$domainname" 443 \
+	univention-add-vhost "$url_prefix.$hostname.$domainname" 443 \
 	--conffile /var/lib/univention-appcenter/apps/$app_id/config/vhost.conf "$@"
-    service apache2 reload
+	service apache2 reload
 fi
 
 COMPONENT_ID=$(univention-app get $app_id component_id | cut -f 2 -d ':' | tr -d '[:space:]')
 ucr set \
-  ucs/web/overview/entries/admin/$app_id/description/de="Keycloak" \
-  ucs/web/overview/entries/admin/$app_id/description="Keycloak" \
-  ucs/web/overview/entries/admin/$app_id/label="Keycloak" \
-  ucs/web/overview/entries/admin/$app_id/link="https://$sso_url/admin/" \
-  ucs/web/overview/entries/admin/$app_id/icon="/univention/js/dijit/themes/umc/icons/scalable/apps-$COMPONENT_ID.svg" \
-  ucs/web/overview/entries/admin/$app_id/link-target='newwindow'
+	ucs/web/overview/entries/admin/$app_id/description/de="Keycloak" \
+	ucs/web/overview/entries/admin/$app_id/description="Keycloak" \
+	ucs/web/overview/entries/admin/$app_id/label="Keycloak" \
+	ucs/web/overview/entries/admin/$app_id/link="https://$sso_url/admin/" \
+	ucs/web/overview/entries/admin/$app_id/icon="/univention/js/dijit/themes/umc/icons/scalable/apps-$COMPONENT_ID.svg" \
+	ucs/web/overview/entries/admin/$app_id/link-target='newwindow'
 
 ## Only make the portal tile for the Keycloak App visible once a Domain Admin is logged in on the portal
 domain_admins_dn=$(univention-ldapsearch -LLL "(&(cn=Domain Admins)(objectClass=univentionGroup))" 1.1 | ldapsearch-decode64 | sed -n 's/^dn: //p')
@@ -71,8 +71,9 @@ udm portals/entry modify "$@" \
 
 # Register LDAP schema
 ucs_registerLDAPExtension "$@" \
-  --schema /var/lib/univention-appcenter/apps/$app_id/adhocfederation.schema \
-  || die
+	--packagename keycloak-ad-hoc-federation --packageversion 1.0 \
+	--schema /var/lib/univention-appcenter/apps/$app_id/data/adhocfederation.schema \
+	|| die
 
 
 eval "$(ucr shell)"
@@ -113,9 +114,9 @@ if [ "$server_role" = "domaincontroller_master" ]; then
 else
 	if [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
 		ucs_parseCredentials "$@"
-        NAMETMP=${binddn:4} # Remove uid=
-        HOSTACCOUNT=${NAMETMP%%,*} # remove from first , to end
-#		univention-ssh $bindpwdfile $HOSTACCOUNT@$ldap_master "/usr/sbin/univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}""
+		NAMETMP=${binddn:4} # Remove uid=
+		HOSTACCOUNT=${NAMETMP%%,*} # remove from first , to end
+#       univention-ssh $bindpwdfile $HOSTACCOUNT@$ldap_master "/usr/sbin/univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}""
 		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$ldap_master:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
 		create_or_download=true
 	fi

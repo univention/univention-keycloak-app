@@ -64,6 +64,16 @@ base64 -d <<%EOF  | tar xjf - --one-top-level=/var/lib/univention-appcenter/apps
 %ARCHIVE_CONTENT%
 %EOF
 
+# ldap schema
+keycloak_ldap_schema_path=/var/lib/univention-appcenter/apps/keycloak/data/adhocfederation.schema
+echo "Installing LDAP Schema extension"
+mkdir -pv /var/lib/univention-appcenter/apps/keycloak/data/
+cat << EOF >"$keycloak_ldap_schema_path"
+%KEYCLOAK-LDAP-SCHEMA%
+EOF
+chmod 644 "$keycloak_ldap_schema_path"
+
+
 # apache template
 keycloak_template_path=/etc/univention/templates/files/etc/apache2/sites-available/univention-keycloak.conf
 echo "Installing univention-keycloak apache template"

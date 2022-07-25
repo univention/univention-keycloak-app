@@ -6,7 +6,7 @@
 set -e
 set -x
 
-APP_VERSION="4.4/keycloak=18.0.0-ucs1"
+APP_VERSION="5.0/keycloak=18.0.2-ucs3"
 
 selfservice () {
 	local uri="https://provider-portal.software-univention.de/appcenter-selfservice/univention-appcenter-control"
@@ -19,7 +19,7 @@ selfservice () {
 	PWDFILE="~/.selfservicepwd"
 	[ -e "$HOME/.univention-appcenter-pwd" ] && PWDFILE="$HOME/.univention-appcenter-pwd"
 
-	curl -sSfL "$uri" | python - "$first" --username=${USERNAME} --pwdfile=${PWDFILE} "$@"
+	curl -sSfL "$uri" | python2.7 - "$first" --username=${USERNAME} --pwdfile=${PWDFILE} "$@"
 }
 
 die () {
@@ -40,6 +40,8 @@ cp app/preinst.tmpl app/preinst
 sed -i -e "/%KEYCLOAK-MANAGEMENT-SCRIPT%/r files/univention-keycloak-config" -e "/%KEYCLOAK-MANAGEMENT-SCRIPT%/d" app/preinst
 tar cjf - -C files/themes UCS | base64 >> files/tmp_base64
 sed -i -e "/%ARCHIVE_CONTENT%/r files/tmp_base64" -e "/%ARCHIVE_CONTENT%/d" app/preinst
+
+sed -i -e "/%KEYCLOAK-LDAP-SCHEMA%/r dependencies/adhocfederation.schema" -e "/%KEYCLOAK-LDAP-SCHEMA%/d" app/preinst
 
 sed -i -e "/%KEYCLOAK-TEMPLATE-APACHE%/r files/univention-keycloak.conf" -e "/%KEYCLOAK-TEMPLATE-APACHE%/d" app/preinst
 sed -i -e "/%KEYCLOAK-INFO-APACHE%/r files/univention-keycloak.info" -e "/%KEYCLOAK-INFO-APACHE%/d" app/preinst
