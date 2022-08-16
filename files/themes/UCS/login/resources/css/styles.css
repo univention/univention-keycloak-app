@@ -35,11 +35,16 @@
 .login-pf body {
     background-image: none;
     background-color: var(--default-background-color);
+    color: var(--pf-c-form__label--Color);
 }
 
 .login-pf a:hover {
     color: var(--link-hover-color);
     text-decoration: none;
+}
+
+.login-pf-page .card-pf p {
+    color: var(--pf-c-form__label--Color);
 }
 
 .card-pf {
