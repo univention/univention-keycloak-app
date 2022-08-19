@@ -77,3 +77,29 @@ The script update-appcenter-test.sh can be used to build and upload the files fr
 
 For local documentation builds, see [Build Sphinx documents
 locally](https://hutten.knut.univention.de/mediawiki/index.php/Build_Sphinx_documents_locally).
+
+# Checklist for new app version
+
+Besides the necessary steps for an app update, make sure to apply the following
+steps **before** release of a new app version for the Keycloak app.
+
+1. [ ] - Update the `DOC_TARGET_VERSION` variable in
+   [.gitlab-ci.yml](.gitlab-ci.yml) to the new app version. The variable makes
+   sure that the new app version has a dedicated documentation.
+
+2. [ ] - Add an appropriate changelog entry to
+   [docs/changelog.rst](docs/changelog.rst) and follow the recommendation at
+   https://keepachangelog.com/en/1.0.0/.
+
+3. If documentation for a new feature or for a change is part of the regular
+   text in the documentation, highlight it with the
+   [versionadded](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-versionadded),
+   [versionchanged](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-versionchanged)
+   or
+   [deprecated](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-deprecated)
+   directive.
+
+4. [ ] - After running the *production* job for the documentation in the
+   pipeline, update the symlink `latest` the new version in the [keycloak-app
+   directory of the docs.univention.de
+   repository](https://git.knut.univention.de/univention/docs.univention.de/-/tree/master/keycloak-app).
