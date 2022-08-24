@@ -79,7 +79,7 @@ ucs_registerLDAPExtension "$@" \
 eval "$(ucr shell)"
 
 
-# Setup schema
+# Add UDM extended attributes to map the LDAP attributes to UDM properties
 udm settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
 	--set name="univentionRemoteIdentifier" \
@@ -101,6 +101,30 @@ udm settings/extended_attribute create "$@" --ignore_exists \
 	--set doNotSearch=0 \
 	--set objectClass=univentionAdHocFederation \
 	--set ldapMapping=univentionRemoteIdentifier \
+	--set deleteObjectClass=1
+
+# Add UDM extended attributes to map the LDAP attributes to UDM properties
+udm settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="univentionSourceIdentifier" \
+	--set CLIName="univentionSourceIdentifier" \
+	--set shortDescription="Source Identifier" \
+	--set translationShortDescription='"de_DE" "Source Identifizierungszeichen"' \
+	--set longDescription="Ad hoc Federation Source Identifier" \
+	--set translationLongDescription='"de_DE" "Ad Hoc Föderation Source Identifizierungszeichen"' \
+	--set tabAdvanced=0 \
+	--set tabName="Ad Hoc Federation" \
+	--set translationTabName='"de_DE" "Ad Hoc Föderation"' \
+	--set tabPosition=1 \
+	--set module="users/user" \
+	--set syntax=string \
+	--set default="" \
+	--set multivalue=0 \
+	--set valueRequired=0 \
+	--set mayChange=1 \
+	--set doNotSearch=0 \
+	--set objectClass=univentionAdHocFederation \
+	--set ldapMapping=univentionSourceIdentifier \
 	--set deleteObjectClass=1
 
 ## as variables were changed we need the new ones
