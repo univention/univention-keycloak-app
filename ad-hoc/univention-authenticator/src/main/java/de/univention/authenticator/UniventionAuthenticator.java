@@ -73,10 +73,10 @@ public class UniventionAuthenticator implements Authenticator {
         var username = user.getUsername();
         var email = user.getEmail();
 
-		logger.infof("User:" + firstname);
-		logger.infof("lastname:" + lastname);
-		logger.infof("username:" + username);
-		logger.infof("user: "+ user.getAttributes());
+        logger.infof("User:" + firstname);
+        logger.infof("lastname:" + lastname);
+        logger.infof("username:" + username);
+        logger.infof("user: "+ user.getAttributes());
         // The IDP doesn't provide a password attribute,
         // and the KC UserModel doesn't have such field either,
         // but UDM curently needs a non null password, so we generate one
@@ -101,9 +101,9 @@ public class UniventionAuthenticator implements Authenticator {
         // if it's absolutely certain, that there is no way to simply configure keycloak to set the desired field.
         var univentionTargetFederationLink =  user.getFirstAttribute("univentionTargetFederationLink");
 
-		logger.infof("univentionRemoteID:" + univentionRemoteIdentifier);
-		logger.infof("univentionCustomer:" + univentionCustomer);
-		logger.infof("univentionTenant:" + univentionTenant);
+        logger.infof("univentionRemoteID:" + univentionRemoteIdentifier);
+        logger.infof("univentionCustomer:" + univentionCustomer);
+        logger.infof("univentionTenant:" + univentionTenant);
         logger.infof("targetFederationLink:" + univentionTargetFederationLink);
         // TODO: Perhaps do some real life performance testing
         // and change this to debug remove if not needed.
@@ -264,19 +264,19 @@ public class UniventionAuthenticator implements Authenticator {
         //    "univentionTenant", univentionTenant
             );
 
-		try{
-    		var listUser = api.udmUsersUserObjectSearch(null, null, "sub", query, true, "", "en_EN", "", "");
-    		var luser = listUser.getEmbedded();
-    		var listUserl = luser.getUdmColonObject();
-			if (listUserl != null && listUserl.size() > 0){
-				logger.infof("Univention Authenticator existsRemoteUser, listUser is greater than 0.");
-				logger.infof("Univention Authenticator existsRemoteUser, %s", listUserl.get(0));
-				return true;
-			}else{
-				logger.infof("Univention Authenticator, listUser is 0 or null.");
-				return false;
-			}
-		} catch(ApiException e) {
+        try {
+            var listUser = api.udmUsersUserObjectSearch(null, null, "sub", query, true, "", "en_EN", "", "");
+            var luser = listUser.getEmbedded();
+            var listUserl = luser.getUdmColonObject();
+            if (listUserl != null && listUserl.size() > 0) {
+                logger.infof("Univention Authenticator existsRemoteUser, listUser is greater than 0.");
+                logger.infof("Univention Authenticator existsRemoteUser, %s", listUserl.get(0));
+                return true;
+            } else {
+                logger.infof("Univention Authenticator, listUser is 0 or null.");
+                return false;
+            }
+        } catch(ApiException e) {
             logger.errorf("Failed to get users via UDM: %s", e);
             // TODO: Better error propagation
             return false;
