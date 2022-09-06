@@ -562,6 +562,8 @@ def parse_args(args=None):
 
 def create_IdP(opt):
 	print("Creating ad hoc federation identity provider...")
+	ucr = ConfigRegistry()
+	ucr.load()
 
 	kc_admin_user = "admin"
 	if opt.remotePwd == "":  # TODO: pass pwd file ?
@@ -667,7 +669,7 @@ def create_IdP(opt):
 			"attribute.name": "objectGuid",
 			"attributes": "[]",
 			"syncMode": "IMPORT",
-			"user.attribute": "remObjGUID"
+			"user.attribute": ucr.get("keycloak/federation/remote/identifier")
 		},
 		"identityProviderAlias": opt.alias,
 		"identityProviderMapper": "saml-user-attribute-idp-mapper",
@@ -698,7 +700,7 @@ def create_IdP(opt):
 		},
 		"identityProviderAlias": opt.alias,
 		"identityProviderMapper": "hardcoded-attribute-idp-mapper",
-		"name": "univentionCustomer"
+		"name": ucr.get("keycloak/federation/source/identifier")
 	}
 	kc_admin.add_mapper_to_idp(opt.alias, mapper_payload)
 
