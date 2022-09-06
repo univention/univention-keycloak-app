@@ -165,6 +165,9 @@ def create_SAML_client(opt):
 		}
 	}
 
+	if opt.client_secret:
+		client_payload_saml["secret"] = opt.client_secret
+
 	# build kc admin session #
 	if opt.keycloak:
 		kc_admin_auth_url = opt.keycloak
@@ -325,6 +328,9 @@ def create_oidc_client(opt):
 		},
 		"authorizationServicesEnabled": ""
 	}
+
+	if opt.client_secret:
+		client_payload_oidc["secret"] = opt.client_secret
 
 	# build kc admin session #
 	if opt.keycloak:
@@ -501,6 +507,7 @@ def parse_args(args=None):
 	operation_subparsers = parser_saml.add_subparsers(title="operation", description="valid subcommands", required=True, dest="operation")
 	create_saml_parser = operation_subparsers.add_parser("create", help="create a new SAML SP in Keycloak")
 	create_saml_parser.add_argument("app", metavar='APP')
+	create_saml_parser.add_argument("--client-secret", default="")
 	create_saml_parser.add_argument("--metadata-url", default="")
 	create_saml_parser.set_defaults(func=create_SAML_client)
 
@@ -508,6 +515,7 @@ def parse_args(args=None):
 	operation_subparsers = parser_oidc.add_subparsers(title="operation", description="valid subcommands", required=True, dest="operation")
 	create_oidc_parser = operation_subparsers.add_parser("create", help="create a new OIDC client in Keycloak")
 	create_oidc_parser.add_argument("client_id", metavar='CLIENT_ID')
+	create_oidc_parser.add_argument("--client-secret", default="")
 	create_oidc_parser.add_argument("--app-url", required=True)
 	create_oidc_parser.set_defaults(func=create_oidc_client)
 
