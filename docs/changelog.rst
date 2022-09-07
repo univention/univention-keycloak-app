@@ -8,7 +8,7 @@ This changelog documents all notable changes to the Keycloak app. `Keep a
 Changelog <https://keepachangelog.com/en/1.0.0/>`_ is the format and this
 project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
-19.0.0-ucs1
+19.0.1-ucs1
 ============
 
 Released: 9. September 2022
