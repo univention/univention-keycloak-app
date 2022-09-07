@@ -138,6 +138,11 @@ relying party (:term:`OIDC RP`) to use Keycloak for authentication:
 
 For more information, see :cite:t:`keycloak-clients`.
 
+.. versionadded:: 19.0.1-ucs1
+
+   :program:`univention-keycloak` added.
+   For more information about the usage, see the ``--help`` option.
+
 As an alternative the app :program:`Keycloak` offers a command line tool. For
 usage, see the following example:
 
@@ -163,6 +168,11 @@ The option group ``oidc/rp`` offers additional options like ``--client-secret``.
 
 Keycloak as SAML Identity Provider
 ==================================
+
+.. versionadded:: 19.0.1-ucs1
+
+   :program:`univention-keycloak` added.
+   For more information about the usage, see the ``--help`` option.
 
 The :program:`Keycloak` app can serve as an :term:`SAML IDP`.
 
@@ -192,6 +202,11 @@ The option group ``saml/sp`` offers additional options like
 
 Two-factor authentication for Keycloak
 ======================================
+
+.. versionadded:: 19.0.1-ucs1
+
+   * Added support for |2FA| to :program:`univention-keycloak`.
+     For more information about the usage, see the ``--help`` option.
 
 The app :program:`Keycloak` offers a |2FA| option. |2FA| is an authentication
 method that grants users access to a service after they sign in with a password

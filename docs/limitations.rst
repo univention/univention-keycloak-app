@@ -24,9 +24,10 @@ accounts from the UCS LDAP to Keycloak. For more information, see
 Installation on Primary Directory Node
 ======================================
 
-The App Center installs the :program:`Keycloak` app only on a Primary Directory
-Node in your UCS environment, see :ref:`app-installation`. The app is therefore
-not suitable for production use in UCS domains that have Backup Directory Nodes.
+The App Center installs the :program:`Keycloak` app only on a UCS 5.0-x Primary
+Directory Node in your UCS environment, see :ref:`app-installation`. The app is
+therefore not suitable for production use in UCS domains that have Backup
+Directory Nodes.
 
 Use the :program:`Keycloak` app only in a UCS environment without Backup
 Directory Nodes, because otherwise:
@@ -36,6 +37,10 @@ Directory Nodes, because otherwise:
 
 * Other apps may not be able to authenticate users through SAML without manual
   interaction.
+
+* Using other hosts requires the synchronization of the Keycloak configuration
+  across hosts on the one hand and synchronization of session data on the other
+  hand, that isn't supported in this version.
 
 The installation might not break anything in production. But, experiments with
 reconfiguration of, for example, UMC and other services so that they use
