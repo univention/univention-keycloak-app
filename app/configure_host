@@ -9,7 +9,7 @@ action=$1
 apache_config () {
 	# create apache config
 	mkdir -p  /var/lib/univention-appcenter/apps/keycloak/config/
-	cat << "EOF" > /var/lib/univention-appcenter/apps/keycloak/config/vhost.conf
+	cat << %EOF > /var/lib/univention-appcenter/apps/keycloak/config/vhost.conf
 ProxyPreserveHost On
 SSLProxyEngine On
 SSLProxyCheckPeerCN on
@@ -18,7 +18,7 @@ RequestHeader set X-Forwarded-Proto "https"
 RequestHeader set X-Forwarded-Port "443"
 ProxyPass / http://127.0.0.1:8180/
 ProxyPassReverse / http://127.0.0.1:8180/
-EOF
+%EOF
 }
 
 theme_config() {
@@ -26,8 +26,8 @@ theme_config() {
 	THEME_SRC="$THEME_DIR/$(basename "$(ucr get keycloak/theme)").css"
 	THEME_DST="/var/lib/univention-appcenter/apps/keycloak/conf/UCS/login/resources/css/theme.css"
 	if [ ! -e "$THEME_SRC" ]; then
-        echo "$THEME_SRC does not exist"
-        exit 1
+		echo "$THEME_SRC does not exist"
+		exit 1
 	fi
 
 	[ -e "$THEME_DST" ] && rm "$THEME_DST"
@@ -35,7 +35,7 @@ theme_config() {
 }
 
 if [ -n "$action" ] && [ "$action" = "remove" ]; then 
-    exit 0
+	exit 0
 fi
 
 apache_config
@@ -46,5 +46,5 @@ theme_config
 #fi
 
 if [ "$action" = "settings" ]; then
-    univention-app reinitialize keycloak
+	univention-app reinitialize keycloak
 fi
