@@ -165,8 +165,8 @@ def create_SAML_client(opt):
 		}
 	}
 
-	if opt.client_secret:
-		client_payload_saml["secret"] = opt.client_secret
+	if opt.client_signature_required:
+		client_payload_saml["attributes"]["saml.client.signature"] = "true"
 
 	# build kc admin session #
 	if opt.keycloak:
@@ -506,8 +506,8 @@ def parse_args(args=None):
 	parser_saml = subparsers.add_parser("saml/sp", help="configure a SAML SP")
 	operation_subparsers = parser_saml.add_subparsers(title="operation", description="valid subcommands", required=True, dest="operation")
 	create_saml_parser = operation_subparsers.add_parser("create", help="create a new SAML SP in Keycloak")
-	create_saml_parser.add_argument("app", metavar='APP')
-	create_saml_parser.add_argument("--client-secret", default="")
+	create_saml_parser.add_argument("app", metavar='APPNAME')
+	create_saml_parser.add_argument("--client-signature-required", action="store_true")
 	create_saml_parser.add_argument("--metadata-url", default="")
 	create_saml_parser.set_defaults(func=create_SAML_client)
 
