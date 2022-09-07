@@ -4,26 +4,26 @@ set -e
 eval "$(ucr shell)"
 
 while [ $# -gt 0 ]; do
-    case "$1" in
-        "--error-file")
-            shift
-            errorfile="$1"
-            shift
-            ;;
-        "--old-version")
-            shift
-            old_version="$1"
-            shift
-            ;;
-        "--version")
-            shift
-            version="$1"
-            shift
-            ;;
-        *)
-            shift
-            ;;
-    esac
+	case "$1" in
+		"--error-file")
+			shift
+			errorfile="$1"
+			shift
+			;;
+		"--old-version")
+			shift
+			old_version="$1"
+			shift
+			;;
+		"--version")
+			shift
+			version="$1"
+			shift
+			;;
+		*)
+			shift
+			;;
+	esac
 done
 
 if [ "$server_role" != "domaincontroller_master" ]; then
@@ -42,8 +42,8 @@ chmod 640 "$pwdfile"
 
 # install jq TODO remove
 command -v jq || {
-    apt-get -qq update
-    apt-get -qq -y install jq
+	apt-get -qq update
+	apt-get -qq -y install jq
 }
 
 apt-get -qq -y install python3-keycloak
@@ -64,30 +64,21 @@ base64 -d <<%EOF  | tar xjf - --one-top-level=/var/lib/univention-appcenter/apps
 %ARCHIVE_CONTENT%
 %EOF
 
-# ldap schema
-keycloak_ldap_schema_path=/var/lib/univention-appcenter/apps/keycloak/data/adhocfederation.schema
-echo "Installing LDAP Schema extension"
-mkdir -pv /var/lib/univention-appcenter/apps/keycloak/data/
-cat << EOF >"$keycloak_ldap_schema_path"
-%KEYCLOAK-LDAP-SCHEMA%
-EOF
-chmod 644 "$keycloak_ldap_schema_path"
-
 
 # apache template
 keycloak_template_path=/etc/univention/templates/files/etc/apache2/sites-available/univention-keycloak.conf
 echo "Installing univention-keycloak apache template"
-	cat << EOF >"$keycloak_template_path"
+	cat <<%EOF >"$keycloak_template_path"
 %KEYCLOAK-TEMPLATE-APACHE%
-EOF
+%EOF
 chmod 644 "$keycloak_template_path"
 
 # apache template info
 keycloak_info_path=/etc/univention/templates/info/univention-keycloak.info
 echo "Installing Keycloak apache template info"
-	cat << EOF >"$keycloak_info_path"
+	cat <<%EOF >"$keycloak_info_path"
 %KEYCLOAK-INFO-APACHE%
-EOF
+%EOF
 chmod 644 "$keycloak_info_path"
 
 exit 0

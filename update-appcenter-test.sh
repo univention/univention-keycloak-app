@@ -42,8 +42,6 @@ sed -i -e "/%KEYCLOAK-MANAGEMENT-SCRIPT%/r files/tmp_uk_b64" -e "/%KEYCLOAK-MANA
 tar cjf - -C files/themes UCS | base64 >> files/tmp_base64
 sed -i -e "/%ARCHIVE_CONTENT%/r files/tmp_base64" -e "/%ARCHIVE_CONTENT%/d" app/preinst
 
-sed -i -e "/%KEYCLOAK-LDAP-SCHEMA%/r dependencies/adhocfederation.schema" -e "/%KEYCLOAK-LDAP-SCHEMA%/d" app/preinst
-
 sed -i -e "/%KEYCLOAK-TEMPLATE-APACHE%/r files/univention-keycloak.conf" -e "/%KEYCLOAK-TEMPLATE-APACHE%/d" app/preinst
 sed -i -e "/%KEYCLOAK-INFO-APACHE%/r files/univention-keycloak.info" -e "/%KEYCLOAK-INFO-APACHE%/d" app/preinst
 
