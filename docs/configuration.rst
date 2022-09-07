@@ -138,20 +138,24 @@ relying party (:term:`OIDC RP`) to use Keycloak for authentication:
 
 For more information, see :cite:t:`keycloak-clients`.
 
-As an alternative the UCS Keycloak App offers a command line tool, which
-can be used like this:
+As an alternative the app :program:`Keycloak` offers a command line tool. For
+usage, see the following example:
 
 .. code-block:: console
 
-   univention-keycloak oidc/op/cert get --as-pem --output <SOMEFILENAME>
-   univention-keycloak oidc/rp create <CLIENT-ID> --app-url "https://$(hostname -f)/<MYAPPURL>/"
+   $ univention-keycloak oidc/op/cert get \
+     --as-pem \
+     --output "$SOMEFILENAME"
+   $ univention-keycloak oidc/rp create "$CLIENT-ID" \
+     --app-url "https://$(hostname -f)/$MYAPPURL/"
 
 The option group ``oidc/rp`` offers additional options like ``--client-secret``.
 
 .. note::
 
-   If the administrator chooses ``Confidential`` as *Access Type* on the client configuration page,
-   Keycloak offers an additional *Credentials* tab with the credentials.
+   If the administrator chooses ``Confidential`` as *Access Type* on the client
+   configuration page, Keycloak offers an additional *Credentials* tab with the
+   credentials.
 
 .. _2fa-authentication:
 
@@ -160,27 +164,31 @@ The option group ``oidc/rp`` offers additional options like ``--client-secret``.
 Keycloak as SAML Identity Provider
 ==================================
 
-The :program:`Keycloak` app can serve as an SAML Identity Provider.
+The :program:`Keycloak` app can serve as an :term:`SAML IDP`.
 
-For apps that want to act as a SAML Service Provider,
-a ``client`` configuration needs to be added in Keycloak.
-This can be done via the Keycloak web interface.
+For apps that want to act as a :term:`SAML SP`, you need to add a ``client``
+configuration in Keycloak through the :ref:`Keycloak Admin Console
+<keycloak-admin-console>`. For more information about how to create a SAML
+client configuration, see :cite:t:`keycloak-saml-client`.
 
-As an alternative the UCS Keycloak App offers a command line tool, which
-can be used like this:
+As an alternative the app :program:`Keycloak` offers a command line tool. For
+usage, see the following example:
 
 .. code-block:: console
 
-   univention-keycloak saml/idp/cert get --as-pem --output <SOMEFILENAME>
-   univention-keycloak saml/sp create <APPNAME> \
-       --metadata-url "https://$(hostname -f)/<METADATA-URL-OF-THE-APP>"
+   $ univention-keycloak saml/idp/cert get \
+     --as-pem --output "$SOMEFILENAME"
+   $ univention-keycloak saml/sp create "$APPNAME" \
+     --metadata-url "https://$(hostname -f)/$METADATA-URL-OF-THE-APP"
 
-The option group ``saml/sp`` offers additional options like ``--client-signature-required``.
+The option group ``saml/sp`` offers additional options like
+``--client-signature-required``.
 
 .. note::
 
-   If the administrator chooses ``Confidential`` as *Access Type* on the client configuration page,
-   Keycloak offers an additional *Credentials* tab with the credentials.
+   If the administrator chooses ``Confidential`` as *Access Type* on the client
+   configuration page, Keycloak offers an additional *Credentials* tab with the
+   credentials.
 
 Two-factor authentication for Keycloak
 ======================================
