@@ -110,7 +110,7 @@ following steps on the system where you installed Keycloak:
    :samp:`slapd[…]: SASL [conn=…] Failure: SAML assertion issuer
    https://ucs-sso-ng.{$domainname}/realms/ucs is unknown`
 
-.. _oidc-sp:
+.. _oidc-op:
 
 Keycloak as OpenID Connect provider
 ===================================
@@ -138,12 +138,49 @@ relying party (:term:`OIDC RP`) to use Keycloak for authentication:
 
 For more information, see :cite:t:`keycloak-clients`.
 
+As an alternative the UCS Keycloak App offers a command line tool, which
+can be used like this:
+
+.. code-block:: console
+
+   univention-keycloak oidc/op/cert get --as-pem --output <SOMEFILENAME>
+   univention-keycloak oidc/rp create <CLIENT-ID> --app-url "https://$(hostname -f)/<MYAPPURL>/"
+
+The option group ``oidc/rp`` offers additional options like ``--client-secret``.
+
 .. note::
 
    If the administrator chooses ``Confidential`` as *Access Type* on the client configuration page,
    Keycloak offers an additional *Credentials* tab with the credentials.
 
 .. _2fa-authentication:
+
+.. _saml-idp:
+
+Keycloak as SAML Identity Provider
+==================================
+
+The :program:`Keycloak` app can serve as an SAML Identity Provider.
+
+For apps that want to act as a SAML Service Provider,
+a ``client`` configuration needs to be added in Keycloak.
+This can be done via the Keycloak web interface.
+
+As an alternative the UCS Keycloak App offers a command line tool, which
+can be used like this:
+
+.. code-block:: console
+
+   univention-keycloak saml/idp/cert get --as-pem --output <SOMEFILENAME>
+   univention-keycloak saml/sp create <APPNAME> \
+       --metadata-url "https://$(hostname -f)/<METADATA-URL-OF-THE-APP>"
+
+The option group ``saml/sp`` offers additional options like ``--client-signature-required``.
+
+.. note::
+
+   If the administrator chooses ``Confidential`` as *Access Type* on the client configuration page,
+   Keycloak offers an additional *Credentials* tab with the credentials.
 
 Two-factor authentication for Keycloak
 ======================================
