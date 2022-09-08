@@ -8,10 +8,25 @@ This changelog documents all notable changes to the Keycloak app. `Keep a
 Changelog <https://keepachangelog.com/en/1.0.0/>`_ is the format and this
 project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
-19.0.1-ucs1
+19.0.1-ucs2
 ============
 
 Released: 9. September 2022
+
+Added
+-----
+
+* This release of :program:`Keycloak` includes an |SPI| extension for so called
+  ad-hoc federation. See the documentation for details.
+
+* Administrators can install the app :program:`Keycloak` on UCS 5.0-x UCS
+  Primary Directory Nodes. For more information, see
+  :ref:`limitation-primary-node`.
+
+19.0.1-ucs1
+============
+
+Released: 7. September 2022
 
 Added
 -----

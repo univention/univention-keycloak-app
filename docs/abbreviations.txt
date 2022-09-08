@@ -1,5 +1,6 @@
 .. |DN| replace:: :abbr:`DN (Distinguished Name)`
 .. |OIDC| replace:: :abbr:`OIDC (OpenID Connect)`
+.. |SPI| replace:: :abbr:`SPI (Service Provider Interfaces)`
 .. |SAML| replace:: :abbr:`SAML (Security Assertion Markup Language)`
 .. |UCS| replace:: :abbr:`UCS (Univention Corporate Server)`
 .. |2FA| replace:: :abbr:`2FA (Two-Factor Authentication)`
