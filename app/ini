@@ -15,7 +15,7 @@ LogoDetailPage = logo_detail_page.jpeg
 Description = SAML and OpenID Connect Identity Provider
 AppCategories = Identity Management, Infrastructure
 DockerMainService = keycloak
-Logo = logo.png
+Logo = logo.svg
 LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	<p>
 	Keycloak is a SAML and OpenID Connect Identity Provider solution, offering federation to other protocol compliant identity providers.
