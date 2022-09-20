@@ -71,6 +71,8 @@ extensions = [
     "sphinx_inline_tabs",
 ]
 
+suppress_warnings = ['git.too_shallow']
+
 bibtex_bibfiles = ["bibliography.bib"]
 bibtex_encoding = "utf-8"
 bibtex_default_style = "unsrt"
@@ -121,11 +123,6 @@ if "spelling" in sys.argv:
     spelling_lang = "en"
     spelling_show_suggestions = True
     spelling_word_list_filename = ["spelling_wordlist"]
-    suppress_warnings = ['git.too_shallow']
-
-
-if "linkcheck" in sys.argv:
-    suppress_warnings = ['git.too_shallow']
 
 linkcheck_ignore = [
     r'https://ucs-sso-ng.example.com/admin/',
