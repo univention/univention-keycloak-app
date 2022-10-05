@@ -8,6 +8,18 @@ This changelog documents all notable changes to the Keycloak app. `Keep a
 Changelog <https://keepachangelog.com/en/1.0.0/>`_ is the format and this
 project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
+19.0.1-ucs3
+============
+
+Released: 10. October 2022
+
+Added
+-----
+
+* This release of :program:`Keycloak` includes a command line program to
+  configure :term:`SAML SP` and :term:`OIDC Provider` clients in Keycloak
+  directly.
+
 19.0.1-ucs2
 ============
 

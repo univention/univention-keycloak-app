@@ -6,7 +6,7 @@
 set -e
 set -x
 
-APP_VERSION="5.0/keycloak=19.0.1-ucs2"
+APP_VERSION="5.0/keycloak=19.0.1-ucs3"
 
 selfservice () {
 	local uri="https://provider-portal.software-univention.de/appcenter-selfservice/univention-appcenter-control"
@@ -19,7 +19,7 @@ selfservice () {
 	PWDFILE="~/.selfservicepwd"
 	[ -e "$HOME/.univention-appcenter-pwd" ] && PWDFILE="$HOME/.univention-appcenter-pwd"
 
-	curl -sSfL "$uri" | python2.7 - "$first" --username=${USERNAME} --pwdfile=${PWDFILE} "$@"
+	curl -sSfL "$uri" | python3 - "$first" --username=${USERNAME} --pwdfile=${PWDFILE} "$@"
 }
 
 die () {

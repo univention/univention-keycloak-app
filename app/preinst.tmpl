@@ -53,7 +53,7 @@ apt-get -qq -y install python3-keycloak
 # management tool
 keycloak_management_script=/usr/sbin/univention-keycloak
 echo "Installing Keycloak management script"
-	cat <<%EOF >"$keycloak_management_script"
+base64 -d <<%EOF >"$keycloak_management_script"
 %KEYCLOAK-MANAGEMENT-SCRIPT%
 %EOF
 chmod 755 "$keycloak_management_script"
