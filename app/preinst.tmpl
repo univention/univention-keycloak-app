@@ -26,14 +26,6 @@ while [ $# -gt 0 ]; do
 	esac
 done
 
-if [ "$server_role" != "domaincontroller_master" ]; then
-	keycloak_primary_dn=$(univention-ldapsearch '(&(univentionServerRole=master)(univentionService=keycloak))' 1.1 | grep ^dn)
-	if [ -z "$keycloak_primary_dn" ]; then
-		message="Error: The Keycloak app needs to be installed on the Primary Directory Node first."
-		echo "$message" > "$errorfile"
-		exit 1
-	fi
-fi
 
 # create password
 pwdfile="/etc/keycloak.secret"
