@@ -35,6 +35,7 @@ VERSION="4"
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
+. /usr/share/univention-ssl/make-certificates.sh
 
 joinscript_init
 
@@ -88,7 +89,7 @@ else
 		HOSTACCOUNT=${NAMETMP%%,*} # remove from first , to end
 #       univention-ssh $bindpwdfile $HOSTACCOUNT@$ldap_master "/usr/sbin/univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}""
 		if [ -z "$keycloak_server_sso_certificate_generation" ] || is_ucr_true keycloak/server/sso/certificate/generation; then
-			/usr/share/univention-ssl/make-certificates.sh gencert "/etc/univention/ssl/$keycloak_server_sso_fqdn" "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}" || die
+			gencert "/etc/univention/ssl/$keycloak_server_sso_fqdn" "${keycloak_server_sso_fqdn}" "${ssl_default_days:-1825}" || die
 		else
 			univention-scp $bindpwdfile "-r $HOSTACCOUNT@$ldap_master:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
 		fi
