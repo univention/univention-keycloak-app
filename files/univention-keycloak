@@ -1219,15 +1219,23 @@ def config(opt):
 	default_locale_ucr = ucr.get("locale/default")
 	default_locale = default_locale_ucr[:default_locale_ucr.index("_")]
 
+	ldap_hostdn = ucr.get("ldap/hostdn")
+	user_dn = ldap_hostdn[ldap_hostdn.index(",dc="):][1:]
+
 	role = ucr.get("server/role")
 	if role == "domaincontroller_master":
 		pwdfile = "/etc/idp-ldap-user.secret"
 		with open(pwdfile, 'r') as fd:
 			kc_service_pass = fd.read().strip()
 		kc_service_user = "sys-idp-user"
+
+		bind_dn = "uid={udm_service_user},cn=users,{user_dn}".format(udm_service_user=kc_service_user, user_dn=user_dn)
+
 	else:
-		kc_service_user = opt.binddn
-		kc_service_pass = opt.bindpwdfile
+		bind_dn = opt.binddn
+		with open(opt.bindpwdfile, 'r') as fd:
+			kc_service_pass = fd.read().strip()
+
 
 	if opt.bind_user:
 		kc_service_user = opt.bind_user
@@ -1257,9 +1265,6 @@ def config(opt):
 	else:
 		ucs_ldap_url = "ldap://{}.{}:7389".format(hostname, domain)  # "ldap://{FQDN}:{port}"
 
-	ldap_hostdn = ucr.get("ldap/hostdn")
-	user_dn = ldap_hostdn[ldap_hostdn.index(",dc="):][1:]
-	bind_dn = "uid={udm_service_user},cn=users,{user_dn}".format(udm_service_user=kc_service_user, user_dn=user_dn)
 
 	print("Using bind-dn: {}".format(bind_dn))
 
