@@ -98,3 +98,20 @@ Show = Install, Settings
 InitialValue = univentionSourceIAM
 Scope = outside, inside
 Description = UDM property referencing the source IAM
+
+[keycloak/database/ip]
+Type = String
+Required = True
+Show = Install, Settings
+InitialValue = 172.17.42.1
+Scope = outside
+Description =  Ip of the DB -- CHANGE LATER
+
+[keycloak/server/master]
+Type = Bool
+Required = True
+InitialValue = true
+Show = Install, Settings
+Scope = outside
+Description = Master or not -- CHANGE LATER
+
