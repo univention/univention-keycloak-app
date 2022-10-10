@@ -93,6 +93,9 @@ else
 		HOSTACCOUNT=${NAMETMP%%,cn=*} # remove from first ",cn=" to end
 		#univention-ssh $bindpwdfile $HOSTACCOUNT@$ldap_master "/usr/sbin/univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}""
 		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$ldap_master:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
+		# CHECK univention-scp from ldap_master to "keycloak_master"
+		# COPY /etc/keycloak.secret from "master"
+		# COPY /etc/postgres-keycloak.secret from "master"
 		create_or_download=true
 		ucr set keycloak/server/sso/certificate/generation='false'
 	fi
