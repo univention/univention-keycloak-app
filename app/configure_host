@@ -41,6 +41,10 @@ fi
 apache_config
 theme_config
 
+chmod 640 "/etc/postgresql-keycloak.secret"
+chgrp "DC Backup Hosts" "/etc/postgresql-keycloak.secret"
+chgrp "DC Backup Hosts" "/etc/keycloak.secret"
+
 #if is_ucr_true keycloak/ucs/setup; then
 #	setup_ucs
 #fi
