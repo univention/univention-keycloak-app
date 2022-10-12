@@ -99,13 +99,8 @@ if [ "$server_role" = "domaincontroller_master" ]; then
 		#univention-ssh $bindpwdfile $HOSTACCOUNT@$ldap_master "/usr/sbin/univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}""
 		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
 		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/keycloak.secret /etc/keycloak.secret" || die
-		#PERMISION DENIED
-		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/postgres-keycloak.secret /etc/remote-postgres-keycloak.secret" || die
-		#PERMISION DENIED
+		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/postgresql-keycloak.secret /etc/remote-postgresql-keycloak.secret" || die
 		keycloak_db_password=$(cat /etc/remote-postgres-keycloak.secret)
-		# COPY /etc/keycloak.secret from "master"
-		# COPY /etc/postgres-keycloak.secret from "master"
-
 		create_or_download=true
 		ucr set keycloak/server/sso/certificate/generation='false'
 	fi
@@ -121,14 +116,9 @@ else
 		HOSTACCOUNT=${NAMETMP%%,cn=*} # remove from first ",cn=" to end
 		#univention-ssh $bindpwdfile $HOSTACCOUNT@$ldap_master "/usr/sbin/univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}""
 		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
-		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
-		#PERMISION DENIED
-		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/postgresql-keycloak.secret /etc/remote-postgres-keycloak.secret" || die
-		#PERMISION DENIED
-		keycloak_db_password=$(cat /etc/remote-postgres-keycloak.secret) # PROBABLY MOVE IT TO PREINST
-		# CHECK univention-scp from ldap_master to "keycloak_master"
-		# COPY /etc/keycloak.secret from "master"
-		# COPY /etc/postgres-keycloak.secret from "master"
+		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/keycloak.secret /etc/keycloak.secret" || die
+		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/postgresql-keycloak.secret /etc/remote-postgresql-keycloak.secret" || die
+		keycloak_db_password=$(cat /etc/remote-postgres-keycloak.secret)
 		create_or_download=true
 		ucr set keycloak/server/sso/certificate/generation='false'
 	fi
