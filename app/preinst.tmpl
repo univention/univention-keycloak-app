@@ -72,10 +72,10 @@ echo "Installing Keycloak apache template info"
 %EOF
 chmod 644 "$keycloak_info_path"
 
-# apache template
+# keycloak configuration template
 keycloak_template_conf_path=/var/lib/univention-appcenter/apps/keycloak/conf/keycloak_template.conf
 echo "Installing keycloak configuration template"
-	cat <<%EOF >"$keycloak_template_conf_path"
+base64 -d <<%EOF >"$keycloak_template_conf_path"
 %KEYCLOAK-TEMPLATE-CONF%
 %EOF
 chmod 644 "$keycloak_template_conf_path"
