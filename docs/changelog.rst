@@ -17,9 +17,9 @@ Added
 -----
 
 * This release of Keycloak includes an extended version of the command line
-  program "univention-keycloak" that can be used to directly create
-  Keycloak "Client" configurations for SAML Service Providers and OpenID
-  Connect Relying Parties.
+  program :program:`univention-keycloak`. Use it to directly create Keycloak
+  *Client* configurations for :term:`SAML Service Providers <SAML SP>` and
+  :term:`OpenID Connect Relying Parties <OIDC RP>`.
 
 19.0.1-ucs2
 ============
