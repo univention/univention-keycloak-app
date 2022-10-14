@@ -84,6 +84,9 @@ fi
 eval "$(ucr shell)"
 
 ## as variables were changed we need the new ones
+psql_pwd_path="/etc/postgresql-keycloak.secret"
+remote_psql_pwd_path="/etc/remote-postgresql-keycloak.secret"
+remote_admin_pwd=""
 
 # check if we need to create a new certificate
 if [ "$server_role" = "domaincontroller_master" ]; then
@@ -91,16 +94,17 @@ if [ "$server_role" = "domaincontroller_master" ]; then
 		univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}" || die
 		create_or_download=true
 		ucr set keycloak/server/sso/certificate/generation='false'
-		keycloak_db_password=$(cat /etc/postgres-keycloak.secret)
+		keycloak_db_password=$(cat $psql_pwd_path)
 	elif [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
 		ucs_parseCredentials "$@"
 		NAMETMP=${binddn:4} # Remove uid=
 		HOSTACCOUNT=${NAMETMP%%,cn=*} # remove from first ",cn=" to end
 		#univention-ssh $bindpwdfile $HOSTACCOUNT@$ldap_master "/usr/sbin/univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}""
 		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
-		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/keycloak.secret /etc/keycloak.secret" || die
-		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/postgresql-keycloak.secret /etc/remote-postgresql-keycloak.secret" || die
-		keycloak_db_password=$(cat /etc/remote-postgres-keycloak.secret)
+		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
+		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
+		keycloak_db_password=$(cat $remote_psql_pwd_path)
+		remote_admin_pwd="/etc/remote-keycloak.secret"
 		create_or_download=true
 		ucr set keycloak/server/sso/certificate/generation='false'
 	fi
@@ -109,16 +113,17 @@ else
 		gencert "/etc/univention/ssl/$keycloak_server_sso_fqdn" "${keycloak_server_sso_fqdn}" "${ssl_default_days:-1825}" || die
 		create_or_download=true
 		ucr set keycloak/server/sso/certificate/generation='false'
-		keycloak_db_password=$(cat /etc/postgres-keycloak.secret)
+		keycloak_db_password=$(cat $psql_pwd_path)
 	elif [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
 		ucs_parseCredentials "$@"
 		NAMETMP=${binddn:4} # Remove uid=
 		HOSTACCOUNT=${NAMETMP%%,cn=*} # remove from first ",cn=" to end
 		#univention-ssh $bindpwdfile $HOSTACCOUNT@$ldap_master "/usr/sbin/univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}""
 		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
-		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/keycloak.secret /etc/keycloak.secret" || die
-		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/postgresql-keycloak.secret /etc/remote-postgresql-keycloak.secret" || die
-		keycloak_db_password=$(cat /etc/remote-postgres-keycloak.secret)
+		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
+		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
+		keycloak_db_password=$(cat $remote_psql_pwd_path)
+		remote_admin_pwd="/etc/remote-keycloak.secret"
 		create_or_download=true
 		ucr set keycloak/server/sso/certificate/generation='false'
 	fi
@@ -131,6 +136,10 @@ fi
 ucr commit /etc/apache2/sites-available/univention-keycloak.conf
 a2ensite univention-keycloak
 systemctl restart apache2
+
+[ -x /usr/sbin/univention-config-registry ] && univention-config-registry register 50-keycloak || true
+ucr commit /etc/postgresql/11/main/pg_hba.conf
+service postgresql restart
 
 sso_hostname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 1)"
 sso_domainname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 2-)"
@@ -148,7 +157,7 @@ if [ -z "$keycloak_server_sso_autoregistration" ] || is_ucr_true keycloak/server
 fi
 
 cp /var/lib/univention-appcenter/apps/keycloak/conf/keycloak_template.conf /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
-sed -i "s/db-password=password/db-password=\"$keycloak_db_password\"/g" /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
+sed -i "s/db-password=password/db-password=$keycloak_db_password/g" /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
 sed -i "s/db-url=jdbc:postgresql:\/\/localhost\/keycloak/db-url=jdbc:postgresql:\/\/$keycloak_db_host_address\/keycloak/g" /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
 docker cp /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf keycloak:/opt/keycloak/conf/keycloak.conf
 
@@ -156,7 +165,8 @@ univention-app shell keycloak ../bin/kc.sh build --db=postgres
 univention-app restart keycloak
 
 i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
-univention-keycloak "$@" init || die
+echo "Container is healty, configuring Keycloak"
+univention-keycloak "$@" --keycloak-pwd "$remote_admin_pwd" init || die
 
 joinscript_save_current_version
 
