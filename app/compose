@@ -10,7 +10,6 @@ services:
     restart: unless-stopped
     environment:
       KC_HTTP_PORT: "8180"
-      KC_DB_URL_HOST: postgres
       KC_DB_USERNAME: keycloak
       KC_HTTPS_KEY_STORE_PASSWORD: univention
       KEYCLOAK_ADMIN: @%@keycloak/admin/user@%@
