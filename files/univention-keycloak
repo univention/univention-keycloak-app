@@ -181,7 +181,9 @@ def create_SAML_client(opt):
 		with open(pwdfile, 'r') as fd:
 			kc_admin_pass = fd.read().strip()
 	else:
-		kc_admin_pass = opt.keycloak_pwd
+		#kc_admin_pass = opt.keycloak_pwd
+		with open(opt.keycloak_pwd, 'r') as fd:
+			kc_admin_pass = fd.read().strip()
 
 	# realm config #
 	realm_name = "ucs"
@@ -345,7 +347,9 @@ def create_oidc_client(opt):
 		with open(pwdfile, 'r') as fd:
 			kc_admin_pass = fd.read().strip()
 	else:
-		kc_admin_pass = opt.keycloak_pwd
+		# kc_admin_pass = opt.keycloak_pwd
+		with open(opt.keycloak_pwd, 'r') as fd:
+			kc_admin_pass = fd.read().strip()
 
 	# realm config #
 	realm_name = "ucs"
@@ -372,7 +376,9 @@ def modify_client_scope_mapper(opt):
 		with open(pwdfile, 'r') as fd:
 			kc_admin_pass = fd.read().strip()
 	else:
-		kc_admin_pass = opt.keycloak_pwd
+		# kc_admin_pass = opt.keycloak_pwd
+		with open(opt.keycloak_pwd, 'r') as fd:
+			kc_admin_pass = fd.read().strip()
 
 	# realm config #
 	realm_name = "ucs"
@@ -462,12 +468,15 @@ def get_client_secret(opt):
 	print("Obtaining secret for client ...")
 
 	kc_admin_user = "admin"
-	if opt.remotePwd == "":  # TODO: pass pwd file ?
+	if opt.keycloak_pwd == "":  # TODO: pass pwd file ?
 		pwdfile = "/etc/keycloak.secret"
 		with open(pwdfile, 'r') as fd:
 			kc_admin_pass = fd.read().strip()
 	else:
-		kc_admin_pass = opt.remotePwd
+		#kc_admin_pass = opt.remotePwd
+		#kc_admin_pass = opt.keycloak_pwd
+		with open(opt.keycloak_pwd, 'r') as fd:
+			kc_admin_pass = fd.read().strip()
 
 	if opt.keycloak:
 		kc_admin_auth_url = opt.keycloak
@@ -574,12 +583,15 @@ def create_IdP(opt):
 	ucr.load()
 
 	kc_admin_user = "admin"
-	if opt.remotePwd == "":  # TODO: pass pwd file ?
+	if opt.keycloak_pwd == "":  # TODO: pass pwd file ?
 		pwdfile = "/etc/keycloak.secret"
 		with open(pwdfile, 'r') as fd:
 			kc_admin_pass = fd.read().strip()
 	else:
 		kc_admin_pass = opt.remotePwd
+		#kc_admin_pass = opt.keycloak_pwd
+		with open(opt.keycloak_pwd, 'r') as fd:
+			kc_admin_pass = fd.read().strip()
 
 	if opt.keycloak:
 		kc_admin_auth_url = opt.keycloak
@@ -745,12 +757,15 @@ def enable_2fa(opt):
 	ldap_base = ucr.get("ldap/base")
 
 	kc_admin_user = "admin"
-	if opt.remotePwd == "":  # TODO: pass pwd file ?
+	if opt.keycloak_pwd == "":  # TODO: pass pwd file ?
 		pwdfile = "/etc/keycloak.secret"
 		with open(pwdfile, 'r') as fd:
 			kc_admin_pass = fd.read().strip()
 	else:
 		kc_admin_pass = opt.remotePwd
+		#kc_admin_pass = opt.keycloak_pwd
+		with open(opt.keycloak_pwd, 'r') as fd:
+			kc_admin_pass = fd.read().strip()
 
 	if opt.keycloak:
 		kc_admin_auth_url = opt.keycloak
@@ -1128,12 +1143,15 @@ def create_adhoc_flow(opt):
 	print("Creating ad hoc federation authentication flow...")
 
 	kc_admin_user = "admin"
-	if opt.remotePwd == "":  # TODO: pass pwd file ?
+	if opt.keycloak_pwd == "":  # TODO: pass pwd file ?
 		pwdfile = "/etc/keycloak.secret"
 		with open(pwdfile, 'r') as fd:
 			kc_admin_pass = fd.read().strip()
 	else:
 		kc_admin_pass = opt.remotePwd
+		#kc_admin_pass = opt.keycloak_pwd
+		with open(opt.keycloak_pwd, 'r') as fd:
+			kc_admin_pass = fd.read().strip()
 
 	if opt.keycloak:
 		kc_admin_auth_url = opt.keycloak
@@ -1244,12 +1262,16 @@ def config(opt):
 		kc_service_pass = opt.bind_pwd
 
 	kc_admin_user = "admin"
-	if opt.remotePwd == "":  # TODO: pass pwd file ?
+	if opt.keycloak_pwd == "":  # TODO: pass pwd file ?
 		pwdfile = "/etc/keycloak.secret"
 		with open(pwdfile, 'r') as fd:
 			kc_admin_pass = fd.read().strip()
 	else:
 		kc_admin_pass = opt.remotePwd
+		#kc_admin_pass = opt.keycloak_pwd
+		with open(opt.keycloak_pwd, 'r') as fd:
+			kc_admin_pass = fd.read().strip()
+
 
 	# realm config #
 	realm_name = "ucs"
