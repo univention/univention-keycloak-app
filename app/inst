@@ -86,6 +86,7 @@ eval "$(ucr shell)"
 ## as variables were changed we need the new ones
 psql_pwd_path="/etc/postgresql-keycloak.secret"
 remote_psql_pwd_path="/etc/remote-postgresql-keycloak.secret"
+machine_secret="/etc/machine.secret"
 remote_admin_pwd=""
 
 # check if we need to create a new certificate
@@ -97,12 +98,9 @@ if [ "$server_role" = "domaincontroller_master" ]; then
 		keycloak_db_password=$(cat $psql_pwd_path)
 	elif [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
 		ucs_parseCredentials "$@"
-		NAMETMP=${binddn:4} # Remove uid=
-		HOSTACCOUNT=${NAMETMP%%,cn=*} # remove from first ",cn=" to end
-		#univention-ssh $bindpwdfile $HOSTACCOUNT@$ldap_master "/usr/sbin/univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}""
-		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
-		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
-		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
+		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
+		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
+		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
 		keycloak_db_password=$(cat $remote_psql_pwd_path)
 		remote_admin_pwd="/etc/remote-keycloak.secret"
 		create_or_download=true
@@ -116,12 +114,9 @@ else
 		keycloak_db_password=$(cat $psql_pwd_path)
 	elif [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
 		ucs_parseCredentials "$@"
-		NAMETMP=${binddn:4} # Remove uid=
-		HOSTACCOUNT=${NAMETMP%%,cn=*} # remove from first ",cn=" to end
-		#univention-ssh $bindpwdfile $HOSTACCOUNT@$ldap_master "/usr/sbin/univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}""
-		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
-		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
-		univention-scp $bindpwdfile "-r $HOSTACCOUNT@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
+		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
+		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
+		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
 		keycloak_db_password=$(cat $remote_psql_pwd_path)
 		remote_admin_pwd="/etc/remote-keycloak.secret"
 		create_or_download=true
