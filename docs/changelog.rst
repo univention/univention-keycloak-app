@@ -11,14 +11,15 @@ project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 19.0.1-ucs3
 ============
 
-Released: 10. October 2022
+Released: 14. October 2022
 
 Added
 -----
 
-* This release of :program:`Keycloak` includes a command line program to
-  configure :term:`SAML SP` and :term:`OIDC Provider` clients in Keycloak
-  directly.
+* This release of Keycloak includes an extended version of the command line
+  program "univention-keycloak" that can be used to directly create
+  Keycloak "Client" configurations for SAML Service Providers and OpenID
+  Connect Relying Parties.
 
 19.0.1-ucs2
 ============
