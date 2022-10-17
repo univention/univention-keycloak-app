@@ -101,6 +101,7 @@ if [ "$server_role" = "domaincontroller_master" ]; then
 		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
 		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
 		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
+		chgrp -R "DC Backup Hosts" "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
 		keycloak_db_password="$(cat $remote_psql_pwd_path)"
 		remote_admin_pwd="/etc/remote-keycloak.secret"
 		create_or_download=true
@@ -120,6 +121,7 @@ else
 		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
 		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
 		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
+		chgrp -R "DC Backup Hosts" "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
 		keycloak_db_password="$(cat $remote_psql_pwd_path)"
 		remote_admin_pwd="/etc/remote-keycloak.secret"
 		create_or_download=true
