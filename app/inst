@@ -95,13 +95,13 @@ if [ "$server_role" = "domaincontroller_master" ]; then
 		univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}" || die
 		create_or_download=true
 		ucr set keycloak/server/sso/certificate/generation='false'
-		keycloak_db_password=$(cat $psql_pwd_path)
+		keycloak_db_password="$(cat $psql_pwd_path)"
 	elif [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
 		ucs_parseCredentials "$@"
 		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
 		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
 		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
-		keycloak_db_password=$(cat $remote_psql_pwd_path)
+		keycloak_db_password="$(cat $remote_psql_pwd_path)"
 		remote_admin_pwd="/etc/remote-keycloak.secret"
 		create_or_download=true
 		ucr set keycloak/server/sso/certificate/generation='false'
@@ -109,15 +109,18 @@ if [ "$server_role" = "domaincontroller_master" ]; then
 else
 	if [ -z "$keycloak_server_sso_certificate_generation" ] || is_ucr_true keycloak/server/sso/certificate/generation; then
 		gencert "/etc/univention/ssl/$keycloak_server_sso_fqdn" "${keycloak_server_sso_fqdn}" "${ssl_default_days:-1825}" || die
+		chgrp -R "DC Backup Hosts" "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
+		chmod -R 640 "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
+		chmod 750 "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
 		create_or_download=true
 		ucr set keycloak/server/sso/certificate/generation='false'
-		keycloak_db_password=$(cat $psql_pwd_path)
+		keycloak_db_password="$(cat $psql_pwd_path)"
 	elif [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
 		ucs_parseCredentials "$@"
 		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
 		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
 		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
-		keycloak_db_password=$(cat $remote_psql_pwd_path)
+		keycloak_db_password="$(cat $remote_psql_pwd_path)"
 		remote_admin_pwd="/etc/remote-keycloak.secret"
 		create_or_download=true
 		ucr set keycloak/server/sso/certificate/generation='false'
