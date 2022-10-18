@@ -76,8 +76,12 @@ keycloak_db_host_dn=$(univention-ldapsearch -LLL univentionService="Keycloak DB"
 if [ -z "$keycloak_db_host_dn" ]; then
 	ucs_addServiceToLocalhost "Keycloak DB" "$@"
 	keycloak_db_host_address="172.17.42.1"
+	ucr set keycloak/server/sso/certificate/generation='true'
+	ucr set keycloak/server/sso/certificate/download='false'
 else
 	keycloak_db_host_address=$(ucs_getAttrOfDN "aRecord" "$keycloak_db_host_dn")
+	ucr set keycloak/server/sso/certificate/generation='false'
+	ucr set keycloak/server/sso/certificate/download='true'
 fi
 
 
