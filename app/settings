@@ -104,4 +104,4 @@ Type = String
 Required = False
 Show = Install, Settings
 Scope = outside
-Description =  Ip address allowed to reach the db. (e.g. 123.123.123.0/16) -- CHANGE LATER
+Description =  Ip addresses allowed to reach the db. (e.g. 123.123.123.0/16) -- CHANGE LATER
