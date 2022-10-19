@@ -48,12 +48,6 @@ hostname="$(ucr get hostname)"
 ldap_base="$(ucr get ldap/base)"
 sso_url="$(ucr get keycloak/server/sso/fqdn)"
 
-url_prefix="$(ucr get keycloak/url/prefix)"
-if [ -n "$url_prefix" ]; then
-	univention-add-vhost "$url_prefix.$hostname.$domainname" 443 \
-	--conffile /var/lib/univention-appcenter/apps/$app_id/config/vhost.conf "$@"
-	service apache2 reload
-fi
 
 COMPONENT_ID=$(univention-app get $app_id component_id | cut -f 2 -d ':' | tr -d '[:space:]')
 ucr set \
