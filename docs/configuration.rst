@@ -62,8 +62,8 @@ following steps on the system where you installed Keycloak:
       .. code-block:: console
 
          $ ucr set \
-         > umc/saml/idp-server=\
-         > "https://ucs-sso-ng.$(hostname -d)/realms/ucs/protocol/saml/descriptor"
+         umc/saml/idp-server=\
+         "https://ucs-sso-ng.$(hostname -d)/realms/ucs/protocol/saml/descriptor"
 
 #. Modify the portal to use SAML for login:
 
@@ -81,8 +81,8 @@ following steps on the system where you installed Keycloak:
       .. code-block:: console
 
          $ udm portals/entry modify \
-         > --dn "cn=login-saml,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
-         > --set activated=TRUE
+         --dn "cn=login-saml,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
+         --set activated=TRUE
 
 #. To activate the changes, restart the LDAP server ``slapd`` within a maintenance
    window.
@@ -149,10 +149,10 @@ usage, see the following example:
 .. code-block:: console
 
    $ univention-keycloak oidc/op/cert get \
-     --as-pem \
-     --output "$SOMEFILENAME"
+   --as-pem \
+   --output "$SOMEFILENAME"
    $ univention-keycloak oidc/rp create "$CLIENT-ID" \
-     --app-url "https://$(hostname -f)/$MYAPPURL/"
+   --app-url "https://$(hostname -f)/$MYAPPURL/"
 
 The option group ``oidc/rp`` offers additional options like ``--client-secret``.
 
@@ -187,9 +187,9 @@ usage, see the following example:
 .. code-block:: console
 
    $ univention-keycloak saml/idp/cert get \
-     --as-pem --output "$SOMEFILENAME"
+   --as-pem --output "$SOMEFILENAME"
    $ univention-keycloak saml/sp create "$APPNAME" \
-     --metadata-url "https://$(hostname -f)/$METADATA-URL-OF-THE-APP"
+   --metadata-url "https://$(hostname -f)/$METADATA-URL-OF-THE-APP"
 
 The option group ``saml/sp`` offers additional options like
 ``--client-signature-required``.
