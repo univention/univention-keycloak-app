@@ -3,13 +3,14 @@ version: '3.1'
 services:
   keycloak:
     container_name: keycloak
-    image: docker.software-univention.de/keycloak-adhoc:19.0.1-ucs2
-    command: start --optimized --hostname=@%@keycloak/server/sso/fqdn@%@ --http-enabled=true --proxy=edge
+    image: docker.software-univention.de/keycloak-adhoc:19.0.1-ucs4
+    command: start --hostname=@%@keycloak/server/sso/fqdn@%@ --http-enabled=true --proxy=edge --cache=cache-ispn-jdbc-ping.xml
     ## For --proxy=edge see https://www.keycloak.org/server/reverseproxy
     ## For --hostname   see https://www.keycloak.org/server/hostname
     restart: unless-stopped
     environment:
       KC_HTTP_PORT: "8180"
+      JGROUPS_DISCOVERY_EXTERNAL_IP: @%@hostname@%@.@%@domainname@%@
       KC_DB_USERNAME: keycloak
       KC_HTTPS_KEY_STORE_PASSWORD: univention
       KEYCLOAK_ADMIN: @%@keycloak/admin/user@%@
@@ -30,6 +31,7 @@ with open(pwdfile, 'r') as fd:
       # does not work, see https://forge.univention.org/bugzilla/show_bug.cgi?id=53878
       # - 127.0.0.1:8180:8080
       - 8180:8180
+      - 7600:7600
     healthcheck:
       test: curl http://127.0.0.1:8180/ -k -s -f -o /dev/null || exit 1
       interval: "2s"

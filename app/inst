@@ -87,6 +87,7 @@ remote_psql_pwd_path="/etc/remote-postgresql-keycloak.secret"
 machine_secret="/etc/machine.secret"
 remote_admin_pwd=""
 
+
 # check if we need to create a new certificate
 if [ "$server_role" = "domaincontroller_master" ]; then
 	if [ -z "$keycloak_server_sso_certificate_generation" ] || is_ucr_true keycloak/server/sso/certificate/generation; then
@@ -107,6 +108,13 @@ if [ "$server_role" = "domaincontroller_master" ]; then
 	fi
 else
 	if [ -z "$keycloak_server_sso_certificate_generation" ] || is_ucr_true keycloak/server/sso/certificate/generation; then
+		ucs_parseCredentials "$@"
+		HOSTACCOUNT="$(ucs_convertDN2UID "$binddn")" # getting uid
+#		NAMETMP=${binddn:4} # Remove uid=
+#		HOSTACCOUNT=${NAMETMP%%,cn=*} # remove from first ",cn=" to end
+#		univention-ssh $bindpwdfile "$HOSTACCOUNT@$ldap_master "/usr/share/univention-ssl/make-certificates.sh; univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}"" || die
+#		DOWNLOAD CERT TO THIS HOST
+#		univention-scp $machine_secret "-r $hostname\$@$ldap_master:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
 		gencert "/etc/univention/ssl/$keycloak_server_sso_fqdn" "${keycloak_server_sso_fqdn}" "${ssl_default_days:-1825}" || die
 		chgrp -R "DC Backup Hosts" "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
 		chmod -R 640 "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
@@ -127,6 +135,16 @@ else
 	fi
 fi
 
+#if [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
+#		ucs_parseCredentials "$@"
+## TODO: Keycloak secret shouldn't be neeed
+#		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
+## TODO: DB secret is on the ldap stored db uri. No need to cp the secret
+#		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
+#		keycloak_db_password="$(cat $remote_psql_pwd_path)"
+#		remote_admin_pwd="/etc/remote-keycloak.secret"
+#		ucr set keycloak/server/sso/certificate/generation='false'
+#fi
 
 # Re-create Apache configuration after the certificate generation
 
@@ -159,11 +177,17 @@ sed -i "s/db-password=password/db-password=$keycloak_db_password/g" /var/lib/uni
 sed -i "s/db-url=jdbc:postgresql:\/\/localhost\/keycloak/db-url=jdbc:postgresql:\/\/$keycloak_db_host_address\/keycloak/g" /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
 docker cp /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf keycloak:/opt/keycloak/conf/keycloak.conf
 
+cp /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping-template.xml /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml
+sed -i "s/\${env.LOCAL_DB_PASSWORD}/$keycloak_db_password/g" /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml
+sed -i "s/\${env.LOCAL_DB_URL_HOST}/$keycloak_db_host_address/g" /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml
+docker cp /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml keycloak:/opt/keycloak/conf/cache-ispn-jdbc-ping.xml
+
 univention-app shell keycloak ../bin/kc.sh build --db=postgres
 univention-app restart keycloak
 
 i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
 echo "Container is healty, configuring Keycloak"
+# TODO: Use the joinscript credentials somehow 
 univention-keycloak "$@" --keycloak-pwd "$remote_admin_pwd" init || die
 
 joinscript_save_current_version

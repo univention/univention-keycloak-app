@@ -106,8 +106,8 @@ image_build:
   stage: build
   image: docker:19.03.8
   variables:
-    MAVEN_STAGE_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app/maven-builder:19.0.1-ucs2"
-    KEYCLOAK_ADHOC_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app/keycloak-adhoc:19.0.1-ucs2"
+    MAVEN_STAGE_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app/maven-builder:19.0.1-ucs4"
+    KEYCLOAK_ADHOC_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app/keycloak-adhoc:19.0.1-ucs4"
   script:
     - docker login -u $CI_KEYCLOAK_DOCKER_USER -p $CI_KEYCLOAK_DOCKER_PASSWORD gitregistry.knut.univention.de
     # MVN BUILD
