@@ -10,3 +10,6 @@ WORKDIR /opt/keycloak/providers
 COPY --from=maven /root/univention-directory-manager/target/univention-directory-manager.jar .
 COPY --from=maven /root/univention-authenticator/target/univention-authenticator-16.1.0-jar-with-dependencies.jar .
 COPY dependencies/*.jar ./
+
+COPY files/cache-ispn-jdbc-ping.xml /opt/keycloak/conf/cache-ispn-jdbc-ping.xml
+EXPOSE 7600

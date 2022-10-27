@@ -6,7 +6,7 @@
 set -e
 set -x
 
-APP_VERSION="5.0/keycloak=backup_db"
+APP_VERSION="5.0/keycloak=backup_db_sync"
 
 selfservice () {
 	local uri="https://provider-portal.software-univention.de/appcenter-selfservice/univention-appcenter-control"
@@ -50,6 +50,9 @@ sed -i -e "/%KEYCLOAK-TEMPLATE-CONF%/r files/tmp_kconf_b64" -e "/%KEYCLOAK-TEMPL
 sed -i -e "/%POSTGRESQL-KEYCLOAK-TEMPLATE%/r files/50-keycloak" -e "/%POSTGRESQL-KEYCLOAK-TEMPLATE%/d" app/preinst
 sed -i -e "/%POSTGRESQL-KEYCLOAK-INFO%/r files/50-keycloak.info" -e "/%POSTGRESQL-KEYCLOAK-INFO%/d" app/preinst
 
+base64 files/cache-ispn-jdbc-ping.xml >> files/tmp_ispn_kconf_b64
+sed -i -e "/%KEYCLOAK-ISPN-TEMPLATE-CONF%/r files/tmp_ispn_kconf_b64" -e "/%KEYCLOAK-ISPN-TEMPLATE-CONF%/d" app/preinst
+
 ## Now we can upload the files for the app to the provider-portal:
 ## The order of the arguments doesn't matter, the univention-appcenter-control script recongnizes the filenames and file extensions.
 selfservice upload "$APP_VERSION" app/compose app/settings app/preinst app/configure_host app/inst app/env app/test
@@ -58,4 +61,4 @@ selfservice upload "$APP_VERSION" app/compose app/settings app/preinst app/confi
 # selfservice upload "$APP_VERSION" app/compose app/settings app/preinst app/configure_host app/inst app/uinst app/env app/test app/setup README_*
 
 ## And finally they clean the working directory after upload
-rm -f app/preinst files/tmp_base64 files/tmp_uk_b64 files/tmp_kconf_b64
+rm -f app/preinst files/tmp_base64 files/tmp_uk_b64 files/tmp_kconf_b64 files/tmp_ispn_kconf_b64

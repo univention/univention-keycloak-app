@@ -1296,7 +1296,7 @@ def config(opt):
 	else:
 		server_fdnq_without_subdomain = "https://{}".format(domain)
 
-	if opt.reverse_proxy_url and opt.keycloak:
+	if opt.reverse_proxy_url:
 		server_fdnq_without_subdomain = opt.reverse_proxy_url
 
 	# valid redirect uris #
