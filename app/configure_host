@@ -48,7 +48,7 @@ chgrp "DC Backup Hosts" "/etc/keycloak.secret"
 #if is_ucr_true keycloak/ucs/setup; then
 #	setup_ucs
 #fi
-### TODO: Change to detect installation + password from Nikola
+### TODO: Change to detect installation + password from Nikola's jdbc uri
 . /usr/share/univention-lib/all.sh
 keycloak_db_host_dn=$(univention-ldapsearch -LLL univentionService="Keycloak DB" dn | sed -ne "s/^dn: //p")
 if [ -z "$keycloak_db_host_dn" ]; then
@@ -57,7 +57,7 @@ if [ -z "$keycloak_db_host_dn" ]; then
 else
 	keycloak_db_host_address=$(ucs_getAttrOfDN "aRecord" "$keycloak_db_host_dn")
 	keycloak_db_password="$(cat "/etc/remote-postgresql-keycloak.secret")"
-	## TODO: REMOVE READ FROM REMOTE FILE, READ FROM LDAP
+	## TODO: REMOVE READ FROM REMOTE FILE, FETCH IP FROM LDAP
 fi
 
 cp /var/lib/univention-appcenter/apps/keycloak/conf/keycloak_template.conf /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf

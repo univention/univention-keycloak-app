@@ -65,7 +65,7 @@ udm portals/entry modify "$@" \
 	--append allowedGroups="$domain_admins_dn" || die
 
 
-
+## TODO: Integrate jdbc uri registration here
 keycloak_db_host_dn=$(univention-ldapsearch -LLL univentionService="Keycloak DB" dn | sed -ne "s/^dn: //p")
 if [ -z "$keycloak_db_host_dn" ]; then
 	ucs_addServiceToLocalhost "Keycloak DB" "$@"
@@ -135,12 +135,13 @@ else
 	fi
 fi
 
+## TODO: Change everything on top for this (after cert errata), rename app setting
 #if [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
 #		ucs_parseCredentials "$@"
 ## TODO: Keycloak secret shouldn't be neeed
-#		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
+##		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/remote-keycloak.secret" || die
 ## TODO: DB secret is on the ldap stored db uri. No need to cp the secret
-#		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
+##		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
 #		keycloak_db_password="$(cat $remote_psql_pwd_path)"
 #		remote_admin_pwd="/etc/remote-keycloak.secret"
 #		ucr set keycloak/server/sso/certificate/generation='false'
@@ -153,6 +154,7 @@ ucr commit /etc/apache2/sites-available/univention-keycloak.conf
 a2ensite univention-keycloak
 systemctl restart apache2
 
+## TODO: Is this needed on non "master" kc installations ?
 [ -x /usr/sbin/univention-config-registry ] && univention-config-registry register 50-keycloak || true
 ucr commit /etc/postgresql/11/main/pg_hba.conf
 service postgresql restart
@@ -187,7 +189,7 @@ univention-app restart keycloak
 
 i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
 echo "Container is healty, configuring Keycloak"
-# TODO: Use the joinscript credentials somehow 
+# TODO: Use the joinscript credentials somehow - $remote_admin_pwd -> $bindpwdfile, add kc-user
 univention-keycloak "$@" --keycloak-pwd "$remote_admin_pwd" init || die
 
 joinscript_save_current_version
