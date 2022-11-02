@@ -172,15 +172,15 @@ if [ -z "$keycloak_server_sso_autoregistration" ] || is_ucr_true keycloak/server
 	fi
 fi
 
-cp /var/lib/univention-appcenter/apps/keycloak/conf/keycloak_template.conf /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
-sed -i "s/db-password=password/db-password=$keycloak_db_password/g" /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
-sed -i "s/db-url=jdbc:postgresql:\/\/localhost\/keycloak/db-url=jdbc:postgresql:\/\/$keycloak_db_host_address\/keycloak/g" /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
-docker cp /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf keycloak:/opt/keycloak/conf/keycloak.conf
+#cp /var/lib/univention-appcenter/apps/keycloak/conf/keycloak_template.conf /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
+#sed -i "s/db-password=password/db-password=$keycloak_db_password/g" /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
+#sed -i "s/db-url=jdbc:postgresql:\/\/localhost\/keycloak/db-url=jdbc:postgresql:\/\/$keycloak_db_host_address\/keycloak/g" /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
+#docker cp /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf keycloak:/opt/keycloak/conf/keycloak.conf
 
-cp /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping-template.xml /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml
-sed -i "s/\${env.LOCAL_DB_PASSWORD}/$keycloak_db_password/g" /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml
-sed -i "s/\${env.LOCAL_DB_URL_HOST}/$keycloak_db_host_address/g" /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml
-docker cp /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml keycloak:/opt/keycloak/conf/cache-ispn-jdbc-ping.xml
+#cp /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping-template.xml /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml
+#sed -i "s/\${env.LOCAL_DB_PASSWORD}/$keycloak_db_password/g" /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml
+#sed -i "s/\${env.LOCAL_DB_URL_HOST}/$keycloak_db_host_address/g" /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml
+#docker cp /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml keycloak:/opt/keycloak/conf/cache-ispn-jdbc-ping.xml
 
 univention-app shell keycloak ../bin/kc.sh build --db=postgres
 univention-app restart keycloak
