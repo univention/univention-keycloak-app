@@ -1,0 +1,96 @@
+#! /bin/sh
+#
+# unjoin script
+#
+# Copyright 2019 Univention GmbH
+#
+# http://www.univention.de/
+#
+# All rights reserved.
+#
+# The source code of this program is made available
+# under the terms of the GNU Affero General Public License version 3
+# (GNU AGPL V3) as published by the Free Software Foundation.
+#
+# Binary versions of this program provided by Univention to you as
+# well as other copyrighted, protected or trademarked materials like
+# Logos, graphics, fonts, specific documentations and configurations,
+# cryptographic keys etc. are subject to a license agreement between
+# you and Univention and not subject to the GNU AGPL V3.
+#
+# In the case you use this program under the terms of the GNU AGPL V3,
+# the program is provided in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public
+# License with the Debian GNU/Linux or Univention distribution in file
+# /usr/share/common-licenses/AGPL-3; if not, see
+# <http://www.gnu.org/licenses/>.
+
+## joinscript api: bindpwdfile
+
+VERSION=1
+
+. /usr/share/univention-join/joinscripthelper.lib
+. /usr/share/univention-lib/all.sh
+
+joinscript_init
+
+app_id="keycloak"
+domainname="$(ucr get domainname)"
+hostname="$(ucr get hostname)"
+url_prefix="$(ucr get keycloak/url/prefix)"
+
+if [ -n "$url_prefix" ]; then
+    univention-add-vhost --remove "$url_prefix.$hostname.$domainname" 443 "$@"
+    service apache2 reload
+fi
+
+# remove service
+ucs_removeServiceFromLocalhost "$app_id" "$@"
+
+# remove portal link
+ucr unset \
+    ucs/web/overview/entries/admin/$app_id/description/de \
+    ucs/web/overview/entries/admin/$app_id/description \
+    ucs/web/overview/entries/admin/$app_id/label \
+    ucs/web/overview/entries/admin/$app_id/link \
+    ucs/web/overview/entries/admin/$app_id/icon \
+    ucs/web/overview/entries/admin/$app_id/link-target
+
+$(python3 <<-%EOF
+import json
+
+from univention.config_registry import ConfigRegistry
+from univention.udm import UDM
+from univention.udm.binary_props import Base64Bzip2BinaryProperty
+from univention.udm.exceptions import NoObject
+
+
+ucr = ConfigRegistry().load()
+fqdn = f'{ucr.get("hostname")}.{ucr.get("domainname")}'
+ldap_base = ucr.get('ldap/base')
+mod = UDM.admin().version(2).get('settings/data')
+
+try:
+    obj = mod.get(f'cn=keycloak,cn=data,cn=univention,{ldap_base}')
+
+    data = json.loads(obj.props.data.raw)
+    data['installations'].remove(fqdn)
+    if data['installations']:
+        raw_value = json.dumps(data).encode('ascii')
+        obj.props.data = Base64Bzip2BinaryProperty('data', raw_value=raw_value)
+        obj.save()
+    else:
+        obj.delete()
+except NoObject:
+    pass
+
+%EOF
+) || die
+
+joinscript_remove_script_from_status_file $app_id
+
+exit 0

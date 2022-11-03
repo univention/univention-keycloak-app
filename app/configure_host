@@ -50,15 +50,64 @@ chgrp "DC Backup Hosts" "/etc/keycloak.secret"
 #fi
 ### TODO: Change to detect installation + password from Nikola's jdbc uri
 . /usr/share/univention-lib/all.sh
-keycloak_db_host_dn=$(univention-ldapsearch -LLL univentionService="Keycloak DB" dn | sed -ne "s/^dn: //p")
-if [ -z "$keycloak_db_host_dn" ]; then
-	keycloak_db_host_address="172.17.42.1"
-	keycloak_db_password="$(cat "/etc/postgresql-keycloak.secret")"
-else
-	keycloak_db_host_address=$(ucs_getAttrOfDN "aRecord" "$keycloak_db_host_dn")
-	keycloak_db_password="$(cat "/etc/remote-postgresql-keycloak.secret")"
-	## TODO: REMOVE READ FROM REMOTE FILE, FETCH IP FROM LDAP
-fi
+
+data="$(python3 <<-%EOF
+import json
+from string import Template
+from urllib.parse import urlparse
+
+from univention.config_registry import ConfigRegistry
+from univention.udm import UDM
+from univention.udm.binary_props import Base64Bzip2BinaryProperty
+from univention.udm.exceptions import NoObject
+
+ucr = ConfigRegistry().load()
+fqdn = f'{ucr.get("hostname")}.{ucr.get("domainname")}'
+ldap_base = ucr.get('ldap/base')
+superordinate = f'cn=univention,{ldap_base}'
+name = 'keycloak'
+mod = UDM.admin().version(2).get('settings/data')
+
+uri = ucr.get('keycloak/database/uri')
+if not uri:
+    try:
+        # URL not found in UCR, try in LDAP first
+        obj = mod.get(f'cn={name},cn=data,{superordinate}')
+
+        data = json.loads(obj.props.data.raw)
+        uri = data['uri']
+        data['installations'].append(fqdn)
+        data['installations'] = list(set(data['installations']))
+    except NoObject:
+        # URL not found in UCR or LDAP - use current host configuration
+        obj = mod.new(superordinate)
+        obj.position = f'cn=data,{superordinate}'
+        obj.props.name = name
+        obj.props.data_type = 'string'
+
+        with open('/etc/postgresql-keycloak.secret', 'r') as fd:
+            password = fd.read().strip()
+
+        uri = f'postgresql://keycloak:{password}@{fqdn}:5432/keycloak'
+        data = {
+            'uri': uri,
+            'installations': [fqdn],
+        }
+
+    raw_value = json.dumps(data).encode('ascii')
+    obj.props.data = Base64Bzip2BinaryProperty('data', raw_value=raw_value)
+    obj.save()
+
+cfg = urlparse(uri)
+print(cfg.hostname)
+print(cfg.password)
+%EOF
+)" || die
+
+# extract KC host (1st line in STDOUT) and DB password (2nd line in STDOUT) from the above python script
+opts=( $(echo -e "$data" | awk -F'\n'  '{print $1, $2}') );
+keycloak_db_host_address="${opts[0]}"
+keycloak_db_password="${opts[1]}"
 
 cp /var/lib/univention-appcenter/apps/keycloak/conf/keycloak_template.conf /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
 sed -i "s/db-password=password/db-password=$keycloak_db_password/g" /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
