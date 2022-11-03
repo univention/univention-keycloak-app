@@ -26,6 +26,18 @@ def check_and_create_component(kc_client, name, prov_id, payload_):
 	return ldap_component.get("id")
 
 
+def modify_component(kc_client, name, prov_id, payload_):
+	ldap_component_filter = {'name': name, 'providerId': prov_id, 'parentId': payload_['parentId']}
+	ldap_component_list = kc_client.get_components(ldap_component_filter)
+	if ldap_component_list:
+		ldap_component = ldap_component_list.pop()
+		kc_client.update_component(ldap_component.get("id"), payload=payload_)
+		ldap_component_list = kc_client.get_components(ldap_component_filter)
+
+	ldap_component = ldap_component_list.pop()
+	return ldap_component.get("id")
+
+
 def get_realm_id(kc_client, name):
 	ldap_realms_list = kc_client.get_realms()
 	# search for realm "name"
@@ -1501,8 +1513,73 @@ def config(opt):
 		}
 	}
 
+	firstname_ldap_mapper = {
+		"name": "first name",
+		"parentId": ldap_component_id,
+		"providerId": "user-attribute-ldap-mapper",
+		"providerType": "org.keycloak.storage.ldap.mappers.LDAPStorageMapper",
+		"config": {
+			"ldap.attribute": [
+				"givenName"
+			],
+			"is.mandatory.in.ldap": [
+				"false"
+			],
+			"read.only": [
+				"true"
+			],
+			"user.model.attribute": [
+				"firstName"
+			]
+		}
+	}
+	mail_ldap_mapper = {
+		"name": "email",
+		"parentId": ldap_component_id,
+		"providerId": "user-attribute-ldap-mapper",
+		"providerType": "org.keycloak.storage.ldap.mappers.LDAPStorageMapper",
+		"config": {
+			"ldap.attribute": [
+				"mailPrimaryAddress"
+			],
+			"is.mandatory.in.ldap": [
+				"false"
+			],
+			"read.only": [
+				"true"
+			],
+			"user.model.attribute": [
+				"email"
+			]
+		}
+	}
+	lastname_ldap_mapper = {
+		"name": "last name",
+		"parentId": ldap_component_id,
+		"providerId": "user-attribute-ldap-mapper",
+		"providerType": "org.keycloak.storage.ldap.mappers.LDAPStorageMapper",
+		"config": {
+			"ldap.attribute": [
+				"lastname"
+			],
+			"is.mandatory.in.ldap": [
+				"false"
+			],
+			"read.only": [
+				"true"
+			],
+			"user.model.attribute": [
+				"lastName"
+			]
+		}
+	}
+
 	# find existing uid->uid mapper or create if none exits #
 	check_and_create_component(kc_admin, payload_ldap_mapper["name"], payload_ldap_mapper["providerId"], payload_ldap_mapper)
+	modify_component(kc_admin, firstname_ldap_mapper["name"], firstname_ldap_mapper["providerId"], firstname_ldap_mapper)
+	modify_component(kc_admin, mail_ldap_mapper["name"], mail_ldap_mapper["providerId"], mail_ldap_mapper)
+	modify_component(kc_admin, lastname_ldap_mapper["name"], lastname_ldap_mapper["providerId"], lastname_ldap_mapper)
+	print("Configured default mappers")
 
 	# Setting admin level to all Domain Admins #
 	# Change realm to master
@@ -1525,6 +1602,12 @@ def config(opt):
 
 	# find existing mapper or create if none exits #
 	check_and_create_component(kc_admin, payload_ldap_mapper["name"], payload_ldap_mapper["providerId"], payload_ldap_mapper)
+	firstname_ldap_mapper["parentId"] = ldap_component_id
+	mail_ldap_mapper["parentId"] = ldap_component_id
+	lastname_ldap_mapper["parentId"] = ldap_component_id
+	modify_component(kc_admin, firstname_ldap_mapper["name"], firstname_ldap_mapper["providerId"], firstname_ldap_mapper)
+	modify_component(kc_admin, mail_ldap_mapper["name"], mail_ldap_mapper["providerId"], mail_ldap_mapper)
+	modify_component(kc_admin, lastname_ldap_mapper["name"], lastname_ldap_mapper["providerId"], lastname_ldap_mapper)
 
 
 def main():
