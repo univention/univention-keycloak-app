@@ -104,6 +104,10 @@ print(cfg.password)
 %EOF
 )" || die
 
+if [ "$action" = "settings" ]; then
+	univention-app reinitialize keycloak
+fi
+
 # extract KC host (1st line in STDOUT) and DB password (2nd line in STDOUT) from the above python script
 opts=( $(echo -e "$data" | awk -F'\n'  '{print $1, $2}') );
 keycloak_db_host_address="${opts[0]}"
@@ -119,7 +123,10 @@ sed -i "s/\${env.LOCAL_DB_PASSWORD}/$keycloak_db_password/g" /var/lib/univention
 sed -i "s/\${env.LOCAL_DB_URL_HOST}/$keycloak_db_host_address/g" /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml
 docker cp /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml keycloak:/opt/keycloak/conf/cache-ispn-jdbc-ping.xml
 
+univention-app shell keycloak ../bin/kc.sh build --db=postgres
+univention-app restart keycloak
 
-if [ "$action" = "settings" ]; then
-	univention-app reinitialize keycloak
-fi
+i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
+echo "Container is healty, configuring Keycloak"
+
+univention-keycloak init || die
