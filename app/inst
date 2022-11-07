@@ -69,7 +69,7 @@ udm portals/entry modify "$@" \
 keycloak_db_host_dn=$(univention-ldapsearch -LLL univentionService="Keycloak DB" dn | sed -ne "s/^dn: //p")
 if [ -z "$keycloak_db_host_dn" ]; then
 	ucs_addServiceToLocalhost "Keycloak DB" "$@"
-	keycloak_db_host_address="172.17.42.1"
+	keycloak_db_host_address="${docker_daemon_default_opts_bip:-172.17.42.1}"
 	ucr set keycloak/server/sso/certificate/generation='true'
 	ucr set keycloak/server/sso/certificate/download='false'
 else
