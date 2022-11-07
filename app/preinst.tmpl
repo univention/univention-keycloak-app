@@ -38,18 +38,6 @@ command -v jq || {
 	apt-get -qq -y install jq
 }
 
-apt-get -qq -y install python3-keycloak
-
-## example: this way we can install files on the host:
-
-# management tool
-keycloak_management_script=/usr/sbin/univention-keycloak
-echo "Installing Keycloak management script"
-base64 -d <<%EOF >"$keycloak_management_script"
-%KEYCLOAK-MANAGEMENT-SCRIPT%
-%EOF
-chmod 755 "$keycloak_management_script"
-
 # theme
 echo "Installing Keycloak UCS theme"
 base64 -d <<%EOF  | tar xjf - --one-top-level=/var/lib/univention-appcenter/apps/keycloak/conf/
