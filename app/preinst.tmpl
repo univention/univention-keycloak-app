@@ -60,14 +60,6 @@ echo "Installing Keycloak apache template info"
 %EOF
 chmod 644 "$keycloak_info_path"
 
-# keycloak configuration template
-keycloak_template_conf_path=/var/lib/univention-appcenter/apps/keycloak/conf/keycloak_template.conf
-echo "Installing keycloak configuration template"
-base64 -d <<%EOF >"$keycloak_template_conf_path"
-%KEYCLOAK-TEMPLATE-CONF%
-%EOF
-chmod 644 "$keycloak_template_conf_path"
-
 # postgresql template
 postgresql_keycloak_template_path=/etc/univention/templates/files/etc/postgresql/11/main/pg_hba.conf.d/50-keycloak.conf
 echo "Installing 50-keycloak postgresql template"

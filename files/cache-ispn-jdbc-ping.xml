@@ -9,8 +9,8 @@
     <stack name="jdbc-ping-tcp" extends="tcp">
       <TCP external_addr="${env.JGROUPS_DISCOVERY_EXTERNAL_IP}" bind_port="7600" />
       <JDBC_PING connection_driver="org.postgresql.Driver"
-                 connection_username="${env.KC_DB_USERNAME}" connection_password="${env.LOCAL_DB_PASSWORD}"
-                 connection_url="jdbc:postgresql://${env.LOCAL_DB_URL_HOST}/keycloak"
+                 connection_username="${env.KC_DB_USERNAME}" connection_password="${env.KC_DB_PASSWORD}"
+                 connection_url="${env.KC_DB_URL}"
 		 initialize_sql="CREATE TABLE IF NOT EXISTS JGROUPSPING (own_addr varchar(200) NOT NULL, bind_addr VARCHAR(200) NOT NULL, created timestamp NOT NULL, cluster_name varchar(200) NOT NULL, ping_data BYTEA, constraint PK_JGROUPSPING PRIMARY KEY (own_addr, cluster_name));"
 		 insert_single_sql="INSERT INTO JGROUPSPING (own_addr, bind_addr, created, cluster_name, ping_data) values (?,'${env.JGROUPS_DISCOVERY_EXTERNAL_IP:127.0.0.1}',NOW(), ?, ?);"
 		 delete_single_sql="DELETE FROM JGROUPSPING WHERE own_addr=? AND cluster_name=?;"

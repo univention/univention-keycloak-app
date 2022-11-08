@@ -40,6 +40,7 @@ fi
 
 apache_config
 theme_config
+service apache2 reload
 
 chmod 640 "/etc/postgresql-keycloak.secret"
 chgrp "DC Backup Hosts" "/etc/postgresql-keycloak.secret"
@@ -60,6 +61,8 @@ from univention.config_registry import ConfigRegistry
 from univention.udm import UDM
 from univention.udm.binary_props import Base64Bzip2BinaryProperty
 from univention.udm.exceptions import NoObject
+from univention.appcenter.app_cache import Apps
+
 
 ucr = ConfigRegistry().load()
 fqdn = f'{ucr.get("hostname")}.{ucr.get("domainname")}'
@@ -67,66 +70,68 @@ ldap_base = ucr.get('ldap/base')
 superordinate = f'cn=univention,{ldap_base}'
 name = 'keycloak'
 mod = UDM.admin().version(2).get('settings/data')
+with open('/etc/postgresql-keycloak.secret', 'r') as fd:
+    password = fd.read().strip()
 
-uri = ucr.get('keycloak/database/uri')
-if not uri:
-    try:
-        # URL not found in UCR, try in LDAP first
-        obj = mod.get(f'cn={name},cn=data,{superordinate}')
+default_uri = f'jdbc:postgresql://{fqdn}:5432/keycloak'
 
-        data = json.loads(obj.props.data.raw)
-        uri = data['uri']
-        data['installations'].append(fqdn)
-        data['installations'] = list(set(data['installations']))
-    except NoObject:
-        # URL not found in UCR or LDAP - use current host configuration
-        obj = mod.new(superordinate)
-        obj.position = f'cn=data,{superordinate}'
-        obj.props.name = name
-        obj.props.data_type = 'string'
+kc_db_url=None
+app = Apps().find("keycloak")
+for setting in app.get_settings():
+    if setting.name == "kc/db/url":
+        kc_db_url = setting.get_value(app)
+    if setting.name == "kc/db/password":
+        kc_db_password = setting.get_value(app)
+    if setting.name == "kc/db/username":
+        kc_db_username = setting.get_value(app)
 
-        with open('/etc/postgresql-keycloak.secret', 'r') as fd:
-            password = fd.read().strip()
+try:
+    # URL not found in UCR, try in LDAP first
+    obj = mod.get(f'cn={name},cn=data,{superordinate}')
 
-        uri = f'postgresql://keycloak:{password}@{fqdn}:5432/keycloak'
-        data = {
-            'uri': uri,
-            'installations': [fqdn],
-        }
-
+    data = json.loads(obj.props.data.raw)
+    kc_db_url = kc_db_url or data['uri']
+    kc_db_password = kc_db_password or data['password']
+    kc_db_username = kc_db_username or data['username']
+    data['installations'].append(fqdn)
+    data['installations'] = list(set(data['installations']))
+except NoObject:
+    # URL not found in UCR or LDAP - use current host configuration
+    obj = mod.new(superordinate)
+    obj.position = f'cn=data,{superordinate}'
+    obj.props.name = name
+    obj.props.data_type = 'string'
+    data = {
+        'uri': kc_db_url,
+        'password': kc_db_password or password,
+        'username': kc_db_username or name,
+        'installations': [fqdn],
+    }
     raw_value = json.dumps(data).encode('ascii')
     obj.props.data = Base64Bzip2BinaryProperty('data', raw_value=raw_value)
     obj.save()
 
-cfg = urlparse(uri)
-print(cfg.hostname)
-print(cfg.password)
+kc_db_url = kc_db_url or default_uri
+cfg = urlparse(kc_db_url)
+print(kc_db_url)
+print(kc_db_password or password)
+print(urlparse(cfg.path).scheme.replace("postgresql", "postgres"))
+print(kc_db_username or "keycloak")
 %EOF
 )" || die
+opts=( $(echo -e "$data" | awk -F'\n'  '{print $1, $2}') );
+echo "$opts"
+kc_db_url="${opts[0]}"
+kc_db_password="${opts[1]}"
+kc_db_kind="${opts[2]}"
+kc_db_username="${opts[3]}"
+echo "$kc_db_url"
+
+univention-app configure keycloak --set "KC/DB/URL=$kc_db_url" "KC/DB/USERNAME=$kc_db_username" "KC/DB/PASSWORD=$kc_db_password" "KC/DB/KIND=$kc_db_kind" --run-script=no
+univention-app reinitialize keycloak
 
 if [ "$action" = "settings" ]; then
-	univention-app reinitialize keycloak
+	i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
+	echo "Container is healty, configuring Keycloak"
+	univention-keycloak init || die
 fi
-
-# extract KC host (1st line in STDOUT) and DB password (2nd line in STDOUT) from the above python script
-opts=( $(echo -e "$data" | awk -F'\n'  '{print $1, $2}') );
-keycloak_db_host_address="${opts[0]}"
-keycloak_db_password="${opts[1]}"
-
-cp /var/lib/univention-appcenter/apps/keycloak/conf/keycloak_template.conf /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
-sed -i "s/db-password=password/db-password=$keycloak_db_password/g" /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
-sed -i "s/db-url=jdbc:postgresql:\/\/localhost\/keycloak/db-url=jdbc:postgresql:\/\/$keycloak_db_host_address\/keycloak/g" /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf
-docker cp /var/lib/univention-appcenter/apps/keycloak/conf/keycloak.conf keycloak:/opt/keycloak/conf/keycloak.conf
-
-cp /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping-template.xml /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml
-sed -i "s/\${env.LOCAL_DB_PASSWORD}/$keycloak_db_password/g" /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml
-sed -i "s/\${env.LOCAL_DB_URL_HOST}/$keycloak_db_host_address/g" /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml
-docker cp /var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping.xml keycloak:/opt/keycloak/conf/cache-ispn-jdbc-ping.xml
-
-univention-app shell keycloak ../bin/kc.sh build --db=postgres
-univention-app restart keycloak
-
-i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
-echo "Container is healty, configuring Keycloak"
-
-univention-keycloak init || die

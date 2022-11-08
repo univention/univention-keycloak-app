@@ -1,7 +1,7 @@
 [Application]
 ID = keycloak
 Code = 3O
-Version = 18.0.0-ucs1
+Version = backup_db_sync
 Name = Keycloak
 DockerScriptRestoreDataAfterSetup = 
 DockerScriptStoreData = 
@@ -24,7 +24,7 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	The app is configured to use the Keycloak feature &quot;User Federation&quot; for authentication of users against OpenLDAP.
 	</p>
 	<p>
-	For more details go to the <a href="https://docs.software-univention.de/keycloak-app/">UCS Keycloak App documentation</a>.
+	For more details go to the <a href="https://docs.software-univention.de/keycloak-app/latest/">documentation of the most recent version of the UCS Keycloak App</a>.
 	<br>
 	&nbsp;
 	<br>
@@ -39,12 +39,9 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	</p>
 	</div>
 PortsExclusive = 8180
-SupportedUcsVersions = 5.0-0
-ServerRole = domaincontroller_master
-DockerEnvDatabaseHost = KC_DB_URL_HOST
-DockerEnvDatabaseUser = KC_DB_USERNAME
+SupportedUcsVersions = 
+ServerRole = domaincontroller_master, domaincontroller_backup
 Database = postgresql
-DockerEnvDatabasePassword = KC_DB_PASSWORD
 DockerEnvDatabasePort = DB_PORT
 DockerEnvDatabaseName = DB_NAME
 DatabaseUser = keycloak
@@ -55,6 +52,8 @@ NotifyVendor = True
 License = free
 Contact = sales@univention.de
 NotificationEmail = appcenter-reporting@univention.de
+Website = https://docs.software-univention.de/keycloak-app/latest/
+MinPhysicalRam = 1024
 
 [de]
 LongDescription = <div class="col-sm-7 col-xs-12 left-col">
@@ -65,7 +64,7 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	Die App ist so konfiguriert, dass sie das Keycloak Feature &quot;User Federation&quot; verwendet um Benutzer durch OpenLDAP authentifizieren zu lassen..
 	</p>
 	<p>
-	Weitere Details sind in der <a href="https://docs.software-univention.de/keycloak-app/">UCS Keycloak App Dokumentation</a> beschrieben.
+	Weitere Details sind in der <a href="https://docs.software-univention.de/keycloak-app/latest/">Dokumentation der aktuellsten Version der UCS Keycloak App</a> beschrieben.
 	<br>
 	&nbsp;
 	<br>
@@ -82,4 +81,5 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 Description = SAML und OpenID Connect Identity Provider
 Maintainer = Univention GmbH
 WebsiteMaintainer = https://www.univention.de/
+Website = https://docs.software-univention.de/keycloak-app/latest/
 
