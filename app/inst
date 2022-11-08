@@ -64,6 +64,13 @@ udm portals/entry modify "$@" \
 	--dn "cn=keycloak,cn=entry,cn=portals,cn=univention,$ldap_base" \
 	--append allowedGroups="$domain_admins_dn" || die
 
+# register LDAP acl to hide settings/data attribute. Contains database password
+ucs_registerLDAPExtension "$@" \
+	--ucsversionstart "4.4-0" --ucsversionend "5.99-0" \
+	--packagename "$app_id" \
+	--packageversion "1" \
+	--acl "/var/lib/univention-appcenter/apps/$app_id/conf/67keycloak.acl" || die
+
 
 ## TODO: Integrate jdbc uri registration here
 keycloak_db_host_dn=$(univention-ldapsearch -LLL univentionService="Keycloak DB" dn | sed -ne "s/^dn: //p")

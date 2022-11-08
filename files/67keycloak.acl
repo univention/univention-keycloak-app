@@ -1,0 +1,14 @@
+@!@
+from univention.lib.misc import custom_groupname
+from ldap.dn import escape_dn_chars
+base = configRegistry['ldap/base']
+domain_admins = escape_dn_chars(custom_groupname('Domain Admins'))
+
+print('''
+
+access to filter="(&(univentionObjectType=settings/data)(cn=keycloak))" attrs=univentionData
+   by group/univentionGroup/uniqueMember="cn=%s,cn=groups,%s" read
+   by set="user/objectClass & [univentionDomainController]" read
+   by * none
+''' % (domain_admins, base))
+@!@
