@@ -52,6 +52,14 @@ echo "Installing univention-keycloak apache template"
 %EOF
 chmod 644 "$keycloak_template_path"
 
+# keycloak settings/data acl
+keycloak_acl_path=/var/lib/univention-appcenter/apps/keycloak/conf/67keycloak.acl
+echo "Installing Keycloak data/settings acl"
+	cat <<%EOF >"$keycloak_acl_path"
+%KEYCLOAK-ACL%
+%EOF
+chmod 644 "$keycloak_acl_path"
+
 # apache template info
 keycloak_info_path=/etc/univention/templates/info/univention-keycloak.info
 echo "Installing Keycloak apache template info"
