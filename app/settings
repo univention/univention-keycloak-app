@@ -106,9 +106,30 @@ Show = Install, Settings
 Scope = outside
 Description =  Ip addresses allowed to reach the db. (e.g. 123.123.123.0/16) -- CHANGE LATER
 
-[keycloak/database/uri]
+[kc/db/url]
 Type = String
 Required = False
 Show = Install, Settings
-Scope = outside
-Description = Database URI (e.g. postgres://keycloak:dbpass@dbhost/keycloak)
+Scope = inside
+Description = Database URI (e.g. jdbc:postgresql://dbhost/keycloak)
+
+[kc/db/username]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside
+Description = Database username. Default "keycloak"
+
+[kc/db/kind]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside,outside
+Description = Database kind (e.g. postgres)
+
+[kc/dc/password]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside
+Description = Database password
