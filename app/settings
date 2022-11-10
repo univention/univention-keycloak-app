@@ -118,6 +118,7 @@ Type = String
 Required = False
 Show = Install, Settings
 Scope = inside
+InitialValue = keycloak
 Description = Database username. Default "keycloak"
 
 [kc/db/kind]
@@ -125,9 +126,10 @@ Type = String
 Required = False
 Show = Install, Settings
 Scope = inside,outside
+InitialValue = postgres
 Description = Database kind (e.g. postgres)
 
-[kc/dc/password]
+[kc/db/password]
 Type = String
 Required = False
 Show = Install, Settings

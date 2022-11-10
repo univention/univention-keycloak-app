@@ -37,12 +37,15 @@ die () {
 cp app/preinst.tmpl app/preinst
 
 ## Then they simply teplace the some keywords by the actual files like:
+base64 files/univention-keycloak >> files/tmp_uk_b64
+sed -i -e "/%KEYCLOAK-MANAGEMENT-SCRIPT%/r files/tmp_uk_b64" -e "/%KEYCLOAK-MANAGEMENT-SCRIPT%/d" app/preinst
 tar cjf - -C files/themes UCS | base64 >> files/tmp_base64
 sed -i -e "/%ARCHIVE_CONTENT%/r files/tmp_base64" -e "/%ARCHIVE_CONTENT%/d" app/preinst
 
 sed -i -e "/%KEYCLOAK-TEMPLATE-APACHE%/r files/univention-keycloak.conf" -e "/%KEYCLOAK-TEMPLATE-APACHE%/d" app/preinst
 sed -i -e "/%KEYCLOAK-INFO-APACHE%/r files/univention-keycloak.info" -e "/%KEYCLOAK-INFO-APACHE%/d" app/preinst
 base64 files/keycloak.conf >> files/tmp_kconf_b64
+sed -i -e "/%KEYCLOAK-TEMPLATE-CONF%/r files/tmp_kconf_b64" -e "/%KEYCLOAK-TEMPLATE-CONF%/d" app/preinst
 
 sed -i -e "/%POSTGRESQL-KEYCLOAK-TEMPLATE%/r files/50-keycloak" -e "/%POSTGRESQL-KEYCLOAK-TEMPLATE%/d" app/preinst
 sed -i -e "/%POSTGRESQL-KEYCLOAK-INFO%/r files/50-keycloak.info" -e "/%POSTGRESQL-KEYCLOAK-INFO%/d" app/preinst
