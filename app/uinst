@@ -41,12 +41,6 @@ joinscript_init
 app_id="keycloak"
 domainname="$(ucr get domainname)"
 hostname="$(ucr get hostname)"
-url_prefix="$(ucr get keycloak/url/prefix)"
-
-if [ -n "$url_prefix" ]; then
-    univention-add-vhost --remove "$url_prefix.$hostname.$domainname" 443 "$@"
-    service apache2 reload
-fi
 
 # remove service
 ucs_removeServiceFromLocalhost "$app_id" "$@"
