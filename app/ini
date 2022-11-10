@@ -1,7 +1,7 @@
 [Application]
 ID = keycloak
 Code = 3O
-Version = backup_db_sync
+Version = 16-test-julia
 Name = Keycloak
 DockerScriptRestoreDataAfterSetup = 
 DockerScriptStoreData = 

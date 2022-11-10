@@ -1,10 +1,11 @@
 #!/bin/bash
 
+
 # shellcheck source=/dev/null
 [ -e /usr/share/univention-lib/ucr.sh ] && . /usr/share/univention-lib/ucr.sh
+. /usr/share/univention-lib/all.sh
 
 action=$1
-
 
 apache_config () {
 	# create apache config
@@ -46,11 +47,6 @@ chmod 640 "/etc/postgresql-keycloak.secret"
 chgrp "DC Backup Hosts" "/etc/postgresql-keycloak.secret"
 chgrp "DC Backup Hosts" "/etc/keycloak.secret"
 
-#if is_ucr_true keycloak/ucs/setup; then
-#	setup_ucs
-#fi
-### TODO: Change to detect installation + password from Nikola's jdbc uri
-. /usr/share/univention-lib/all.sh
 
 data="$(python3 <<-%EOF
 import json
@@ -68,26 +64,25 @@ ucr = ConfigRegistry().load()
 fqdn = f'{ucr.get("hostname")}.{ucr.get("domainname")}'
 ldap_base = ucr.get('ldap/base')
 superordinate = f'cn=univention,{ldap_base}'
-name = 'keycloak'
+app_name = 'keycloak'
 mod = UDM.admin().version(2).get('settings/data')
 with open('/etc/postgresql-keycloak.secret', 'r') as fd:
-    password = fd.read().strip()
+    default_password = fd.read().strip()
 
-default_uri = f'jdbc:postgresql://{fqdn}:5432/keycloak'
-
-kc_db_url=None
+default_url = f'jdbc:postgresql://{fqdn}:5432/keycloak'
+kc_db_url = None
 app = Apps().find("keycloak")
 for setting in app.get_settings():
     if setting.name == "kc/db/url":
-        kc_db_url = setting.get_value(app)
+        kc_db_url = setting.get_value(app) or kc_db_url
     if setting.name == "kc/db/password":
         kc_db_password = setting.get_value(app)
     if setting.name == "kc/db/username":
-        kc_db_username = setting.get_value(app)
+        kc_db_username = setting.get_value(app) or app_name
 
 try:
     # URL not found in UCR, try in LDAP first
-    obj = mod.get(f'cn={name},cn=data,{superordinate}')
+    obj = mod.get(f'cn={app_name},cn=data,{superordinate}')
 
     data = json.loads(obj.props.data.raw)
     kc_db_url = kc_db_url or data['uri']
@@ -99,35 +94,33 @@ except NoObject:
     # URL not found in UCR or LDAP - use current host configuration
     obj = mod.new(superordinate)
     obj.position = f'cn=data,{superordinate}'
-    obj.props.name = name
+    obj.props.name = app_name
     obj.props.data_type = 'string'
     data = {
-        'uri': kc_db_url,
-        'password': kc_db_password or password,
-        'username': kc_db_username or name,
+        'uri': kc_db_url or default_url,
+        'password': kc_db_password or default_password,
+        'username': kc_db_username,
         'installations': [fqdn],
     }
-    raw_value = json.dumps(data).encode('ascii')
-    obj.props.data = Base64Bzip2BinaryProperty('data', raw_value=raw_value)
-    obj.save()
+raw_value = json.dumps(data).encode('ascii')
+obj.props.data = Base64Bzip2BinaryProperty('data', raw_value=raw_value)
+obj.save()
 
-kc_db_url = kc_db_url or default_uri
+kc_db_url = kc_db_url or default_url
 cfg = urlparse(kc_db_url)
 print(kc_db_url)
-print(kc_db_password or password)
+print(kc_db_password or default_password)
 print(urlparse(cfg.path).scheme.replace("postgresql", "postgres"))
-print(kc_db_username or "keycloak")
+print(kc_db_username)
 %EOF
 )" || die
 opts=( $(echo -e "$data" | awk -F'\n'  '{print $1, $2}') );
-echo "$opts"
 kc_db_url="${opts[0]}"
 kc_db_password="${opts[1]}"
 kc_db_kind="${opts[2]}"
 kc_db_username="${opts[3]}"
-echo "$kc_db_url"
 
-univention-app configure keycloak --set "KC/DB/URL=$kc_db_url" "KC/DB/USERNAME=$kc_db_username" "KC/DB/PASSWORD=$kc_db_password" "KC/DB/KIND=$kc_db_kind" --run-script=no
+univention-app configure keycloak --set "kc/db/url=$kc_db_url" "kc/db/username=$kc_db_username" "kc/db/password=$kc_db_password" "kc/db/kind=$kc_db_kind" --run-script=no >/dev/null #dont log infos
 univention-app reinitialize keycloak
 
 if [ "$action" = "settings" ]; then
