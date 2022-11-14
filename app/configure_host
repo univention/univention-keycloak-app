@@ -110,7 +110,7 @@ kc_db_url = kc_db_url or default_url
 cfg = urlparse(kc_db_url)
 print(kc_db_url)
 print(kc_db_password or default_password)
-print(urlparse(cfg.path).scheme.replace("postgresql", "postgres"))
+print(urlparse(cfg.path).scheme.replace("postgresql", "postgres").replace("sqlserver", "mssql")
 print(kc_db_username)
 %EOF
 )" || die
@@ -125,6 +125,5 @@ univention-app reinitialize keycloak
 
 if [ "$action" = "settings" ]; then
 	i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
-	echo "Container is healty, configuring Keycloak"
-	univention-keycloak init || die
+	echo "Container is healthy"
 fi
