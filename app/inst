@@ -71,91 +71,31 @@ ucs_registerLDAPExtension "$@" \
 	--packageversion "1" \
 	--acl "/var/lib/univention-appcenter/apps/$app_id/conf/67keycloak.acl" || die
 
-
-## TODO: Integrate jdbc uri registration here
-keycloak_db_host_dn=$(univention-ldapsearch -LLL univentionService="Keycloak DB" dn | sed -ne "s/^dn: //p")
-if [ -z "$keycloak_db_host_dn" ]; then
-	ucs_addServiceToLocalhost "Keycloak DB" "$@"
-	keycloak_db_host_address="${docker_daemon_default_opts_bip:-172.17.42.1}"
-	ucr set keycloak/server/sso/certificate/generation='true'
-	ucr set keycloak/server/sso/certificate/download='false'
-else
-	keycloak_db_host_address=$(ucs_getAttrOfDN "aRecord" "$keycloak_db_host_dn")
-	ucr set keycloak/server/sso/certificate/generation='false'
-	ucr set keycloak/server/sso/certificate/download='true'
-fi
-
-
-eval "$(ucr shell)"
-
 ## as variables were changed we need the new ones
 psql_pwd_path="/etc/postgresql-keycloak.secret"
 remote_psql_pwd_path="/etc/remote-postgresql-keycloak.secret"
 machine_secret="/etc/machine.secret"
 remote_admin_pwd=""
 
+eval "$(ucr shell)"
+ucs_parseCredentials "$@"
+keycloak_db_host_dn=$(univention-ldapsearch -LLL univentionService="Keycloak DB" dn | sed -ne "s/^dn: //p")
+primary_dn=$(univention-ldapsearch -LLL univentionObjectType="computers/domaincontroller_master" dn | sed -ne "s/^dn: //p")
+primary_address=$(ucs_getAttrOfDN "aRecord" "$primary_dn")
+if [ -z "$keycloak_db_host_dn" ]; then
+	ucs_addServiceToLocalhost "Keycloak DB" "$@"
+else
+	keycloak_db_host_address=$(ucs_getAttrOfDN "aRecord" "$keycloak_db_host_dn")
+	univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/keycloak.secret" || die
+fi
 
 # check if we need to create a new certificate
-if [ "$server_role" = "domaincontroller_master" ]; then
-	if [ -z "$keycloak_server_sso_certificate_generation" ] || is_ucr_true keycloak/server/sso/certificate/generation; then
-		univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}" || die
-		create_or_download=true
-		ucr set keycloak/server/sso/certificate/generation='false'
-		keycloak_db_password="$(cat $psql_pwd_path)"
-	elif [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
-		ucs_parseCredentials "$@"
-		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
-		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/keycloak.secret" || die
-		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
-		chgrp -R "DC Backup Hosts" "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
-		keycloak_db_password="$(cat $remote_psql_pwd_path)"
-		remote_admin_pwd="/etc/keycloak.secret"
-		create_or_download=true
-		ucr set keycloak/server/sso/certificate/generation='false'
-	fi
-else
-	if [ -z "$keycloak_server_sso_certificate_generation" ] || is_ucr_true keycloak/server/sso/certificate/generation; then
-		ucs_parseCredentials "$@"
-		HOSTACCOUNT="$(ucs_convertDN2UID "$binddn")" # getting uid
-#		NAMETMP=${binddn:4} # Remove uid=
-#		HOSTACCOUNT=${NAMETMP%%,cn=*} # remove from first ",cn=" to end
-#		univention-ssh $bindpwdfile "$HOSTACCOUNT@$ldap_master "/usr/share/univention-ssl/make-certificates.sh; univention-certificate new -name "${keycloak_server_sso_fqdn}" -days "${ssl_default_days:-1825}"" || die
-#		DOWNLOAD CERT TO THIS HOST
-#		univention-scp $machine_secret "-r $hostname\$@$ldap_master:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
-		gencert "/etc/univention/ssl/$keycloak_server_sso_fqdn" "${keycloak_server_sso_fqdn}" "${ssl_default_days:-1825}" || die
-		chgrp -R "DC Backup Hosts" "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
-		chmod -R 640 "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
-		chmod 750 "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
-		create_or_download=true
-		ucr set keycloak/server/sso/certificate/generation='false'
-		keycloak_db_password="$(cat $psql_pwd_path)"
-	elif [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
-		ucs_parseCredentials "$@"
-		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
-		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/keycloak.secret" || die
-		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
-		chgrp -R "DC Backup Hosts" "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
-		keycloak_db_password="$(cat $remote_psql_pwd_path)"
-		remote_admin_pwd="/etc/keycloak.secret"
-		create_or_download=true
-		ucr set keycloak/server/sso/certificate/generation='false'
-	fi
+if [ "$server_role" = "domaincontroller_backup" ]; then
+	univention-scp "$machine_secret" "-r $hostname\$@$primary_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
+	chgrp -R "DC Backup Hosts" "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
 fi
-## Keycloak postgres db password does not need to be downloaded -> is in LDAP
-## TODO: Change everything on top for this (after cert errata), rename app setting
-#if [ -z "$keycloak_server_sso_certificate_download" ] || is_ucr_true keycloak/server/sso/certificate/download; then
-#		ucs_parseCredentials "$@"
-## TODO: Keycloak secret shouldn't be neeed
-##		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/keycloak.secret" || die
-## TODO: DB secret is on the ldap stored db uri. No need to cp the secret
-##		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:$psql_pwd_path $remote_psql_pwd_path" || die
-#		keycloak_db_password="$(cat $remote_psql_pwd_path)"
-#		remote_admin_pwd="/etc/keycloak.secret"
-#		ucr set keycloak/server/sso/certificate/generation='false'
-#fi
 
 # Re-create Apache configuration after the certificate generation
-
 [ -x /usr/sbin/univention-config-registry ] && univention-config-registry register univention-keycloak || true
 ucr commit /etc/apache2/sites-available/univention-keycloak.conf
 a2ensite univention-keycloak
@@ -184,7 +124,7 @@ fi
 systemctl restart apache2
 univention-app restart keycloak
 i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
-echo "Container is healty, configuring Keycloak"
+echo "Container is healthy, configuring Keycloak"
 
 univention-keycloak init || die
 # another restart for the cache initialization
