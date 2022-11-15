@@ -64,6 +64,45 @@ if [ -z "$keycloak_dns_addresses" ]; then
 	udm dns/host_record remove --dn "relativeDomainName=$sso_hostname,zoneName=$sso_domainname,cn=dns,$ldap_base"
 fi
 
+if is_localhost_in_admember_mode; then
+		ucs_parseCredentials "$@"
+		if [ -n "$binddn" ] && [ -n "$bindpwdfile" ]; then
+			#Create TEMPORARY FILE
+			filename="$(python3 <<-%EOF
+import ldap
+import ldap.sasl
+from ldap.filter import filter_format
+import univention.lib.admember
+import tempfile
+from univention.config_registry.interfaces import Interfaces
+from univention.config_registry import ConfigRegistry
+
+ucr = univention.config_registry.ConfigRegistry()
+ucr.load()
+fqdn = ucr.get('keycloak/server/sso/fqdn')
+ad_domain_info = univention.lib.admember.lookup_adds_dc()
+ad_ip = ad_domain_info['DC IP']
+ip = Interfaces().get_default_ip_address().ip
+
+fd = tempfile.NamedTemporaryFile('w+', delete=False)
+fd.write('server %s\n' % ad_ip)
+fd.write('update delete %s A %s\n' % (fqdn, ip))
+fd.write('send\n')
+fd.write('quit\n')
+fd.close()
+
+print(fd.name)
+
+%EOF
+)"
+			# CALL KINIT
+			kinit --password-file="$bindpwdfile" "$(ucs_convertDN2UID "$binddn")"
+			# CALL NSUPDATE
+			nsupdate -v -g "$filename"
+			rm "$filename"
+		fi
+fi
+
 
 $(python3 <<-%EOF
 import json

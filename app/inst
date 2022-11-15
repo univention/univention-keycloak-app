@@ -114,7 +114,7 @@ if [ -z "$keycloak_server_sso_autoregistration" ] || is_ucr_true keycloak/server
 	if is_localhost_in_admember_mode; then
 		ucs_parseCredentials "$@"
 		if [ -n "$binddn" ] && [ -n "$bindpwdfile" ]; then
-			add_host_record_in_ad "$binddn" "" "$bindpwdfile" \
+			add_host_record_in_ad "" "$binddn" "$bindpwdfile" \
 				"$keycloak_server_sso_fqdn" "$(get_default_ip_address)" || die
 		fi
 	fi
