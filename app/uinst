@@ -94,11 +94,11 @@ fd.close()
 print(fd.name)
 
 %EOF
-)"
+)" || die
 			# CALL KINIT
-			kinit --password-file="$bindpwdfile" "$(ucs_convertDN2UID "$binddn")"
+			kinit --password-file="$bindpwdfile" "$(ucs_convertDN2UID "$binddn")" || die
 			# CALL NSUPDATE
-			nsupdate -v -g "$filename"
+			nsupdate -v -g "$filename" || die
 			rm "$filename"
 		fi
 fi
