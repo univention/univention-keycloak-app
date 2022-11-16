@@ -73,27 +73,26 @@ ucs_registerLDAPExtension "$@" \
 
 ## as variables were changed we need the new ones
 psql_pwd_path="/etc/postgresql-keycloak.secret"
-remote_psql_pwd_path="/etc/remote-postgresql-keycloak.secret"
 machine_secret="/etc/machine.secret"
-remote_admin_pwd=""
 
 eval "$(ucr shell)"
 ucs_parseCredentials "$@"
-keycloak_db_host_dn=$(univention-ldapsearch -LLL univentionService="Keycloak DB" dn | sed -ne "s/^dn: //p")
-primary_dn=$(univention-ldapsearch -LLL univentionObjectType="computers/domaincontroller_master" dn | sed -ne "s/^dn: //p")
-primary_address=$(ucs_getAttrOfDN "aRecord" "$primary_dn")
-if [ -z "$keycloak_db_host_dn" ]; then
-	ucs_addServiceToLocalhost "Keycloak DB" "$@"
-else
-	keycloak_db_host_address=$(ucs_getAttrOfDN "aRecord" "$keycloak_db_host_dn")
-	univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host_address:/etc/keycloak.secret /etc/keycloak.secret" || die
-fi
-
+primary="$ldap_master"
 # check if we need to create a new certificate
 if [ "$server_role" = "domaincontroller_backup" ]; then
-	univention-scp "$machine_secret" "-r $hostname\$@$primary_address:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
+	univention-scp "$machine_secret" "-r $hostname\$@$primary:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
 	chgrp -R "DC Backup Hosts" "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
 fi
+
+keycloak_db_host_dn=$(univention-ldapsearch -LLL univentionService="Keycloak DB" dn | sed -ne "s/^dn: //p")
+if [ -z "$keycloak_db_host_dn" ]; then
+       ucs_addServiceToLocalhost "Keycloak DB" "$@"
+else
+       keycloak_db_host=$(ucs_getAttrOfDN "cn" "$keycloak_db_host_dn")
+       univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host:/etc/keycloak.secret /etc/keycloak.secret" || die
+fi
+
+
 
 # Re-create Apache configuration after the certificate generation
 [ -x /usr/sbin/univention-config-registry ] && univention-config-registry register univention-keycloak || true
@@ -121,14 +120,25 @@ if [ -z "$keycloak_server_sso_autoregistration" ] || is_ucr_true keycloak/server
 	fi
 fi
 
-systemctl restart apache2
+
 univention-app restart keycloak
 i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
 echo "Container is healthy, configuring Keycloak"
-
 univention-keycloak init || die
+
+
+for umc in $(univention-ldapsearch -LLL univentionService="Univention Management Console" displayName | sed -n 's/displayName: //p' | tr ";" "\n")
+do
+	univention-keycloak "$@" saml/sp create --metadata-url="https://$umc.$domainname/univention/saml/metadata" --umc-uid-mapper
+	if [ "$?" != "0" ]; then
+		echo "Error creating a saml serviceprovider for the umc of $umc.$domainname"
+	fi
+
+done
+
 # another restart for the cache initialization
 univention-app restart keycloak
+
 
 joinscript_save_current_version
 
