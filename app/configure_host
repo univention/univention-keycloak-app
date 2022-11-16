@@ -110,7 +110,7 @@ kc_db_url = kc_db_url or default_url
 cfg = urlparse(kc_db_url)
 print(kc_db_url)
 print(kc_db_password or default_password)
-print(urlparse(cfg.path).scheme.replace("postgresql", "postgres").replace("sqlserver", "mssql")
+print(urlparse(cfg.path).scheme.replace("postgresql", "postgres").replace("sqlserver", "mssql"))
 print(kc_db_username)
 %EOF
 )" || die
