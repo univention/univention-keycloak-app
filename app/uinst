@@ -60,6 +60,17 @@ ucr unset \
     ucs/web/overview/entries/admin/$app_id/icon \
     ucs/web/overview/entries/admin/$app_id/link-target
 
+eval "$(ucr shell)"
+sso_hostname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 1)"
+sso_domainname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 2-)"
+udm dns/host_record modify --dn "relativeDomainName=$sso_hostname,zoneName=$sso_domainname,cn=dns,$ldap_base" --remove a="$(get_default_ip_address)"
+keycloak_dns_record=$(univention-ldapsearch -LLL relativeDomainName="ucs-sso-ng" dn | sed -ne "s/^dn: //p")
+keycloak_dns_addresses=$(ucs_getAttrOfDN "aRecord" "$keycloak_dns_record")
+if [ -z "$keycloak_dns_addresses" ]; then
+	udm dns/host_record remove --dn "relativeDomainName=$sso_hostname,zoneName=$sso_domainname,cn=dns,$ldap_base"
+fi
+
+
 $(python3 <<-%EOF
 import json
 
