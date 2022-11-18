@@ -3,7 +3,7 @@ version: '3.1'
 services:
   keycloak:
     container_name: keycloak
-    image: gitregistry.knut.univention.de/univention/components/keycloak-app/keycloak-adhoc:19.0.1-ucs5
+    image: gitregistry.knut.univention.de/univention/components/keycloak-app/keycloak-adhoc:19.0.1-ucs4
     command: start --hostname=@%@keycloak/server/sso/fqdn@%@ --http-enabled=true --proxy=edge --cache=cache-ispn-jdbc-ping.xml --db=@%@kc/db/kind@%@
     ## For --proxy=edge see https://www.keycloak.org/server/reverseproxy
     ## For --hostname   see https://www.keycloak.org/server/hostname

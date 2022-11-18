@@ -31,7 +31,7 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	&nbsp;
 	</p>
 	<p>
-	NOTE: This App should currently only be installed for testing purposes. It can only be installed on a UCS Primary Directory Node and thus is not suitable yet for productive use in environments that have UCS Backup Directory Nodes. It generates a new DNS name
+	NOTE: This App should currently only be installed for testing purposes.
 	<tt>
 	ucs-sso-ng.$domainname
 	</tt>
@@ -71,7 +71,7 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	&nbsp;
 	</p>
 	<p>
-	NOTE: Diese App sollte zur Zeit nur zu Testzwecken installiert werden. Die App kann aktuell nur auf UCS Primary Directory Nodes installiert werden und ist daher noch nicht geeignet für produktive Nutzung in Umgebungen, die UCS Backup Directory Nodes haben. Die App erzeugt einen neuen DNS-Namen
+	NOTE: Diese App sollte zur Zeit nur zu Testzwecken installiert werden.
 	<tt>
 	ucs-sso-ng.$domainname
 	</tt>
