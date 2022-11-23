@@ -135,3 +135,27 @@ Required = False
 Show = Install, Settings
 Scope = inside
 Description = Database password
+
+[kc/db/xa]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside, outside
+InitialValue = false
+Description = Database xa transactions flag (e.g true/false)
+
+[kc/db/driver]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside
+InitialValue = org.postgresql.Driver
+Description = Database infinispan driver
+
+[kc/db/ping/datatype]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside
+InitialValue = BYTEA
+Description = Datatype for ping_data value in the database (Mariadb compatibility)

@@ -120,7 +120,17 @@ kc_db_password="${opts[1]}"
 kc_db_kind="${opts[2]}"
 kc_db_username="${opts[3]}"
 
-univention-app configure keycloak --set "kc/db/url=$kc_db_url" "kc/db/username=$kc_db_username" "kc/db/password=$kc_db_password" "kc/db/kind=$kc_db_kind" --run-script=no >/dev/null #dont log infos
+if [ "$kc_db_kind" = "mariadb" ]; then
+	kc_db_driver="org.mariadb.jdbc.Driver"
+	kc_db_ping_datatype="VARBINARY(255)"
+fi
+
+if [ "$kc_db_kind" = "postgres" ]; then
+	kc_db_driver="org.postgresql.Driver"
+	kc_db_ping_datatype="BYTEA"
+fi
+
+univention-app configure keycloak --set "kc/db/url=$kc_db_url" "kc/db/username=$kc_db_username" "kc/db/password=$kc_db_password" "kc/db/kind=$kc_db_kind" "kc/db/driver=$kc_db_driver" "kc/db/ping/datatype=$kc_db_ping_datatype" --run-script=no >/dev/null #dont log infos
 univention-app reinitialize keycloak
 
 if [ "$action" = "settings" ]; then
