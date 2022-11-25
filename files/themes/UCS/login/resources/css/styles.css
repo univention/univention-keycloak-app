@@ -13,7 +13,7 @@
 }
 
 .kc-social-gray{
-    color: var(--pf-c-form__label--Color);
+    color: var(--font-color-contrast-high);
 }
 
 .pf-c-button {
@@ -35,7 +35,7 @@
 .login-pf body {
     background-image: none;
     background-color: var(--default-background-color);
-    color: var(--pf-c-form__label--Color);
+    color: var(--font-color-contrast-high);
 }
 
 .login-pf a:hover {
@@ -44,25 +44,45 @@
 }
 
 .login-pf-page .card-pf p {
-    color: var(--pf-c-form__label--Color);
+    color: var(--font-color-contrast-high);
 }
 
 .card-pf {
+    box-shadow: none;
     background: var(--bgc-content-container);
+    border-radius: 10px;
+    border-top: none;
+    width: 400px;
+    min-height: 400px;
+    padding: 3rem 1rem 3rem !important;
+}
+
+#kc-page-title {
+    display: none;
+}
+
+#kc-header {
+    color: var(--font-color-contrast-high);
 }
 
 .login-pf-page .login-pf-header h1 {
-    color: var(--pf-c-form__label--Color);
+    color: var(--font-color-contrast-high);
 }
 
 .login-pf-page .login-pf-header {
     background-image: url("../img/login_logo.svg");
     background-repeat: no-repeat;
-    background-position: left;
+    background-position: center;
+    padding: 1.7rem 0;
+    margin-bottom: 3rem;
 }
 
 #kc-locale-dropdown a {
-    color: var(--pf-c-form__label--Color)
+    color: var(--font-color-contrast-high);
+}
+
+.form-group {
+    margin-bottom: 0;
 }
 
 .pf-c-button.pf-m-control {
@@ -70,17 +90,51 @@
     --pf-c-button--disabled--BackgroundColor: var(--pf-c-button--m-control--disabled--BackgroundColor);
     --pf-c-button--after--BorderWidth: var(--pf-c-button--m-control--after--BorderWidth);
     --pf-c-button--after--BorderColor: var(--pf-c-button--m-control--after--BorderTopColor) var(--pf-c-button--m-control--after--BorderRightColor) var(--pf-c-button--m-control--after--BorderBottomColor) var(--pf-c-button--m-control--after--BorderLeftColor);
-    color: var(--pf-c-form__label--Color);
+    color: var(--font-color-contrast-high);
     background-color: var(--pf-global--primary-color--100);
+}
+
+.pf-c-button.pf-m-primary {
+    color: var(--font-color-contrast-high);
+    background-color: var(--pf-c-button--m-primary--BackgroundColor);
+    position: relative;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: .25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-3);
+}
+
+.pf-c-button.pf-m-primary:focus {
+    --pf-c-button--m-primary--Color: var(--pf-global--Color--light-100);
 }
 
 .pf-c-form-control {
     --pf-global--primary-color--200: unset;
     background-color: var(--bgc-inputfield-on-container);
-    color: var(--pf-c-form__label--Color);
+    color: var(--font-color-contrast-high);
     --pf-c-form-control--invalid--Background: var(--bgc-inputfield-on-container) var(--pf-c-form-control--invalid--exclamation--Background);
+    --pf-global--primary-color--200: unset;
+    --border-color: transparent;
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.8rem !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 0.25rem;
+    outline: none;
+    font-size: var(--font-size-3);
+    transition: border 250ms;
+    height: unset !important;
+}
+
+.pf-c-form-control:focus {
+    padding-bottom: 0.8rem;
+    border-bottom-width: 0;
 }
 
 #kc-form-login {
-    color: var(--pf-c-form__label--Color);
+    color: var(--font-color-contrast-high);
 }
