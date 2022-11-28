@@ -37,8 +37,6 @@ die () {
 cp app/preinst.tmpl app/preinst
 
 ## Then they simply teplace the some keywords by the actual files like:
-base64 files/univention-keycloak >> files/tmp_uk_b64
-sed -i -e "/%KEYCLOAK-MANAGEMENT-SCRIPT%/r files/tmp_uk_b64" -e "/%KEYCLOAK-MANAGEMENT-SCRIPT%/d" app/preinst
 tar cjf - -C files/themes UCS | base64 >> files/tmp_base64
 sed -i -e "/%ARCHIVE_CONTENT%/r files/tmp_base64" -e "/%ARCHIVE_CONTENT%/d" app/preinst
 
@@ -63,4 +61,4 @@ selfservice upload "$APP_VERSION" app/compose app/settings app/preinst app/confi
 # selfservice upload "$APP_VERSION" app/compose app/settings app/preinst app/configure_host app/inst app/uinst app/env app/test app/setup README_*
 
 ## And finally they clean the working directory after upload
-rm -f app/preinst files/tmp_base64 files/tmp_uk_b64 files/tmp_kconf_b64 files/tmp_ispn_kconf_b64
+rm -f app/preinst files/tmp_base64 files/tmp_kconf_b64 files/tmp_ispn_kconf_b64
