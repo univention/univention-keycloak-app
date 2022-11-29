@@ -41,9 +41,11 @@ The following list describes the elements in more detail.
 .. glossary::
 
    Keycloak
-      *Keycloak* is the Keycloak software as distributed by the Keycloak project as
-      container image for Docker. The :program:`Keycloak` app uses the software
-      as-is without any changes to the software code.
+      *Keycloak* is the Keycloak software as distributed by the Keycloak project
+      as container image for Docker. The :program:`Keycloak` app uses the
+      unmodified Keycloak binary image and additionally includes files to for
+      example support synchronization of data between instances deployed on the
+      same domain.
 
    LDAP
       *LDAP* is the LDAP directory provided by |UCS| with the OpenLDAP software.

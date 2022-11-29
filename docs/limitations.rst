@@ -21,42 +21,22 @@ accounts from the UCS LDAP to Keycloak. For more information, see
 
 .. _limitation-primary-node:
 
-Installation on Primary Directory Node
-======================================
+Installation on UCS
+===================
 
-The App Center installs the :program:`Keycloak` app only on a UCS 5.0-x Primary
-Directory Node in your UCS environment, see :ref:`app-installation`. The app is
-therefore not suitable for production use in UCS domains that have Backup
-Directory Nodes.
+The App Center installs the app :program:`Keycloak` on a UCS 5.0-x Primary
+Directory Node or Backup Directory Node in your UCS environment, see
+:ref:`app-installation`. The app is suitable for production use in UCS domains.
+Administrators need to keep in mind, other apps may be unable to authenticate
+users through SAML without manual reconfiguration.
 
-Use the :program:`Keycloak` app only in a UCS environment without Backup
-Directory Nodes, because otherwise:
-
-* Users may encounter sign in problems at the UCS management system on other UCS
-  systems.
-
-* Other apps may not be able to authenticate users through SAML without manual
-  interaction.
-
-* Using other hosts requires the synchronization of the Keycloak configuration
-  across hosts on the one hand and synchronization of session data on the other
-  hand, that isn't supported in this version.
-
-The installation might not break anything in production. But, experiments with
-reconfiguration of, for example, UMC and other services so that they use
-Keycloak, may have undesired results. In particular, when you change the UCR
-variable :envvar:`umc/saml/idp-server` to point to your Keycloak installation.
-The LDAP server will not recognize SAML tickets that the *simpleSAMLphp* based
-identity provider issued after you restart it. Users will experience
-invalidation of their existing sessions.
-
-.. TODO : Discuss with SME:
-
-   * What kind of sign in problems may occur? Can we specify them better?
-   * What kind of manual interaction by whom is meant here?
-
-   See https://git.knut.univention.de/univention/ucs/-/issues/1081 and
-   https://git.knut.univention.de/univention/ucs/-/issues/994.
+Administrators need to take care with experiments that involve the
+reconfiguration, for example, of UMC, and other services to use
+Keycloak. The experiments may have undesired results. In particular, when you
+change the UCR variable :envvar:`umc/saml/idp-server` to point to your Keycloak
+installation and restart the LDAP server, the LDAP server doesn't accept
+SAML tickets any longer that the *simpleSAMLphp* based identity provider issued.
+So users find their existing sessions invalidated.
 
 .. _limitation-no-user-activation:
 
@@ -81,3 +61,14 @@ credentials.
 
 UCS takes care of password policy definition and enforcement. For more
 information, see :ref:`uv-manual:domain-ldap` in :cite:t:`ucs-manual`.
+
+.. _limitation-application-client:
+
+Application clients
+===================
+
+:program:`Keycloak` offers the possibility to create |SAML| or |OIDC| clients
+using the command line tool :program:`univention-keycloak`. Administrators can
+adjust the generic client configuration, if they need a specific configuration.
+In this case you can use the :ref:`Keycloak Admin Console
+<keycloak-admin-console>`.

@@ -151,8 +151,8 @@ usage, see the following example:
    $ univention-keycloak oidc/op/cert get \
    --as-pem \
    --output "$SOMEFILENAME"
-   $ univention-keycloak oidc/rp create "$CLIENT-ID" \
-   --app-url "https://$(hostname -f)/$MYAPPURL/"
+   $ univention-keycloak oidc/rp create \
+   --app-url="https://$(hostname -f)/${MYAPP_URL}/" "${MYAPP_CLIENT_ID}"
 
 The option group ``oidc/rp`` offers additional options like ``--client-secret``.
 
@@ -188,7 +188,7 @@ usage, see the following example:
 
    $ univention-keycloak saml/idp/cert get \
    --as-pem --output "$SOMEFILENAME"
-   $ univention-keycloak saml/sp create "$APPNAME" \
+   $ univention-keycloak saml/sp create \
    --metadata-url "https://$(hostname -f)/$METADATA-URL-OF-THE-APP"
 
 The option group ``saml/sp`` offers additional options like
@@ -200,8 +200,126 @@ The option group ``saml/sp`` offers additional options like
    configuration page, Keycloak offers an additional *Credentials* tab with the
    credentials.
 
+.. _backup-and-restore:
+
+Backup and restore
+==================
+
+Administrators can create a backup of the :program:`Keycloak` app data. The data
+comprises information for example about the realm, clients, groups, and roles.
+To create a backup, run the *export* action as in the following steps:
+
+.. code-block:: console
+
+   $ univention-app shell keycloak /opt/keycloak/bin/kc.sh export \
+   --dir /var/lib/univention-appcenter/apps/keycloak/data/myexport
+
+In this example :file:`myexport` is a freely chosen directory name.
+
+To restore the backup into the app :program:`Keycloak`, run the *import* action
+as in the following step:
+
+.. code-block:: console
+
+   $ univention-app shell keycloak /opt/keycloak/bin/kc.sh import \
+   --dir /var/lib/univention-appcenter/apps/keycloak/data/myexport
+
+.. warning::
+
+   :program:`Keycloak` defines the scope of exported data and may not contain
+   every configuration option the program offers.
+
+.. _mariadb-database-configuration:
+
+MariaDB as database
+===================
+
+The :program:`Keycloak` app uses PostgreSQL as default database back end.
+This section explains how to configure the app :program:`Keycloak` to connect
+and use a MariaDB database back end. The setup requires a configuration through
+:ref:`app-settings`. Administrators can select the database back end either
+during initial app installation of :program:`Keycloak` or change it later after
+installation.
+
+The following examples for the database configuration assume that a user account
+with the appropriate permissions for MariaDB exists. They use the database user
+account ``keycloak`` and the password ``database-password``.
+
+.. note::
+
+   The database user needs the following minimum privileges to work in a single
+   machine setup. Use the `GRANT command <mariadb-grant_>`_:
+
+   .. code-block:: sql
+
+      GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, REFERENCES, INDEX, DROP
+      ON `<database>`.* TO `<user>`@`<host>`;
+
+.. tab:: Initial installation
+
+   To specify a MariaDB database during installation, run
+
+   .. code-block:: console
+
+      $ univention-app install \
+      --set kc/db/url="jdbc:mariadb://${database_hostname}:3306/keycloak" \
+      --set kc/db/password="database-password"
+
+.. tab:: After installation
+
+   .. tab:: UMC
+
+      To specify a MariaDB database after installation in UMC:
+
+
+      #. Sign in to the UCS management system.
+      #. Go to :menuselection:`App Center --> Keycloak --> Manage Installation --> App Settings`.
+      #. Search for the variable :envvar:`Database URI`. Set the value to your
+         MariaDB endpoint, for example :samp:`jdbc:mariadb://${database_hostname}:3306/keycloak`
+         and click :guilabel:`Apply Changes`.
+
+   .. tab:: Console
+
+      To specify a MariaDB database after installation on the command line:
+
+      .. code-block:: console
+
+         $ univention-app configure keycloak \
+         --set kc/db/url "jdbc:mariadb://${database_hostname}:3306/keycloak" \
+         --set kc/db/password "database-password"
+
+   And to persist this change also in LDAP, use the following commands:
+
+   .. code-block:: console
+
+      $ univention-install jq
+      $ new_json=$(univention-ldapsearch -LLL \
+      '(&(cn=keycloak)(univentionObjectType=settings/data))' \
+      | sed -n 's/^univentionData:: //p' | base64 -d | bzip2 --decompress \
+      | jq '.uri = "jdbc:mariadb://${database_hostname}:3306/keycloak"')
+      $ udm settings/data modify \
+      --dn "cn=keycloak,cn=data,cn=univention,$(ucr get ldap/base)" \
+      --set data=$(echo "$new_json" | bzip2 -c | base64 -w0)
+
+.. _cluster-setup:
+
+Multiple installations in the domain
+====================================
+
+Administrators can install the app :program:`Keycloak` on several nodes in a UCS
+domain to increase availability and provide failover using the default DNS name
+``ucs-sso-ng.$(hostname -d)``. The default installations in the domain don't
+require any interaction from the administrator. This will also provide session
+synchronization between all :program:`Keycloak` installations on the domain.
+
+
 Two-factor authentication for Keycloak
 ======================================
+
+.. warning::
+
+   The two-factor capability isn't supported. Usage isn't recommended in
+   production environments.
 
 .. versionadded:: 19.0.1-ucs1
 
@@ -262,9 +380,15 @@ Deactivate two-factor authentication for domain administrators
 
 Keycloak ad hoc federation
 ==========================
+
+.. warning::
+
+   Keycloak ad hoc federation isn't supported. Usage isn't recommended in
+   production environments.
+
 .. versionadded:: 19.0.1-ucs2
    
-:program:`Keycloak` |SPI| extension for ad-hoc federation added.
+:program:`Keycloak` |SPI| extension for ad hoc federation added.
 Keycloak offers identity brokering to delegate authentication to one or more
 identity providers for OpenID Connect or SAML 2.0.
 
@@ -676,7 +800,7 @@ more information, consult :cite:t:`keycloak-docs`.
         - Set
 
       * - No
-        - None
+        - :samp:`ucs-sso-ng.{$domainname}`
         - Installation and app configuration
 
 
@@ -700,3 +824,128 @@ more information, consult :cite:t:`keycloak-docs`.
       * - Yes
         - ``true``
         - Installation and app configuration
+
+
+.. envvar:: keycloak/federation/remote/identifier
+
+   This property stores the name of the UDM property that stores
+   the unique identifier of the remote IAM objects. It is only
+   used for ad hoc federation.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``univentionObjectIdentifier``
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/federation/source/identifier
+
+   This property stores the name of the UDM property that stores
+   the remote source of an IAM objects. It is only used
+   for ad hoc federation.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``univentionSourceIAM``
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/database/connection
+
+   Specifies the IP addresses from which the default PostgreSQL database can receive
+   connections.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - None
+        - Installation and app configuration
+
+
+.. envvar:: kc/db/url
+
+   Specifies the database JDBC URL (for example ``jdbc:postgresql://dbhost/keycloak``)
+   to connect Keycloak. Defaults to :samp:`jdbc:postgresql://{fqdn}:5432/keycloak`.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - :samp:`jdbc:postgresql://{fqdn}:5432/keycloak`
+        - Installation and app configuration
+
+
+.. envvar:: kc/db/username
+
+   Specifies the database username. Defaults to ``keycloak``.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``keycloak``
+        - Installation and app configuration
+
+
+.. envvar:: kc/db/kind
+
+   Specifies the kind of database. Defaults to ``postgres``.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``postgres``
+        - Installation and app configuration
+
+
+.. envvar:: kc/db/password
+
+   Specifies the password to connect to the database.
+
+   .. list-table::
+     :header-rows: 1
+     :widths: 2 5 5
+
+     * - Required
+       - Default value
+       - Set
+
+     * - No
+       - None
+       - Installation and app configuration

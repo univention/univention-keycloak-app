@@ -8,7 +8,7 @@ Installation
 
 You can install the :program:`Keycloak` app like any other app with Univention
 App Center. The App Center only allows to install Keycloak on a UCS system with
-the system role *Primary Director Node*. For more information, see
+system role *Primary Directory Node* or *Backup Directory Node*. For more information, see
 :ref:`uv-manual:domain-ldap-primary-directory-node` in :cite:t:`ucs-manual`.
 
 UCS offers two different ways for app installation:
@@ -93,13 +93,6 @@ steps:
 
          $ univention-app install --set keycloak/admin/user="Administrator" keycloak
 
-.. TODO Point out that the testers must read the release notes of future releases
-
-   When we automate additional initial configuration settings, things may change
-   in Keycloak. We will warn about this in the release notes of future releases
-   of the Keycloak app.
-
-   https://git.knut.univention.de/univention/components/keycloak-app/-/issues/1#content
 
 .. _keycloak-admin-console:
 

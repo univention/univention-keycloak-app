@@ -1,5 +1,6 @@
 .. _deb-admin-handbook-shell: https://www.debian.org/doc/manuals/debian-handbook/short-remedial-course.en.html#sect.shell-and-basic-commands
 .. _keycloak: https://www.keycloak.org/
+.. _mariadb-grant: https://mariadb.com/kb/en/grant/
 .. _ms-adfs: https://learn.microsoft.com/en-us/windows-server/identity/active-directory-federation-services
 .. _quay-keycloak: https://quay.io/repository/keycloak/keycloak
 .. _w-openid-connect: https://en.wikipedia.org/wiki/OpenID#OpenID_Connect_(OIDC)
