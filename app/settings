@@ -118,7 +118,6 @@ Type = String
 Required = False
 Show = Install, Settings
 Scope = inside
-InitialValue = keycloak
 Description = Database username. Default "keycloak"
 
 [kc/db/kind]
@@ -149,7 +148,6 @@ Type = String
 Required = False
 Show = Install, Settings
 Scope = inside
-InitialValue = org.postgresql.Driver
 Description = Database infinispan driver
 
 [kc/db/ping/datatype]
@@ -157,5 +155,4 @@ Type = String
 Required = False
 Show = Install, Settings
 Scope = inside
-InitialValue = BYTEA
 Description = Datatype for ping_data value in the database (Mariadb compatibility)

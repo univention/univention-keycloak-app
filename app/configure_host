@@ -69,8 +69,10 @@ mod = UDM.admin().version(2).get('settings/data')
 with open('/etc/postgresql-keycloak.secret', 'r') as fd:
     default_password = fd.read().strip()
 
+driver_mapping = {"postgres": ["org.postgresql.Driver", "BYTEA"], "mariadb": ["org.mariadb.jdbc.Driver", "VARBINARY(255)"]}
 default_url = f'jdbc:postgresql://{fqdn}:5432/keycloak'
 kc_db_url = None
+
 app = Apps().find("keycloak")
 for setting in app.get_settings():
     if setting.name == "kc/db/url":
@@ -79,6 +81,11 @@ for setting in app.get_settings():
         kc_db_password = setting.get_value(app)
     if setting.name == "kc/db/username":
         kc_db_username = setting.get_value(app) or app_name
+    if setting.name == "kc/db/driver":
+        kc_db_driver = setting.get_value(app)
+    if setting.name == "kc/db/ping/datatype":
+        kc_db_ping_datatype = setting.get_value(app)
+
 
 try:
     # URL not found in UCR, try in LDAP first
@@ -88,30 +95,46 @@ try:
     kc_db_url = kc_db_url or data['uri']
     kc_db_password = kc_db_password or data['password']
     kc_db_username = kc_db_username or data['username']
+    kc_db_driver = kc_db_driver or data['driver']
+    kc_db_ping_datatype = kc_db_ping_datatype or data['ping_datatype']
     data['installations'].append(fqdn)
     data['installations'] = list(set(data['installations']))
 except NoObject:
-    # URL not found in UCR or LDAP - use current host configuration
+    # URL not found in UCR or LDAP - use current host configuration or defaults
+    kc_db_url = kc_db_url or default_url
+    cfg = urlparse(kc_db_url)
+    kc_db_kind = urlparse(cfg.path).scheme.replace("postgresql", "postgres").replace("sqlserver", "mssql")
+    kc_db_driver = kc_db_driver or driver_mapping.get(kc_db_kind, [''])[0]
+    kc_db_ping_datatype = kc_db_ping_datatype or driver_mapping.get(kc_db_kind, [''])[1]
     obj = mod.new(superordinate)
     obj.position = f'cn=data,{superordinate}'
     obj.props.name = app_name
     obj.props.data_type = 'string'
     data = {
-        'uri': kc_db_url or default_url,
+        'uri': kc_db_url,
         'password': kc_db_password or default_password,
         'username': kc_db_username,
+        'driver': kc_db_driver,
+        'ping_datatype': kc_db_ping_datatype,
         'installations': [fqdn],
     }
+else:
+    cfg = urlparse(kc_db_url)
+    kc_db_kind = urlparse(cfg.path).scheme.replace("postgresql", "postgres").replace("sqlserver", "mssql")
+
+
 raw_value = json.dumps(data).encode('ascii')
 obj.props.data = Base64Bzip2BinaryProperty('data', raw_value=raw_value)
 obj.save()
 
-kc_db_url = kc_db_url or default_url
-cfg = urlparse(kc_db_url)
+
+
 print(kc_db_url)
 print(kc_db_password or default_password)
-print(urlparse(cfg.path).scheme.replace("postgresql", "postgres").replace("sqlserver", "mssql"))
+print(kc_db_kind)
 print(kc_db_username)
+print(kc_db_driver)
+print(kc_db_ping_datatype)
 %EOF
 )" || die
 opts=( $(echo -e "$data" | awk -F'\n'  '{print $1, $2}') );
@@ -119,16 +142,8 @@ kc_db_url="${opts[0]}"
 kc_db_password="${opts[1]}"
 kc_db_kind="${opts[2]}"
 kc_db_username="${opts[3]}"
-
-if [ "$kc_db_kind" = "mariadb" ]; then
-	kc_db_driver="org.mariadb.jdbc.Driver"
-	kc_db_ping_datatype="VARBINARY(255)"
-fi
-
-if [ "$kc_db_kind" = "postgres" ]; then
-	kc_db_driver="org.postgresql.Driver"
-	kc_db_ping_datatype="BYTEA"
-fi
+kc_db_driver="${opts[4]}"
+kc_db_ping_datatype="${opts[5]}"
 
 univention-app configure keycloak --set "kc/db/url=$kc_db_url" "kc/db/username=$kc_db_username" "kc/db/password=$kc_db_password" "kc/db/kind=$kc_db_kind" "kc/db/driver=$kc_db_driver" "kc/db/ping/datatype=$kc_db_ping_datatype" --run-script=no >/dev/null #dont log infos
 univention-app reinitialize keycloak
