@@ -12,6 +12,30 @@
     --pf-global--danger-color--100: var(--bgc-error);
 }
 
+#kc-header-wrapper {
+    text-transform: none;
+    font-size: var(--font-size-2);
+    line-height: var(--font-lineheight-normal);
+    font-weight: 600;
+    letter-spacing: 0;
+    padding: 5.5rem 0 2.5rem;
+}
+
+input + .pf-c-form__label {
+    position: absolute;
+    top: 0.75rem;
+    left: 1rem;
+    transform-origin: left center;
+    transition: transform 0.3s, color 0.3s;
+    pointer-events: none;
+    font-size: var(--font-size-3);
+}
+
+input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__label {
+    transform: translateY(-1rem) scale(0.65);
+    color: var(--font-color-contrast-middle);
+}
+
 .kc-social-gray{
     color: var(--font-color-contrast-high);
 }
@@ -43,6 +67,10 @@
     text-decoration: none;
 }
 
+.login-pf-page {
+    padding-top: 0;
+}
+
 .login-pf-page .card-pf p {
     color: var(--font-color-contrast-high);
 }
@@ -63,6 +91,7 @@
 
 #kc-header {
     color: var(--font-color-contrast-high);
+    margin-bottom: 0;
 }
 
 .login-pf-page .login-pf-header h1 {
@@ -83,6 +112,7 @@
 
 .form-group {
     margin-bottom: 0;
+    position: relative;
 }
 
 .pf-c-button.pf-m-control {
