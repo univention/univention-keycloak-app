@@ -71,16 +71,15 @@ with open('/etc/postgresql-keycloak.secret', 'r') as fd:
 
 driver_mapping = {"postgres": ["org.postgresql.Driver", "BYTEA"], "mariadb": ["org.mariadb.jdbc.Driver", "VARBINARY(255)"]}
 default_url = f'jdbc:postgresql://{fqdn}:5432/keycloak'
-kc_db_url = None
 
 app = Apps().find("keycloak")
 for setting in app.get_settings():
     if setting.name == "kc/db/url":
-        kc_db_url = setting.get_value(app) or kc_db_url
+        kc_db_url = setting.get_value(app)
     if setting.name == "kc/db/password":
         kc_db_password = setting.get_value(app)
     if setting.name == "kc/db/username":
-        kc_db_username = setting.get_value(app) or app_name
+        kc_db_username = setting.get_value(app)
     if setting.name == "kc/db/driver":
         kc_db_driver = setting.get_value(app)
     if setting.name == "kc/db/ping/datatype":
