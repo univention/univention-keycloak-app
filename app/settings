@@ -99,13 +99,6 @@ InitialValue = univentionSourceIAM
 Scope = outside, inside
 Description = UDM property referencing the source IAM
 
-[keycloak/database/connection]
-Type = String
-Required = False
-Show = Install, Settings
-Scope = outside
-Description =  Ip addresses allowed to reach the db. (e.g. 123.123.123.0/16) -- CHANGE LATER
-
 [kc/db/url]
 Type = String
 Required = False
@@ -118,6 +111,7 @@ Type = String
 Required = False
 Show = Install, Settings
 Scope = inside
+InitialValue = keycloak
 Description = Database username. Default "keycloak"
 
 [kc/db/kind]
