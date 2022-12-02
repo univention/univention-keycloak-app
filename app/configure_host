@@ -112,7 +112,7 @@ except NoObject:
     data = {
         'uri': kc_db_url,
         'password': kc_db_password or default_password,
-        'username': kc_db_username,
+        'username': kc_db_username or app_name,
         'driver': kc_db_driver,
         'ping_datatype': kc_db_ping_datatype,
         'installations': [fqdn],
