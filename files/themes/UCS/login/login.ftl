@@ -39,6 +39,12 @@
 
                 </div>
 
+                <#if recaptchaRequired??>
+                    <div class="${properties.kcFormGroupClass!}" style="display:flex; justify-content:center; align-items:center">
+                        <div class="g-recaptcha" data-sitekey="${recaptchaSiteKey}"></div>
+                    </div>
+                </#if>
+
                 <div class="${properties.kcFormGroupClass!} ${properties.kcFormSettingClass!}">
                     <div id="kc-form-options">
                         <#if realm.rememberMe && !usernameHidden??>
