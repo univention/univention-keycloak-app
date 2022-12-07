@@ -14,7 +14,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <version.keycloak>18.0.0</version.keycloak>
+        <version.keycloak>19.0.1</version.keycloak>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -24,26 +24,26 @@
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-server-spi</artifactId>
-            <version>18.0.0</version>
+            <version>19.0.1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-server-spi-private</artifactId>
-            <version>18.0.0</version>
+            <version>19.0.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-core</artifactId>
-            <version>18.0.0</version>
+            <version>19.0.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-services</artifactId>
-            <version>18.0.0</version>
+            <version>19.0.1</version>
             <scope>provided</scope>
         </dependency>
 
