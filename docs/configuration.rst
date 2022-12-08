@@ -288,6 +288,32 @@ federation* is useful when administrators want to keep track of all users in
 
    For more information on |SPI|, see :cite:t:`keycloak-spi`.
 
+.. _ad-hoc-federation-import-external-ca:
+
+Import external CA certificates
+-------------------------------
+
+Federation involves other, for example external, server systems and requires
+trust. Certificates are a way to implement trust. To tell your Keycloak
+system to trust another system for the ad-hoc federation, you need to
+import the CA certificate for that system. Keycloak needs the CA certificate
+to verify the encrypted connection with the other system.
+
+Use the following steps to add the CA certificate of the other system:
+
+.. code-block:: console
+
+   $ docker cp /path/to/externalCA.pem keycloak:/externalCA.pem
+   $ univention-app shell keycloak \
+   keytool -cacerts -import -alias ucsCA -file /externalCA.pem -storepass "changeit" -noprompt
+
+Repeat this procedure when any CA certificate expires. In case of any CA related
+TLS error, restart the container:
+
+.. code-block:: console
+
+  $ docker restart keycloak
+
 .. _ad-hoc-federation-custom-auth-flow:
 
 Create custom authentication flow

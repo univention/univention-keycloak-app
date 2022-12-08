@@ -136,6 +136,9 @@ do
 
 done
 
+# add UCS rootCA to trusted CA certificates
+univention-app shell keycloak keytool -cacerts -import -alias ucsCA -file /etc/pki/ca-trust/extracted/pem/ucsCAcert.pem -storepass "changeit" -noprompt
+
 # another restart for the cache initialization
 univention-app restart keycloak
 
