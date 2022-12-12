@@ -193,9 +193,10 @@ def _do_sso_login(chrome, username="administrator", password="univention"):
 	time.sleep(10)
 
 
-def _user_login(chrome, username="administrator", password="univention"):
+def _user_login(chrome, username="administrator", password="univention", logout=True):
 	_do_sso_login(chrome, username, password)
-	_logout(chrome)
+	if logout:
+		_logout(chrome)
 
 
 def _incorrect_login(chrome, username="administrator", password="univention"):
@@ -219,6 +220,18 @@ def _test_sso(chrome):
 
 	# wrong login
 	_incorrect_login(chrome, "nonExistUser", "Password")
+
+
+def _sso_login(chrome):
+	__activate_idp_keycloak()
+	chrome.goto_portal()
+
+	_user_login(chrome, "userAdminTest", "univention", logout=False)
+
+	chrome.get("")  # URL other machine
+	chrome.click_portal_tile(u'Login (Single sign-on)')
+	time.sleep(5)
+	_logout(chrome)
 
 
 def test_keycloak(chrome):
@@ -682,6 +695,19 @@ def _logout_keycloak_client(kc_admin):
 		"admin/realms/{realm-name}/users/{id}/logout".format(**params_path), data=""
 	)
 	print(data_raw)
+
+def test_session_synch(chrome):
+	# Connect as admin
+	pwdfile = "/etc/keycloak.secret"
+	with open(pwdfile, 'r') as fd:
+		password = fd.read().strip()
+
+	_create_users()
+
+	with chrome.capture('keycloak_session_sync'):
+		_sso_login(chrome)
+
+	_delete_users()
 
 
 if __name__ == '__main__':
