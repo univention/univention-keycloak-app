@@ -222,19 +222,21 @@ def _test_sso(chrome):
 	_incorrect_login(chrome, "nonExistUser", "Password")
 
 
-def _sso_login(chrome):
+def _session_sync_login(chrome):
 	__activate_idp_keycloak()
 	chrome.goto_portal()
 
 	_user_login(chrome, "userAdminTest", "univention", logout=False)
 
-	chrome.get("")  # URL other machine
+	# TODO: Enable SSO for kc in the backup, or is it already enabled ?
+
+	chrome.get("https://backup.jtorres.org/")  # TODO: URL from portal machine2
 	chrome.click_portal_tile(u'Login (Single sign-on)')
 	time.sleep(5)
 	_logout(chrome)
 
 
-def test_keycloak(chrome):
+def _test_keycloak(chrome):
 	# login as admin
 	pwdfile = "/etc/keycloak.secret"
 	with open(pwdfile, 'r') as fd:
@@ -654,7 +656,7 @@ def _delete_adhoc_users(kc_admin):
 	print("Response code from config Univention-Authenticator: ", data_raw.status_code)
 
 
-def test_adhoc_federation(chrome):
+def _test_adhoc_federation(chrome):
 	# Connect as admin
 	pwdfile = "/etc/keycloak.secret"
 	with open(pwdfile, 'r') as fd:
@@ -703,9 +705,10 @@ def test_session_synch(chrome):
 		password = fd.read().strip()
 
 	_create_users()
+	# TODO: wait for replication 10s is enough ??
 
 	with chrome.capture('keycloak_session_sync'):
-		_sso_login(chrome)
+		_session_sync_login(chrome)
 
 	_delete_users()
 
