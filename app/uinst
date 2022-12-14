@@ -42,9 +42,6 @@ app_id="keycloak"
 domainname="$(ucr get domainname)"
 hostname="$(ucr get hostname)"
 
-# remove service
-ucs_removeServiceFromLocalhost "$app_id" "$@"
-
 # remove portal link
 ucr unset \
     ucs/web/overview/entries/admin/$app_id/description/de \
@@ -95,6 +92,10 @@ except NoObject:
 
 %EOF
 ) || die
+
+# remove service
+ucs_removeServiceFromLocalhost "$app_id" "$@"
+ucs_removeServiceFromLocalhost "$app_id DB" "$@"
 
 joinscript_remove_script_from_status_file $app_id
 
