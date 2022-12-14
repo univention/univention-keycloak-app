@@ -70,7 +70,7 @@ with open('/etc/postgresql-keycloak.secret', 'r') as fd:
     default_password = fd.read().strip()
 
 driver_mapping = {"postgres": ["org.postgresql.Driver", "BYTEA"], "mariadb": ["org.mariadb.jdbc.Driver", "VARBINARY(255)"]}
-default_url = f'jdbc:postgresql://{fqdn}:5432/keycloak?ssl=require'
+default_url = f'jdbc:postgresql://{fqdn}:5432/keycloak?sslmode=require'
 
 app = Apps().find("keycloak")
 for setting in app.get_settings():
