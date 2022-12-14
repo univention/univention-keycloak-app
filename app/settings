@@ -34,16 +34,6 @@ Scope = outside
 Group = Administration
 Group[de] = Administration
 
-[keycloak/java/opts]
-Type = String
-Required = True
-Show = Install, Settings
-InitialValue = -server
-Scope = outside
-Description = Java options for keycloak
-Group = Administration
-Group[de] = Administration
-
 [keycloak/theme]
 Type = String
 Show = Install, Settings

@@ -20,7 +20,6 @@ with open(pwdfile, 'r') as fd:
     print(fd.read().strip())@!@
       KC_LOG_LEVEL: @%@keycloak/log/level@%@
       PROXY_ADDRESS_FORWARDING: "true"
-      JAVA_OPTS: "@%@keycloak/java/opts@%@"
       X509_CA_BUNDLE: "/ca-certificates.crt"
     volumes:
       - /etc/ssl/certs/ca-certificates.crt:/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem:ro
