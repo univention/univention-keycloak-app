@@ -70,7 +70,7 @@ with open('/etc/postgresql-keycloak.secret', 'r') as fd:
     default_password = fd.read().strip()
 
 driver_mapping = {"postgres": ["org.postgresql.Driver", "BYTEA"], "mariadb": ["org.mariadb.jdbc.Driver", "VARBINARY(255)"]}
-default_url = f'jdbc:postgresql://{fqdn}:5432/keycloak'
+default_url = f'jdbc:postgresql://{fqdn}:5432/keycloak?ssl=require'
 
 app = Apps().find("keycloak")
 for setting in app.get_settings():
@@ -151,3 +151,6 @@ if [ "$action" = "settings" ]; then
 	i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
 	echo "Container is healthy"
 fi
+
+# add UCS rootCA to trusted CA certificates
+univention-app shell keycloak keytool -cacerts -import -alias ucsCA -file /etc/pki/ca-trust/extracted/pem/ucsCAcert.pem -storepass "changeit" -noprompt
