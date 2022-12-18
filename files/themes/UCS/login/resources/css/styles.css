@@ -21,6 +21,24 @@
     padding: 5.5rem 0 2.5rem;
 }
 
+#umcLoginLinks {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+#umcLoginLinks a {
+  font-size: var(--font-size-body);
+  color: inherit;
+  margin: 0 0.5rem;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-thickness 250ms;
+}
+
+#umcLoginLinks a:hover, #umcLoginLinks a:focus {
+  text-decoration-thickness: 3px;
+}
+
 input + .pf-c-form__label {
     position: absolute;
     top: 0.75rem;

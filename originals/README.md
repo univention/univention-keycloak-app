@@ -5,3 +5,7 @@ We put some original files from Keycloak here. In case they get updated upstream
 **login.ftl**
 
 Is the template Keycloak uses to render the login form. We basically just switched `<label>` and `<input>` tags. The result is in `files/themes/UCS/login/login.ftl`
+
+**theme.ftl**
+
+Is the template "above" the login.ftl. We added the div `#umcLoginLinks`
