@@ -149,10 +149,41 @@
 
     </div>
     <div id="umcLoginLinks">
+      <script>
+        function fillUsername() {
+          document.getElementById("username").value = "Administrator";
+          document.getElementById("password").focus();
+        }
+        function showUCSTooltip() {
+          var element = document.getElementById("howDoILoginTooltip");
+          element.style.display = "block";
+          document.body.addEventListener("click", function() {
+            element.style.display = "none";
+          }, {once : true});
+        }
+      </script>
       <#if locale.currentLanguageTag = 'de'>
-        <a href="hallo1">Hallo 1</a>
+        <div class="umcLoginLinksWrapper">
+          <a href="javascript:void(0);" onmouseover="showUCSTooltip();" target="_self">Wie melde ich mich an?</a>
+          <div style="display:none;" id="howDoILoginTooltip" class="pf-c-tooltip pf-m-bottom" role="tooltip">
+            <div class="pf-c-tooltip__arrow"></div>
+            <div
+              class="pf-c-tooltip__content"
+              id="tooltip-bottom-content"
+            >Bitte geben Sie einen gültigen Benutzernamen und Passwort ein. Der Standardbenutzer zum Verwalten dieser Domäne ist <a href="javascript:void(0);" onclick="fillUsername();">Administrator</a> mit demselben initialen Passwort des root Benutzers.</div>
+          </div>
+        </div>
       <#else>
-        <a href="hallo1">Hello 1</a>
+        <div class="umcLoginLinksWrapper">
+          <a href="javascript:void(0);" onmouseover="showUCSTooltip();" target="_self">How do I login?</a>
+          <div style="display:none;" id="howDoILoginTooltip" class="pf-c-tooltip pf-m-bottom" role="tooltip">
+            <div class="pf-c-tooltip__arrow"></div>
+            <div
+              class="pf-c-tooltip__content"
+              id="tooltip-bottom-content"
+            >Please login with a valid username and password. The default user to manage the domain is <a href="javascript:void(0);" onclick="fillUsername();">Administrator</a> which has the same initial password as the root account.</div>
+          </div>
+        </div>
       </#if>
     </div>
   </div>
