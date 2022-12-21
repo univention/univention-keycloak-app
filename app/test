@@ -224,16 +224,40 @@ def _test_sso(chrome):
 
 def _session_sync_login(chrome):
 	__activate_idp_keycloak()
-	chrome.goto_portal()
 
+	# Modify host record to ucs-sso-ng -> master kc
+	ucr = ConfigRegistry()
+	ucr.load()
+	hostname = ucr.get("hostname")
+	domain = ucr.get("domainname")
+	ldap_base = ucr.get("ldap/base")
+
+	dns_mod = UDM.admin().version(2).get('dns/host_record')
+	dns_obj = dns_mod.get("relativeDomainName=ucs-sso-ng,zoneName={},cn=dns,{}".format(domain,ldap_base))
+	ips=dns_obj.props.a
+	ips_rm_first = ips[1:]
+	ips_rm_second = ips[:1]
+	dns_obj.props.a = ips_rm_first
+	dns_obj.save()
+
+	# Get SSO session
+	chrome.goto_portal()
 	_user_login(chrome, "userAdminTest", "univention", logout=False)
 
-	# TODO: Enable SSO for kc in the backup, or is it already enabled ?
+	# Change keycloak endpoint
+	# Modify host record to ucs-sso-ng -> backup kc
+	dns_obj.props.a = ips_rm_second
+	dns_obj.save()
 
-	chrome.get("https://backup.jtorres.org/")  # TODO: URL from portal machine2
+	# SSO on the master
+	chrome.get("https://master.{}/".format(domain))
 	chrome.click_portal_tile(u'Login (Single sign-on)')
 	time.sleep(5)
 	_logout(chrome)
+
+	# Restore initial values
+	dns_obj.props.a = ips
+	dns_obj.save()
 
 
 def _test_keycloak(chrome):
@@ -705,7 +729,6 @@ def test_session_synch(chrome):
 		password = fd.read().strip()
 
 	_create_users()
-	# TODO: wait for replication 10s is enough ??
 
 	with chrome.capture('keycloak_session_sync'):
 		_session_sync_login(chrome)
