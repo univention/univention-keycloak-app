@@ -323,7 +323,7 @@ Two-factor authentication for Keycloak
 
 .. versionadded:: 19.0.1-ucs1
 
-   * Added support for |2FA| to :program:`univention-keycloak`.
+   * Added functionality to enable |2FA| to :program:`univention-keycloak`.
      For more information about the usage, see the ``--help`` option.
 
 The app :program:`Keycloak` offers a |2FA| option. |2FA| is an authentication
