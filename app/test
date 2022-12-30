@@ -553,9 +553,6 @@ def _create_idp(kc_admin):
 	with open("/root/sign.cert", 'r') as fd:
 		certificate = fd.read()
 
-	##  https://keycloak.ucs-4445.juanp.bug/admin/realms/ucs/authentication/executions/71ec2ef5-61a0-4227-bad9-c4450292bac4/config
-	##  kc_admin.raw_post(url,payload)
-	##  check raise error
 	data_raw = kc_admin.raw_post("admin/realms/{}/authentication/executions/{}/config".format(kc_admin.realm_name, ua_execution["id"]), json.dumps(config_ua))
 	print("Response code from config Univention-Authenticator: ", data_raw.status_code)
 	payload_idp = {
