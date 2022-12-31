@@ -80,7 +80,7 @@ class Config:
 
 
 @pytest.fixture(scope='session')
-def config() -> Config:
+def kc_config() -> Config:
 	# load UCR
 	ucr = ConfigRegistry()
 	ucr.load()
@@ -92,11 +92,11 @@ def config() -> Config:
 
 
 @pytest.fixture
-def kc_admin(config) -> KeycloakAdmin:
+def kc_admin(kc_config) -> KeycloakAdmin:
 	yield KeycloakAdmin(
-		server_url=config.url,
-		username=config.username,
-		password=config.password,
+		server_url=kc_config.url,
+		username=kc_config.username,
+		password=kc_config.password,
 		realm_name='ucs',
 		user_realm_name='master',
 		verify=True,
@@ -128,11 +128,11 @@ def oidc_client(kc_admin) -> str:
 		pass
 
 
-def test_create_oidc_client(oidc_client, config):
+def test_create_oidc_client(oidc_client, kc_config):
 	assert oidc_client
 
 
-def test_delete_oidc_client(oidc_client, kc_admin, config):
+def test_delete_oidc_client(oidc_client, kc_admin, kc_config):
 	kc_admin.delete_client(oidc_client)
 	assert not kc_admin.get_client_id(oidc_client)
 
