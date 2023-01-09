@@ -121,12 +121,11 @@ fi
 univention-app restart keycloak
 i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
 echo "Container is healthy, configuring Keycloak"
-univention-keycloak init || die
-
+univention-keycloak --keycloak-url "https://$keycloak_server_sso_fqdn" init || die
 
 for umc in $(univention-ldapsearch -LLL univentionService="Univention Management Console" displayName | sed -n 's/displayName: //p' | tr ";" "\n")
 do
-	univention-keycloak "$@" saml/sp create --metadata-url="https://$umc.$domainname/univention/saml/metadata" --umc-uid-mapper
+	univention-keycloak "$@" --keycloak-url "https://$keycloak_server_sso_fqdn" saml/sp create --metadata-url="https://$umc.$domainname/univention/saml/metadata" --umc-uid-mapper
 	if [ "$?" != "0" ]; then
 		echo "Error creating a saml serviceprovider for the umc of $umc.$domainname"
 	fi
