@@ -5,7 +5,7 @@ RUN mvn clean package --file univention-directory-manager
 RUN mvn install --file univention-directory-manager
 RUN mvn clean package --file univention-authenticator
 
-FROM quay.io/keycloak/keycloak:19.0.1
+FROM quay.io/keycloak/keycloak:19.0.2
 WORKDIR /opt/keycloak/providers
 COPY --from=maven /root/univention-directory-manager/target/univention-directory-manager.jar .
 COPY --from=maven /root/univention-authenticator/target/univention-authenticator-16.1.0-jar-with-dependencies.jar .
