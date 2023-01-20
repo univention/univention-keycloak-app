@@ -3,6 +3,7 @@
 .. SPDX-License-Identifier: AGPL-3.0-only
 
 .. |DN| replace:: :abbr:`DN (Distinguished Name)`
+.. |IDE| replace:: :abbr:`IDE (integrated development environment)`
 .. |OIDC| replace:: :abbr:`OIDC (OpenID Connect)`
 .. |SPI| replace:: :abbr:`SPI (Service Provider Interfaces)`
 .. |SAML| replace:: :abbr:`SAML (Security Assertion Markup Language)`

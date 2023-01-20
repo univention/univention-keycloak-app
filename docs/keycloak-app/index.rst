@@ -23,6 +23,7 @@ directory in Univention Corporate Server (UCS). It covers the following topics:
 #. :ref:`app-limitations`
 #. :ref:`app-use-cases`
 #. :ref:`app-troubleshooting`
+#. :ref:`keycloak-debugging`
 
 This documentation doesn't cover the following topics:
 
@@ -61,5 +62,6 @@ improvement.
    limitations
    use-cases
    troubleshooting
+   debugging
    changelog
    bibliography
