@@ -1,2 +1,4 @@
 *.swp
 _build/
+target/
+*.pyc
