@@ -15,6 +15,7 @@ import org.keycloak.storage.ldap.mappers.msad.LDAPServerPolicyHintsDecorator;
 import org.keycloak.storage.ldap.mappers.msad.UserAccountControl;
 
 import javax.naming.AuthenticationException;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -22,11 +23,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static java.lang.Math.floor;
+
 public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStorageMapper implements PasswordUpdateCallback {
 
     public static final String SHADOW_MAX = "shadowMax";
     public static final String SHADOW_EXPIRE = "shadowExpire";
     public static final String SHADOW_LAST_CHANGE = "shadowLastChange";
+    public static final String KRB5_VALID_END = "krb5ValidEnd";
+    public static final String KRB5_PASSWORD_END = "krb5PasswordEnd";
+    public static final String KRB5_KDC_FLAGS = "krb5KDCFlags";
+    public static final String SAMBA_KICKOFF_TIME = "sambaKickoffTime";
+    public static final String SAMBA_ACCT_FLAGS = "sambaAcctFlags";
     public static final String LDAP_PASSWORD_POLICY_HINTS_ENABLED = "ldap.password.policy.hints.enabled";
     private static final Pattern AUTH_EXCEPTION_REGEX = Pattern.compile(".*LDAP: error code ([0-9]+) .*");
     private static final Logger logger = Logger.getLogger(UniventionUserAccountControlStorageMapper.class);
@@ -56,6 +64,11 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         query.addReturningLdapAttribute(SHADOW_MAX);
         query.addReturningLdapAttribute(SHADOW_EXPIRE);
         query.addReturningLdapAttribute(SHADOW_LAST_CHANGE);
+        query.addReturningLdapAttribute(KRB5_VALID_END);
+        query.addReturningLdapAttribute(KRB5_PASSWORD_END);
+        query.addReturningLdapAttribute(KRB5_KDC_FLAGS);
+        query.addReturningLdapAttribute(SAMBA_KICKOFF_TIME);
+        query.addReturningLdapAttribute(SAMBA_ACCT_FLAGS);
     }
 
     public boolean onAuthenticationFailure(LDAPObject ldapUser, UserModel user, AuthenticationException ldapException, RealmModel realm) {
@@ -73,13 +86,15 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         logger.debugf("Univention Error code is '%s' after failed LDAP login of user '%s'. Realm is '%s'", errorCode, user.getUsername(), getRealmName());
 
         if (errorCode.equals("49")) {
-            if (attributes.containsKey("shadowExpire")) {
+            final Instant now = Instant.now();
+
+            if (isAccountDisabled(attributes)) {
                 // User is disabled in Univention. Set him to disabled in KC as well
                 if (user.isEnabled()) {
                     user.setEnabled(false);
                 }
                 return true;
-            } else if (attributes.containsKey("shadowMax") && attributes.containsKey("shadowLastChange")) {
+            } else if (isPasswordChangeNeeded(now, attributes)) {
                 // User needs to change his Univention password. Allow him to login, but add UPDATE_PASSWORD required action to authenticationSession
                 if (user.getRequiredActionsStream().noneMatch(action -> Objects.equals(action, UserModel.RequiredAction.UPDATE_PASSWORD.name()))) {
                     // This usually happens when 49 was returned, which means that "shadowMax" is set to some positive value, which is older than Univention password expiration policy.
@@ -100,7 +115,60 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
                     logger.tracef("Skip adding required action UPDATE_PASSWORD. It was already set on user '%s' in realm '%s'", user.getUsername(), getRealmName());
                 }
                 return true;
+            } else if (isAccountLocked(now, attributes)) {
+                logger.warnf("Locked user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
+            } else if (isAccountExpired(now, attributes)) {
+                logger.warnf("Expired user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
             }
+        }
+
+        return false;
+    }
+
+    private boolean isAccountDisabled(Map<String, Set<String>> attributes) {
+        if (attributes.containsKey(SHADOW_EXPIRE)) {
+            final long shadowExpire = Long.parseLong(attributes.get(SHADOW_EXPIRE).iterator().next());
+            if (1 == shadowExpire) {
+                return true;
+            } else if (attributes.containsKey(SAMBA_ACCT_FLAGS)) {
+                return attributes.get(SAMBA_ACCT_FLAGS).iterator().next().contains("L");
+            } else if (attributes.containsKey(KRB5_KDC_FLAGS)) {
+                return 254 == Long.parseLong(attributes.get(KRB5_KDC_FLAGS).iterator().next());
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isAccountExpired(Instant now, Map<String, Set<String>> attributes) {
+        if (attributes.containsKey(SHADOW_EXPIRE)) {
+            final long shadowExpire = Long.parseLong(attributes.get(SHADOW_EXPIRE).iterator().next());
+            return shadowExpire < floor(now.toEpochMilli() / 86400000.0);
+        }
+
+        return false;
+    }
+
+    private boolean isAccountLocked(Instant now, Map<String, Set<String>> attributes) {
+        if (attributes.containsKey(KRB5_VALID_END)) {
+            final Instant timeValidEnd = Instant.parse(attributes.get(KRB5_VALID_END).iterator().next());
+            return timeValidEnd.toEpochMilli() < (now.toEpochMilli() + 1000);
+        } else if (attributes.containsKey(SAMBA_KICKOFF_TIME)) {
+            final long timeKickOff = Long.parseLong(attributes.get(SAMBA_KICKOFF_TIME).iterator().next());
+            return timeKickOff * 1000 < now.toEpochMilli();
+        }
+
+        return false;
+    }
+
+    private boolean isPasswordChangeNeeded(Instant now, Map<String, Set<String>> attributes) {
+        if (attributes.containsKey(SHADOW_MAX) && attributes.containsKey(SHADOW_LAST_CHANGE)) {
+            final long shadowMax = Long.parseLong(attributes.get(SHADOW_MAX).iterator().next());
+            final long shadowLastChange = Long.parseLong(attributes.get(SHADOW_LAST_CHANGE).iterator().next());
+            return shadowMax + shadowLastChange < now.toEpochMilli() / 86400000;
+        } else if (attributes.containsKey(KRB5_PASSWORD_END)) {
+            final Instant timeValidEnd = Instant.parse(attributes.get(KRB5_PASSWORD_END).iterator().next());
+            return timeValidEnd.toEpochMilli() < (now.toEpochMilli() + 1000);
         }
 
         return false;
