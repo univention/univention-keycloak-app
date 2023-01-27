@@ -1,4 +1,4 @@
-FROM maven:3.8.2-openjdk-11 as builder
+FROM maven:3.8.2-openjdk-11 as maven
 
 ARG ARTIFACTS_DIR="/tmp/artifacts/"
 ARG BUILD_DIR="/tmp/build/"
@@ -27,7 +27,7 @@ FROM quay.io/keycloak/keycloak:19.0.2
 
 ARG ARTIFACTS_DIR="/tmp/artifacts/"
 
-COPY --from=builder --chown=keycloak ${ARTIFACTS_DIR} ${ARTIFACTS_DIR}
+COPY --from=maven --chown=keycloak ${ARTIFACTS_DIR} ${ARTIFACTS_DIR}
 
 RUN cp ${ARTIFACTS_DIR}/*.jar /opt/keycloak/providers\
  && cp ${ARTIFACTS_DIR}/cache-ispn-jdbc-ping.xml /opt/keycloak/conf/cache-ispn-jdbc-ping.xml\
