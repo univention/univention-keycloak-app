@@ -35,6 +35,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
     public static final String KRB5_KDC_FLAGS = "krb5KDCFlags";
     public static final String SAMBA_KICKOFF_TIME = "sambaKickoffTime";
     public static final String SAMBA_ACCT_FLAGS = "sambaAcctFlags";
+    public static final String SAMBA_PWD_MUST_CHANGE = "sambaPwdMustChange";
     public static final String LDAP_PASSWORD_POLICY_HINTS_ENABLED = "ldap.password.policy.hints.enabled";
     private static final Pattern AUTH_EXCEPTION_REGEX = Pattern.compile(".*LDAP: error code ([0-9]+) .*");
     private static final Logger logger = Logger.getLogger(UniventionUserAccountControlStorageMapper.class);
@@ -69,6 +70,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         query.addReturningLdapAttribute(KRB5_KDC_FLAGS);
         query.addReturningLdapAttribute(SAMBA_KICKOFF_TIME);
         query.addReturningLdapAttribute(SAMBA_ACCT_FLAGS);
+        query.addReturningLdapAttribute(SAMBA_PWD_MUST_CHANGE);
     }
 
     public boolean onAuthenticationFailure(LDAPObject ldapUser, UserModel user, AuthenticationException ldapException, RealmModel realm) {
@@ -128,13 +130,11 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
     private boolean isAccountDisabled(Map<String, Set<String>> attributes) {
         if (attributes.containsKey(SHADOW_EXPIRE)) {
             final long shadowExpire = Long.parseLong(attributes.get(SHADOW_EXPIRE).iterator().next());
-            if (1 == shadowExpire) {
-                return true;
-            } else if (attributes.containsKey(SAMBA_ACCT_FLAGS)) {
-                return attributes.get(SAMBA_ACCT_FLAGS).iterator().next().contains("L");
-            } else if (attributes.containsKey(KRB5_KDC_FLAGS)) {
-                return 254 == Long.parseLong(attributes.get(KRB5_KDC_FLAGS).iterator().next());
-            }
+            return 1 == shadowExpire;
+        } else if (attributes.containsKey(SAMBA_ACCT_FLAGS)) {
+            return attributes.get(SAMBA_ACCT_FLAGS).iterator().next().contains("L");
+        } else if (attributes.containsKey(KRB5_KDC_FLAGS)) {
+            return 254 == Long.parseLong(attributes.get(KRB5_KDC_FLAGS).iterator().next());
         }
 
         return false;
@@ -169,6 +169,9 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         } else if (attributes.containsKey(KRB5_PASSWORD_END)) {
             final Instant timeValidEnd = Instant.parse(attributes.get(KRB5_PASSWORD_END).iterator().next());
             return timeValidEnd.toEpochMilli() < (now.toEpochMilli() + 1000);
+        } else if (attributes.containsKey(SAMBA_PWD_MUST_CHANGE)) {
+            final long sambaPwdMustChange = Long.parseLong(attributes.get(SAMBA_PWD_MUST_CHANGE).iterator().next());
+            return 0 == sambaPwdMustChange;
         }
 
         return false;
