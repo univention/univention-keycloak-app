@@ -19,12 +19,13 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import java.text.SimpleDateFormat;
 
 import static java.lang.Math.floor;
-
 public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStorageMapper implements PasswordUpdateCallback {
 
     public static final String SHADOW_MAX = "shadowMax";
@@ -39,6 +40,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
     public static final String LDAP_PASSWORD_POLICY_HINTS_ENABLED = "ldap.password.policy.hints.enabled";
     private static final Pattern AUTH_EXCEPTION_REGEX = Pattern.compile(".*LDAP: error code ([0-9]+) .*");
     private static final Logger logger = Logger.getLogger(UniventionUserAccountControlStorageMapper.class);
+    private static final SimpleDateFormat krb5Format = new SimpleDateFormat("yyyyMMddHHmmss'Z'");
 
     public UniventionUserAccountControlStorageMapper(ComponentModel mapperModel, LDAPStorageProvider ldapProvider) {
         super(mapperModel, ldapProvider);
@@ -91,11 +93,13 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
             final Instant now = Instant.now();
 
             if (isAccountDisabled(attributes)) {
-                // User is disabled in Univention. Set him to disabled in KC as well
-                if (user.isEnabled()) {
-                    user.setEnabled(false);
-                }
-                return true;
+                // User is disabled in openLDAP. Don't allow them to log in
+                logger.debugf("Disabled user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
+                return false;
+            } else if (isAccountExpired(now, attributes)) {
+                logger.debugf("Expired user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
+            } else if (isAccountLocked(now, attributes)) {
+                logger.debugf("Locked user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
             } else if (isPasswordChangeNeeded(now, attributes)) {
                 // User needs to change his Univention password. Allow him to login, but add UPDATE_PASSWORD required action to authenticationSession
                 if (user.getRequiredActionsStream().noneMatch(action -> Objects.equals(action, UserModel.RequiredAction.UPDATE_PASSWORD.name()))) {
@@ -117,14 +121,13 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
                     logger.tracef("Skip adding required action UPDATE_PASSWORD. It was already set on user '%s' in realm '%s'", user.getUsername(), getRealmName());
                 }
                 return true;
-            } else if (isAccountLocked(now, attributes)) {
-                logger.warnf("Locked user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
-            } else if (isAccountExpired(now, attributes)) {
-                logger.warnf("Expired user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
             }
         }
-
         return false;
+    }
+
+    @Override
+    public void passwordUpdated(UserModel user, LDAPObject ldapUser, UserCredentialModel password) {
     }
 
     private boolean isAccountDisabled(Map<String, Set<String>> attributes) {
@@ -140,24 +143,28 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         return false;
     }
 
-    private boolean isAccountExpired(Instant now, Map<String, Set<String>> attributes) {
+    private boolean isAccountExpired(Instant now, Map<String, Set<String>> attributes)   {
+        if (attributes.containsKey(KRB5_VALID_END)) {
+            try {
+                final Date timeValidEnd = krb5Format.parse(attributes.get(KRB5_VALID_END).iterator().next());
+                return timeValidEnd.before(Date.from(now));
+            } catch(java.text.ParseException e) {
+                logger.warnf("Could not parse krb5ValidEnd Attribute: %s", e.getMessage());
+                return false;
+            }
+        }
         if (attributes.containsKey(SHADOW_EXPIRE)) {
             final long shadowExpire = Long.parseLong(attributes.get(SHADOW_EXPIRE).iterator().next());
             return shadowExpire < floor(now.toEpochMilli() / 86400000.0);
         }
-
         return false;
     }
 
     private boolean isAccountLocked(Instant now, Map<String, Set<String>> attributes) {
-        if (attributes.containsKey(KRB5_VALID_END)) {
-            final Instant timeValidEnd = Instant.parse(attributes.get(KRB5_VALID_END).iterator().next());
-            return timeValidEnd.toEpochMilli() < (now.toEpochMilli() + 1000);
-        } else if (attributes.containsKey(SAMBA_KICKOFF_TIME)) {
+        if (attributes.containsKey(SAMBA_KICKOFF_TIME)) {
             final long timeKickOff = Long.parseLong(attributes.get(SAMBA_KICKOFF_TIME).iterator().next());
             return timeKickOff * 1000 < now.toEpochMilli();
         }
-
         return false;
     }
 
@@ -165,10 +172,16 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         if (attributes.containsKey(SHADOW_MAX) && attributes.containsKey(SHADOW_LAST_CHANGE)) {
             final long shadowMax = Long.parseLong(attributes.get(SHADOW_MAX).iterator().next());
             final long shadowLastChange = Long.parseLong(attributes.get(SHADOW_LAST_CHANGE).iterator().next());
-            return shadowMax + shadowLastChange < now.toEpochMilli() / 86400000;
+            return (shadowMax + shadowLastChange) < (now.toEpochMilli() / 86400000);
         } else if (attributes.containsKey(KRB5_PASSWORD_END)) {
-            final Instant timeValidEnd = Instant.parse(attributes.get(KRB5_PASSWORD_END).iterator().next());
-            return timeValidEnd.toEpochMilli() < (now.toEpochMilli() + 1000);
+            try {
+                final Date timePasswordEnd = krb5Format.parse(attributes.get(KRB5_PASSWORD_END).iterator().next());
+                logger.debugf("Could not parse krb5PasswordEnd Attribute:" );
+                return timePasswordEnd.before(Date.from(now));
+            } catch(java.text.ParseException e) {
+                logger.debugf("Could not parse krb5PasswordEnd Attribute: %s", e.getMessage());
+                return true;
+            }
         } else if (attributes.containsKey(SAMBA_PWD_MUST_CHANGE)) {
             final long sambaPwdMustChange = Long.parseLong(attributes.get(SAMBA_PWD_MUST_CHANGE).iterator().next());
             return 0 == sambaPwdMustChange;
@@ -185,43 +198,12 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         String exceptionMessage = e.getCause().getMessage().replace('\n', ' ');
         logger.debugf("Failed to update Univention password. Exception message: %s", exceptionMessage);
         exceptionMessage = exceptionMessage.toUpperCase();
-//
-//        Matcher m = AUTH_INVALID_NEW_PASSWORD.matcher(exceptionMessage);
-//        if (m.matches()) {
-//            String errorCode = m.group(1);
-//            String errorCode2 = m.group(2);
-//
-//            // 52D corresponds to ERROR_PASSWORD_RESTRICTION. See https://msdn.microsoft.com/en-us/library/windows/desktop/ms681385(v=vs.85).aspx
-//            if ((errorCode.equals("53")) && errorCode2.endsWith("52D")) {
-//                ModelException me = new ModelException("invalidPasswordGenericMessage", e);
-//                return me;
-//            }
-//        }
-
         return e;
     }
 
     private String getRealmName() {
         RealmModel realm = session.getContext().getRealm();
         return (realm != null) ? realm.getName() : "null";
-    }
-
-    protected UserAccountControl getUserAccountControl(LDAPObject ldapUser) {
-        String userAccountControl = ldapUser.getAttributeAsString(LDAPConstants.USER_ACCOUNT_CONTROL);
-        long longValue = userAccountControl == null ? 0 : Long.parseLong(userAccountControl);
-        return new UserAccountControl(longValue);
-    }
-
-    // Update user in LDAP if "updateInLDAP" is true. Otherwise, it is assumed that LDAP update will be called at the end of transaction
-    protected void updateUserAccountControl(boolean updateInLDAP, LDAPObject ldapUser, UserAccountControl accountControl) {
-        String userAccountControlValue = String.valueOf(accountControl.getValue());
-        logger.debugf("Updating userAccountControl of user '%s' to value '%s'. Realm is '%s'", ldapUser.getDn().toString(), userAccountControlValue, getRealmName());
-
-        ldapUser.setSingleAttribute(LDAPConstants.USER_ACCOUNT_CONTROL, userAccountControlValue);
-
-        if (updateInLDAP) {
-            ldapProvider.getLdapIdentityStore().update(ldapUser);
-        }
     }
 
     @Override
@@ -233,27 +215,6 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
 
         boolean applyDecorator = mapperModel.get(LDAP_PASSWORD_POLICY_HINTS_ENABLED, false);
         return applyDecorator ? new LDAPServerPolicyHintsDecorator() : null;
-    }
-
-    @Override
-    public void passwordUpdated(UserModel user, LDAPObject ldapUser, UserCredentialModel password) {
-        logger.debugf("Going to update userAccountControl for ldap user '%s' after successful password update. Keycloak user '%s' in realm '%s'", ldapUser.getDn().toString(),
-                user.getUsername(), getRealmName());
-
-        // Normally it's read-only
-        ldapUser.removeReadOnlyAttributeName(LDAPConstants.PWD_LAST_SET);
-
-        ldapUser.setSingleAttribute(LDAPConstants.PWD_LAST_SET, "-1");
-
-        UserAccountControl control = getUserAccountControl(ldapUser);
-        control.remove(UserAccountControl.PASSWD_NOTREQD);
-        control.remove(UserAccountControl.PASSWORD_EXPIRED);
-
-        if (user.isEnabled()) {
-            control.remove(UserAccountControl.ACCOUNTDISABLE);
-        }
-
-        updateUserAccountControl(true, ldapUser, control);
     }
 
     @Override
@@ -275,34 +236,11 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
             boolean kcEnabled = super.isEnabled();
 
             if (getShadowExpire() > 0) {
-                // Merge KC and Univention
-                return kcEnabled && !getUserAccountControl(ldapUser).has(UserAccountControl.ACCOUNTDISABLE);
-            } else {
-                // If new Univention user is created and shadowExpire is still 0, Univention account is in disabled state. So read just from Keycloak DB. User is not able to login via Univention anyway
-                return kcEnabled;
+                return true;
             }
+            // If new Univention user is created and shadowExpire is still 0, Univention account is in disabled state. User is not able to login via Univention anyway
+            return false;
         }
-
-//        @Override
-//        public void setEnabled(boolean enabled) {
-//            // Always update DB
-//            super.setEnabled(enabled);
-//
-//            if (getShadowExpire() > 0) {
-//                UniventionUserAccountControlStorageMapper.logger.debugf("Going to propagate enabled=%s for ldapUser '%s' to Univention", enabled, ldapUser.getDn().toString());
-//
-//                UserAccountControl control = getUserAccountControl(ldapUser);
-//                if (enabled) {
-//                    control.remove(UserAccountControl.ACCOUNTDISABLE);
-//                } else {
-//                    control.add(UserAccountControl.ACCOUNTDISABLE);
-//                }
-//
-//                markUpdatedAttributeInTransaction(SHADOW_EXPIRE);//LDAPConstants.ENABLED TODO
-//
-//                updateUserAccountControl(false, ldapUser, control);
-//            }
-//        }
 
         @Override
         public void addRequiredAction(RequiredAction action) {
@@ -316,11 +254,6 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
                 UniventionUserAccountControlStorageMapper.logger.debugf("Going to propagate required action UPDATE_PASSWORD to Univention for ldap user '%s'. Keycloak user '%s' in realm '%s'",
                         ldapUser.getDn().toString(), getUsername(), getRealmName());
 
-                // Normally it's read-only
-                ldapUser.removeReadOnlyAttributeName(LDAPConstants.PWD_LAST_SET);
-
-                ldapUser.setSingleAttribute(LDAPConstants.PWD_LAST_SET, "0");
-
                 markUpdatedRequiredActionInTransaction(action);
             } else {
                 // Update DB
@@ -330,41 +263,17 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         }
 
         @Override
-        public void removeRequiredAction(RequiredAction action) {
-            String actionName = action.name();
-            removeRequiredAction(actionName);
-        }
-
-        @Override
         public void removeRequiredAction(String action) {
             // Always update DB
+            UniventionUserAccountControlStorageMapper.logger.debugf("Going to remove required action UPDATE_PASSWORD from Univention for ldap user '%s'. Account control: %s, Keycloak user '%s' in realm '%s'");
             super.removeRequiredAction(action);
-
-            if (RequiredAction.UPDATE_PASSWORD.toString().equals(action)) {
-
-                // Don't set pwdLastSet in Univention when it is new user
-                UserAccountControl accountControl = getUserAccountControl(ldapUser);
-                if (accountControl.getValue() != 0 && !accountControl.has(UserAccountControl.PASSWD_NOTREQD)) {
-                    UniventionUserAccountControlStorageMapper.logger.debugf("Going to remove required action UPDATE_PASSWORD from Univention for ldap user '%s'. Account control: %s, Keycloak user '%s' in realm '%s'",
-                            ldapUser.getDn().toString(), accountControl.getValue(), getUsername(), getRealmName());
-
-                    // Normally it's read-only
-                    ldapUser.removeReadOnlyAttributeName(LDAPConstants.PWD_LAST_SET);
-
-                    ldapUser.setSingleAttribute(LDAPConstants.PWD_LAST_SET, "-1");
-
-                    markUpdatedRequiredActionInTransaction(action);
-                } else {
-                    UniventionUserAccountControlStorageMapper.logger.tracef("It was not required action to remove UPDATE_PASSWORD from Univention for ldap user '%s' as it was not set on the user. Account control: %s, Keycloak user '%s' in realm '%s'",
-                            ldapUser.getDn().toString(), accountControl.getValue(), getUsername(), getRealmName());
-                }
-            }
+                markUpdatedRequiredActionInTransaction(action);
         }
 
         @Override
         public Stream<String> getRequiredActionsStream() {
-            if (getShadowExpire() == 0 || getUserAccountControl(ldapUser).has(UserAccountControl.PASSWORD_EXPIRED)) {
-                UniventionUserAccountControlStorageMapper.logger.tracef("Required action UPDATE_PASSWORD is set in LDAP for user '%s' in realm '%s'", getUsername(), getRealmName());
+            if (getShadowExpire() == 0) {
+                UniventionUserAccountControlStorageMapper.logger.debugf("Required action UPDATE_PASSWORD is set in LDAP for user '%s' in realm '%s'", getUsername(), getRealmName());
                 return Stream.concat(super.getRequiredActionsStream(), Stream.of(RequiredAction.UPDATE_PASSWORD.toString()))
                         .distinct();
             }
@@ -373,7 +282,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
 
         protected long getShadowExpire() {
             final String shadowExpire = ldapUser.getAttributeAsString(SHADOW_EXPIRE);
-            return shadowExpire == null ? 0 : Long.parseLong(shadowExpire);
+            return shadowExpire == null ? 1 : Long.parseLong(shadowExpire);
         }
     }
 }
