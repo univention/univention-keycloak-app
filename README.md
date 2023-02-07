@@ -1,3 +1,5 @@
+_[TOC]_
+
 ## Introduction
 
 This repository contains the components of the Keycloak App for the UCS Appcenter.
@@ -62,6 +64,32 @@ Manual product tests:
 
 See [app/](app/) for app center integration files and
 https://docs.software-univention.de/app-center/5.0/en/configurations.html#installation-scripts
+
+## Pipelines
+
+### image_build
+
+Builds the keycloak image and pushes it in our local gitlabe registry.
+The name of the image if `gitregistry.knut.univention.de/univention/components/keycloak-app:$NAME_OF_BRANCH`
+or `gitregistry.knut.univention.de/univention/components/keycloak-app:latest` for the `main` branch.
+
+The idea is that every MR has its own image and QA can use this
+to setup an environemt for testing.
+
+The app in the test appcenter always uses the image from the `main` branch.
+
+Before releasing a new version the image has to be transfered to our external
+registry (see docker-job). In this process the image of the app is changed to
+e.g. `docker.software-univention.de/keycloak-keycloak:19.0.2-ucs1`.
+
+## Test Environments
+
+The latest version on the test appcenter will always point to the "main" branch image. If
+you want to setup keycloak with an image of your MergeRequest, do:
+* `univention-app update`
+* change the image name in the latest compose file in the local cache, e.g.  `/var/cache/univention-appcenter/appcenter-test.software-univention.de/5.0/keycloak_20230201094428.compose`
+* install the app
+* if the app is already installed, run `univention-app configure keycloak`
 
 ## App updates
 

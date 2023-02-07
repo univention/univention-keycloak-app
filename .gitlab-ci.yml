@@ -1,11 +1,23 @@
+include:
+  - project: univention/dist/docker-services
+    file:
+      - kaniko.yml
+      - pre-commit.yml
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_OPEN_MERGE_REQUESTS
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true"
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_PIPELINE_SOURCE == "webide"
+
 stages:
   - build
   - production
 
 variables:
   DOCS_DIR: "docs"
-  CI_REGISTRY: docker-registry.knut.univention.de
-  SPHINX_DOC: $CI_REGISTRY/sphinx
+  SPHINX_DOC: docker-registry.knut.univention.de/sphinx
   LANG: "C.UTF-8"
   DEBIAN_FRONTEND: noninteractive
   UNIVENTION_BASECONF: /dev/null
@@ -104,17 +116,13 @@ docs-production:
 
 image_build:
   stage: build
-  image: docker:19.03.8
+  extends: .kaniko
+  rules:
+    - changes:
+      - ad-hoc/**/*
+      - dependencies/**/*
+      - Dockerfile
+      - files/**/*
+      - univention-ldap-mapper/**/*
   variables:
-    MAVEN_STAGE_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app/maven-builder:19.0.2-ucs1"
-    KEYCLOAK_ADHOC_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app/keycloak:19.0.2-ucs1"
-  script:
-    - docker login -u $CI_KEYCLOAK_DOCKER_USER -p $CI_KEYCLOAK_DOCKER_PASSWORD gitregistry.knut.univention.de
-    # MVN BUILD
-    - docker pull ${MAVEN_STAGE_IMAGE} || true
-    - docker build --target maven --cache-from ${MAVEN_STAGE_IMAGE} --tag ${MAVEN_STAGE_IMAGE} .
-    - docker push ${MAVEN_STAGE_IMAGE}
-    # build keycloak
-    - docker pull ${KEYCLOAK_ADHOC_IMAGE} || true
-    - docker build --cache-from ${KEYCLOAK_ADHOC_IMAGE} --cache-from ${MAVEN_STAGE_IMAGE} --tag ${KEYCLOAK_ADHOC_IMAGE} .
-    - docker push ${KEYCLOAK_ADHOC_IMAGE}
+    KANIKO_ARGS: --build-arg commit="$CI_COMMIT_SHA" --build-arg date="$CI_JOB_STARTED_AT" --cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache
