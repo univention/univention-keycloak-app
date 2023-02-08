@@ -31,7 +31,7 @@
 
 ## joinscript api: bindpwdfile
 
-VERSION="4"
+VERSION="5"
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
@@ -136,6 +136,10 @@ done
 univention-app restart keycloak
 
 ucs_addServiceToLocalhost "$app_id" "$@"
+
+if [ "$JS_LAST_EXECUTED_VERSION" -lt 5 ]; then
+	univention-keycloak extension register --names ldapmapper password
+fi
 
 joinscript_save_current_version
 
