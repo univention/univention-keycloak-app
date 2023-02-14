@@ -50,7 +50,7 @@ public class UniventionUpdatePassword extends UpdatePassword {
             formCustomizer.accept(form);
         }
 
-        return form.createForm(Templates.getTemplate(LoginFormsPages.LOGIN_UPDATE_PASSWORD));
+        return form.createForm("univention-login-update-password.ftl");
     }
 
     public void processAction(RequiredActionContext context) {
@@ -61,6 +61,7 @@ public class UniventionUpdatePassword extends UpdatePassword {
         KeycloakSession session = context.getSession();
         MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
         event.event(EventType.UPDATE_PASSWORD);
+        String password = formData.getFirst("password");
         String passwordNew = formData.getFirst("password-new");
         String passwordConfirm = formData.getFirst("password-confirm");
 
@@ -68,7 +69,7 @@ public class UniventionUpdatePassword extends UpdatePassword {
                 .client(authSession.getClient())
                 .user(authSession.getAuthenticatedUser());
 
-        if (Validation.isBlank(passwordNew)) {
+        if (Validation.isBlank(password)) {
             Response challenge = context.form()
                     .setAttribute("username", authSession.getAuthenticatedUser().getUsername())
                     .addError(new FormMessage(Validation.FIELD_PASSWORD, Messages.MISSING_PASSWORD))
