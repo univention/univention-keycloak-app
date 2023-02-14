@@ -91,6 +91,28 @@ you want to setup keycloak with an image of your MergeRequest, do:
 * install the app
 * if the app is already installed, run `univention-app configure keycloak`
 
+Or use the https://jenkins2022.knut.univention.de/job/UCS-5.0/job/UCS-5.0-3/view/Keycloak/job/UcsKeycloakEnvironment/ Jenkins job
+to create a test environment (primary + keycloak and backup + keycloak). The docker image for the keycloak app can be changed via
+the `KEYCLOAK_IMAGE` parameter.
+
+To find out the IPs of your two systems, you have to consult the console output of the Jenkins job and find lines like
+```sh
+10:01:12 [primary] Requesting IPv4 address..
+10:01:12 [primary] Requesting IPv4 address: done (MAC=52:54:00:5d:8a:29  IPv4=10.207.183.251)
+[...]
+10:01:15 [backup1] Requesting IPv4 address..
+10:01:16 [backup1] Requesting IPv4 address: done (MAC=52:54:00:cb:d4:2b  IPv4=10.207.183.252)
+```
+
+Then add the following to your `/etc/hosts`:
+```
+10.207.63.20 master.ucs.test
+10.207.63.21 backup.ucs.test
+10.207.63.20 ucs-sso-ng.ucs.test
+# 10.207.63.21 ucs-sso-ng.ucs.test # if we want to test keycloak on the backup
+```
+
+
 ## App updates
 
 The script update-appcenter-test.sh can be used to build and upload the files from the repo for the latest test app center app version
