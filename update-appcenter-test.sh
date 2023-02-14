@@ -6,7 +6,10 @@
 set -e
 set -x
 
-APP_VERSION="5.0/keycloak=19.0.2-ucs1"
+UCS_VERSION="5.0"
+APP_ID="keycloak"
+VERSION="$(sed -n 's/^Version\s*=\s*//p' app/ini)"
+APP_VERSION="${UCS_VERSION}/${APP_ID}=${VERSION}"
 
 selfservice () {
 	local uri="https://provider-portal.software-univention.de/appcenter-selfservice/univention-appcenter-control"

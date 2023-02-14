@@ -116,3 +116,24 @@ Required = False
 Show = Install, Settings
 Scope = inside
 Description = Datatype for ping_data value in the database (Mariadb compatibility)
+
+[ucs/self/registration/check_email_verification]
+Type = Bool
+InitialValue =  false
+Scope = inside
+Show = Install, Settings
+Description = Whether or not to check if a self-registered user account is verified.
+
+[ucs/self/registration/check_email_verification_error_message]
+Type = String
+InitialValue = You must verify your account before you can login.
+Scope = inside
+Show = Install, Settings
+Description = English error message if self-registered user account is not yet verified
+
+[ucs/self/registration/check_email_verification_error_message_de]
+Type = String
+InitialValue = Sie müssen Ihr Konto verifizieren, bevor Sie sich einloggen können.
+Scope = inside
+Show = Install, Settings
+Description = German error message if self-registered user account is not yet verified
