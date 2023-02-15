@@ -40,6 +40,8 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
     public static final String SAMBA_KICKOFF_TIME = "sambaKickoffTime";
     public static final String SAMBA_ACCT_FLAGS = "sambaAcctFlags";
     public static final String SAMBA_PWD_MUST_CHANGE = "sambaPwdMustChange";
+    public static final String SELF_SERVICE_EMAIL_VERIFIED = "univentionPasswordRecoveryEmailVerified";
+    public static final String SELF_SERVICE_REGISTERED = "univentionRegisteredThroughSelfService";
     public static final String LDAP_PASSWORD_POLICY_HINTS_ENABLED = "ldap.password.policy.hints.enabled";
     private static final Pattern AUTH_EXCEPTION_REGEX = Pattern.compile("^(?=.*LDAP: error code ([0-9]+))(?!.*Invalid Credentials).*");
     private static final Logger logger = Logger.getLogger(UniventionUserAccountControlStorageMapper.class);
@@ -76,6 +78,8 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         query.addReturningLdapAttribute(SAMBA_KICKOFF_TIME);
         query.addReturningLdapAttribute(SAMBA_ACCT_FLAGS);
         query.addReturningLdapAttribute(SAMBA_PWD_MUST_CHANGE);
+        query.addReturningLdapAttribute(SELF_SERVICE_EMAIL_VERIFIED);
+        query.addReturningLdapAttribute(SELF_SERVICE_REGISTERED);
     }
 
     public boolean onAuthenticationFailure(LDAPObject ldapUser, UserModel user, AuthenticationException ldapException, RealmModel realm) {
@@ -234,6 +238,18 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
             return false;
         }
 
+        public boolean isAccountVerifiedThroughSelfService() {
+            if (attributes.containsKey(SELF_SERVICE_EMAIL_VERIFIED) && attributes.containsKey(SELF_SERVICE_REGISTERED)) {
+                    final String verified = attributes.get(SELF_SERVICE_EMAIL_VERIFIED).iterator().next();
+                    final String registered = attributes.get(SELF_SERVICE_REGISTERED).iterator().next();
+                    if (registered.equals("FALSE") || ((registered.equals("TRUE") && verified.equals("TRUE")))) {
+                        return true;
+                    }
+                    return false;
+            }
+            return true;
+        }
+
         public boolean isPasswordChangeNeeded() {
             if (attributes.containsKey(SHADOW_MAX) && attributes.containsKey(SHADOW_LAST_CHANGE)) {
                 final long shadowMax = Long.parseLong(attributes.get(SHADOW_MAX).iterator().next());
@@ -285,9 +301,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
                 UniventionUserAccountControlStorageMapper.logger.debugf("Going to propagate required action UPDATE_PASSWORD to Univention for ldap user '%s'. Keycloak user '%s' in realm '%s'",
                         ldapUser.getDn().toString(), getUsername(), getRealmName());
 
-                markUpdatedRequiredActionInTransaction(action);
             } else {
-                // Update DB
                 UniventionUserAccountControlStorageMapper.logger.debugf("Going to add required action '%s' of user '%s' in realm '%s' to the DB", action, getUsername(), getRealmName());
                 super.addRequiredAction(action);
             }
@@ -301,19 +315,28 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
 
         @Override
         public void removeRequiredAction(String action) {
-            // Always update DB
-            super.removeRequiredAction(action);
-            markUpdatedRequiredActionInTransaction(action);
+            if (UniventionSelfService.ID.equals(action)) {
+                UniventionUserAccountControlStorageMapper.logger.debugf("Going to propagate required action UNIVENTION_SELF_SERVICE to Univention for ldap user '%s'. Keycloak user '%s' in realm '%s'",
+                        ldapUser.getDn().toString(), getUsername(), getRealmName());
+
+            } else {
+                super.removeRequiredAction(action);
+            }
         }
 
         @Override
         public Stream<String> getRequiredActionsStream() {
+            Stream<String> requiredActions  = super.getRequiredActionsStream();
             if (accountAttributesHelper.isPasswordChangeNeeded()) {
                 UniventionUserAccountControlStorageMapper.logger.debugf("Required action UPDATE_PASSWORD is set in LDAP for user '%s' in realm '%s'", getUsername(), getRealmName());
-                return Stream.concat(super.getRequiredActionsStream(), Stream.of(UniventionUpdatePassword.ID))
-                        .distinct();
+                requiredActions = Stream.concat(requiredActions, Stream.of(UniventionUpdatePassword.ID)).distinct();
             }
-            return super.getRequiredActionsStream();
+            String checkVerification = System.getenv("UCS_SELF_REGISTRATION_CHECK_EMAIL_VERIFICATION");
+            if (checkVerification.equals("True") && !accountAttributesHelper.isAccountVerifiedThroughSelfService()) {
+                UniventionUserAccountControlStorageMapper.logger.debugf("Required action SELF_SERVICE_VERIFICATION is set in LDAP for user '%s'", requiredActions.toString());
+                requiredActions = Stream.concat(requiredActions, Stream.of(UniventionSelfService.ID)).distinct();
+            }
+            return requiredActions;
         }
     }
 }

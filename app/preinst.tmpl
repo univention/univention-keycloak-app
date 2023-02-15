@@ -68,6 +68,35 @@ echo "Installing Keycloak apache template info"
 %EOF
 chmod 644 "$keycloak_info_path"
 
+# translation template info
+keycloak_translation_info_path_de=/etc/univention/templates/info/messages_de.properties.info
+keycloak_translation_info_path_en=/etc/univention/templates/info/messages_en.properties.info
+echo "Installing Keycloak translation template info"
+	cat <<%EOF >"$keycloak_translation_info_path_de"
+%KEYCLOAK-LOGIN-TRANSLATION-INFO-DE%
+%EOF
+	cat <<%EOF >"$keycloak_translation_info_path_en"
+%KEYCLOAK-LOGIN-TRANSLATION-INFO-EN%
+%EOF
+chmod 644 "$keycloak_translation_info_path_de"
+chmod 644 "$keycloak_translation_info_path_en"
+
+#translation template
+keycloak_translation_login_path_de=/etc/univention/templates/files/var/lib/univention-appcenter/apps/keycloak/conf/UCS/login/messages/messages_de.properties
+keycloak_translation_login_path_en=/etc/univention/templates/files/var/lib/univention-appcenter/apps/keycloak/conf/UCS/login/messages/messages_en.properties
+mkdir -p /etc/univention/templates/files/var/lib/univention-appcenter/apps/keycloak/conf/UCS/login/messages/
+echo "Installing Keycloak transaltion template"
+	cat <<%EOF >"$keycloak_translation_login_path_de"
+%KEYCLOAK-LOGIN-TRANSLATION-DE%
+%EOF
+	cat <<%EOF >"$keycloak_translation_login_path_en"
+%KEYCLOAK-LOGIN-TRANSLATION-EN%
+%EOF
+chmod 644 "$keycloak_translation_login_path_de"
+chmod 644 "$keycloak_translation_login_path_en"
+ucr commit /var/lib/univention-appcenter/apps/keycloak/conf/UCS/login/messages/messages_de.properties
+ucr commit /var/lib/univention-appcenter/apps/keycloak/conf/UCS/login/messages/messages_en.properties
+
 # postgresql template
 postgresql_keycloak_template_path=/etc/univention/templates/files/etc/postgresql/11/main/pg_hba.conf.d/50-keycloak.conf
 echo "Installing 50-keycloak postgresql template"

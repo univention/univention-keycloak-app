@@ -56,6 +56,10 @@ sed -i -e "/%POSTGRESQL-KEYCLOAK-INFO%/r files/50-keycloak.info" -e "/%POSTGRESQ
 base64 files/cache-ispn-jdbc-ping.xml >> files/tmp_ispn_kconf_b64
 sed -i -e "/%KEYCLOAK-ISPN-TEMPLATE-CONF%/r files/tmp_ispn_kconf_b64" -e "/%KEYCLOAK-ISPN-TEMPLATE-CONF%/d" app/preinst
 
+sed -i -e "/%KEYCLOAK-LOGIN-TRANSLATION-DE%/r files/messages_de.properties" -e "/KEYCLOAK-LOGIN-TRANSLATION-DE%/d" app/preinst
+sed -i -e "/%KEYCLOAK-LOGIN-TRANSLATION-EN%/r files/messages_en.properties" -e "/%KEYCLOAK-LOGIN-TRANSLATION-EN%/d" app/preinst
+sed -i -e "/%KEYCLOAK-LOGIN-TRANSLATION-INFO-DE%/r files/messages_de.properties.info" -e "/KEYCLOAK-LOGIN-TRANSLATION-INFO-DE%/d" app/preinst
+sed -i -e "/%KEYCLOAK-LOGIN-TRANSLATION-INFO-EN%/r files/messages_en.properties.info" -e "/%KEYCLOAK-LOGIN-TRANSLATION-INFO-EN%/d" app/preinst
 ## Now we can upload the files for the app to the provider-portal:
 ## The order of the arguments doesn't matter, the univention-appcenter-control script recongnizes the filenames and file extensions.
 selfservice upload "$APP_VERSION" \
