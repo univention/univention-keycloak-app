@@ -1,0 +1,7 @@
+<h1>Hinweise zum Update</h1>
+<p>
+Wenn die App auf mehreren Systemen in der Domäne installiert ist,
+müssen Sie sicherstellen, dass alle Installationen auf die gleiche
+Version der Keycloak App aktualisiert werden, um einen
+ordnungsgemäßen Betrieb sicherzustellen.
+</p>

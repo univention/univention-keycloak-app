@@ -1,0 +1,6 @@
+<h1>Notes on the update</h1>
+<p>
+If the app is installed on multiple systems in the domain,
+make sure to update all Keycloak installations to the same
+app version to ensure proper operation of Keycloak.
+</p>

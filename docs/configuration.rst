@@ -312,6 +312,10 @@ domain to increase availability and provide failover using the default DNS name
 require any interaction from the administrator. This will also provide session
 synchronization between all :program:`Keycloak` installations on the domain.
 
+.. note::
+   If the :program:`Keycloak` app is installed on multiple systems in the domain
+   and updates are available, make sure to update the app on all systems so that
+   exactly one version of the app is available in the domain.
 
 Two-factor authentication for Keycloak
 ======================================

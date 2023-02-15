@@ -58,7 +58,17 @@ sed -i -e "/%KEYCLOAK-ISPN-TEMPLATE-CONF%/r files/tmp_ispn_kconf_b64" -e "/%KEYC
 
 ## Now we can upload the files for the app to the provider-portal:
 ## The order of the arguments doesn't matter, the univention-appcenter-control script recongnizes the filenames and file extensions.
-selfservice upload "$APP_VERSION" app/compose app/settings app/preinst app/configure_host app/inst app/env app/test app/uinst
+selfservice upload "$APP_VERSION" \
+    app/compose \
+    app/settings \
+    app/preinst \
+    app/configure_host \
+    app/inst \
+    app/env \
+    app/test \
+    app/uinst \
+    app/README_UPDATE_DE \
+    app/README_UPDATE_EN
 
 ## There are more "magic" files that can be uploaded for specific purposes:
 # selfservice upload "$APP_VERSION" app/compose app/settings app/preinst app/configure_host app/inst app/uinst app/env app/test app/setup README_*
