@@ -315,7 +315,7 @@ synchronization between all :program:`Keycloak` installations on the domain.
 .. note::
    If the :program:`Keycloak` app is installed on multiple systems in the domain
    and updates are available, make sure to update the app on all systems so that
-   exactly one version of the app is available in the domain.
+   all instances of the app in the domain are on the same version.
 
 Two-factor authentication for Keycloak
 ======================================
