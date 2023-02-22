@@ -31,7 +31,7 @@
 
 ## joinscript api: bindpwdfile
 
-VERSION="4"
+VERSION="5"
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
@@ -122,6 +122,9 @@ univention-app restart keycloak
 i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
 echo "Container is healthy, configuring Keycloak"
 univention-keycloak --keycloak-url "https://$keycloak_server_sso_fqdn" init || die
+
+# enable extensions
+univention-keycloak "$@" --keycloak-url "https://$keycloak_server_sso_fqdn" extension register --names ldapmapper password || die
 
 for umc in $(univention-ldapsearch -LLL univentionService="Univention Management Console" displayName | sed -n 's/displayName: //p' | tr ";" "\n")
 do
