@@ -49,6 +49,13 @@ InitialValue = ucs-sso-ng.@%@domainname@%@
 Scope = outside
 Description = Defines the fqdn of the identity provider of this UCS domain.
 
+[keycloak/password/change/endpoint]
+Type = String
+Show = Install, Settings
+InitialValue = @%@hostname@%@.@%@domainname@%@
+Scope = inside
+Description = Defines the fqdn of the UCS instance used to change user password.
+
 [keycloak/federation/remote/identifier]
 Type = String
 Required = True

@@ -135,6 +135,8 @@ do
 
 done
 
+univention-keycloak "$@" --keycloak-url "https://$keycloak_server_sso_fqdn" extension register --names ldapmapper password || die
+
 # another restart for the cache initialization
 univention-app restart keycloak
 
