@@ -84,12 +84,25 @@ e.g. `docker.software-univention.de/keycloak-keycloak:19.0.2-ucs1`.
 
 ## Test Environments
 
+### Manual
 The latest version on the test appcenter will always point to the "main" branch image. If
 you want to setup keycloak with an image of your MergeRequest, do:
 * `univention-app update`
 * change the image name in the latest compose file in the local cache, e.g.  `/var/cache/univention-appcenter/appcenter-test.software-univention.de/5.0/keycloak_20230201094428.compose`
 * install the app
 * if the app is already installed, run `univention-app configure keycloak`
+
+Konfigure keycloak:
+```
+# activate SSO login portal tile
+udm portals/entry modify --dn "cn=login-saml,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" --set activated=TRUE
+
+# set umc idp server to keycloak (default is still simplesamlphp)
+ucr set umc/saml/idp-server="https://ucs-sso-ng.$(ucr get domainname)/realms/ucs/protocol/saml/descriptor"
+service slapd restart
+```
+
+### Via jenkins job
 
 Or use the https://jenkins2022.knut.univention.de/job/UCS-5.0/job/UCS-5.0-3/view/Keycloak/job/UcsKeycloakEnvironment/ Jenkins job
 to create a test environment (primary + keycloak and backup + keycloak). The docker image for the keycloak app can be changed via
