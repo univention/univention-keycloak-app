@@ -54,11 +54,35 @@ All tests with browsers should happen in a new private browser window. This ensu
 
 All tests have to happen using actual hostnames with correct and verfifyable certificates. The involved services rely on and test for signed and trusted certificates.
 
-An app specific test can be added here as [app/test](app/test)
+All tests have to pass before releasing a new version of the keycloak app.
 
-Manual product tests:
-- TODO: If it makes sense, then describe steps to do some typical basic checks of functionality
-- ...
+
+## App tests and app specific test (deprecated use ucs-test-keycloak)
+
+An app specific test can be added here as [app/test](app/test). This test is executed in our "normal" keycloak tests and during the app install and upgrade tests.
+
+https://jenkins2022.knut.univention.de/job/UCS-5.0/job/Apps/job/keycloak/
+
+## Unit test in the container
+
+We are working on unit test in the keycloak container. At some point they will be executed automatically in a pipeline job.
+
+## ucs-test-keycloak and test jobs
+
+The core of the product test should be done in ucs-test-keycloak and our jenkins jobs. We should try to automate as much as possible. Currently we have jobs for (https://jenkins2022.knut.univention.de/job/UCS-5.0/job/UCS-5.0-3/view/Keycloak/)
+* Login Performance
+* Product Tests
+  * Maria DB setup
+  * Setup with two backup's
+
+## Manuall testing
+
+* add here what we have to test manually
+
+## TODO
+
+* move the tests from the app specific test to ucs-test-keycloak
+* add a separate update test job in (jenkins) Product Tests
 
 # Internals
 
