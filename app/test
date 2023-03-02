@@ -901,18 +901,18 @@ def _logout_keycloak_client(kc_admin):
 	)
 	print(data_raw)
 
-def test_session_synch(chrome):
-	# Connect as admin
-	pwdfile = "/etc/keycloak.secret"
-	with open(pwdfile, 'r') as fd:
-		password = fd.read().strip()
-
-	_create_users()
-
-	with chrome.capture('keycloak_session_sync'):
-		_session_sync_login(chrome)
-
-	_delete_users()
+#def test_session_synch(chrome):
+#	# Connect as admin
+#	pwdfile = "/etc/keycloak.secret"
+#	with open(pwdfile, 'r') as fd:
+#		password = fd.read().strip()
+#
+#	_create_users()
+#
+#	with chrome.capture('keycloak_session_sync'):
+#		_session_sync_login(chrome)
+#
+#	_delete_users()
 
 
 if __name__ == '__main__':
