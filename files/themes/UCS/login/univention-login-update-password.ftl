@@ -3,63 +3,35 @@
     <#if section = "header">
         ${msg("updatePasswordTitle")}
     <#elseif section = "form">
-        <form id="kc-passwd-update-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+        <form id="kc-passwd-update-form" action="${url.loginAction}" method="post">
+            <div class="${properties.kcFormGroupClass!}">
+                <p class="ucs-p">${msg("updatePasswordTitle")}</p>
+            </div>
             <input type="text" id="username" name="username" value="${username}" autocomplete="username"
                    readonly="readonly" style="display:none;"/>
 
             <div class="${properties.kcFormGroupClass!}">
-                <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="password" class="${properties.kcLabelClass!}">${msg("password")}</label>
-                </div>
-                <div class="${properties.kcInputWrapperClass!}">
-                    <input type="password" id="password" name="password" class="${properties.kcInputClass!}"
-                           autofocus autocomplete="current-password"
-                           aria-invalid="<#if messagesPerField.existsError('password')>true</#if>"
-                    />
-
-                    <#if messagesPerField.existsError('password')>
-                        <span id="input-error-password" class="${properties.kcInputErrorMessageClass!}" aria-live="polite">
-                            ${kcSanitize(messagesPerField.get('password'))?no_esc}
-                        </span>
-                    </#if>
-                </div>
+                <input type="password" id="password" placeholder="" name="password" class="${properties.kcInputClass!}"
+                       autofocus autocomplete="current-password"
+                       aria-invalid="<#if messagesPerField.existsError('password')>true</#if>"
+                />
+                <label for="password" class="${properties.kcLabelClass!}">${msg("password")}</label>
             </div>
             <div class="${properties.kcFormGroupClass!}">
-                <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="password-new" class="${properties.kcLabelClass!}">${msg("passwordNew")}</label>
-                </div>
-                <div class="${properties.kcInputWrapperClass!}">
-                    <input type="password" id="password-new" name="password-new" class="${properties.kcInputClass!}"
-                           autofocus autocomplete="new-password"
-                           aria-invalid="<#if messagesPerField.existsError('password-new','password-confirm')>true</#if>"
-                    />
-
-                    <#if messagesPerField.existsError('password-new')>
-                        <span id="input-error-password" class="${properties.kcInputErrorMessageClass!}" aria-live="polite">
-                            ${kcSanitize(messagesPerField.get('password-new'))?no_esc}
-                        </span>
-                    </#if>
-                </div>
+                <input type="password" id="password-new" placeholder="" name="password-new" class="${properties.kcInputClass!}"
+                       autofocus autocomplete="new-password"
+                       aria-invalid="<#if messagesPerField.existsError('password-new','password-confirm')>true</#if>"
+                />
+                <label for="password-new" class="${properties.kcLabelClass!}">${msg("passwordNew")}</label>
             </div>
 
             <div class="${properties.kcFormGroupClass!}">
-                <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="password-confirm" class="${properties.kcLabelClass!}">${msg("passwordConfirm")}</label>
-                </div>
-                <div class="${properties.kcInputWrapperClass!}">
-                    <input type="password" id="password-confirm" name="password-confirm"
-                           class="${properties.kcInputClass!}"
-                           autocomplete="new-password"
-                           aria-invalid="<#if messagesPerField.existsError('password-confirm')>true</#if>"
-                    />
-
-                    <#if messagesPerField.existsError('password-confirm')>
-                        <span id="input-error-password-confirm" class="${properties.kcInputErrorMessageClass!}" aria-live="polite">
-                            ${kcSanitize(messagesPerField.get('password-confirm'))?no_esc}
-                        </span>
-                    </#if>
-
-                </div>
+                <input type="password" id="password-confirm" placeholder="" name="password-confirm"
+                       class="${properties.kcInputClass!}"
+                       autocomplete="new-password"
+                       aria-invalid="<#if messagesPerField.existsError('password-confirm')>true</#if>"
+                />
+                <label for="password-confirm" class="${properties.kcLabelClass!}">${msg("passwordConfirm")}</label>
             </div>
 
             <div class="${properties.kcFormGroupClass!}">
@@ -73,7 +45,7 @@
                     </div>
                 </div>
 
-                <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
+                <div id="kc-form-buttons" class="${properties.kcFormGroupClass!}">
                     <#if isAppInitiatedAction??>
                         <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonLargeClass!}" type="submit" value="${msg("doSubmit")}" />
                         <button class="${properties.kcButtonClass!} ${properties.kcButtonDefaultClass!} ${properties.kcButtonLargeClass!}" type="submit" name="cancel-aia" value="true" />${msg("doCancel")}</button>

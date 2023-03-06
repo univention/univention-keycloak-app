@@ -176,6 +176,7 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
     line-height: var(--font-lineheight-normal);
     font-size: var(--font-size-body);
     color: var(--font-color-contrast-high);
+    margin-bottom: 1rem;
 }
 
 .ucs-p a {
