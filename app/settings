@@ -136,7 +136,7 @@ Type = String
 Required = False
 Show = Install, Settings
 Scope = inside, outside
-InitialValue = Your account is not verified <br>You must <a id="loginSelfServiceLink" href="https://@%@hostname@%@.@%@domainname@%@/univention/selfservice/#/selfservice/verifyaccount" target="_blank">verify your account</a> before you can login.<br/>
+InitialValue = Your account is not verified.<br>You must <a id="loginSelfServiceLink" href="https://@%@hostname@%@.@%@domainname@%@/univention/selfservice/#/selfservice/verifyaccount" target="_blank">verify your account</a> before you can login.<br/>
 Description = English error message if self-registered user account is not yet verified
 
 [keycloak/login/messages/de/accountNotVerifiedMsg]
@@ -144,5 +144,5 @@ Type = String
 Required = False
 Show = Install, Settings
 Scope = inside, outside
-InitialValue = Konto nicht verifiziert <br>Sie m\u00FCssen Ihr <a id="loginSelfServiceLink" href="https://@%@hostname@%@.@%@domainname@%@/univention/selfservice/#/selfservice/verifyaccount" target="_blank">Konto verifizieren</a>, bevor Sie sich einloggen k\u00F6nnen.<br/>
+InitialValue = Konto nicht verifiziert.<br>Sie m\u00FCssen Ihr <a id="loginSelfServiceLink" href="https://@%@hostname@%@.@%@domainname@%@/univention/selfservice/#/selfservice/verifyaccount" target="_blank">Konto verifizieren</a>, bevor Sie sich einloggen k\u00F6nnen.<br/>
 Description = German error message if self-registered user account is not yet verified
