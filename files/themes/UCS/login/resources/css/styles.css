@@ -69,6 +69,7 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
 
 .login-pf-page {
     padding-top: 0;
+    margin-bottom: 5.5rem;
 }
 
 .login-pf-page .card-pf p {
@@ -151,7 +152,7 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
     --border-color: transparent;
     width: 100%;
     margin-bottom: 1rem;
-    padding: 0.8rem !important;
+    padding: 1.2rem 1rem 0.3rem 1rem !important;
     border: 1px solid var(--border-color) !important;
     border-radius: 0.25rem;
     outline: none;
@@ -167,4 +168,24 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
 
 #kc-form-login {
     color: var(--font-color-contrast-high);
+}
+
+.ucs-p {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: normal;
+    line-height: var(--font-lineheight-normal);
+    font-size: var(--font-size-body);
+    color: var(--font-color-contrast-high);
+}
+
+.ucs-p a {
+    color: inherit;
+    transition: color 250ms, text-decoration-thickness 250ms;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+}
+
+.login-pf .ucs-p a:hover, .login-pf .ucs-p a:focus {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
 }

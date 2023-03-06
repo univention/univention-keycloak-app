@@ -6,7 +6,7 @@
 			<form id="univention-self-service-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
 				<div class="${properties.kcFormGroupClass!}">
 					<div class="${properties.kcLabelWrapperClass!}">
-						<label for="self_service"class="${properties.kcLabelClass!}">${msg("accountNotVerifiedMsg")?no_esc}</label>
+						<p class="ucs-p">${msg("accountNotVerifiedMsg")?no_esc}</p>
 					</div>
 				</div>
 				<div class="${properties.kcFormGroupClass!}">
