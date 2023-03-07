@@ -127,7 +127,7 @@ univention-keycloak --keycloak-url "https://$keycloak_server_sso_fqdn" init || d
 
 # enable extensions
 # TODO every time or just once in the domain?
-univention-keycloak "$@" --keycloak-url "https://$keycloak_server_sso_fqdn" extension register --names ldapmapper password || die
+univention-keycloak "$@" --keycloak-url "https://$keycloak_server_sso_fqdn" extension register || die
 
 for umc in $(univention-ldapsearch -LLL univentionService="Univention Management Console" displayName | sed -n 's/displayName: //p' | tr ";" "\n")
 do
