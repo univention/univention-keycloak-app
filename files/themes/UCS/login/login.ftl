@@ -4,19 +4,19 @@
         ${msg("loginAccountTitle")}
     <#elseif section = "form">
     <div id="kc-form">
-       <div class="${properties.kcFormGroupClass!}">
-       <#if messagesPerField.existsError('username','password')>
-           <div class="alert-error ${properties.kcAlertClass!} pf-m-danger">
+      <#if messagesPerField.existsError('username','password')>
+        <div class="${properties.kcFormGroupClass!}">
+            <div class="alert-error ${properties.kcAlertClass!} pf-m-danger">
 
-               <div class="pf-c-alert__icon">
-                   <span class="${properties.kcFeedbackErrorIcon!}"></span>
-               </div>
-               <span class="${properties.kcAlertTitleClass!}">
-                       ${kcSanitize(messagesPerField.getFirstError('username','password'))?no_esc}
-               </span>
-           </div>
-       </div>
-       </#if>
+                <div class="pf-c-alert__icon">
+                    <span class="${properties.kcFeedbackErrorIcon!}"></span>
+                </div>
+                <span class="${properties.kcAlertTitleClass!}">
+                        ${kcSanitize(messagesPerField.getFirstError('username','password'))?no_esc}
+                </span>
+            </div>
+        </div>
+      </#if>
       <div id="kc-form-wrapper">
         <#if realm.password>
             <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}" method="post">
@@ -29,7 +29,6 @@
 
                     </div>
                 </#if>
-		</div>
 
                 <div class="${properties.kcFormGroupClass!}">
 

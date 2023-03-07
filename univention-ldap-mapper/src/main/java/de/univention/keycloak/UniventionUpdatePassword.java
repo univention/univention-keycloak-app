@@ -147,7 +147,7 @@ public class UniventionUpdatePassword extends UpdatePassword {
         if (Validation.isBlank(password)) {
             LoginFormsProvider form = context.form()
                     .setAttribute("username", authSession.getAuthenticatedUser().getUsername())
-                    .addError(new FormMessage(Validation.FIELD_PASSWORD, Messages.MISSING_PASSWORD));
+                    .setError(Messages.MISSING_PASSWORD);
 
             Response challenge = form.createForm(UPDATE_PASSWORD_FORM);
             context.challenge(challenge);
@@ -156,7 +156,7 @@ public class UniventionUpdatePassword extends UpdatePassword {
         } else if (Validation.isBlank(passwordNew)) {
             LoginFormsProvider form = context.form()
                     .setAttribute("username", authSession.getAuthenticatedUser().getUsername())
-                    .addError(new FormMessage("password-new", "missingPasswordNewMessage"));
+                    .setError(Messages.MISSING_PASSWORD);
 
             Response challenge = form.createForm(UPDATE_PASSWORD_FORM);
             context.challenge(challenge);
@@ -165,7 +165,7 @@ public class UniventionUpdatePassword extends UpdatePassword {
         } else if (!passwordNew.equals(passwordConfirm)) {
             LoginFormsProvider form = context.form()
                     .setAttribute("username", authSession.getAuthenticatedUser().getUsername())
-                    .addError(new FormMessage(Validation.FIELD_PASSWORD_CONFIRM, Messages.NOTMATCH_PASSWORD));
+                    .setError(Messages.NOTMATCH_PASSWORD);
 
             Response challenge = form.createForm(UPDATE_PASSWORD_FORM);
             context.challenge(challenge);
