@@ -117,6 +117,20 @@ if [ -z "$keycloak_server_sso_autoregistration" ] || is_ucr_true keycloak/server
 	fi
 fi
 
+# wait for the keycloak_server_sso_fqdn dns record
+wait_for_dns () {
+	local server="${1:?missing server param}" i out
+	for ((i=0; i<300; i++))
+	do
+		out="$(nslookup -timeout=1 -retry=0 "$server")" && return 0
+		echo "waiting for $server ..."
+		sleep 1
+	done
+	echo "failed to lookup $server"
+	echo "$out"
+	return 1
+}
+wait_for_dns "$keycloak_server_sso_fqdn" || die
 
 univention-app restart keycloak
 i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
