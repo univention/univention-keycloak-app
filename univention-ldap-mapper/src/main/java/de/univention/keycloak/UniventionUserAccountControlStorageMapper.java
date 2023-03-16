@@ -86,7 +86,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         final String exceptionMessage = ldapException.getMessage();
         Matcher m = AUTH_EXCEPTION_REGEX.matcher(exceptionMessage);
         if (m.matches()) {
-            String errorCode = m.group(1);
+            final String errorCode = m.group(1);
             return processAuthErrorCode(errorCode, user, ldapUser.getAttributes());
         } else {
             return false;
@@ -106,30 +106,34 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
             } else if (accountAttributesHelper.isAccountLocked()) {
                 logger.debugf("Locked user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
             } else if (accountAttributesHelper.isPasswordChangeNeeded()) {
-                // User needs to change his Univention password. Allow him to login, but add UPDATE_PASSWORD required action to authenticationSession
-                if (user.getRequiredActionsStream().noneMatch(action -> Objects.equals(action, UniventionUpdatePassword.ID))) {
-                    // This usually happens when 49 was returned, which means that "shadowMax" is set to some positive value, which is older than Univention password expiration policy.
-                    AuthenticationSessionModel authSession = session.getContext().getAuthenticationSession();
-                    if (authSession != null) {
-                        if (authSession.getRequiredActions().stream().noneMatch(action -> Objects.equals(action, UniventionUpdatePassword.ID))) {
-                            logger.debugf("Adding requiredAction UPDATE_PASSWORD to the authenticationSession of user %s", user.getUsername());
-                            authSession.addRequiredAction(UniventionUpdatePassword.ID);
-                        }
-                    } else {
-                        // Just a fallback. It should not happen during normal authentication process
-                        logger.debugf("Adding requiredAction UPDATE_PASSWORD to the user %s", user.getUsername());
-                        user.addRequiredAction(UniventionUpdatePassword.ID);
-                    }
-                } else {
-                    // This typically happens when "shadowMax" is set to 1 and password was manually set
-                    // by administrator (or user) to expire
-                    logger.debugf("Skip adding required action UPDATE_PASSWORD. It was already set on user '%s' in realm '%s'", user.getUsername(), getRealmName());
-                }
+                addPasswordChangeAction(user);
                 return true;
             }
         }
 
         return false;
+    }
+
+    protected void addPasswordChangeAction(UserModel user) {
+        // User needs to change his Univention password. Allow him to login, but add UPDATE_PASSWORD required action to authenticationSession
+        if (user.getRequiredActionsStream().noneMatch(action -> Objects.equals(action, UniventionUpdatePassword.ID))) {
+            // This usually happens when 49 was returned, which means that "shadowMax" is set to some positive value, which is older than Univention password expiration policy.
+            AuthenticationSessionModel authSession = session.getContext().getAuthenticationSession();
+            if (authSession != null) {
+                if (authSession.getRequiredActions().stream().noneMatch(action -> Objects.equals(action, UniventionUpdatePassword.ID))) {
+                    logger.debugf("Adding requiredAction UPDATE_PASSWORD to the authenticationSession of user %s", user.getUsername());
+                    authSession.addRequiredAction(UniventionUpdatePassword.ID);
+                }
+            } else {
+                // Just a fallback. It should not happen during normal authentication process
+                logger.debugf("Adding requiredAction UPDATE_PASSWORD to the user %s", user.getUsername());
+                user.addRequiredAction(UniventionUpdatePassword.ID);
+            }
+        } else {
+            // This typically happens when "shadowMax" is set to 1 and password was manually set
+            // by administrator (or user) to expire
+            logger.debugf("Skip adding required action UPDATE_PASSWORD. It was already set on user '%s' in realm '%s'", user.getUsername(), getRealmName());
+        }
     }
 
     protected ModelException processFailedPasswordUpdateException(ModelException e) {
@@ -156,7 +160,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         return e;
     }
 
-    private String getRealmName() {
+    protected String getRealmName() {
         RealmModel realm = session.getContext().getRealm();
         return (realm != null) ? realm.getName() : "null";
     }
@@ -254,14 +258,13 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
             if (attributes.containsKey(SHADOW_MAX) && attributes.containsKey(SHADOW_LAST_CHANGE)) {
                 final long shadowMax = Long.parseLong(attributes.get(SHADOW_MAX).iterator().next());
                 final long shadowLastChange = Long.parseLong(attributes.get(SHADOW_LAST_CHANGE).iterator().next());
-                return shadowMax + shadowLastChange < now.toEpochMilli() / 86400000;
+                return shadowMax + shadowLastChange < floor(now.getEpochSecond() / 86400.0);
             } else if (attributes.containsKey(KRB5_PASSWORD_END)) {
                 try {
                     final Date timePasswordEnd = krb5Format.parse(attributes.get(KRB5_PASSWORD_END).iterator().next());
-                    logger.debugf("Could not parse krb5PasswordEnd Attribute:" );
                     return timePasswordEnd.before(Date.from(now));
                 } catch(java.text.ParseException e) {
-                    logger.debugf("Could not parse krb5PasswordEnd Attribute: %s", e.getMessage());
+                    logger.warnf("Could not parse krb5PasswordEnd Attribute: %s", e.getMessage());
                     return true;
                 }
             } else if (attributes.containsKey(SAMBA_PWD_MUST_CHANGE)) {
