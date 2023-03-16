@@ -20,7 +20,7 @@ RUN cp /tmp/build/univention-directory-manager/target/univention-directory-manag
  && cp /tmp/build/univention-authenticator/target/univention-authenticator-16.1.0-jar-with-dependencies.jar /tmp/artifacts/\
  && cp /tmp/build/univention-ldap-mapper/target/univention-ldap-mapper-19.0.2.jar /tmp/artifacts/
 
-FROM quay.io/keycloak/keycloak:19.0.2
+FROM quay.io/keycloak/keycloak:20.0.2
 
 COPY --from=maven --chown=keycloak /tmp/artifacts/ /tmp/artifacts/
 
