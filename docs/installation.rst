@@ -94,6 +94,35 @@ steps:
          $ univention-app install --set keycloak/admin/user="Administrator" keycloak
 
 
+.. _installation-initial-configuration:
+
+Initial Keycloak configuration
+==============================
+
+The first installation of the :program:`Keycloak` app in the UCS domain creates
+an initial configuration.
+
+To not overwrite custom settings, subsequent installations of the
+:program:`Keycloak` app on additional UCS systems in the domain don't create the
+initial configuration.
+
+.. admonition:: Factory reset of the configuration
+
+   For a *factory reset* of the configuration, delete the realm *UCS* in the
+   *Keycloak Admin Console*.
+
+   .. warning::
+
+      Beware, your installation looses all custom configuration settings, custom
+      services providers and other changes to the realm *UCS*.
+
+   After you deleted the realm *UCS*, create the initial configuration with the
+   following command:
+
+   .. code-block:: console
+
+      $ univention-keycloak init
+
 .. _keycloak-admin-console:
 
 Sign in to Keycloak Admin Console

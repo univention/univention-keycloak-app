@@ -50,6 +50,7 @@ improvement.
    :hidden:
 
    installation
+   update
    configuration
    architecture
    limitations

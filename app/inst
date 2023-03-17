@@ -136,12 +136,18 @@ univention-app restart keycloak
 i=0; while [ "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" != "healthy" ] && [ "$((++i))" -lt 100 ]; do  sleep 2; done; if [ "$i" -eq 100 ]; then echo "ERROR: Container did not come up healthy"; exit 1; fi
 echo "Container is healthy, configuring Keycloak"
 
-# TODO every time or just once in the domain?
+# if init is necessary (ucs realm does not exist),
+# this also sets domain_config_version
+# and domain_config_init to the current keycloak version
 univention-keycloak --keycloak-url "https://$keycloak_server_sso_fqdn" init || die
 
-# enable extensions
-# TODO every time or just once in the domain?
-univention-keycloak "$@" --keycloak-url "https://$keycloak_server_sso_fqdn" extension register || die
+# for upgrades, upgrade-config runs all upgrade
+# steps between "domain_config_version" and
+# the current keycloak version and saves the
+# current version in "domain_config_version"
+if ! ucr_is_false keycloak/auto-migration; then
+	univention-keycloak "$@" --keycloak-url "https://$keycloak_server_sso_fqdn" upgrade-config || die
+fi
 
 for umc in $(univention-ldapsearch -LLL univentionService="Univention Management Console" displayName | sed -n 's/displayName: //p' | tr ";" "\n")
 do
