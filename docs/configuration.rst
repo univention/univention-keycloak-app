@@ -953,3 +953,59 @@ more information, consult :cite:t:`keycloak-docs`.
      * - No
        - None
        - Installation and app configuration
+
+
+.. envvar:: ucs/self/registration/check_email_verification
+
+   Controls if the login is denied for unverified, self registered user
+   accounts. For more information, see
+   :ref:`uv-manual:user-management-password-changes-by-users-selfregistration-account-verification`
+   in the :cite:t:`ucs-manual`.
+
+   .. list-table::
+     :header-rows: 1
+     :widths: 2 5 5
+
+     * - Required
+       - Default value
+       - Set
+
+     * - No
+       - False
+       - Installation and app configuration
+
+
+.. envvar:: keycloak/login/messages/en/accountNotVerifiedMsg
+
+   English error message if self registered user account is not yet verified
+   (html is supported in this error message).
+
+   .. list-table::
+     :header-rows: 1
+     :widths: 2 5 5
+
+     * - Required
+       - Default value
+       - Set
+
+     * - No
+       - :samp:`Your account is not verified.<br>You must <a id="loginSelfServiceLink" href="https://${hostname}.${domainname}/univention/selfservice/#/selfservice/verifyaccount" target="_blank">verify your account</a> before you can login.<br/>'`
+       - Installation and app configuration
+
+
+.. envvar:: keycloak/login/messages/de/accountNotVerifiedMsg
+
+  German error message if self-registered user account is not yet verified
+  (html is supported in this error message).
+
+  .. list-table::
+    :header-rows: 1
+    :widths: 2 5 5
+
+    * - Required
+      - Default value
+      - Set
+
+    * - No
+      - :samp:`Konto nicht verifiziert.<br>Sie m\\u00FCssen Ihr <a id="loginSelfServiceLink" href="https://${hostname}.${domainname}/univention/selfservice/#/selfservice/verifyaccount" target="_blank">Konto verifizieren</a>, bevor Sie sich einloggen k\\u00F6nnen.<br/>'`
+      - Installation and app configuration
