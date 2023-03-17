@@ -145,7 +145,7 @@ univention-keycloak --keycloak-url "https://$keycloak_server_sso_fqdn" init || d
 # steps between "domain_config_version" and
 # the current keycloak version and saves the
 # current version in "domain_config_version"
-if ! ucr_is_false keycloak/auto-migration; then
+if ! is_ucr_false keycloak/auto-migration; then
 	univention-keycloak "$@" --keycloak-url "https://$keycloak_server_sso_fqdn" upgrade-config || die
 fi
 
