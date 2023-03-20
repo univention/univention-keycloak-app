@@ -21,10 +21,15 @@ COPY univention-user-attribute-nameid-mapper-base64/ ./univention-user-attribute
 RUN mvn clean package --file univention-user-attribute-nameid-mapper-base64 \
  && mvn install --file univention-user-attribute-nameid-mapper-base64
 
+COPY univention-app-authenticator/ ./univention-app-authenticator
+RUN mvn clean package --file univention-app-authenticator \
+ && mvn install --file univention-app-authenticator
+
 RUN cp /tmp/build/univention-directory-manager/target/univention-directory-manager.jar /tmp/artifacts/\
  && cp /tmp/build/univention-authenticator/target/univention-authenticator-16.1.0-jar-with-dependencies.jar /tmp/artifacts/\
  && cp /tmp/build/univention-ldap-mapper/target/univention-ldap-mapper-21.1.1.jar /tmp/artifacts/ \
- && cp /tmp/build/univention-user-attribute-nameid-mapper-base64/target/univention-user-attribute-nameid-mapper-base64-21.1.1.jar /tmp/artifacts/
+ && cp /tmp/build/univention-user-attribute-nameid-mapper-base64/target/univention-user-attribute-nameid-mapper-base64-21.1.1.jar /tmp/artifacts/ \
+ && cp /tmp/build/univention-app-authenticator/target/univention-app-authenticator-21.1.1.jar /tmp/artifacts/
 
 FROM quay.io/keycloak/keycloak:21.1.1
 
