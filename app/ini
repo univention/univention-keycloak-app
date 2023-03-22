@@ -39,7 +39,7 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	</p>
 	</div>
 PortsExclusive = 8180
-SupportedUcsVersions = 
+SupportedUcsVersions = 5.0-3 errata620
 ServerRole = domaincontroller_master, domaincontroller_backup
 Database = postgresql
 DockerEnvDatabasePort = DB_PORT
