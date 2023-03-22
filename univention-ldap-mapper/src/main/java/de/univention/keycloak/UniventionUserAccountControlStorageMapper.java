@@ -206,11 +206,19 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         public boolean isAccountDisabled() {
             if (attributes.containsKey(SHADOW_EXPIRE)) {
                 final long shadowExpire = Long.parseLong(attributes.get(SHADOW_EXPIRE).iterator().next());
-                return 1 == shadowExpire;
-            } else if (attributes.containsKey(SAMBA_ACCT_FLAGS)) {
-                return attributes.get(SAMBA_ACCT_FLAGS).iterator().next().contains("L");
-            } else if (attributes.containsKey(KRB5_KDC_FLAGS)) {
-                return 254 == Long.parseLong(attributes.get(KRB5_KDC_FLAGS).iterator().next());
+                if (1 == shadowExpire) {
+                    return true;
+                }
+            }
+            if (attributes.containsKey(SAMBA_ACCT_FLAGS)) {
+                if (attributes.get(SAMBA_ACCT_FLAGS).iterator().next().contains("L")) {
+                    return true;
+                }
+            }
+            if (attributes.containsKey(KRB5_KDC_FLAGS)) {
+                if (254 == Long.parseLong(attributes.get(KRB5_KDC_FLAGS).iterator().next())) {
+                    return true;
+                }
             }
 
             return false;
@@ -219,14 +227,16 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         public boolean isAccountExpired() {
             if (attributes.containsKey(SHADOW_EXPIRE)) {
                 final long shadowExpire = Long.parseLong(attributes.get(SHADOW_EXPIRE).iterator().next());
-                return shadowExpire <= floor(now.getEpochSecond() / 86400.0);
-            } else if (attributes.containsKey(KRB5_VALID_END)) {
+                if (shadowExpire <= floor(now.getEpochSecond() / 86400.0)){
+                    return true;
+                }
+            }
+            if (attributes.containsKey(KRB5_VALID_END)) {
                 try {
                     final Date timeValidEnd = krb5Format.parse(attributes.get(KRB5_VALID_END).iterator().next());
                     return timeValidEnd.before(Date.from(now));
                 } catch(java.text.ParseException e) {
-                    logger.debugf("Could not parse krb5ValidEnd Attribute: %s", e.getMessage());
-                    return false;
+                    logger.errorf("Could not parse krb5ValidEnd Attribute: %s", e.getMessage());
                 }
             }
 
@@ -270,7 +280,6 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
                    }
                } catch(java.text.ParseException e) {
                    logger.errorf("Could not parse krb5PasswordEnd Attribute: %s", e.getMessage());
-                   return true;
                }
             }
             if (attributes.containsKey(SAMBA_PWD_MUST_CHANGE)) {
