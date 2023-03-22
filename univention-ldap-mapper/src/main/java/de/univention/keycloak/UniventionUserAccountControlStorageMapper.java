@@ -19,10 +19,7 @@ import org.keycloak.storage.ldap.mappers.msad.LDAPServerPolicyHintsDecorator;
 import javax.naming.AuthenticationException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -350,7 +347,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
                 UniventionUserAccountControlStorageMapper.logger.debugf("Required action UPDATE_PASSWORD is set in LDAP for user '%s' in realm '%s'", getUsername(), getRealmName());
                 requiredActions = Stream.concat(requiredActions, Stream.of(UniventionUpdatePassword.ID)).distinct();
             }
-            String checkVerification = System.getenv("UCS_SELF_REGISTRATION_CHECK_EMAIL_VERIFICATION");
+            final String checkVerification = Optional.ofNullable(System.getenv("UCS_SELF_REGISTRATION_CHECK_EMAIL_VERIFICATION")).orElse("");
             if (checkVerification.equals("True") && !accountAttributesHelper.isAccountVerifiedThroughSelfService()) {
                 UniventionUserAccountControlStorageMapper.logger.debugf("Required action SELF_SERVICE_VERIFICATION is set in LDAP for user '%s'", requiredActions.toString());
                 requiredActions = Stream.concat(requiredActions, Stream.of(UniventionSelfService.ID)).distinct();
