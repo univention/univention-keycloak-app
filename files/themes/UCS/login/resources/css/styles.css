@@ -10,6 +10,7 @@
     --pf-global--BackgroundColor--100: var(--bgc-content-body);
 /*    --link-hover-color: var(--button-bgc-hover); */
     --pf-global--danger-color--100: var(--bgc-error);
+    --pf-c-button--m-primary--BackgroundColor: var(--button-primary-bgc);
 }
 
 #kc-header-wrapper {
@@ -69,11 +70,11 @@ input + .pf-c-form__label {
     transition: transform 0.3s, color 0.3s;
     pointer-events: none;
     font-size: var(--font-size-3);
+    color: var(--font-color-contrast-middle);
 }
 
 input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__label {
     transform: translateY(-1rem) scale(0.65);
-    color: var(--font-color-contrast-middle);
 }
 
 .kc-social-gray{
@@ -143,8 +144,7 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
     background-image: url("../img/login_logo.svg");
     background-repeat: no-repeat;
     background-position: center;
-    padding: 1.7rem 0;
-    margin-bottom: 3rem;
+    padding-bottom: 4.7rem;
 }
 
 #kc-locale-dropdown a {
@@ -167,7 +167,7 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
 
 .pf-c-button.pf-m-primary {
     color: var(--font-color-contrast-high);
-    background-color: var(--pf-c-button--m-primary--BackgroundColor);
+    background-color: var(--button-primary-bgc);
     position: relative;
     width: 100%;
     padding: 0.75rem 1rem;
