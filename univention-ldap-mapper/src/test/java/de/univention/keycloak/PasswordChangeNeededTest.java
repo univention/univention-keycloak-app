@@ -62,6 +62,20 @@ public class PasswordChangeNeededTest {
     }
 
     @Test
+    // Happens on the day of expiry itself - krb5 is expired but not shadow. The password should be regarded as expired if either one marks the password as expired
+    public void krb5PasswordEndExpiredbutNotShadow() {
+        final Instant expireAt = Instant.now().plus(-1, ChronoUnit.SECONDS);
+        final Long shadowLastChange = expireAt.getEpochSecond() / 86400;
+        Map<String, Set<String>> attributes = new HashMap<>();
+        attributes.put(SHADOW_MAX, Collections.singleton("1"));
+        attributes.put(SHADOW_LAST_CHANGE, Collections.singleton(shadowLastChange.toString()));
+        attributes.put(KRB5_PASSWORD_END, Collections.singleton(krb5Format.format(Date.from(expireAt))));
+
+        final UniventionUserAccountControlStorageMapper.AccountAttributesHelper helper = new UniventionUserAccountControlStorageMapper.AccountAttributesHelper(attributes);
+        assertTrue(helper.isPasswordChangeNeeded());
+    }
+
+    @Test
     public void krb5PasswordEndNotExpired() throws IllegalAccessException {
         final Instant expireAt = Instant.now();
 

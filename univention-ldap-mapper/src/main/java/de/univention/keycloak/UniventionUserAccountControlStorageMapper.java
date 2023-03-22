@@ -258,20 +258,27 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
             if (attributes.containsKey(SHADOW_MAX) && attributes.containsKey(SHADOW_LAST_CHANGE)) {
                 final long shadowMax = Long.parseLong(attributes.get(SHADOW_MAX).iterator().next());
                 final long shadowLastChange = Long.parseLong(attributes.get(SHADOW_LAST_CHANGE).iterator().next());
-                return shadowMax + shadowLastChange < floor(now.getEpochSecond() / 86400.0);
-            } else if (attributes.containsKey(KRB5_PASSWORD_END)) {
-                try {
-                    final Date timePasswordEnd = krb5Format.parse(attributes.get(KRB5_PASSWORD_END).iterator().next());
-                    return timePasswordEnd.before(Date.from(now));
-                } catch(java.text.ParseException e) {
-                    logger.warnf("Could not parse krb5PasswordEnd Attribute: %s", e.getMessage());
+                if (shadowMax + shadowLastChange < floor(now.getEpochSecond() / 86400.0)) {
                     return true;
                 }
-            } else if (attributes.containsKey(SAMBA_PWD_MUST_CHANGE)) {
-                final long sambaPwdMustChange = Long.parseLong(attributes.get(SAMBA_PWD_MUST_CHANGE).iterator().next());
-                return 0 == sambaPwdMustChange;
             }
-
+            if (attributes.containsKey(KRB5_PASSWORD_END)) {
+               try {
+                   final Date timePasswordEnd = krb5Format.parse(attributes.get(KRB5_PASSWORD_END).iterator().next());
+                   if (timePasswordEnd.before(Date.from(now))) {
+                       return true;
+                   }
+               } catch(java.text.ParseException e) {
+                   logger.errorf("Could not parse krb5PasswordEnd Attribute: %s", e.getMessage());
+                   return true;
+               }
+            }
+            if (attributes.containsKey(SAMBA_PWD_MUST_CHANGE)) {
+               final long sambaPwdMustChange = Long.parseLong(attributes.get(SAMBA_PWD_MUST_CHANGE).iterator().next());
+               if (sambaPwdMustChange == 0) {
+                   return true;
+               }
+            }
             return false;
         }
     }
