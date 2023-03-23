@@ -963,49 +963,64 @@ more information, consult :cite:t:`keycloak-docs`.
    in the :cite:t:`ucs-manual`.
 
    .. list-table::
-     :header-rows: 1
-     :widths: 2 5 5
+      :header-rows: 1
+      :widths: 2 5 5
 
-     * - Required
-       - Default value
-       - Set
+      * - Required
+        - Default value
+        - Set
 
-     * - No
-       - False
-       - Installation and app configuration
+      * - No
+        - False
+        - Installation and app configuration
 
 
 .. envvar:: keycloak/login/messages/en/accountNotVerifiedMsg
 
-   English error message if self registered user account is not yet verified
-   (html is supported in this error message).
+   English error message for a self-registered user account that isn't verified
+   yet. The error message supports HTML format.
 
    .. list-table::
-     :header-rows: 1
-     :widths: 2 5 5
+      :header-rows: 1
+      :widths: 2 5 5
 
-     * - Required
-       - Default value
-       - Set
+      * - Required
+        - Default value
+        - Set
 
-     * - No
-       - :samp:`Your account is not verified.<br>You must <a id="loginSelfServiceLink" href="https://${hostname}.${domainname}/univention/selfservice/#/selfservice/verifyaccount" target="_blank">verify your account</a> before you can login.<br/>'`
-       - Installation and app configuration
+      * - No
+        - See default value in
+          :numref:`listing-default-account-not-verified-message-en` after the table.
+        - Installation and app configuration
+
+   .. code-block::
+      :caption: Default value for :envvar:`keycloak/login/messages/en/accountNotVerifiedMsg`
+      :name: listing-default-account-not-verified-message-en
+
+      'Your account is not verified.<br>You must <a id="loginSelfServiceLink" href="https://${hostname}.${domainname}/univention/selfservice/#/selfservice/verifyaccount" target="_blank">verify your account</a> before you can login.<br/>'
 
 
 .. envvar:: keycloak/login/messages/de/accountNotVerifiedMsg
 
-  German error message if self-registered user account is not yet verified
-  (html is supported in this error message).
+   German error message for a self-registered user account that isn't verified
+   yet. The error message supports HTML format.
 
-  .. list-table::
-    :header-rows: 1
-    :widths: 2 5 5
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
 
-    * - Required
-      - Default value
-      - Set
+      * - Required
+        - Default value
+        - Set
 
-    * - No
-      - :samp:`Konto nicht verifiziert.<br>Sie m\\u00FCssen Ihr <a id="loginSelfServiceLink" href="https://${hostname}.${domainname}/univention/selfservice/#/selfservice/verifyaccount" target="_blank">Konto verifizieren</a>, bevor Sie sich einloggen k\\u00F6nnen.<br/>'`
-      - Installation and app configuration
+      * - No
+        - See default value in
+          :numref:`listing-default-account-not-verified-message-de` after the
+          table.
+        - Installation and app configuration
+
+   .. code-block::
+      :caption: Default value for :envvar:`keycloak/login/messages/de/accountNotVerifiedMsg`
+      :name: listing-default-account-not-verified-message-de
+
+      'Konto nicht verifiziert.<br>Sie m\\u00FCssen Ihr <a id="loginSelfServiceLink" href="https://${hostname}.${domainname}/univention/selfservice/#/selfservice/verifyaccount" target="_blank">Konto verifizieren</a>, bevor Sie sich einloggen k\\u00F6nnen.<br/>'
