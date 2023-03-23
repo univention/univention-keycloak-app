@@ -65,7 +65,7 @@ https://jenkins2022.knut.univention.de/job/UCS-5.0/job/Apps/job/keycloak/
 
 ## Unit test in the container
 
-We are working on unit test in the keycloak container. At some point they will be executed automatically in a pipeline job.
+We have unit test for the univention-ldap-mapper. These are executed during the image build.
 
 ## ucs-test-keycloak and test jobs
 
@@ -74,6 +74,7 @@ The core of the product test should be done in ucs-test-keycloak and our jenkins
 * Product Tests
   * Maria DB setup
   * Setup with two backup's
+  * UPdate scenario
 
 ## Manuall testing
 
@@ -82,7 +83,6 @@ The core of the product test should be done in ucs-test-keycloak and our jenkins
 ## TODO
 
 * move the tests from the app specific test to ucs-test-keycloak
-* add a separate update test job in (jenkins) Product Tests
 
 # Internals
 
