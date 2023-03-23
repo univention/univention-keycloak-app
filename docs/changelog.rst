@@ -14,9 +14,11 @@ project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 Released: 23. March 2023
 
 * This release of Keycloak app includes extensions for
+
   #. Univention LDAP mapper
   #. Univention Password reset
   #. Univention Self service
+
 * :program:`Keycloak` now checks the password expiry during the login and
   presents a password change dialog if the password is expired.
 * The app now offers a setting to deny the login for unverified, self
