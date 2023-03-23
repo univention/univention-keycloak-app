@@ -17,6 +17,7 @@ directory in Univention Corporate Server (UCS). It covers the following topics:
 #. :ref:`app-configuration`
 #. :ref:`app-architecture`
 #. :ref:`app-limitations`
+#. :ref:`app-use-cases`
 #. :ref:`app-troubleshooting`
 
 This documentation doesn't cover the following topics:
@@ -54,6 +55,7 @@ improvement.
    configuration
    architecture
    limitations
+   use-cases
    troubleshooting
    changelog
    bibliography

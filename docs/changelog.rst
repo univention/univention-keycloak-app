@@ -8,6 +8,25 @@ This changelog documents all notable changes to the Keycloak app. `Keep a
 Changelog <https://keepachangelog.com/en/1.0.0/>`_ is the format and this
 project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
+19.0.2-ucs2
+============
+
+Released: 22. March 2023
+
+Added
+-----
+
+* This release of Keycloak includes extensions for:
+
+  #. Univention LDAP mapper
+  #. Password reset
+  #. Self service
+
+These will provide reset of expired user account password and preventing user
+from login if the app setting `ucs/self/registration/check_email_verification`
+is set to ``true`` (default is ``false``). For more information, please
+see :ref:`use cases <app-use-cases>`.
+
 19.0.1-ucs3
 ============
 

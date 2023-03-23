@@ -7,7 +7,7 @@ Troubleshooting
 .. highlight:: console
 
 When you encounter problems with the operation of the :program:`Keycloak` app,
-this chapter providers information where you can look closer into and to get an
+this chapter provides information where you can look closer into and to get an
 impression about what is going wrong.
 
 .. _app-log-files:
