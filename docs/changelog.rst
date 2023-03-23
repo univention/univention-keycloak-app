@@ -8,13 +8,20 @@ This changelog documents all notable changes to the Keycloak app. `Keep a
 Changelog <https://keepachangelog.com/en/1.0.0/>`_ is the format and this
 project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
+19.0.2-ucs2
+===========
+
+Released: TODO
+
+* :program:`Keycloak` now checks the password expiry during the login and
+  presents a password change dialog if the password is expired.
+* The app now offers a setting to deny the login for unverified, self
+  registered user accounts. For more information, see :ref:`app-settings`.
+
 19.0.1-ucs3
 ============
 
 Released: 14. October 2022
-
-Added
------
 
 * This release of Keycloak includes an extended version of the command line
   program :program:`univention-keycloak`. Use it to directly create Keycloak
@@ -25,9 +32,6 @@ Added
 ============
 
 Released: 9. September 2022
-
-Added
------
 
 * This release of :program:`Keycloak` includes an |SPI| extension for so called
   ad-hoc federation. See the documentation for details.
@@ -40,9 +44,6 @@ Added
 ============
 
 Released: 7. September 2022
-
-Added
------
 
 * The app now offers :program:`univention-keycloak`, a command line program to
   configure :term:`SAML SP` and :term:`OIDC Provider` clients in Keycloak
@@ -67,9 +68,6 @@ Added
 ============
 
 Released: 28. June 2022
-
-Added
------
 
 * Initial release of the app.
 
