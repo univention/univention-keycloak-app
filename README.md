@@ -157,19 +157,21 @@ Then add the following to your `/etc/hosts`:
 
 # App/Documentation updates
 
-The script update-appcenter-test.sh can be used to build and upload the files from the repo for the latest test app center app version
-1. update changelog         
+The script update-appcenter-test.sh can be used to build and upload the files
+from the repository for the latest test app center app version
+1. update changelog
 1. run update-appcenter-test.sh
 1. update docker image names (appcenter test)
 1. run keycloak product tests (errata_update and release_update == public)
 1. release the documentation:
-   * see below               
-1. release the app:                                                         
+   * see below
+1. release the app:
    * go to omar
-   * run TODO            
+   * run TODO
 1. check release app (currenty manual testing)
-                                                                                
-After the release we need to create a new "test" version in the appcenter for our tests.           
+
+After the release we need to create a new "test" version in the appcenter for
+our tests.
 1. create another app version in the test appcenter
 1. update `Version` in `app/ini`
 1. run `update-appcenter-test.sh`
