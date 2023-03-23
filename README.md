@@ -179,7 +179,8 @@ Copy this block to the release issue and do all of them:
 1. [ ] release the app:
    * go to omar
    * run TODO
-1. [ ] check release app (currenty manual testing)
+1. [ ] check released app (currenty manual testing)
+1. [ ] Write mail to app-announcement@univention.de
 
 After the release we need to create a new "test" version in the appcenter for
 our tests.
