@@ -73,7 +73,6 @@ public class PasswordChangeNeededTest {
 
         final UniventionUserAccountControlStorageMapper.AccountAttributesHelper helper = new UniventionUserAccountControlStorageMapper.AccountAttributesHelper(attributes);
         assertTrue(helper.isPasswordChangeNeeded());
-        assertFalse(helper.isPasswordChangeNeeded());
     }
 
     @Test
