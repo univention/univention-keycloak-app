@@ -5,3 +5,8 @@ müssen Sie sicherstellen, dass alle Installationen auf die gleiche
 Version der Keycloak App aktualisiert werden, um einen
 ordnungsgemäßen Betrieb sicherzustellen.
 </p>
+<p>
+Eine Übersicht zu den Änderungen und Fehlerbehebungen finden Sie im
+<a href="http://docs.software-univention.de/keycloak-app/latest/changelog.html">
+Keycloak App Changelog</a>.
+</p>
