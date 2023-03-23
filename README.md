@@ -149,23 +149,30 @@ Then add the following to your `/etc/hosts`:
 # 10.207.63.21 ucs-sso-ng.ucs.test # if we want to test keycloak on the backup
 ```
 
-
-## App updates
-
-The script update-appcenter-test.sh can be used to build and upload the files from the repo for the latest test app center app version
-
 ## Special use case: Ad-Hoc-Federation using the "univention-authenticator" Keycloak SPI
 * The "univention-authenticator" Keycloak SPI is an extension written in Java.
 * It is shipped as part of the UCS Keycloak App, but not configured by default.
 * If configured properly (TODO: details pending) it allows creating a "shadow user account" in UDM after
   successful authentication against an external IdP (see page 13 of the [Summit presentation](https://www.slideshare.net/Univention/modularisierung-und-containerisierung-von-ucs).
 
-# Documentation
+# App/Documentation updates
 
-For local documentation builds, see [Build Sphinx documents
-locally](https://hutten.knut.univention.de/mediawiki/index.php/Build_Sphinx_documents_locally).
-
-# Checklist for new app version
+The script update-appcenter-test.sh can be used to build and upload the files from the repo for the latest test app center app version
+1. update changelog         
+1. run update-appcenter-test.sh
+1. update docker image names (appcenter test)
+1. run keycloak product tests (errata_update and release_update == public)
+1. release the documentation:
+   * see below               
+1. release the app:                                                         
+   * go to omar
+   * run TODO            
+1. check release app (currenty manual testing)
+                                                                                
+After the release we need to create a new "test" version in the appcenter for our tests.           
+1. create another app version in the test appcenter
+1. update `Version` in `app/ini`
+1. run `update-appcenter-test.sh`
 
 Besides the necessary steps for an app update, make sure to apply the following
 steps **before** release of a new app version for the Keycloak app.
@@ -190,3 +197,9 @@ steps **before** release of a new app version for the Keycloak app.
    pipeline, update the symlink `latest` the new version in the [keycloak-app
    directory of the docs.univention.de
    repository](https://git.knut.univention.de/univention/docs.univention.de/-/tree/master/keycloak-app).
+
+
+# Documentation
+
+For local documentation builds, see [Build Sphinx documents
+locally](https://hutten.knut.univention.de/mediawiki/index.php/Build_Sphinx_documents_locally).
