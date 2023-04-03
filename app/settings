@@ -148,3 +148,11 @@ Required = False
 Show = Install, Settings
 Scope = outside
 Description = Additional frame-ancestors for the Content Security Policy response header of Keycloak.
+
+[keycloak/cookies/samesite]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = outside
+InitialValue = None
+Description = Sets the "SameSite" attribute for all cookies of Keycloak. Possible values are "Lax", "Strict" and "None".

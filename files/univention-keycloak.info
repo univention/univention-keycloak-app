@@ -12,3 +12,4 @@ Variables: keycloak/apache2/ssl/key
 Variables: keycloak/apache2/ssl/ca
 Variables: keycloak/apache2/ssl/certificatechain
 Variables: keycloak/csp/frame-ancestors
+Variables: keycloak/cookies/samesite
