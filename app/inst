@@ -77,7 +77,7 @@ eval "$(ucr shell)"
 ucs_parseCredentials "$@"
 primary="$ldap_master"
 # check if we need to create a new certificate
-if [ "$server_role" = "domaincontroller_backup" ]; then
+if [ "$server_role" = "domaincontroller_backup" ] && [ -z "$keycloak_apache2_ssl_certificate" ]; then
 	univention-scp "$machine_secret" "-r $hostname\$@$primary:/etc/univention/ssl/${keycloak_server_sso_fqdn}/ /etc/univention/ssl/" || die
 	chgrp -R "DC Backup Hosts" "/etc/univention/ssl/$keycloak_server_sso_fqdn/"
 fi
