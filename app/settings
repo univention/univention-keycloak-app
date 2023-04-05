@@ -147,9 +147,9 @@ Scope = inside, outside
 InitialValue = Konto nicht verifiziert.<br>Sie m\u00FCssen Ihr <a id="loginSelfServiceLink" href="https://@%@hostname@%@.@%@domainname@%@/univention/selfservice/#/selfservice/verifyaccount" target="_blank">Konto verifizieren</a>, bevor Sie sich einloggen k\u00F6nnen.<br/>
 Description = German error message if self-registered user account is not yet verified
 
-[keycloak/security/CSP]
+[keycloak/csp/frame-ancestors]
 Type = String
 Required = False
 Show = Install, Settings
 Scope = outside
-Description = Additional values for the Content Security Policy for Keycloak.
+Description = Additional frame-ancestors for the Content Security Policy response header of Keycloak.
