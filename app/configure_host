@@ -20,6 +20,8 @@ RequestHeader set X-Forwarded-Port "443"
 ProxyPass / http://127.0.0.1:8180/
 ProxyPassReverse / http://127.0.0.1:8180/
 %EOF
+	# we need to commit the apache conf because that may have changed during an update
+	ucr commit /etc/apache2/sites-available/univention-keycloak.conf
 }
 
 theme_config() {
