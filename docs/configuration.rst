@@ -1004,3 +1004,111 @@ more information, consult :cite:t:`keycloak-docs`.
       :name: listing-default-account-not-verified-message-de
 
       'Konto nicht verifiziert.<br>Sie m\\u00FCssen Ihr <a id="loginSelfServiceLink" href="https://${hostname}.${domainname}/univention/selfservice/#/selfservice/verifyaccount" target="_blank">Konto verifizieren</a>, bevor Sie sich einloggen k\\u00F6nnen.<br/>'
+
+
+.. envvar:: keycloak/csp/frame-ancestors
+
+   Additional entries to the ``frame-ancestors`` directive of the Keycloak
+   virtual host. The space separated list of sources can have multiple values
+   can be used. For example, ``https://portal.external.com
+   https://*.remote.de``. For more information, see *CSP: frame-ancestors* in
+   :cite:t:`csp-frame-ancestors`.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - None
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/apache2/ssl/certificate
+
+   Sets the absolute path to the SSL certificate file for the :program:`Apache
+   web server` module ``mod_ssl`` of the Keycloak virtual host. The web server
+   needs the certificate in the PEM format.
+
+   The web server uses the UCS certificate from
+   :samp:`/etc/univention/ssl/ucs-sso-ng.{$domainname}/cert.pem`, if the UCR
+   variable has no value.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - :samp:`/etc/univention/ssl/ucs-sso-ng.{$domainname}/cert.pem`
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/apache2/ssl/key
+
+   Sets the absolute path to the private RSA/DSA key of the SSL certificate file
+   for the :program:`Apache web server` module ``mod_ssl`` of the Keycloak
+   virtual host. The web server needs the certificate in the PEM format.
+
+   The web server uses the UCS private key from
+   :samp:`/etc/univention/ssl/ucs-sso-ng.{$domainname}/private.key`, if the UCR
+   variable has no value.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - :samp:`/etc/univention/ssl/ucs-sso-ng.{$domainname}/private.key`
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/apache2/ssl/ca
+
+   Sets the absolute path to the certificate of the certificate authority (CA)
+   for the :program:`Apache web server` module ``mod_ssl`` of the Keycloak
+   virtual host. The web server needs the certificate in the PEM format.
+
+   The web server uses the UCS CA from
+   :file:`/etc/univention/ssl/ucsCA/CAcert.pem`, if the UCR variable has no
+   value.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - :file:`/etc/univention/ssl/ucsCA/CAcert.pem`
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/cookies/samesite
+
+   This setting sets the ``SameSite`` attribute in all the cookies of Keycloak.
+   Possible values are ``Lax``, ``Strict`` and the default value ``None``.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``None``
+        - Installation and app configuration

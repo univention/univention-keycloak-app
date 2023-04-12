@@ -6,3 +6,5 @@
 .. |2FA| replace:: :abbr:`2FA (Two-Factor Authentication)`
 .. |OTP| replace:: :abbr:`OTP (one-time password)`
 .. |UDM| replace:: :abbr:`UDM (Univention Directory Manager)`
+.. |UMC| replace:: :abbr:`UMC (Univention Management Console)`
+.. |FQDN| replace:: :abbr:`FQDN (fully qualified domain name)`

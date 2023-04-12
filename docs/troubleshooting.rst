@@ -55,3 +55,55 @@ This log level only affects the log information that Keycloak itself generates
 and writes to the Docker logs. The App Center sets the Docker container's
 ``KEYCLOAK_LOGLEVEL`` environment variable to the value of
 :envvar:`keycloak/log/level`.
+
+.. _troubleshoot-custom-fqdn:
+
+Configuration of single sign-on through external public domain
+==============================================================
+
+Administrators may encounter some problems when reconfiguring of the
+Univention Management Console and Keycloak for a custom |FQDN|. This section
+describes the most common problems that may occur.
+
+.. _troubleshoot-custom-fqdn-join-script-failure-3:
+
+Univention Management Console join script failure
+-------------------------------------------------
+
+During the run of the |UMC| join script as described in
+:ref:`use-case-custom-fqdn-ucs-systems`, the join script may fail with the error
+code ``3``.
+
+During the script run, the join script downloads the |SAML| metadata from the
+:term:`SAML IDP` specified in :envvar:`umc/saml/idp-server`. The download was
+unsuccessful. Check manually, for example with your web browser, if you can
+reach the metadata at
+:samp:`https://{$SSO_FQDN}/realms/ucs/protocol/saml/descriptor`. After you can
+load the metadata manually, run the following commands:
+
+.. code-block:: console
+
+   # Set the SAML metadata url
+   $ ucr set umc/saml/idp-server="https://${SSO_FQDN}/realms/ucs/protocol/saml/descriptor"
+
+   # Execute the join script again
+   $ univention-run-join-scripts --force --run-scripts 92univention-management-console-web-server.inst
+
+
+.. _troubleshoot-custom-fqdn-sso-session-refresh:
+
+Single sign-on session not refreshed
+------------------------------------
+
+After a sign-in to the UCS portal through single sign-on, the portal passively
+refreshes the user session every five minutes. If the configuration of the
+Keycloak virtual host in the Apache web server is incorrect, the passive refresh
+doesn't work for the UCS portal or other services.
+
+To allow external connections to Keycloak, you need to add the sources as space
+separated list to the UCR variable :envvar:`keycloak/csp/frame-ancestors`.
+
+.. tip::
+
+   Recommendation
+      To test this behavior, use a private or incognito session in your web browser.
