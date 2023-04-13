@@ -10,3 +10,9 @@ Eine Übersicht zu den Änderungen und Fehlerbehebungen finden Sie im
 <a href="http://docs.software-univention.de/keycloak-app/latest/changelog.html">
 Keycloak App Changelog</a>.
 </p>
+<p>
+<b>Version: 21.0.1-ucs</b>
+<ul>
+    <li>Ab dieser Version benötigt die App ein CPU die das Microarchitecture Level x86-64-v2 unterstützt (siehe auch <a href="https://help.univention.com/t/21420">help.univention.de</a>)</li>
+</ul>
+</p>

@@ -3,6 +3,7 @@ FROM maven:3.8.2-openjdk-11 as maven
 RUN mkdir /tmp/artifacts/
 COPY dependencies/*.jar /tmp/artifacts/
 COPY files/cache-ispn-jdbc-ping.xml /tmp/artifacts/
+COPY files/keycloak-healthcheck /tmp/artifacts/
 
 RUN mkdir /tmp/build/
 WORKDIR /tmp/build/
@@ -18,14 +19,15 @@ RUN mvn install --file univention-ldap-mapper
 
 RUN cp /tmp/build/univention-directory-manager/target/univention-directory-manager.jar /tmp/artifacts/\
  && cp /tmp/build/univention-authenticator/target/univention-authenticator-16.1.0-jar-with-dependencies.jar /tmp/artifacts/\
- && cp /tmp/build/univention-ldap-mapper/target/univention-ldap-mapper-19.0.2.jar /tmp/artifacts/
+ && cp /tmp/build/univention-ldap-mapper/target/univention-ldap-mapper-21.0.1.jar /tmp/artifacts/
 
-FROM quay.io/keycloak/keycloak:19.0.2
+FROM quay.io/keycloak/keycloak:21.0.1
 
 COPY --from=maven --chown=keycloak /tmp/artifacts/ /tmp/artifacts/
 
 RUN cp /tmp/artifacts/*.jar /opt/keycloak/providers\
  && cp /tmp/artifacts/cache-ispn-jdbc-ping.xml /opt/keycloak/conf/cache-ispn-jdbc-ping.xml\
+ && cp /tmp/artifacts/keycloak-healthcheck /opt/keycloak/bin/\
  && rm -rf /tmp/artifacts/
 
 EXPOSE 7600

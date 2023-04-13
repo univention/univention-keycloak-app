@@ -3,10 +3,13 @@ version: '3.1'
 services:
   keycloak:
     container_name: keycloak
-    image: gitregistry.knut.univention.de/univention/components/keycloak-app:latest
-    command: start --hostname=@%@keycloak/server/sso/fqdn@%@ --http-enabled=true --proxy=edge --cache=cache-ispn-jdbc-ping.xml --db=@%@kc/db/kind@%@ --transaction-xa-enabled=@%@kc/db/xa@%@
-    ## For --proxy=edge see https://www.keycloak.org/server/reverseproxy
-    ## For --hostname   see https://www.keycloak.org/server/hostname
+    image: gitregistry.knut.univention.de/univention/components/keycloak-app:branch-keycloak-21 # TODO
+    # For --proxy=edge see https://www.keycloak.org/server/reverseproxy
+    # For --hostname   see https://www.keycloak.org/server/hostname
+    command: start --hostname=@%@keycloak/server/sso/fqdn@%@ --http-enabled=true --proxy=edge --cache-config-file=cache-ispn-jdbc-ping.xml --db=@%@kc/db/kind@%@ --transaction-xa-enabled=@%@kc/db/xa@%@
+    # see https://forge.univention.org/bugzilla/show_bug.cgi?id=55360
+    security_opt:
+      - seccomp:/etc/docker/seccomp-systemd.json
     restart: unless-stopped
     environment:
       KC_HTTP_PORT: "8180"
@@ -32,7 +35,7 @@ with open(pwdfile, 'r') as fd:
       - 8180:8180
       - 7600:7600
     healthcheck:
-      test: curl http://127.0.0.1:8180/ -k -s -f -o /dev/null || exit 1
+      test: /opt/keycloak/bin/keycloak-healthcheck || exit 1
       interval: "2s"
-      timeout: "3s"
-      retries: 20
+      timeout: "5s"
+      retries: 30

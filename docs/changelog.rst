@@ -8,6 +8,17 @@ This changelog documents all notable changes to the Keycloak app. `Keep a
 Changelog <https://keepachangelog.com/en/1.0.0/>`_ is the format and this
 project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
+21.0.1-ucs1
+===========
+
+Released: TODO
+
+* From this version on the :program:`Keycloak` app requires a CPU that
+  supports the micro architecture level ``x86-64-v2``,
+  see https://help.univention.com/t/21420 for more information.
+* The app updates to *Keycloak* version 21.0.1 of the upstream Docker image
+  from https://quay.io/repository/keycloak/keycloak.
+
 19.0.2-ucs2
 ============
 
