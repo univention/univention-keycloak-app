@@ -8,6 +8,8 @@ This changelog documents all notable changes to the Keycloak app. `Keep a
 Changelog <https://keepachangelog.com/en/1.0.0/>`_ is the format and this
 project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
+Please also consider the `upstream release notes <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
+
 21.0.1-ucs1
 ===========
 
@@ -18,6 +20,12 @@ Released: TODO
   see https://help.univention.com/t/21420 for more information.
 * The app updates to *Keycloak* version 21.0.1 of the upstream Docker image
   from https://quay.io/repository/keycloak/keycloak.
+* Accessing the userinfo endpoint now requires `openid` to be specified in the
+  list of requested scopes. See
+  `this upstream issue <https://github.com/keycloak/keycloak/issues/14184>`_
+  for background information.
+* See `upstream release notes <https://www.keycloak.org/docs/latest/release_notes/index.html>`_
+  for more details.
 
 19.0.2-ucs2
 ============
