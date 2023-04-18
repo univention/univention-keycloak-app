@@ -13,6 +13,11 @@ Keycloak App Changelog</a>.
 <p>
 <b>Version: 21.0.1-ucs</b>
 <ul>
-    <li>Ab dieser Version benötigt die App ein CPU die das Microarchitecture Level x86-64-v2 unterstützt (siehe auch <a href="https://help.univention.com/t/21420">help.univention.de</a>)</li>
+    <li>
+      Ab dieser Version benötigt die App ein CPU die das Microarchitecture Level x86-64-v2 unterstützt (siehe auch <a href="https://help.univention.com/t/21420">help.univention.de</a>)
+    </li>
+    <li>
+      Für den Zugriff auf den <i>userinfo</i> Endpunkt (openid) wird nun der Scope <i>openid</i> in der Liste der angefordert Scopes benötigt (siehe auch <a href="https://github.com/keycloak/keycloak/issues/14184">https://github.com/keycloak/keycloak/issues/14184</a>).
+    </li>
 </ul>
 </p>
