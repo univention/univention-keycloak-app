@@ -13,7 +13,7 @@ Please also consider the `upstream release notes <https://www.keycloak.org/docs/
 21.0.1-ucs1
 ===========
 
-Released: TODO
+Released: 19. April 2023
 
 * From this version on the :program:`Keycloak` app requires a CPU that
   supports the micro architecture level ``x86-64-v2``,
