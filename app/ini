@@ -24,26 +24,13 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	The app is configured to use the Keycloak feature &quot;User Federation&quot; for authentication of users against OpenLDAP.
 	</p>
 	<p>
-	For more details go to the <a href="https://docs.software-univention.de/keycloak-app/latest/">documentation of the most recent version of the UCS Keycloak App</a>.
-	<br>
-	&nbsp;
-	<br>
-	&nbsp;
-	</p>
-	<p>
-	NOTE: This App should currently only be installed for testing purposes.
-	<tt>
-	ucs-sso-ng.$domainname
-	</tt>
-	.
+	For more details go to the <a href="https://docs.software-univention.de/keycloak-app/latest/">documentation of the most recent version of the UCS Keycloak App</a>
 	</p>
 	</div>
 PortsExclusive = 8180
 SupportedUcsVersions = 5.0-3 errata638
 ServerRole = domaincontroller_master, domaincontroller_backup
 Database = postgresql
-DockerEnvDatabasePort = DB_PORT
-DockerEnvDatabaseName = DB_NAME
 DatabaseUser = keycloak
 DatabasePasswordFile = /etc/postgresql-keycloak.secret
 WebsiteMaintainer = https://www.univention.com/
@@ -54,6 +41,9 @@ Contact = sales@univention.de
 NotificationEmail = appcenter-reporting@univention.de
 Website = https://docs.software-univention.de/keycloak-app/latest/
 MinPhysicalRam = 1024
+DockerEnvDatabaseHost = LOCAL_DB_URL_HOST
+DockerEnvDatabaseUser = LOCAL_DB_USERNAME
+DockerEnvDatabasePassword = LOCAL_DB_PASSWORD
 
 [de]
 LongDescription = <div class="col-sm-7 col-xs-12 left-col">
@@ -64,18 +54,7 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	Die App ist so konfiguriert, dass sie das Keycloak Feature &quot;User Federation&quot; verwendet um Benutzer durch OpenLDAP authentifizieren zu lassen..
 	</p>
 	<p>
-	Weitere Details sind in der <a href="https://docs.software-univention.de/keycloak-app/latest/">Dokumentation der aktuellsten Version der UCS Keycloak App</a> beschrieben.
-	<br>
-	&nbsp;
-	<br>
-	&nbsp;
-	</p>
-	<p>
-	NOTE: Diese App sollte zur Zeit nur zu Testzwecken installiert werden.
-	<tt>
-	ucs-sso-ng.$domainname
-	</tt>
-	.
+	Weitere Details sind in der <a href="https://docs.software-univention.de/keycloak-app/latest/">Dokumentation der aktuellsten Version der UCS Keycloak App</a> beschrieben.&nbsp;
 	</p>
 	</div>
 Description = SAML und OpenID Connect Identity Provider
