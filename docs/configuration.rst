@@ -787,6 +787,9 @@ more information, consult :cite:t:`keycloak-docs`.
         - :samp:`ucs-sso-ng.{$domainname}`
         - Installation and app configuration
 
+   .. warning::
+       The Keycloak admin console can not be used externally. It is always reachable
+       on the internal name `ucs-sso-ng.{$domainname}`.
 
 .. envvar:: keycloak/server/sso/autoregistration
 

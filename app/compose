@@ -6,7 +6,7 @@ services:
     image: gitregistry.knut.univention.de/univention/components/keycloak-app:latest
     # For --proxy=edge see https://www.keycloak.org/server/reverseproxy
     # For --hostname   see https://www.keycloak.org/server/hostname
-    command: start --hostname=@%@keycloak/server/sso/fqdn@%@ --http-enabled=true --proxy=edge --cache-config-file=cache-ispn-jdbc-ping.xml --db=@%@kc/db/kind@%@ --transaction-xa-enabled=@%@kc/db/xa@%@
+    command: start --hostname=@%@keycloak/server/sso/fqdn@%@ --http-enabled=true --proxy=edge --cache-config-file=cache-ispn-jdbc-ping.xml --db=@%@kc/db/kind@%@ --transaction-xa-enabled=@%@kc/db/xa@%@ --hostname-admin=ucs-sso-ng.@%@domainname@%@
     # see https://forge.univention.org/bugzilla/show_bug.cgi?id=55360
     security_opt:
       - seccomp:/etc/docker/seccomp-systemd.json

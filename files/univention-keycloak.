@@ -1,0 +1,57 @@
+@%@UCRWARNING=# @%@
+
+@!@
+def print_vhost_config(fqdn):
+        fqdn.update(dict(
+                fqdn='%s.%s' % (configRegistry.get('hostname'), configRegistry.get('domainname')),
+                ssl_certificate=configRegistry.get('keycloak/apache2/ssl/certificate', '/etc/univention/ssl/%(ssofqdn)s/cert.pem' % ssofqdn),
+                ssl_certificate_key=configRegistry.get('keycloak/apache2/ssl/key', '/etc/univention/ssl/%(ssofqdn)s/private.key' % ssofqdn),
+                ssl_ca_certificate=configRegistry.get('keycloak/apache2/ssl/ca', '/etc/univention/ssl/ucsCA/CAcert.pem'),
+                ssl_certificate_chain='',
+                keycloak_prefix=configRegistry.get('keycloak/url/prefix','keycloak'),
+        ))
+        print('''
+<VirtualHost *:443>
+        ServerName %(ssofqdn)s
+
+        SSLEngine on
+        SSLProxyEngine on
+        SSLCertificateFile %(ssl_certificate)s
+        SSLCertificateKeyFile %(ssl_certificate_key)s
+        SSLCACertificateFile %(ssl_ca_certificate)s
+        %(ssl_certificate_chain)s
+
+        IncludeOptional /var/lib/univention-appcenter/apps/keycloak/config/vhost.con[f]
+
+        RewriteEngine on
+        RewriteCond %%{HTTP_HOST} ^%(ssofqdn)s$
+        RewriteCond %%{REQUEST_URI} ^/univention/(login|management|self-service|portal|server-overview)/$
+        RewriteRule ^/univention/(.*)$ %%{REQUEST_SCHEME}://%(fqdn)s/univention/\$1 [L,QSA,R=301,END]
+</VirtualHost>
+<VirtualHost *:80>
+        ServerName %(ssofqdn)s
+
+        RewriteEngine on
+        RewriteCond %%{HTTP_HOST} ^%(ssofqdn)s$
+        RewriteCond %%{REQUEST_URI} ^/univention/(login|management|self-service|portal|server-overview)/$
+        RewriteRule ^/univention/(.*)$ %%{REQUEST_SCHEME}://%(fqdn)s/univention/\$1 [L,QSA,R=301,END]
+</VirtualHost>
+''' % fqdn)
+
+
+sso_fqdn = configRegistry.get('keycloak/server/sso/fqdn', 'ucs-sso-ng.%s' % configRegistry.get('domainname'))
+sso_fqdn_admin = configRegistry.get('keycloak/server/sso/fqdn/admin', 'ucs-sso-ng.%s' % configRegistry.get('domainname'))
+ssofqdn = {'ssofqdn': sso_fqdn}
+ssofqdn_admin = {'ssofqdn': sso_fqdn_admin}
+import os.path
+enable_virtualhost = configRegistry.is_true('ucs/server/sso/virtualhost', True)
+custom_CSP=configRegistry.get('keycloak/csp/frame-ancestors',''),
+domain=configRegistry.get('domainname')
+if enable_virtualhost:
+        print(f'Header edit Content-Security-Policy " *frame-ancestors [^;]*;" " frame-ancestors \'self\' https://*.{domain} {custom_CSP}; "')
+        print('<IfModule mod_ssl.c>')
+        print_vhost_config(ssofqdn)
+        if sso_fqdn != sso_fqdn_admin:
+            print_vhost_config(ssofqdn_admin)
+        print('</IfModule>')
+@!@

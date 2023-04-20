@@ -40,19 +40,14 @@ VERSION="5"
 joinscript_init
 
 app_id="keycloak"
-
-domainname="$(ucr get domainname)"
-hostname="$(ucr get hostname)"
-ldap_base="$(ucr get ldap/base)"
-sso_url="$(ucr get keycloak/server/sso/fqdn)"
-
+eval "$(ucr shell)"
 
 COMPONENT_ID=$(univention-app get $app_id component_id | cut -f 2 -d ':' | tr -d '[:space:]')
 ucr set \
 	ucs/web/overview/entries/admin/$app_id/description/de="Keycloak" \
 	ucs/web/overview/entries/admin/$app_id/description="Keycloak" \
 	ucs/web/overview/entries/admin/$app_id/label="Keycloak" \
-	ucs/web/overview/entries/admin/$app_id/link="https://$sso_url/admin/" \
+	ucs/web/overview/entries/admin/$app_id/link="https://$keycloak_sso_fqdn_admin/admin/" \
 	ucs/web/overview/entries/admin/$app_id/icon="/univention/js/dijit/themes/umc/icons/scalable/apps-$COMPONENT_ID.svg" \
 	ucs/web/overview/entries/admin/$app_id/link-target='newwindow'
 
@@ -73,7 +68,6 @@ ucs_registerLDAPExtension "$@" \
 psql_pwd_path="/etc/postgresql-keycloak.secret"
 machine_secret="/etc/machine.secret"
 
-eval "$(ucr shell)"
 ucs_parseCredentials "$@"
 primary="$ldap_master"
 # check if we need to create a new certificate
@@ -102,12 +96,10 @@ systemctl restart apache2
 ucr commit /etc/postgresql/11/main/pg_hba.conf
 service postgresql restart
 
-sso_hostname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 1)"
-sso_domainname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 2-)"
-
 if [ -z "$keycloak_server_sso_autoregistration" ] || is_ucr_true keycloak/server/sso/autoregistration; then
+	# Add ucs-sso-ng hostname always for the admin console
 	/usr/share/univention-directory-manager-tools/univention-dnsedit "$@" --ignore-exists \
-		"$sso_domainname" add a "$sso_hostname" "$(get_default_ip_address)" || die
+		"$domainname" add a "ucs-sso-ng" "$(get_default_ip_address)" || die
 	if is_localhost_in_admember_mode; then
 		ucs_parseCredentials "$@"
 		if [ -n "$binddn" ] && [ -n "$bindpwdfile" ]; then
@@ -116,6 +108,7 @@ if [ -z "$keycloak_server_sso_autoregistration" ] || is_ucr_true keycloak/server
 		fi
 	fi
 fi
+
 
 # wait for the keycloak_server_sso_fqdn dns record
 wait_for_dns () {
