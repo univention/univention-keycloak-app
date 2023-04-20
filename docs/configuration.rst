@@ -705,7 +705,10 @@ more information, consult :cite:t:`keycloak-docs`.
 
    Defines the name of the first user with administration rights in Keycloak.
    The file :file:`/etc/keycloak.secret` stores this user's password on the
-   system you installed the app.
+   system you installed the app. This setting only has effect if the Keycloak
+   database doesn't contain any users in the master realm. If your Keycloak
+   installation connects to an existing database, the admin user is not updated
+   or renamed.
 
    .. list-table::
       :header-rows: 1

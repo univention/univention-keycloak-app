@@ -5,10 +5,8 @@ Show = Install
 ShowReadOnly = Settings
 InitialValue = admin
 Scope = outside
-Description = Name of the initial admin user (password file is /etc/keycloak.secret)
-Description[de] = Name of the initial admin user (password file is /etc/keycloak.secret)
+Description = Name of the initial admin user (password file is /etc/keycloak.secret). This setting will only have effect if the Keycloak database does not yet contain any user in the master realm.
 Group = Administration
-Group[de] = Administration
 
 [keycloak/url/prefix]
 Type = String
@@ -18,9 +16,7 @@ ShowReadOnly = Settings
 InitialValue = keycloak
 Scope = outside
 Description = Prefix for the URL (e.g. login.$FQDN)
-Description[de] = Prefix for the URL (e.g. login.$FQDN)
 Group = Administration
-Group[de] = Administration
 
 [keycloak/log/level]
 Type = List
@@ -32,7 +28,6 @@ Labels = ALL, DEBUG, ERROR, FATAL, INFO, OFF, TRACE, WARN
 InitialValue = INFO
 Scope = outside
 Group = Administration
-Group[de] = Administration
 
 [keycloak/theme]
 Type = String
