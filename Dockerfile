@@ -19,9 +19,9 @@ RUN mvn install --file univention-ldap-mapper
 
 RUN cp /tmp/build/univention-directory-manager/target/univention-directory-manager.jar /tmp/artifacts/\
  && cp /tmp/build/univention-authenticator/target/univention-authenticator-16.1.0-jar-with-dependencies.jar /tmp/artifacts/\
- && cp /tmp/build/univention-ldap-mapper/target/univention-ldap-mapper-21.0.1.jar /tmp/artifacts/
+ && cp /tmp/build/univention-ldap-mapper/target/univention-ldap-mapper-21.0.2.jar /tmp/artifacts/
 
-FROM quay.io/keycloak/keycloak:21.0.1
+FROM quay.io/keycloak/keycloak:21.0.2
 
 COPY --from=maven --chown=keycloak /tmp/artifacts/ /tmp/artifacts/
 
