@@ -1,5 +1,5 @@
 [keycloak/admin/user]
-Type = String
+Type = Password
 Required = True
 Show = Install
 ShowReadOnly = Settings
@@ -96,7 +96,7 @@ InitialValue = postgres
 Description = Database kind (e.g. postgres)
 
 [kc/db/password]
-Type = String
+Type = Password
 Required = False
 Show = Install, Settings
 Scope = inside
