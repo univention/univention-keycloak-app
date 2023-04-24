@@ -1,5 +1,5 @@
 [keycloak/admin/user]
-Type = Password
+Type = String
 Required = True
 Show = Install
 ShowReadOnly = Settings
