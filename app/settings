@@ -1,13 +1,3 @@
-[keycloak/admin/user]
-Type = String
-Required = True
-Show = Install
-ShowReadOnly = Settings
-InitialValue = admin
-Scope = outside
-Description = Name of the initial admin user (password file is /etc/keycloak.secret). This setting will only have effect if the Keycloak database does not yet contain any user in the master realm.
-Group = Administration
-
 [keycloak/url/prefix]
 Type = String
 Required = True

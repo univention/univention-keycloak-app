@@ -87,12 +87,6 @@ steps:
          their default values, set them before the installation. For a
          reference, see :ref:`app-settings`.
 
-      **Example**: To define a different administration user in Keycloak, run:
-
-      .. code-block::
-
-         $ univention-app install --set keycloak/admin/user="Administrator" keycloak
-
 
 .. _installation-initial-configuration:
 
@@ -100,7 +94,8 @@ Initial Keycloak configuration
 ==============================
 
 The first installation of the :program:`Keycloak` app in the UCS domain creates
-an initial configuration.
+an administrative user named `admin`, whose password is written to `/etc/keycloak.secret`.
+With this user, the intial configuration of `Keycloak` is created.
 
 To not overwrite custom settings, subsequent installations of the
 :program:`Keycloak` app on additional UCS systems in the domain don't create the
@@ -121,7 +116,12 @@ initial configuration.
 
    .. code-block:: console
 
-      $ univention-keycloak init
+      $ univention-keycloak --binduser=admin --bindpwdfile=/etc/keycloak.secret init
+
+   .. warning::
+
+       After you deleted the realm *UCS*, create the initial configuration with the
+       following command:
 
 .. _keycloak-admin-console:
 

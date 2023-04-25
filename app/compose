@@ -15,7 +15,6 @@ services:
       KC_HTTP_PORT: "8180"
       JGROUPS_DISCOVERY_EXTERNAL_IP: @%@hostname@%@.@%@domainname@%@
       KC_HTTPS_KEY_STORE_PASSWORD: univention
-      KEYCLOAK_ADMIN: @%@keycloak/admin/user@%@
       KEYCLOAK_ADMIN_PASSWORD: @!@
 import os
 pwdfile="/etc/keycloak.secret"

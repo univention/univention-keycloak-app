@@ -700,29 +700,6 @@ The following references show the available settings within the
 Keycloak has a lot more possibilities for configuration and customization. For
 more information, consult :cite:t:`keycloak-docs`.
 
-
-.. envvar:: keycloak/admin/user
-
-   Defines the name of the first user with administration rights in Keycloak.
-   The file :file:`/etc/keycloak.secret` stores this user's password on the
-   system you installed the app. This setting only has effect if the Keycloak
-   database doesn't contain any users in the master realm. If your Keycloak
-   installation connects to an existing database, the admin user is not updated
-   or renamed.
-
-   .. list-table::
-      :header-rows: 1
-      :widths: 2 5 5
-
-      * - Required
-        - Default value
-        - Set
-
-      * - Yes
-        - ``admin``
-        - Only before installation
-
-
 .. envvar:: keycloak/log/level
 
    Configures the verbosity of log messages in Keycloak.
