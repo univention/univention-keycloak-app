@@ -16,7 +16,6 @@ FILES_TO_COPY=(
 	"app/configure_host"
 	"app/inst"
 #	"app/env"
-	"app/test"
 	"app/uinst"
 	"app/README_UPDATE_DE"
 	"app/README_UPDATE_EN"
