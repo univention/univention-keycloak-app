@@ -95,7 +95,7 @@ Initial Keycloak configuration
 
 The first installation of the :program:`Keycloak` app in the UCS domain creates
 an administrative user named `admin`, whose password is written to `/etc/keycloak.secret`.
-With this user, the intial configuration of `Keycloak` is created.
+With this user, the initial configuration of `Keycloak` is created.
 
 To not overwrite custom settings, subsequent installations of the
 :program:`Keycloak` app on additional UCS systems in the domain don't create the
