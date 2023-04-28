@@ -10,6 +10,15 @@ project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
 Please also consider the `upstream release notes <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+21.0.1-ucs2
+===========
+
+Released: 28. April 2023
+
+* From this version on the :program:`Keycloak` app supports
+  Single sign-on through an external public domain name.
+  For more information, see :ref:`use cases <use-case-custom-fqdn-idp>`.
+
 21.0.1-ucs1
 ===========
 
