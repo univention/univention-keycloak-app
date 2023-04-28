@@ -10,6 +10,14 @@ project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
 Please also consider the `upstream release notes <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+21.0.1-ucs2
+===========
+
+Released: 28. April 2023
+
+* The app can be configured to use an external fully qualified domain name,
+  see :ref:`use-case-reconfigure-sso`.
+
 21.0.1-ucs1
 ===========
 
