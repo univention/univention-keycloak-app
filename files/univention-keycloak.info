@@ -6,6 +6,7 @@ Mode: 644
 Variables: domainname
 Variables: hostname
 Variables: keycloak/server/sso/fqdn
+Variables: keycloak/server/sso/path
 Variables: ucs/server/sso/virtualhost
 Variables: keycloak/apache2/ssl/certificate
 Variables: keycloak/apache2/ssl/key

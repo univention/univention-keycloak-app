@@ -7,23 +7,6 @@
 
 action=$1
 
-apache_config () {
-	# create apache config
-	mkdir -p  /var/lib/univention-appcenter/apps/keycloak/config/
-	cat <<%EOF > /var/lib/univention-appcenter/apps/keycloak/config/vhost.conf
-ProxyPreserveHost On
-SSLProxyEngine On
-SSLProxyCheckPeerCN on
-SSLProxyCheckPeerExpire on
-RequestHeader set X-Forwarded-Proto "https"
-RequestHeader set X-Forwarded-Port "443"
-ProxyPass / http://127.0.0.1:8180/
-ProxyPassReverse / http://127.0.0.1:8180/
-%EOF
-	# we need to commit the apache conf because that may have changed during an update
-	ucr commit /etc/apache2/sites-available/univention-keycloak.conf
-}
-
 theme_config() {
 	THEME_DIR="/usr/share/univention-web/themes"
 	THEME_SRC="$THEME_DIR/$(basename "$(ucr get keycloak/theme)").css"
@@ -41,7 +24,9 @@ if [ -n "$action" ] && [ "$action" = "remove" ]; then
 	exit 0
 fi
 
-apache_config
+# we need to commit the apache conf because that may have changed during an update
+ucr commit /etc/apache2/sites-available/univention-keycloak.conf
+
 theme_config
 service apache2 reload
 

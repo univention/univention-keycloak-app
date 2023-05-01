@@ -1,7 +1,11 @@
 #!/bin/bash
 
+# if missing, append / to $KEYCLOAK_SERVER_SSO_PATH
+URI="${KEYCLOAK_SERVER_SSO_PATH%/}/"
+
+# https://github.com/keycloak/keycloak/issues/17273#issuecomment-1456572972
 exec 3<>/dev/tcp/localhost/8180
-echo -e "GET / HTTP/1.1\nhost: localhost:8180\n" >&3
+echo -e "GET ${URI} HTTP/1.1\nhost: localhost:8180\n" >&3
 timeout --preserve-status 1 cat <&3 | grep -q "Welcome to Keycloak"
 ERROR=$?
 exec 3<&-

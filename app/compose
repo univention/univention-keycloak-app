@@ -6,7 +6,23 @@ services:
     image: gitregistry.knut.univention.de/univention/components/keycloak-app:latest
     # For --proxy=edge see https://www.keycloak.org/server/reverseproxy
     # For --hostname   see https://www.keycloak.org/server/hostname
-    command: start --hostname=@%@keycloak/server/sso/fqdn@%@ --http-enabled=true --proxy=edge --cache-config-file=cache-ispn-jdbc-ping.xml --db=@%@kc/db/kind@%@ --transaction-xa-enabled=@%@kc/db/xa@%@
+@!@
+ucr = configRegistry
+fqdn = f"{ucr.get('hostname')}.{ucr.get('domainname')}"
+kc_fqdn = ucr.get('keycloak/server/sso/fqdn')
+sso_path = ucr.get('keycloak/server/sso/path', '/')
+db_kind = ucr.get('kc/db/kind')
+db_xa = ucr.get('kc/db/xa')
+
+if kc_fqdn == fqdn and sso_path == '/':
+    sso_path = '/auth'
+
+sso_path = sso_path.rstrip('/')
+
+print(f'''
+    command: start --hostname={kc_fqdn} --http-relative-path={sso_path} --http-enabled=true --proxy=edge --cache-config-file=cache-ispn-jdbc-ping.xml --db={db_kind} --transaction-xa-enabled={db_xa}
+''')
+@!@
     # see https://forge.univention.org/bugzilla/show_bug.cgi?id=55360
     security_opt:
       - seccomp:/etc/docker/seccomp-systemd.json

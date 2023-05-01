@@ -34,6 +34,13 @@ InitialValue = ucs-sso-ng.@%@domainname@%@
 Scope = outside
 Description = Defines the fqdn of the identity provider of this UCS domain.
 
+[keycloak/server/sso/path]
+Type = String
+Show = Install, Settings
+InitialValue = /
+Scope = outside, inside
+Description = Defines the dedicated path under which keycloak is available.
+
 [keycloak/password/change/endpoint]
 Type = String
 Show = Install, Settings
