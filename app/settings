@@ -41,6 +41,22 @@ InitialValue = /
 Scope = outside, inside
 Description = Defines the dedicated path under which keycloak is available.
 
+[keycloak/server/sso/virtualhost]
+Type = Bool
+InitialValue = True
+Required = True
+Scope = outside
+Show = Install, Settings
+Description = Whether or not to create a dedicated virtual host apache config for the keycloak server fqdn.
+
+[keycloak/apache/config]
+Type = Bool
+InitialValue = True
+Required = True
+Scope = outside
+Show = Install, Settings
+Description = Whether or not to create an apache config for the keycloak.
+
 [keycloak/password/change/endpoint]
 Type = String
 Show = Install, Settings

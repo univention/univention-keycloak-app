@@ -10,6 +10,18 @@ project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
 Please also consider the `upstream release notes <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+21.1.0-ucs1
+===========
+
+Released: TODO
+
+* The UCR variable :envvar:`ucs/server/sso/virtualhost` has been replaced by
+  :envvar:`keycloak/apache/config`.  In case you set
+  :envvar:`ucs/server/sso/virtualhost=false` to to disable the UCS web server
+  configuration for Keycloak, set :envvar:`keycloak/apache/config=true` before
+  the update.
+
+
 21.0.1-ucs2
 ===========
 
@@ -21,7 +33,7 @@ Released: 28. April 2023
 21.0.1-ucs1
 ===========
 
-Released: 19. April 2023 
+Released: 19. April 2023
 
 * From this version on the :program:`Keycloak` app requires a CPU that
   supports the micro architecture level ``x86-64-v2``,

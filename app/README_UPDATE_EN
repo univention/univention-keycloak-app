@@ -9,7 +9,17 @@ Please see the <a href="http://docs.software-univention.de/keycloak-app/latest/c
 Keycloak app changelog</a> for detailed information about the changes and bugfixes.
 </p>
 <p>
-<b>Version: 21.0.1-ucs</b>
+<b>Version: 21.1.0-ucs1</b>
+<ul>
+    <li>
+      The UCR variable <strong>ucs/server/sso/virtualhost</strong> has been replaced by <strong>keycloak/apache/config</strong>.
+      In case <strong>ucs/server/sso/virtualhost</strong> variable was used to disable the UCS apache configuration for keycloak,
+      set <strong>keycloak/apache/config=true</strong> before the update.
+    </li>
+</ul>
+</p>
+<p>
+<b>Version: 21.0.1-ucs1</b>
 <ul>
     <li>
       From this version on the keycloak app requires a CPU that supports the microarchitecture level x86-64-v2 (see <a href="https://help.univention.com/t/21420">help.univention.de</a> for more information)

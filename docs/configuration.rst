@@ -809,6 +809,45 @@ more information, consult :cite:t:`keycloak-docs`.
         - ``true``
         - Installation and app configuration
 
+.. envvar:: keycloak/server/sso/virtualhost
+
+   If set to ``true`` (default) the UCS system will create a dedicated
+   apache virtual host configuration for the Keycloak server FQDN.
+
+   Possible values:
+      ``true`` or ``false``
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - Yes
+        - ``true``
+        - Installation and app configuration
+
+.. envvar:: keycloak/apache/config
+
+   If set to ``true`` (default) the UCS system will create an apache
+   configuration for Keycloak.
+
+   Possible values:
+      ``true`` or ``false``
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - Yes
+        - ``true``
+        - Installation and app configuration
 
 .. envvar:: keycloak/federation/remote/identifier
 
