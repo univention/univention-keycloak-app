@@ -1155,3 +1155,43 @@ more information, consult :cite:t:`keycloak-docs`.
       * - No
         - ``None``
         - Installation and app configuration
+
+
+.. _language-settings:
+
+Adjusting texts on the Keycloak login page
+==========================================
+
+The :program:`Keycloak` app lets Administrators overwrite any messages on the
+:program:`Keycloak` login page.
+Each text variable value in this login template can be overwritten
+by using a UCR variable of the form
+
+:samp:`keycloak/login/messages/[de/en]/key=value`
+
+This make use of the :program:`Keycloak` message bundles that are documented
+here:
+https://www.keycloak.org/docs/latest/server_development/#messages
+
+For example, the login title in the :program:`Keycloak` login dialogue can be
+adjusted like this:
+
+.. code-block::
+
+  $ ucr set \
+  keycloak/login/messages/en/loginTitleHtml=\
+  'Login at Domainname'
+
+
+After setting one of these variables, this command
+has to be run to make the change visible in :program:`Keycloak` login page:
+
+.. code-block:: console
+
+  $ univention-app configure keycloak
+
+.. warning::
+
+   These settings are local settings. The UCR variables have to be set on each
+   host running :program:`Keycloak`.
+
