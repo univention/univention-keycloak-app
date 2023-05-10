@@ -20,6 +20,8 @@ Released: TODO
   :envvar:`ucs/server/sso/virtualhost=false` to to disable the UCS web server
   configuration for Keycloak, set :envvar:`keycloak/apache/config=true` before
   the update.
+* The app can be configured to use a different URL path for the single sign-on
+  endpoint, see :ref:`use-case-reconfigure-sso`.
 
 
 21.0.1-ucs2
