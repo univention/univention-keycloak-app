@@ -296,3 +296,50 @@ run the following commands:
 For UCS systems joining the domain, configure a UCR policy and assign it the UCS
 systems before you install them. The UCR policy must set
 :envvar:`umc/saml/idp-server` to your custom :term:`SAML IDP` URL.
+
+.. _use-case-lets-encrypt:
+
+Official (:program:`Let's Encrypt`) certificates for single sing-on
+-------------------------------------------------------------------
+
+If the single sing-on endpoint is exposed to the internet, usually an
+official certificate for the server is required. This can be achieved
+with the :program:`Let's Encrypt` app (but it is not required to use this
+app to create the official certificate).
+
+.. note::
+
+   The examples below assume the :program:`Let's Encrypt` was
+   used to create the certificate. The actual filenames of the
+   certificate and key can differ depending on which mechanism
+   was used to create the certificate.
+
+Dedicated |FQDN| for single sing-on endpoint
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this scenario the single sing-on endpoint has its own (virtual host)
+web server configuration. The certificate files can be configured with
+following UCR variables.
+
+.. code-block:: console
+
+   $ cert_file="/etc/univention/letsencrypt/signed_chain.crt"
+   $ key_file="/etc/univention/letsencrypt/domain.key"
+   $ ucr set keycloak/apache2/ssl/certificate="$cert_file"
+   $ ucr set keycloak/apache2/ssl/key="$key_file"
+   $ systemctl reload apache2.service
+
+Single sing-on |FQDN| identical to UCS Portal |FQDN| (or internal name)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here the :program:`Keycloak` app uses the global web server configuration and
+therefor the standard UCR variables for the :program:`Apache` certificate
+files can be used.
+
+.. code-block:: console
+
+   $ cert_file="/etc/univention/letsencrypt/signed_chain.crt"
+   $ key_file="/etc/univention/letsencrypt/domain.key"
+   $ ucr set apache2/ssl/certificate="$cert_file"
+   $ ucr set apache2/ssl/key="$key_file"
+   $ systemctl reload apache2.service
