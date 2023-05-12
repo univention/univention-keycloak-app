@@ -10,7 +10,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
+import os
 import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
@@ -37,7 +37,7 @@ def read_version_from_ci() -> str:
 
     import yaml
 
-    with open("../.gitlab-ci.yml", "r") as f:
+    with open("../../.gitlab-ci.yml", "r") as f:
         ci = yaml.safe_load(f)
         return ci.get(
                 "variables", {"DOC_TARGET_VERSION": "18.0.0"}
@@ -72,8 +72,9 @@ extensions = [
 ]
 
 suppress_warnings = ['git.too_shallow']
+git_last_updated_timezone = "Europe/Berlin"
 
-bibtex_bibfiles = ["bibliography.bib"]
+bibtex_bibfiles = ["../bibliography.bib"]
 bibtex_encoding = "utf-8"
 bibtex_default_style = "unsrt"
 bibtex_reference_style = "label"
@@ -100,8 +101,10 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 #
 html_theme = 'univention_sphinx_book_theme'
 
+doc_base = os.path.basename(os.path.dirname(__file__))
+
 html_context = {
-    "pdf_download_filename": "keycloak-app.pdf",
+    "pdf_download_filename": f"{doc_base}.pdf",
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -131,9 +134,9 @@ linkcheck_ignore = [
 root_doc = "index"
 
 rst_epilog = """
-.. include:: /links.txt
+.. include:: /../links.txt
 
-.. include:: /abbreviations.txt
+.. include:: /../abbreviations.txt
 """
 
 intersphinx_mapping = {
@@ -144,7 +147,7 @@ latex_engine = 'lualatex'
 latex_show_pagerefs = True
 latex_show_urls = "footnote"
 latex_documents = [
-    (root_doc, 'keycloak-app.tex', project, author, "manual", False)]
+    (root_doc, f'{doc_base}.tex', project, author, "manual", False)]
 latex_elements = {
     "papersize": "a4paper",
 }
@@ -153,4 +156,4 @@ latex_elements = {
 # feedback link.
 # https://git.knut.univention.de/univention/documentation/univention_sphinx_extension
 univention_feedback = True
-univention_doc_basename = "keycloak-app"
+univention_doc_basename = doc_base
