@@ -1,0 +1,85 @@
+default:
+  artifacts:
+    expire_in: 1 day
+  interruptible: true
+  retry:
+    max: 2
+    when:
+      - api_failure
+      - stuck_or_timeout_failure
+      - runner_system_failure
+
+variables:
+  GIT_STRATEGY: fetch
+  GIT_SUBMODULE_STRATEGY: none
+  GIT_DEPTH: "3"
+  IMAGE_TAG: $KNUT_REGISTRY
+  LANG: "C.UTF-8"
+  DEBIAN_FRONTEND: noninteractive
+  UNIVENTION_BASECONF: /dev/null
+
+include:
+  - project: 'univention/documentation/sphinx-docker'
+    file: 'pipeline/sphinx.yml'
+
+stages:
+  - build
+  - merge
+  - production
+
+.sphinx-doc:
+  stage: build
+  image: $SPHINX_BASE
+  artifacts:
+    paths:
+      - $DOCS_DIR/_build
+      - $CI_PROJECT/out
+    reports:
+      codequality: $DOCS_DIR/codeclimate.json
+
+.sphinx-html:
+  extends:
+    - .sphinx-doc
+    - .sphinx-html-template
+  script:
+    - mkdir -p "$CI_PROJECT_DIR"/out/"$DOC_TARGET_PATH"
+    - make -C "$DOCS_DIR" -e FORCE_COLOR="TRUE" -e SPHINXOPTS="-v -D language='$language'" -e BUILDDIR="_build/$language" html
+    - rsync -av --delete "$DOCS_DIR"/_build/"$language"/html/ "$CI_PROJECT_DIR"/out/"$DOC_TARGET_PATH"
+
+.sphinx-pdf:
+  extends:
+    - .sphinx-doc
+    - .sphinx-pdf-template
+  script:
+    - mkdir -p "$CI_PROJECT_DIR"/out/"$DOC_TARGET_PATH"
+    - make -C "$DOCS_DIR" -e FORCE_COLOR="TRUE" -e SPHINXOPTS="-v -D language='$language'" -e BUILDDIR="_build/$language" latexpdf
+    - cp "$DOCS_DIR"/_build/"$language"/latex/"$DOC_NAME".pdf "$CI_PROJECT_DIR"/out/"$DOC_TARGET_PATH"/"$DOC_NAME".pdf
+
+.sphinx-linkcheck:
+  extends: 
+    - .sphinx-doc
+    - .sphinx-linkcheck-template
+  script:
+    - make -C "$DOCS_DIR" -e FORCE_COLOR="TRUE" -e SPHINXOPTS="-v -D language='$language'" -e BUILDDIR="_build/$language" linkcheck
+
+.sphinx-spelling:
+  extends:
+    - .sphinx-doc
+    - .sphinx-spelling-template
+  script:
+    - make -C "$DOCS_DIR" -e FORCE_COLOR="TRUE" -e SPHINXOPTS="-W --keep-going -D language='$language'" -e BUILDDIR="_build/$language" spelling
+
+.sphinx-warnings:
+  extends: .sphinx-warnings-template
+  script:
+    - make -C "$DOCS_DIR" -e FORCE_COLOR="TRUE" -e SPHINXOPTS="-v -W --keep-going -D language='$language'" -e BUILDDIR="_build/$language" html
+
+# The child pipeline needs at minimum one job to run - otherwise the sub-pipeline fails
+webframe:
+  stage: build
+  image: docker-registry.knut.univention.de/docbook
+  script:
+    - cp -rTu /DocBook/webframe public
+  artifacts:
+    paths:
+      - public
