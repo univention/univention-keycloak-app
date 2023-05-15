@@ -1,3 +1,7 @@
+.. SPDX-FileCopyrightText: 2021-2023 Univention GmbH
+..
+.. SPDX-License-Identifier: AGPL-3.0-only
+
 .. _deb-admin-handbook-shell: https://www.debian.org/doc/manuals/debian-handbook/short-remedial-course.en.html#sect.shell-and-basic-commands
 .. _keycloak: https://www.keycloak.org/
 .. _mariadb-grant: https://mariadb.com/kb/en/grant/
