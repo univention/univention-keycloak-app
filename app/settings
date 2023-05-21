@@ -49,6 +49,13 @@ Scope = outside
 Show = Install, Settings
 Description = Whether or not to create a dedicated virtual host apache config for the keycloak server fqdn.
 
+[keycloak/admin/console/fqdn]
+Type = String
+Show = Install, Settings
+InitialValue = ucs-sso-ng.@%@domainname@%@
+Scope = outside
+Description = Defines the fqdn of the Keycloak admin console of this UCS domain.
+
 [keycloak/apache/config]
 Type = Bool
 InitialValue = True
