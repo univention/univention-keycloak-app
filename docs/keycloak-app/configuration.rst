@@ -791,6 +791,33 @@ more information, consult :cite:t:`keycloak-docs`.
         - :samp:`ucs-sso-ng.{$domainname}`
         - Installation and app configuration
 
+   .. warning::
+       The Keycloak admin console is not configured by this setting. Even if this setting
+       has been customized, it is reachable on the internal name `ucs-sso-ng.{$domainname}`.
+
+
+.. envvar:: keycloak/admin/console/fqdn
+
+   Defines the FQDN to the Keycloak admin console in your environment's UCS domain.
+   Defaults to :samp:`ucs-sso-ng.{$domainname}`.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - :samp:`ucs-sso-ng.{$domainname}`
+        - Installation and app configuration
+
+   .. warning::
+       A custom virtual host configuration for the Keycloak admin console can be
+       added by creating a local apache configuration file in
+       `/var/lib/univention-appcenter/apps/keycloak/data/local-univention-keycloak.conf`
+
 
 .. envvar:: keycloak/server/sso/autoregistration
 

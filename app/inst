@@ -116,6 +116,8 @@ if [ -z "$keycloak_server_sso_autoregistration" ] || is_ucr_true keycloak/server
 		fi
 	fi
 fi
+/usr/share/univention-directory-manager-tools/univention-dnsedit "$@" --ignore-exists \
+	"$domainname" add a "ucs-sso-ng" "$(get_default_ip_address)" || die
 
 # wait for the keycloak_server_sso_fqdn dns record
 wait_for_dns () {
