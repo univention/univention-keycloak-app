@@ -1305,3 +1305,49 @@ administration console to a specific IP subnet by putting this in the `local-uni
                 deny from all
                 allow from 10.207.0.0/16
   </LocationMatch>
+
+
+.. _kerberos-authentication:
+
+Activating Kerberos authentication
+==================================
+The :program:`Keycloak` is automatically configured to evaluate :program:`Kerberos` Tickets
+during login.
+During login on e.g. a Windows client, joined to the domain, a :program:`Kerberos` Ticket is fetched automatically.
+With the :program:`Keycloak` :program:`Kerberos` integration, they can now access the Univention portal and log in
+without having to provide username and password again.
+
+
+The web browsers must be configured to transfer the Kerberos ticket to the SAML Identity Provider.
+Here are two examples for the configuration of Firefox and Microsoft Edge:
+
+
+#. Mozilla Firefox
+   In the extended Firefox configuration, which can be reached by entering ``about:config`` in the
+   Firefox address line, the address of the identity provider must be entered in the option
+   ``network.negotiate-auth.trusted-uris``, which is ``ucs-sso-ng.[Domain name]`` by default.
+
+
+#. Microsoft Edge
+   In the Control Panel, the Internet Options must be opened, followed by Security > Local Intranet > Sites > Advanced.
+   The address of the identity provider has to be added, which is ``ucs-sso-ng.[Domain name]`` by
+   default.
+
+
+If you installed :program:`Samba 4` *after* installing :program:`Keycloak`, the following command has to be executed on the Primary Directory Node:
+
+.. code-block:: console
+
+  $ eval "$(ucr shell keycloak/server/sso/fqdn)"
+  $ samba-tool spn add "HTTP/$keycloak_server_sso_fqdn" "krbkeycloak"
+
+Per default, :program:`Keycloak` will try to use :program:`Kerberos`. If no :program:`Kerberos` ticket is
+available, it will fall back to using username and password authentication.
+
+You can disable this feature in the ref:`Keycloak Admin Console <keycloak-admin-console>` by
+
+* Select the realm ``UCS``
+
+* On the sidebar click ``User federation`` and choose the ``ldap-provider``
+
+* Go to the section ``Kerberos integration`` and disable  ``Allow Kerberos authentication``

@@ -40,7 +40,6 @@ VERSION="6"
 joinscript_init
 
 app_id="keycloak"
-
 domainname="$(ucr get domainname)"
 hostname="$(ucr get hostname)"
 ldap_base="$(ucr get ldap/base)"
@@ -157,6 +156,52 @@ do
 	fi
 
 done
+
+# create kerberos user
+
+echo "creating keycloak kerberos user"
+spn_account_name="krbkeycloak"
+servicePrincipalName="HTTP/$keycloak_server_sso_fqdn"
+servicePrincipal="$servicePrincipalName"'@'"$kerberos_realm"
+keytab_path="/var/lib/univention-appcenter/apps/keycloak/conf/keycloak.keytab"
+user_exists=$(univention-ldapsearch -LLL uid="$spn_account_name" 1.1)
+
+if [ -n "$user_exists" ]; then
+	echo "Kerberos Service Principal already exists: $user_exists.\nSkipping user creation"
+else
+	krb_password="$(makepasswd --chars 20)"
+	udm users/user create "$@" --ignore_exists \
+		--position "cn=users,$ldap_base" \
+		--set username="$spn_account_name" \
+		--set lastname="keycloak" \
+		--set password="$krb_password" \
+		--append objectFlag=hidden || die
+
+fi
+
+ldapmodify -x -h "$ldap_master" -p "${ldap_master_port:-7389}" -D "cn=admin,$ldap_base" -y "/etc/ldap.secret" <<%EOF
+dn: uid=$spn_account_name,cn=users,$ldap_base
+changetype: modify
+replace: krb5PrincipalName
+krb5PrincipalName: $servicePrincipal
+%EOF
+
+if dpkg -s univention-samba4 &> /dev/null; then
+	samba_private_dir="/var/lib/samba/private"
+	timeout=${keycloak_kerberos_timeout:-1200}
+	for i in $(seq 1 10 $timeout); do
+		echo "looking for spn account \"$spn_account_name\" in local samba"
+		service_account_dn=$(ldbsearch -H $samba_private_dir/sam.ldb samAccountName="$spn_account_name" dn | sed -n 's/^dn: \(.*\)/\1/p')
+		[ -n "$service_account_dn" ] && break
+		sleep 10
+	done
+	samba-tool spn add "$servicePrincipalName" "$spn_account_name"
+fi
+
+rm "$keytab_path"
+kadmin -l ext --keytab="$keytab_path" "$servicePrincipal" || die
+chown "1000":"DC Backup Hosts" "$keytab_path" || die
+chmod 660 "$keytab_path" || die
 
 # another restart for the cache initialization
 univention-app restart keycloak
