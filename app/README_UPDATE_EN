@@ -9,7 +9,7 @@ Please see the <a href="http://docs.software-univention.de/keycloak-app/latest/c
 Keycloak app changelog</a> for detailed information about the changes and bugfixes.
 </p>
 <p>
-<b>Version: 21.1.0-ucs1</b>
+<b>Version: 21.0.1-ucs3</b>
 <ul>
     <li>
       The UCR variable <strong>ucs/server/sso/virtualhost</strong> has been replaced by <strong>keycloak/apache/config</strong>.

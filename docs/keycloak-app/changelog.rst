@@ -14,7 +14,7 @@ project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
 Please also consider the `upstream release notes <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
-21.1.0-ucs1
+21.0.1-ucs3
 ===========
 
 Released: TODO
