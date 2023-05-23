@@ -104,6 +104,14 @@ Validate configuration success
 
    * Obtaining a valid certificate from a CA.
 
+.. warning::
+
+   The :program:`Keycloak` admin interface as well as the :program:`Keycloak` REST API
+   are also publicly available if the :program:`Keycloak` app was configured to be available
+   externally. For security reasons, this should be restricted.
+   Please see :ref:`apache-configuration` for an exemplary configuration.
+
+
 External |FQDN| different from internal UCS name
 ------------------------------------------------
 

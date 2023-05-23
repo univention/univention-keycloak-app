@@ -1195,3 +1195,26 @@ has to be run to make the change visible in :program:`Keycloak` login page:
    These settings are local settings. The UCR variables have to be set on each
    host running :program:`Keycloak`.
 
+
+.. _apache-configuration:
+
+Adjusting the Keycloak apache configuration
+===========================================
+
+The :program:`Keycloak` app ships an apache configuration in
+`/etc/apache2/sites-available/univention-keycloak.conf`.
+This file is created by the app and will be overwritten during updates.
+
+
+This configuration can be customized by creating the file
+`/var/lib/univention-appcenter/apps/keycloak/data/local-univention-keycloak.conf`.
+
+For example, an Administrator may want to restrict the access to the :program:`Keycloak`
+administration console to a specific IP subnet by putting this in the `local-univention-keycloak.conf`.
+
+.. code-block:: console
+
+  <LocationMatch "^(/admin/|/realms/master/)">
+                deny from all
+                allow from 10.207.0.0/16
+  </LocationMatch>
