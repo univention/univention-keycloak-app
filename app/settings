@@ -1,13 +1,3 @@
-[keycloak/url/prefix]
-Type = String
-Required = True
-Show = Install
-ShowReadOnly = Settings
-InitialValue = keycloak
-Scope = outside
-Description = Prefix for the URL (e.g. login.$FQDN)
-Group = Administration
-
 [keycloak/log/level]
 Type = List
 Required = True
