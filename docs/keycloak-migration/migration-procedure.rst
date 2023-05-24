@@ -16,10 +16,46 @@ from :program:`SimpleSAMLPHP` for SAML and :program:`Kopano Connect` for OIDC to
 Installation of Keycloak
 ========================
 
-TODO
+Optional steps (TODO better naming)
+===================================
+
+In the following some optional steps, that are
+not required to complete the migration.
+
+Import SimpleSAMLPHP signing certificate pair from to Keycloak
+--------------------------------------------------------------
+
+It is possible to import the signing key and certificate from
+:program:`SimpleSAMLPHP` into :program:`Keycloak`. This step allows you
+to re-use the IDP certificate in the client configuration.
+
+We do not recommend to import the old keys but instead to use the newly
+generated keys from :program:`Keycloak`.
+
+To import the key and certificate into :program:`Keycloak`:
+
+* Get the old key and certificate from the *Primary Directory Node*, in most
+  cases this will be
+  :file:`/etc/simplesamlphp/ucs-sso.ucs.test-idp-certificate.crt` for the
+  certificate and
+  :file:`/etc/simplesamlphp/ucs-sso.ucs.test-idp-certificate.key` for the
+  private key.
+* Import the existing key and certificate into :program:`Keycloak` as described
+  in cite:t:`keycloak-adding-an-existing-keypair-and-certificate`.
+* Make sure to *enable* and *activate* the key and set a priority greater than
+  100.
+* Disable and deactivate the standard key *rsa-generated*.
+* Make sure the imported key is used for *signing* by checking the IDP
+  metadata in ``https://$KEYCLOAK_FQDN/realms/ucs/protocol/saml/descriptor``,
+  you should see the imported key in `<509Certificate>`.
+
+.. note::
+
+   If you import the old keys, do not update the IDP certificate in
+   the services (clients) settings as described in the examples below.
 
 Single sing-on between Keycloak and SimpleSAMLPHP (optional)
-=============================================================
+------------------------------------------------------------
 
 TODO
 
