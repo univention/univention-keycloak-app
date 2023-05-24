@@ -19,11 +19,10 @@ Installation of Keycloak
 Optional steps (TODO better naming)
 ===================================
 
-In the following some optional steps, that are
-not required to complete the migration.
+The following sections describe optional steps for the migration procedure.
 
-Import SimpleSAMLPHP signing certificate pair from to Keycloak
---------------------------------------------------------------
+Import SimpleSAMLPHP signing certificate pair to Keycloak
+---------------------------------------------------------
 
 It is possible to import the signing key and certificate from
 :program:`SimpleSAMLPHP` into :program:`Keycloak`. This step allows you
