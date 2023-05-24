@@ -24,34 +24,44 @@ The following sections describe optional steps for the migration procedure.
 Import SimpleSAMLPHP signing certificate pair to Keycloak
 ---------------------------------------------------------
 
-It is possible to import the signing key and certificate from
-:program:`SimpleSAMLPHP` into :program:`Keycloak`. This step allows you
-to re-use the IDP certificate in the client configuration.
-
-We do not recommend to import the old keys but instead to use the newly
-generated keys from :program:`Keycloak`.
-
-To import the key and certificate into :program:`Keycloak`:
-
-* Get the old key and certificate from the *Primary Directory Node*, in most
-  cases this will be
-  :file:`/etc/simplesamlphp/ucs-sso.ucs.test-idp-certificate.crt` for the
-  certificate and
-  :file:`/etc/simplesamlphp/ucs-sso.ucs.test-idp-certificate.key` for the
-  private key.
-* Import the existing key and certificate into :program:`Keycloak` as described
-  in cite:t:`keycloak-adding-an-existing-keypair-and-certificate`.
-* Make sure to *enable* and *activate* the key and set a priority greater than
-  100.
-* Disable and deactivate the standard key *rsa-generated*.
-* Make sure the imported key is used for *signing* by checking the IDP
-  metadata in ``https://$KEYCLOAK_FQDN/realms/ucs/protocol/saml/descriptor``,
-  you should see the imported key in `<509Certificate>`.
+You can use the existing :term:`SAML IDP` certificates from
+:program:`SimpleSAMLPHP` in the client configuration.
 
 .. note::
 
-   If you import the old keys, do not update the IDP certificate in
-   the services (clients) settings as described in the examples below.
+   Univention doesn't recommend to import the old keys from
+   :program:`SimpleSAMLPHP`, but use the freshly generated keys from
+   :program:`Keycloak`.
+
+To import the signing key and the certificate into :program:`Keycloak`, use the
+following steps.
+
+#. Copy the private key and the certificate from the UCS *Primary Directory
+   Node*. The default locations are:
+
+   * Private key: :file:`/etc/simplesamlphp/ucs-sso.ucs.test-idp-certificate.key`
+
+   * Certificate: :file:`/etc/simplesamlphp/ucs-sso.ucs.test-idp-certificate.crt`
+
+#. Import the copied private key and the certificate to :program:`Keycloak` as
+   described in :cite:t:`keycloak-adding-an-existing-keypair-and-certificate`.
+
+#. Make sure to *enable* and *activate* the private key and set the priority to
+   a value greater than ``100``.
+
+#. *Disable* and *deactivate* the standard key ``rsa-generated``.
+
+#. Verify that the :term:`SAML IDP` uses the private for signatures. Validate
+   the :term:`SAML IDP` metadata in
+   :samp:`https://{$KEYCLOAK_FQDN}/realms/ucs/protocol/saml/descriptor` and look
+   for the imported key at ``<509Certifcate>``.
+
+.. caution::
+
+   If you import the private key and the certificate from
+   :program:`SimpleSAMLPHP` with the previously described steps, don't update
+   the :term:`SAML IDP` certificate in the services settings as described in the
+   following examples.
 
 Single sing-on between Keycloak and SimpleSAMLPHP (optional)
 ------------------------------------------------------------
