@@ -4,15 +4,14 @@
 
 .. _migration-procedure:
 
-**************************
-Procedure of the migration
-**************************
+*******************
+Migration procedure
+*******************
 
-This section explains the steps that are needed to migrate the UCS domain and
-connected services from :program:`SimpleSAMLPHP` (SAML) and
-:program:`Kopano Connect` (OIDC) to :program:`Keycloak`. This includes the
-installation and configuration of :program:`Keycloak` and the configuration
-of SAML and OIDC services.
+This section explains the steps to migrate the UCS domain and connected services
+from :program:`SimpleSAMLPHP` for SAML and :program:`Kopano Connect` for OIDC to
+:program:`Keycloak`. This includes the installation and configuration of
+:program:`Keycloak` and the configuration of SAML and OIDC services.
 
 Installation of Keycloak
 ========================
