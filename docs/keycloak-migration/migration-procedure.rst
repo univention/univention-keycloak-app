@@ -24,12 +24,15 @@ The following sections describe optional steps for the migration procedure.
 Import SimpleSAMLPHP signing certificate pair to Keycloak
 ---------------------------------------------------------
 
-You can use the existing :term:`SAML IDP` certificates from
-:program:`SimpleSAMLPHP` in the client configuration.
+It is possible to import the signing key and certificate from
+:program:`SimpleSAMLPHP` into :program:`Keycloak`.
+
+This step allows you to use the existing :term:`SAML IDP` certificate
+from :program:`SimpleSAMLPHP` in the client configuration of SAML services.
 
 .. note::
 
-   Univention doesn't recommend to import the old keys from
+   For security reasons Univention doesn't recommend to import the old keys from
    :program:`SimpleSAMLPHP`, but use the freshly generated keys from
    :program:`Keycloak`.
 
@@ -43,7 +46,8 @@ following steps.
 
    * Certificate: :file:`/etc/simplesamlphp/ucs-sso.ucs.test-idp-certificate.crt`
 
-#. Import the copied private key and the certificate to :program:`Keycloak` as
+#. Import the copied private key and the certificate to :program:`Keycloak`
+   via the :ref:`Keycloak Admin Console <keycloak-admin-console>` as
    described in :cite:t:`keycloak-adding-an-existing-keypair-and-certificate`.
 
 #. Make sure to *enable* and *activate* the private key and set the priority to
@@ -51,17 +55,18 @@ following steps.
 
 #. *Disable* and *deactivate* the standard key ``rsa-generated``.
 
-#. Verify that the :term:`SAML IDP` uses the private for signatures. Validate
-   the :term:`SAML IDP` metadata in
-   :samp:`https://{$KEYCLOAK_FQDN}/realms/ucs/protocol/saml/descriptor` and look
-   for the imported key at ``<509Certifcate>``.
+#. Verify that :program:`Keycloak` uses the imported key for signatures.
+   Check the :term:`SAML IDP` metadata in
+   :samp:`https://{$KEYCLOAK_FQDN}/realms/ucs/protocol/saml/descriptor` and
+   verify that the `<ds:KeyName>` is the key ID (`kid`) of the imported key
+   in the :ref:`Keycloak Admin Console <keycloak-admin-console>`.
 
 .. caution::
 
    If you import the private key and the certificate from
-   :program:`SimpleSAMLPHP` with the previously described steps, don't update
-   the :term:`SAML IDP` certificate in the services settings as described in the
-   following examples.
+   :program:`SimpleSAMLPHP` with the previously described steps, do not update
+   the :term:`SAML IDP` certificate in the SAML services settings as described
+   in the following examples.
 
 Single sing-on between Keycloak and SimpleSAMLPHP (optional)
 ------------------------------------------------------------
