@@ -16,10 +16,13 @@ from :program:`SimpleSAMLPHP` for SAML and :program:`Kopano Connect` for OIDC to
 Installation of Keycloak
 ========================
 
-TODO
+Optional steps (TODO better naming)
+===================================
+
+The following sections describe optional steps for the migration procedure.
 
 Single sing-on between Keycloak and SimpleSAMLPHP (optional)
-=============================================================
+------------------------------------------------------------
 
 TODO
 
@@ -41,5 +44,6 @@ TODO, maybe link to Keycloak doc for troubleshooting
 Remove SimpleSAMLPHP (TODO)
 ======================================
 
-TODO to be discussed, how do make clear that the migration has taken place,
-remove :program:`univention-saml`?
+TODO: We decided that installing the Keycloak app is enough to allow the update
+to UCS 5.2. So no extra steps are needed after the migration. This section
+can be removed.
