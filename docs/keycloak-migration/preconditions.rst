@@ -11,5 +11,10 @@ Pre-conditions
 TODO
 Before the migration can take place, please make sure:
 
-* The UCS domain controller primary is on version 5.0-4.
 * Single singe-on is used for at least one service.
+* The UCS domain controller primary is on version 5.0-4 with the latest errata
+  updates.
+* The server where :program:`Keycloak` should be installed is also on
+  version 5.0-4 with the latest errata updates.
+* If :program:`Keycloak` is already installed, make sure to update to the
+  latest version.
