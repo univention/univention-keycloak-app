@@ -1,0 +1,2 @@
+.. |IDE| replace:: :abbr:`IDE (integrated development environment)`
+.. |SPI| replace:: :abbr:`SPI (Service Provider Interfaces)`
