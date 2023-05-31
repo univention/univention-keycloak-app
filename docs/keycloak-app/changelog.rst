@@ -17,7 +17,7 @@ Please also consider the `upstream release notes <https://www.keycloak.org/docs/
 21.0.1-ucs3
 ===========
 
-Released: TODO
+Released: 31. May 2023
 
 * The UCR variable :envvar:`ucs/server/sso/virtualhost` has been replaced by
   :envvar:`keycloak/apache/config`.  In case you set
