@@ -12,3 +12,4 @@
 .. |UDM| replace:: :abbr:`UDM (Univention Directory Manager)`
 .. |UMC| replace:: :abbr:`UMC (Univention Management Console)`
 .. |FQDN| replace:: :abbr:`FQDN (fully qualified domain name)`
+.. |IDP| replace:: :abbr:`IDP (Identity Provider)`
