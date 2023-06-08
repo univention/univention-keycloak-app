@@ -13,7 +13,7 @@ Group = Administration
 Type = String
 Show = Install, Settings
 InitialValue = @%@ucs/web/theme@%@
-Scope = outside
+Scope = distributed, outside
 Description = Name of the theme to be applied to the keycloak login interface. Example: "dark" or "light". A CSS file of the same name has to exist in the folder /usr/share/univention-web/themes/.
 Group = Settings
 
