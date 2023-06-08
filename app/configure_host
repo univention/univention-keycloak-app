@@ -6,6 +6,7 @@
 . /usr/share/univention-lib/all.sh
 
 action=$1
+fqdn="$(hostname -f)"
 
 theme_config() {
 	THEME_DIR="/usr/share/univention-web/themes"
@@ -21,8 +22,17 @@ theme_config() {
 }
 
 if [ -n "$action" ] && [ "$action" = "remove" ]; then
+	settings="$(univention-dcd --json get apps/keycloak | jq 'del(.installations[] | select(. == "'"$fqdn"'"))')"
+	[ -n "$settings" ] && univention-dcd set apps/keycloak "$settings"
 	exit 0
 fi
+
+# first test of DCD, manage installations
+# update installations
+univention-dcd register apps/keycloak --type object
+settings="$(univention-dcd --json get apps/keycloak | jq '. | select(.installations | index("'"$fqdn"'") | not) | .installations += ["'"$fqdn"'"]')"
+[ -n "$settings" ] && univention-dcd set apps/keycloak "$settings"
+
 
 # we need to commit the apache conf because that may have changed during an update
 ucr commit /etc/apache2/sites-available/univention-keycloak.conf
