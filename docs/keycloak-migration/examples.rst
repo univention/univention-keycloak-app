@@ -69,7 +69,7 @@ following steps:
    :program:`Nextcloud` app installed.
 
    The second command in :numref:`migration-nextcloud-get-idp-settings` outputs
-   the base URL of your :program:`Keycloak` server. Replace :samp:`{$SSO_URL}`
+   the base URL of your :program:`Keycloak` server. Replace :samp:`{SSO_URL}`
    in the following instruction with this value.
 
 #. To change the |IDP| settings for :program:`Nextcloud`, run the following
@@ -87,7 +87,7 @@ following steps:
         --general-uid_mapping="uid" \
         --idp-singleLogoutService.url="$sso/realms/ucs/protocol/saml" \
         --idp-singleSignOnService.url="$sso/realms/ucs/protocol/saml" \
-        --idp-entityId="$SSO_URL/realms/ucs" 1
+        --idp-entityId="$sso/realms/ucs" 1
 
 To validate the setup, visit the sign-in page of your :program:`Nextcloud`
 app and initiate a single sign-on. :program:`Nextcloud` redirects you to
