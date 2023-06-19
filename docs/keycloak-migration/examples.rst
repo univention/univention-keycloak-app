@@ -104,10 +104,154 @@ Google Connector
 
 TODO
 
-Office365 Connector
--------------------
+.. _migration-365-connector:
 
-TODO
+Microsoft 365 Connector
+-----------------------
+
+The example illustrates how to migrate the app :program:`Microsoft 365
+Connector` to use :program:`Keycloak` as :term:`SAML IDP`. It assumes
+that your environment meets the following requirements:
+
+* The configuration of the app :program:`Microsoft 365 Connector` is complete
+  and done.
+
+* The |SAML| login for your *Azure Active Directory* domain works with
+  :program:`SimpleSAMLPHP`.
+
+* You have a client computer with *Microsoft Windows* installed on it and a
+  working internet connection on the client computer to configure |SAML| in
+  *Azure Active Directory*.
+
+* You have the *Administrator* credentials for your *Azure Active Directory*
+  domain for the |SAML| service configuration.
+
+* The UCS domain has the latest version of the app :program:`Keycloak`
+  installed.
+
+To setup :program:`Microsoft 365 Connector` for |SAML| with :program:`Keycloak`
+use the following steps:
+
+#. Create a :term:`SAML SP` for :program:`Microsoft 365 Connector` in
+   :program:`Keycloak`. Run the following commands on the UCS system that has
+   :program:`Keycloak` installed:
+
+   .. code-block:: console
+      :caption: Create SAML SP for *Microsoft 365 Connector* in *Keycloak*
+      :name: migration-365-connector-create-saml-sp
+
+      # get the saml client metadata xml from microsoft
+      $ curl https://nexus.microsoftonline-p.com/federationmetadata/saml20/federationmetadata.xml > /tmp/ms.xml
+
+      # create the client in keycloak
+      $ univention-keycloak saml/sp create \
+        --metadata-file /tmp/ms.xml \
+        --metadata-url urn:federation:MicrosoftOnline \
+        --idp-initiated-sso-url-name MicrosoftOnline \
+        --name-id-format persistent
+
+      # create a SAML nameid mapper
+      $ univention-keycloak saml-client-nameid-mapper create \
+        urn:federation:MicrosoftOnline \
+        entryUUID \
+        --mapper-nameid-format "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent" \
+        --user-attribute entryUUID \
+        --base64
+
+#. For the configuration of the |SAML| settings of your *Azure Active Directory*
+   domain you need the public certificate and the base URL of the
+   :program:`Keycloak` server. Run the following commands on the UCS system that
+   has :program:`Keycloak` installed:
+
+   .. code-block:: console
+      :caption: Retrieve public certificate and *Keycloak* base URL
+      :name: migration-365-connector-keycloak-certificate
+
+      $ univention-keycloak saml/idp/cert get --output /tmp/kc.cert
+      $ cat /tmp/kc.cert
+
+      $ univention-keycloak get-keycloak-base-url
+
+   The output of the first command in
+   :numref:`migration-365-connector-keycloak-certificate` is the certificate.
+   Replace :samp:`{$KEYCLOAK_CERTIFICATE}` in the following steps
+   with this value.
+
+   The second command in :numref:`migration-365-connector-keycloak-certificate`
+   outputs the base URL of your :program:`Keycloak` server. Replace
+   :samp:`$SSO_URL` in the following steps with this value.
+
+#. To configure the |SAML| settings for the *Azure Active Directory* domain
+   copy the following code block to your *Microsoft Windows* client computer.
+   Replace the values for :samp:`$SSO_URL`, :samp:`$KEYCLOAK_CERTIFICATE`,
+   the *Azure Active Directory* domain name and credentials and run the
+   script in the *Microsoft Windows* :program:`PowerShell`.
+
+   .. code-block:: powershell
+      :caption: Change *Azure Active Directory* domain authentication to use *Keycloak*
+      :name: migration-365-connector-windows-change
+
+      # CHANGE this according to your setup/environemt
+      $sso_fqdn = "$SSO_URL"
+      $signing_cert = "$KEYCLOAK_CERTIFICATE"
+      $domain = "YOUR AZURE DOMAIN NAME"
+      $username = "YOUR AZURE DOMAIN ADMIN"
+      $password = "PASSWORD OF YOUR AZURE DOMAIN ADMIN"
+      # CHANGE end
+
+      $issuer_uri = "$sso_fqdn/realms/ucs"
+      $logon_uri = "$sso_fqdn/realms/ucs/protocol/saml"
+      $passive_logon_uri = "$sso_fqdn/realms/ucs/protocol/saml"
+      $logoff_uri = "$sso_fqdn/realms/ucs/protocol/saml"
+      $pass = ConvertTo-SecureString -String "$password" -AsPlainText -Force
+      $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $username, $pass
+      $o365cred = Get-Credential $credential
+
+      Install-Module MSOnline
+      Import-Module MSOnline
+      Connect-MsolService -Credential $o365cred
+
+      Set-MsolDomainAuthentication -DomainName "$domain" -Authentication Managed
+      Set-MsolDomainAuthentication `
+          -DomainName "$domain" `
+          -FederationBrandName "UCS" `
+          -Authentication Federated `
+          -ActiveLogOnUri "$logon_uri" `
+          -PassiveLogOnUri "$passive_logon_uri" `
+          -SigningCertificate "$signing_cert" `
+          -IssuerUri "$issuer_uri" `
+          -LogOffUri "$logoff_uri" `
+          -PreferredAuthenticationProtocol SAMLP
+
+      Get-MsolDomain
+      Pause
+
+#. To change the link in the UCS portal entry *Microsoft 365 Login* for the
+   |IDP| initiated single sign-on, run the following command on your UCS
+   *Primary Directory Node*:
+
+   .. code-block:: console
+      :caption: Change portal entry for *Microsoft 365 Login* to |IDP| initiated single sign-on
+      :name: migration-365-connector-portal-entry
+
+      sso_url="$SSO_URL"
+      udm portals/entry modify \
+        --dn "cn=office365,cn=entry,cn=portals,cn=univention,$ldap_base" \
+        --set link='"en_US" "'$sso_url'/realms/ucs/protocol/saml/clients/MicrosoftOnline"'
+
+To validate the setup, visit https://www.microsoft365.com/ and sign in with one
+of the UCS user accounts enabled for *Microsoft 365*. Also, verify the UCS
+portal entry *Microsoft 365 Login* for the |IDP| initiated single sign-on.
+
+.. warning::
+
+   The automatic redirect after the single sign-out doesn't work with
+   :program:`Keycloak`.
+
+.. seealso::
+
+   `Microsoft 365 Connector <https://www.univention.com/products/univention-app-center/app-catalog/microsoft365/>`_
+      in Univention App Catalog
 
 Migration of services using OIDC for authentication
 ===================================================
