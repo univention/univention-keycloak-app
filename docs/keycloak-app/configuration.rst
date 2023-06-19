@@ -116,6 +116,67 @@ following steps on the system where you installed Keycloak:
 
 .. _oidc-op:
 
+Import of user attributes from UCS to Keycloak
+============================================================
+
+:program:`Keycloak` uses the LDAP directory of the UCS domain as
+backend for the user accounts. During the authentication process
+certain user attributes are imported into :program:`Keycloak`. These
+attributes can be used later on in so called *Attribute Mappers* to pass
+additional information trough the |SAML| assertion or |OIDC| token to
+services (e.g. *displayName*).
+
+By default the :program:`Keycloak` app is configured to import the following
+user attributes:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 5 5
+
+   * - LDAP attribute
+     - Keycloak attribute
+
+   * - ``uid``
+     - ``username``
+
+   * - ``uid``
+     - ``uid``
+
+   * - ``entryUUID``
+     - ``entryUUID``
+
+   * - ``lastname``
+     - ``lastName``
+
+   * - ``mailPrimaryAddress``
+     - ``email``
+
+   * - ``givenName``
+     - ``firstName``
+
+   * - ``createTimestamp``
+     - ``createTimestamp``
+
+   * - ``modifyTimestamp``
+     - ``modifyTimestamp``
+
+It is possible to configure the import of additional LDAP user attributes to
+:program:`Keycloak`, for example
+
+.. code-block:: console
+
+   $ univention-keycloak user-attribute-ldap-mapper create description
+
+to import the LDAP user attribute ``description`` to the :program:`Keycloak`
+attribute ``description``.
+
+With the following command you get a list of all the currently configured
+:program:`Keycloak` user attributes.
+
+.. code-block:: console
+
+   $ univention-keycloak user-attribute-ldap-mapper get --user-attributes
+
 Keycloak as OpenID Connect provider
 ===================================
 
