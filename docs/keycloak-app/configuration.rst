@@ -114,6 +114,29 @@ following steps on the system where you installed Keycloak:
    :samp:`slapd[…]: SASL [conn=…] Failure: SAML assertion issuer
    https://ucs-sso-ng.{$domainname}/realms/ucs is unknown`
 
+By default :program:`Keycloak` app creates a :term:`SAML SP` (client) for
+every UCS Portal server. You can see the list of existing :term:`SAML SP`
+clients with the following command:
+
+.. code-block:: console
+
+   $ univention-keycloak saml/sp get --json
+   [
+       "https://ucs1.example.com/univention/saml/metadata",
+       "https://ucs2.example.com/univention/saml/metadata",
+       ...
+   ]
+
+If the :term:`SAML SP` for a  particular UCS Portal server does not exist,
+you can create it in :program:`Keycloak` with the command:
+
+.. code-block:: console
+
+   $ FQDN="the fqdn of the UCS Portal server"
+   $ univention-keycloak saml/sp create \
+     --metadata-url="https://$FQDN/univention/saml/metadata" \
+     --umc-uid-mapper
+
 .. _oidc-op:
 
 Keycloak as OpenID Connect provider

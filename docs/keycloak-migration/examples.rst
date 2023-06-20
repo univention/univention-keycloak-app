@@ -16,6 +16,16 @@ Migration of services using SAML for authentication
 
 Generic SAML service ... TODO
 
+.. _portal-migration:
+
+UCS Portal
+----------
+
+The UCS Portal can be configured to use |SAML| for authentication.
+Please see :ref:`uv-keycloak-app:login-portal` for detailed
+description how to setup the UCS Portal to use :program:`Keycloak`
+as :term:`SAML IDP`.
+
 .. _migration-nextcloud:
 
 Nextcloud
