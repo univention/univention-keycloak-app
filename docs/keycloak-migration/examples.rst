@@ -99,10 +99,121 @@ authentication.
    `Nextcloud <https://www.univention.com/products/univention-app-center/app-catalog/nextcloud/>`_
       in Univention App Catalog
 
-Google Connector
-----------------
+.. _migration-google-connector:
 
-TODO
+Google Workspace Connector
+--------------------------
+
+This section provides a step-by-step guide for migrating the :program:`Google
+Connector` app to use :program:`Keycloak` as :term:`SAML IDP`. The migration
+assumes that your environment meets the following requirements:
+
+* The configuration of the app :program:`Google Workspace Connector` is complete
+  and done.
+
+* The |SAML| login for your *Google Workspace* works with
+  :program:`SimpleSAMLPHP`.
+
+* You have the administrator credentials for your *Google Workspace Admin Console* for
+  the |SAML| service configuration.
+
+* The UCS domain has the latest version of the app :program:`Keycloak`
+  installed.
+
+To setup :program:`Google Workspace Connector` for |SAML| with
+:program:`Keycloak` use the following steps:
+
+#. Create a :term:`SAML SP` for :program:`Google Workspace Connector` in
+   :program:`Keycloak`. Run the following commands on the UCS system that has
+   :program:`Keycloak` installed:
+
+   .. code-block:: console
+      :caption: Create SAML SP for *Google Workspace Connector* in *Keycloak*
+      :name: migration-google-connector-create-saml-sp
+
+      $ google_domain="REPLACE_WITH_NAME_OF_YOUR_GOOGLE_DOMAIN"
+      $ univention-keycloak saml/sp create \
+          --client-id google.com \
+          --assertion-consumer-url-post "https://www.google.com/a/$google_domain/acs" \
+          --single-logout-service-url-post "https://www.google.com/a/$google_domain/acs" \
+          --idp-initiated-sso-url-name google.com \
+          --name-id-format email \
+          --frontchannel-logout-off
+      $ univention-keycloak user-attribute-ldap-mapper \
+        create univentionGoogleAppsPrimaryEmail
+      $ univention-keycloak saml-client-nameid-mapper create \
+        google.com \
+        univentionGoogleAppsPrimaryEmail \
+        --user-attribute univentionGoogleAppsPrimaryEmail \
+        --mapper-nameid-format urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
+
+#. For the configuration of the |SAML| settings of your *Google Workspace* you
+   need the public certificate and the base URL of the :program:`Keycloak`
+   server. Run the following commands on the UCS system that has
+   :program:`Keycloak` installed:
+
+   .. code-block:: console
+      :caption: Retrieve public certificate and *Keycloak* base URL
+      :name: migration-google-connector-keycloak-certificate
+
+      $ univention-keycloak saml/idp/cert get --as-pem --output /tmp/kc.cert
+      $ univention-keycloak get-keycloak-base-url
+
+   The output of the first command in
+   :numref:`migration-google-connector-keycloak-certificate` is the certificate.
+   Copy the file :file:`/tmp/kc.cert` to your local client computer.
+
+   The second command in
+   :numref:`migration-google-connector-keycloak-certificate` outputs the base
+   URL of your :program:`Keycloak` server. Replace :samp:`{SSO_URL}` in the
+   following instruction with this value.
+
+#. Change the *Third-party SSO profile for your organisation* settings in the
+   *Google Workspace Admin console* of your google domain.
+
+   #. Open the URL https://admin.google.com and login with your administrator
+      account.
+
+   #. Go to :menuselection:`Security --> Authentication --> SSO with third-party IdP`.
+
+   #. Open *Third-party SSO profile for your organisation*.
+
+   #. Change *Sign-in page URL* to ``SSO_URL/realms/ucs/protocol/saml``.
+
+   #. Change *Sign-out page URL* to ``SSO_URL/realms/ucs/protocol/openid-connect/logout``.
+
+   #. To upload the :program:`Keycloak` certificate from :file:`/tmp/kc.cert`
+      click :guilabel:`REPLACE CERTIFICATE`.
+
+   #. *Save* your settings.
+
+#. Change the link in the UCS portal entry *Google Workspace login* for the
+   |IDP| initiated single sign-on. On your UCS *Primary Directory Node* run the
+   following command:
+
+   .. code-block:: console
+      :caption: Change portal entry for *Google Workspace login* to |IDP| initiated single sign-on
+      :name: migration-google-connector-portal-entry
+
+      $ google_domain="REPLACE WITH NAME_OF_YOUR_GOOGLE_DOMAIN"
+      $ sso_url="REPLACE WITH SSO_URL"
+      $ udm portals/entry modify \
+        --dn "cn=SP,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
+        --set link='"en_US" "'$sso_url'/realms/ucs/protocol/saml/clients/google.com?RelayState=https://www.google.com/a/'$google_domain'/ServiceLogin"'
+
+To validate the setup, visit https://google.com and sign in with one of the
+UCS user accounts enabled for *Google Workspace*. Also, verify the UCS portal
+entry *Google Workspace login* for the |IDP| initiated single sign-on.
+
+.. warning::
+
+   The automatic redirect after the single sign-out doesn't work with
+   :program:`Keycloak`.
+
+.. seealso::
+
+   `Google Workspace Connector <https://www.univention.com/products/univention-app-center/app-catalog/google-apps/>`_
+      in Univention App Catalog
 
 .. _migration-365-connector:
 
