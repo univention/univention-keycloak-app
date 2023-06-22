@@ -14,7 +14,90 @@ to :program:`Keycloak`.
 Migration of services using SAML for authentication
 ===================================================
 
-Generic SAML service ... TODO
+This section gives a general idea about the migration of services that use
+:program:`SimpleSAMLPHP` as :term:`SAML Provider` for the authentication to
+:program:`Keycloak` as :term:`SAML Provider`.
+
+The general approach for the migration includes the following:
+
+* Installing the latest version of the :program:`Keycloak` app in the UCS
+  domain.
+
+* Getting an overview of all the services that use :program:`SimpleSAMLPHP`
+  and their settings.
+
+* Check and create attribute mappers for LDAP. This will make selected LDAP
+  attributes part of the |SAML| assertion (XML response) and available to
+  :program:`Keycloak`.
+
+* Create an :term:`SAML SP` and necessary attribute mappers in
+  :program:`Keycloak` for every service that uses :program:`SimpleSAMLPHP` as
+  :term:`SAML Provider`.
+
+* Change the |SAML| settings in the services to use :program:`Keycloak` as
+  :term:`SAML Provider` and validate the setup.
+
+To setup a service for |SAML| with :program:`Keycloak` use the following steps:
+
+1. Create appropriate LDAP attribute mapper(s) depending on your needs. To get
+   full list of LDAP attributes used, run:
+
+   .. code-block:: console
+      :caption: List IDP LDAP attributes
+      :name: list-idp-ldap-attributes
+
+      $ udm saml/idpconfig list | grep LdapGetAttributes | awk -F'[: ]' '{print $5;}'
+
+   Then for each attribute you need, do call:
+
+   .. code-block:: console
+      :caption: Create LDAP attribute mapping
+      :name: create-ldap-attribute-mapping
+
+      $ univention-keycloak user-attribute-ldap-mapper create $LDAP_ATTRIBUTE_NAME
+
+#. Create |SAML| client in :program:`Keycloak` using one of the following
+   methods:
+
+   1. create |SAML| client from saml/serviceprovider object
+      (map attributes to univention-keycloak options)
+
+   2. use metadata either from known URL or :samp:`serviceProviderMetadata`
+      obtained using `udm saml/serviceprovider list`.
+
+   3. In case of custom settings are used, do check
+      /etc/simplesamlphp/metadata.d/*.php files.
+
+#. You can also use the :ref:`Keycloak Admin Console <keycloak-admin-console>`
+   to create :term:`SAML RP` clients manually or to adjust clients created
+   with :samp:`univention-keycloak saml/rp create`. See also
+   :ref:`uv-keycloak-app:saml-op` for more information on how to manage
+   :term:`SAML RP` clients with :program:`Keycloak`.
+
+#. change the |SAML| settings in the services to use :program:`Keycloak` as
+  :term:`SAML Provider` and validate the setup.
+
+   .. code-block:: console
+      :caption: Get base URL of the *Keycloak* server
+
+      $ sso_url="$(univention-keycloak get-keycloak-base-url)"
+
+#. It is necessary to update the IDP public certificate in your |SAML|
+   settings. To obtain :program:`Keycloak` server certificate:
+
+   .. code-block:: console
+      :caption: Retrieve public certificate and *Keycloak* base URL
+      :name: migration-of-services-using-SAML-keycloak-certificate
+
+      $ univention-keycloak saml/idp/cert get \
+         --as-pem \
+         --output "/tmp/keycloak.cert"
+
+#. SAML 2.0 Identity Provider Metadata for keycloak is:
+   https://${sso_url}/realms/ucs/protocol/saml/descriptor
+
+To get a better picture using |SAML| with :program:`Keycloak`, have a look at
+the examples in the next sections.
 
 .. _portal-migration:
 
