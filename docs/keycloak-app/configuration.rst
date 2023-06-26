@@ -114,7 +114,8 @@ following steps on the system where you installed Keycloak:
    :samp:`slapd[…]: SASL [conn=…] Failure: SAML assertion issuer
    https://ucs-sso-ng.{$domainname}/realms/ucs is unknown`
 
-.. _oidc-op:
+
+.. _ldap-attribute-mapper:
 
 Import of user attributes from UCS to Keycloak
 ============================================================
@@ -176,6 +177,8 @@ With the following command you get a list of all the currently configured
 .. code-block:: console
 
    $ univention-keycloak user-attribute-ldap-mapper get --user-attributes
+
+.. _oidc-op:
 
 Keycloak as OpenID Connect provider
 ===================================
