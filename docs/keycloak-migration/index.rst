@@ -5,15 +5,15 @@
 .. _doc-entry:
 
 #########################################################
-Migration guide: SimpleSAMLphp/Kopano Connect to Keycloak
+Migration guide: SimpleSAMLphp/Kopano Konnect to Keycloak
 #########################################################
 
 This document explains the required steps for the migration from the apps
-:program:`SimpleSAMLphp` (SAML) and :program:`Kopano Connect` (OIDC) as |IDP| to
+:program:`SimpleSAMLphp` (SAML) and :program:`Kopano Konnect` (OIDC) as |IDP| to
 the app :program:`Keycloak`.
 
 In future releases of |UCS| the :program:`Keycloak` app will replace
-:program:`SimpleSAMLphp` and the :program:`Kopano Connect` app as the default
+:program:`SimpleSAMLphp` and the :program:`Kopano Konnect` app as the default
 identity providers in |UCS|. The reason for this change is that :program:`Keycloak`
 has many advantages in terms of functionality, configurability and
 maintainability (e.g. Keycloak provides OIDC and SAML endpoints in one

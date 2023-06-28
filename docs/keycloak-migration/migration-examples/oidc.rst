@@ -8,7 +8,7 @@ Services using OIDC
 ===================
 
 The following examples demonstrate the migration of services that use |OIDC|
-for authentication and :program:`Kopano Connect` as |IDP| to
+for authentication and :program:`Kopano Konnect` as |IDP| to
 :program:`Keycloak` as |IDP|.
 
 .. _migration-ownCloud:

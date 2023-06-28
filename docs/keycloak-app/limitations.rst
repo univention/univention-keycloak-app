@@ -51,7 +51,7 @@ In the *Users* UMC module, the user account's *SAML settings* at
 :menuselection:`Account --> SAML settings` don't require anymore that
 administrators activate identity providers for user accounts. Therefore, any
 user account can use |SAML| for single sign-on. The behavior is the same as for
-the |OIDC| capability before through the :program:`Kopano Connect` app.
+the |OIDC| capability before through the :program:`Kopano Konnect` app.
 
 .. _limitation-password-restriction:
 
