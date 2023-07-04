@@ -203,6 +203,8 @@ kadmin -l ext --keytab="$keytab_path" "$servicePrincipal" || die
 chown "1000":"DC Backup Hosts" "$keytab_path" || die
 chmod 660 "$keytab_path" || die
 
+univention-keycloak kerberos-config set --server-principal "$servicePrincipal"
+
 # another restart for the cache initialization
 univention-app restart keycloak
 
