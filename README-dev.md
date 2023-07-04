@@ -128,6 +128,12 @@ our tests.
 
 For local documentation builds, see [Build Sphinx documents locally](https://hutten.knut.univention.de/mediawiki/index.php/Build_Sphinx_documents_locally).
 
+## Local build
+
+```
+docker run -ti --rm -v "$PWD:/project" -w /project -u $UID --network=host --pull=always docker-registry.knut.univention.de/knut/sphinx-base:latest make -C docs/keycloak-app clean livehtml
+```
+
 # Configuration tricks
 
 ## Import SimpleSAMLPHP signing certificate pair to Keycloak
