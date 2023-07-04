@@ -23,6 +23,8 @@ Released: TODO
 
 * The app updates to *Keycloak* version 21.1.1 of the upstream Docker image
   from https://quay.io/repository/keycloak/keycloak.
+* The app actives configures :program:`Kerberos` ticket authentication 
+  through the browser. For more information, see see :ref:`kerberos-authentication`.
 
 21.0.1-ucs4
 ===========

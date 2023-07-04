@@ -1311,30 +1311,25 @@ administration console to a specific IP subnet by putting this in the `local-uni
 
 Activating Kerberos authentication
 ==================================
-The :program:`Keycloak` is automatically configured to evaluate :program:`Kerberos` Tickets
-during login.
-During login on e.g. a Windows client, joined to the domain, a :program:`Kerberos` Ticket is fetched automatically.
-With the :program:`Keycloak` :program:`Kerberos` integration, they can now access the Univention portal and log in
-without having to provide username and password again.
 
+The :program:`Keycloak` app is by default configured to evaluate :program:`Kerberos` tickets
+during the authentication process. If you have a UCS domain with client workstations that acquire :program:`Kerberos` tickets during the user login process, the web browser can be configured to send this ticket for authentication to :program:`Keycloak` to enable a password-less login (e.g. at the UCS portal).
 
-The web browsers must be configured to transfer the Kerberos ticket to the SAML Identity Provider.
-Here are two examples for the configuration of Firefox and Microsoft Edge:
+To allow the web browser to send the :program:`Kerberos` tickets you have to change the following settings:
 
+Mozilla Firefox
+  Open a new tab and enter ``about:config`` in the address bar to open the Firefox
+  configuration. Search for ``network.negotiate-auth.trusted-uris`` and add the |FQDN|
+  of your :program:`Keycloak` server, which is ``ucs-sso-ng.[Domain name]`` by default.
 
-#. Mozilla Firefox
-   In the extended Firefox configuration, which can be reached by entering ``about:config`` in the
-   Firefox address line, the address of the identity provider must be entered in the option
-   ``network.negotiate-auth.trusted-uris``, which is ``ucs-sso-ng.[Domain name]`` by default.
+Microsoft Edge                                                                  
+  For Microsoft Edge on Windows, Kerberos authentication is configured in       
+  the general settings of the operating system. Open the ``Control Panel`` and      
+  select :menuselection:`Security --> Local Intranet --> Sites --> Advanced`.   
+  Add the |FQDN| of your :program:`Keycloak` server (``ucs-sso-ng.[Domain name]``
+  by default) to the list of ``Websites``. 
 
-
-#. Microsoft Edge
-   In the Control Panel, the Internet Options must be opened, followed by Security > Local Intranet > Sites > Advanced.
-   The address of the identity provider has to be added, which is ``ucs-sso-ng.[Domain name]`` by
-   default.
-
-
-If you installed :program:`Samba 4` *after* installing :program:`Keycloak`, the following command has to be executed on the Primary Directory Node:
+If you install the :program:`Active Directory-compatible Domain Controller` app *after* installing :program:`Keycloak`, the following command has to be executed on the Primary Directory Node:
 
 .. code-block:: console
 
@@ -1344,7 +1339,7 @@ If you installed :program:`Samba 4` *after* installing :program:`Keycloak`, the 
 Per default, :program:`Keycloak` will try to use :program:`Kerberos`. If no :program:`Kerberos` ticket is
 available, it will fall back to using username and password authentication.
 
-You can disable this feature in the ref:`Keycloak Admin Console <keycloak-admin-console>` by
+You can disable this feature in the :ref:`Keycloak Admin Console <keycloak-admin-console>` by
 
 * Select the realm ``UCS``
 

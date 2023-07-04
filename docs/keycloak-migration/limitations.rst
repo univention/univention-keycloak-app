@@ -27,16 +27,6 @@ clients through a checkbox on the user object in the |UMC|. To restrict the
 access of users to certain clients isn't possible with :program:`Keycloak` at
 the moment.
 
-.. _limit-kerberos-authentication:
-
-Kerberos authentication
-=======================
-
-In :program:`SimpleSAMLphp` it's possible to authenticate through a Kerberos
-ticket, for example after sign-in to a Microsoft Windows client computer.
-:program:`Keycloak` doesn't automatically configure the authentication
-through a Kerberos ticket yet.
-
 .. _limit-custom login page:
 
 Customization of the login page
