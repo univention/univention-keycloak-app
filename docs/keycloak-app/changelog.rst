@@ -19,7 +19,7 @@ Please also consider the `upstream release notes
 21.1.1-ucs1
 ===========
 
-Released: TODO
+Released: 5. July 2023
 
 * The app updates to *Keycloak* version 21.1.1 of the upstream Docker image
   from https://quay.io/repository/keycloak/keycloak.
