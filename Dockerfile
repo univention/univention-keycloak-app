@@ -26,7 +26,7 @@ RUN cp /tmp/build/univention-directory-manager/target/univention-directory-manag
  && cp /tmp/build/univention-ldap-mapper/target/univention-ldap-mapper-21.1.1.jar /tmp/artifacts/ \
  && cp /tmp/build/univention-user-attribute-nameid-mapper-base64/target/univention-user-attribute-nameid-mapper-base64-21.1.1.jar /tmp/artifacts/
 
-FROM quay.io/keycloak/keycloak:21.1.1
+FROM quay.io/keycloak/keycloak:21.1.2
 
 COPY --from=maven --chown=keycloak /tmp/artifacts/ /tmp/artifacts/
 
