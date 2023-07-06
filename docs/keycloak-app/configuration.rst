@@ -1312,37 +1312,47 @@ administration console to a specific IP subnet by putting this in the `local-uni
 Activating Kerberos authentication
 ==================================
 
-The :program:`Keycloak` app is by default configured to evaluate :program:`Kerberos` tickets
-during the authentication process. If you have a UCS domain with client workstations that acquire :program:`Kerberos` tickets during the user login process, the web browser can be configured to send this ticket for authentication to :program:`Keycloak` to enable a password-less login (e.g. at the UCS portal).
+In the default configuration, the :program:`Keycloak` app evaluates
+:program:`Kerberos` tickets during the authentication process. If you have a UCS
+domain with client workstations that obtain :program:`Kerberos` tickets during
+the user login process, users can configure their web browsers to send this
+ticket to :program:`Keycloak` for authentication to enable a passwordless login,
+for example in the UCS portal.
 
-To allow the web browser to send the :program:`Kerberos` tickets you have to change the following settings:
+To enable the web browser to send the :program:`Kerberos` tickets, you must
+change the following settings:
 
 Mozilla Firefox
-  Open a new tab and enter ``about:config`` in the address bar to open the Firefox
-  configuration. Search for ``network.negotiate-auth.trusted-uris`` and add the |FQDN|
-  of your :program:`Keycloak` server, which is ``ucs-sso-ng.[Domain name]`` by default.
+   Open a new tab and enter ``about:config`` in the address bar to open the
+   Firefox configuration. Search for ``network.negotiate-auth.trusted-uris`` and
+   add the |FQDN| of your :program:`Keycloak` server, which is
+   :samp:`ucs-sso-ng.{[Domain name]}` by default.
 
-Microsoft Edge                                                                  
-  For Microsoft Edge on Windows, Kerberos authentication is configured in       
-  the general settings of the operating system. Open the ``Control Panel`` and      
-  select :menuselection:`Security --> Local Intranet --> Sites --> Advanced`.   
-  Add the |FQDN| of your :program:`Keycloak` server (``ucs-sso-ng.[Domain name]``
-  by default) to the list of ``Websites``. 
+Microsoft Edge
+   For Microsoft Edge on Windows, you need to configure Kerberos authentication
+   in the general settings of the operating system. Open the *Control Panel* and
+   move to :menuselection:`Security --> Local Intranet --> Sites --> Advanced`.
+   Add the |FQDN| of your :program:`Keycloak` server, :samp:`ucs-sso-ng.{[Domain
+   name]}` by default, to the list of ``Websites``.
 
-If you install the :program:`Active Directory-compatible Domain Controller` app *after* installing :program:`Keycloak`, the following command has to be executed on the Primary Directory Node:
+If you install the :program:`Active Directory-compatible Domain Controller` app
+*after* installing :program:`Keycloak`, you need to run the following command on
+the Primary Directory Node:
 
 .. code-block:: console
 
   $ eval "$(ucr shell keycloak/server/sso/fqdn)"
   $ samba-tool spn add "HTTP/$keycloak_server_sso_fqdn" "krbkeycloak"
 
-Per default, :program:`Keycloak` will try to use :program:`Kerberos`. If no :program:`Kerberos` ticket is
-available, it will fall back to using username and password authentication.
+Per default, :program:`Keycloak` tries to use :program:`Kerberos`. If no
+:program:`Kerberos` ticket is available, *Keycloak* falls back to username and
+password authentication. You can deactivate this behavior in the :ref:`Keycloak
+Admin Console <keycloak-admin-console>` with the following steps:
 
-You can disable this feature in the :ref:`Keycloak Admin Console <keycloak-admin-console>` by
+* Select the realm ``UCS``.
 
-* Select the realm ``UCS``
+* On the sidebar, click :guilabel:`User federation` and choose
+  ``ldap-provider``.
 
-* On the sidebar click ``User federation`` and choose the ``ldap-provider``
-
-* Go to the section ``Kerberos integration`` and disable  ``Allow Kerberos authentication``
+* Go to the section *Kerberos integration* and deactivate :guilabel:`Allow
+  Kerberos authentication`.

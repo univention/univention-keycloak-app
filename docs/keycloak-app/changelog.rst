@@ -29,10 +29,14 @@ Released: TODO
 
 Released: 5. July 2023
 
-* The app updates to *Keycloak* version 21.1.1 of the upstream Docker image
-  from https://quay.io/repository/keycloak/keycloak.
-* The app now configures :program:`Kerberos` ticket authentication
-  through the browser. For more information, see see :ref:`kerberos-authentication`.
+* The app updates to *Keycloak* version 21.1.1 of the upstream Docker image from
+  https://quay.io/repository/keycloak/keycloak. See `release notes for Keycloak
+  21.1.0
+  <https://www.keycloak.org/docs/latest/release_notes/index.html#keycloak-21-1-0>`_
+  for more details.
+
+* The app now configures :program:`Kerberos` ticket authentication through the
+  web browser. For more information, see :ref:`kerberos-authentication`.
 
 21.0.1-ucs4
 ===========
