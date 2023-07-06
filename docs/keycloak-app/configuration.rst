@@ -1337,7 +1337,8 @@ Microsoft Edge
 
 If you install the :program:`Active Directory-compatible Domain Controller` app
 *after* installing :program:`Keycloak`, you need to run the following command on
-the Primary Directory Node:
+the Primary Directory Node. It ensures that the Kerberos authentication also works
+with the :program:`Active Directory-compatible Domain Controller`:
 
 .. code-block:: console
 
