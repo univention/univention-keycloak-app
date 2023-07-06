@@ -103,6 +103,8 @@ Copy this block to the release issue and do all of them:
 1. [ ] update docker image names (appcenter test)
 1. [ ] run keycloak product tests (errata_update and release_update == public)
 1. [ ] release the documentation:
+   1. [ ] Check the keycloak version in the documentation links in `docs/bibliography.bib`
+   1. [ ] When you release a new Keycloak version and mention it in the changelog, also add a link to the Keycloak changelog for that dedicated version. See the example for 20.0.1.
    1. [ ] Update the `DOC_TARGET_VERSION` variable in [.gitlab-ci.yml](.gitlab-ci.yml) to the new app version. The variable makes sure that the new app version has a dedicated documentation.
    1. [ ] Add an appropriate changelog entry to
  [docs/changelog.rst](docs/changelog.rst) and follow the recommendation at https://keepachangelog.com/en/1.0.0/.
