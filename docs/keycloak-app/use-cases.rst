@@ -325,11 +325,30 @@ app to create the official certificate).
 Dedicated |FQDN| for single sing-on endpoint
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In this scenario the single sing-on endpoint has its own (virtual host)
-web server configuration. The certificate files can be configured with
-following UCR variables.
+In case you use the :program:`Let's Encrypt` app, you have to configure
+:program:`Let's Encrypt` to acquire a certificate for both names, the UCS portal
+and :program:`Keycloak`. Apply the following app settings for the
+:program:`Let's Encrypt` app:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 7 5
+
+   * - App setting
+     - Value
+
+   * - Domain(s) to obtain a certificate for, separated by space
+     - :samp:`portal.extern.com auth.extern.com`
+
+   * - Use certificate in Apache
+     - :samp:`yes`
+
+In this scenario the single sing-on endpoint has its own web server
+configuration, as web server virtual host. To configure the certificate files
+for :program:`Keycloak`, set the following UCR variables:
 
 .. code-block:: console
+   :caption: Set UCR variables to use the Let's Encrypt certificate
 
    $ cert_file="/etc/univention/letsencrypt/signed_chain.crt"
    $ key_file="/etc/univention/letsencrypt/domain.key"
@@ -337,14 +356,35 @@ following UCR variables.
    $ ucr set keycloak/apache2/ssl/key="$key_file"
    $ systemctl reload apache2.service
 
+.. _use-case-lets-encrypt-identical-fqdn:
+
 Single sing-on |FQDN| identical to UCS Portal |FQDN| (or internal name)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Here the :program:`Keycloak` app uses the global web server configuration and
-therefor the standard UCR variables for the :program:`Apache` certificate
-files can be used.
+If you use the :program:`Let's Encrypt` app to generate the certificates, you
+need the following app settings for :program:`Let's Encrypt`:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 7 5
+
+   * - App Setting
+     - Value
+
+   * - Domain(s) to obtain a certificate for, separated by space
+     - :samp:`portal.extern.com`
+
+   * - Use certificate in Apache
+     - :samp:`yes`
+
+In this use case, the :program:`Keycloak` app uses the global web server
+configuration. You can therefore use the standard UCR variables for the
+:program:`Apache` certificate files as outlined in
+:numref:`use-case-lets-encrypt-identical-fqdn-assign-certs-webserver`.
 
 .. code-block:: console
+   :caption: Assign certificates to web server configuration
+   :name: use-case-lets-encrypt-identical-fqdn-assign-certs-webserver
 
    $ cert_file="/etc/univention/letsencrypt/signed_chain.crt"
    $ key_file="/etc/univention/letsencrypt/domain.key"
