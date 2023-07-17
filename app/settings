@@ -1,3 +1,113 @@
+[keycloak/theme]
+Type = String
+Show = Install, Settings
+InitialValue = @%@ucs/web/theme@%@
+Scope = outside
+Description = Name of the theme to be applied to the keycloak login interface. Example: "dark" or "light". A CSS file of the same name has to exist in the folder /usr/share/univention-web/themes/.
+Group = Appearance settings
+
+[keycloak/server/sso/fqdn]
+Type = String
+Show = Install, Settings
+InitialValue = ucs-sso-ng.@%@domainname@%@
+Scope = outside
+Description = Defines the fqdn of the identity provider of this UCS domain.
+Group = Fully qualified domain name and web server settings
+
+[keycloak/server/sso/path]
+Type = String
+Show = Install, Settings
+InitialValue = /
+Scope = outside, inside
+Description = Defines the dedicated path under which keycloak is available.
+Group = Fully qualified domain name and web server settings
+
+[keycloak/server/sso/virtualhost]
+Type = Bool
+InitialValue = True
+Required = True
+Scope = outside
+Show = Install, Settings
+Description = Whether or not to create a dedicated virtual host apache config for the keycloak server fqdn.
+Group = Fully qualified domain name and web server settings
+
+[keycloak/apache/config]
+Type = Bool
+InitialValue = True
+Required = True
+Scope = outside
+Show = Install, Settings
+Description = Whether or not to create an apache config for the keycloak.
+Group = Fully qualified domain name and web server settings
+
+[keycloak/server/sso/autoregistration]
+Type = Bool
+InitialValue = True
+Required = True
+Scope = outside
+Show = Install, Settings
+Description = Whether or not to create a DNS host record for the keycloak FQDN in the UCS domain. You need to set this if you don't use the default FQDN for keycloak.
+Group = Fully qualified domain name and web server settings
+
+[keycloak/apache2/ssl/certificate]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = outside
+Description = Path to an existing PEM certificate file to use for the keycloak apache configuration. You need to set this if you don't use the default FQDN for keycloak.
+Group = Fully qualified domain name and web server settings
+
+[keycloak/apache2/ssl/key]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = outside
+Description = Path to an existing private key file to use for the keycloak apache configuration. You need to set this if you don't use the default FQDN for keycloak.
+Group = Fully qualified domain name and web server settings
+
+[keycloak/csp/frame-ancestors]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = outside
+Description = Additional frame-ancestors for the Content Security Policy response header of Keycloak.
+Group = Fully qualified domain name and web server settings
+
+[keycloak/cookies/samesite]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = outside
+InitialValue = None
+Description = Sets the "SameSite" attribute for all cookies of Keycloak. Possible values are "Lax", "Strict" and "None".
+Group = Fully qualified domain name and web server settings
+
+[ucs/self/registration/check_email_verification]
+Type = Bool
+InitialValue =  false
+Scope = inside
+Show = Install, Settings
+Description = Whether or not to check if a self-registered user account is verified.
+Group = Self Service settings
+
+[keycloak/login/messages/en/accountNotVerifiedMsg]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside, outside
+InitialValue = Your account is not verified.<br>You must <a id="loginSelfServiceLink" href="https://@%@hostname@%@.@%@domainname@%@/univention/selfservice/#/selfservice/verifyaccount" target="_blank">verify your account</a> before you can login.<br/>
+Description = English error message if self-registered user account is not yet verified
+Group = Self Service settings
+
+[keycloak/login/messages/de/accountNotVerifiedMsg]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside, outside
+InitialValue = Konto nicht verifiziert.<br>Sie m\u00FCssen Ihr <a id="loginSelfServiceLink" href="https://@%@hostname@%@.@%@domainname@%@/univention/selfservice/#/selfservice/verifyaccount" target="_blank">Konto verifizieren</a>, bevor Sie sich einloggen k\u00F6nnen.<br/>
+Description = German error message if self-registered user account is not yet verified
+Group = Self Service settings
+
 [keycloak/log/level]
 Type = List
 Required = True
@@ -7,45 +117,7 @@ Values = ALL, DEBUG, ERROR, FATAL, INFO, OFF, TRACE, WARN
 Labels = ALL, DEBUG, ERROR, FATAL, INFO, OFF, TRACE, WARN
 InitialValue = INFO
 Scope = outside
-Group = Administration
-
-[keycloak/theme]
-Type = String
-Show = Install, Settings
-InitialValue = @%@ucs/web/theme@%@
-Scope = outside
-Description = Name of the theme to be applied to the keycloak login interface. Example: "dark" or "light". A CSS file of the same name has to exist in the folder /usr/share/univention-web/themes/.
-Group = Settings
-
-[keycloak/server/sso/fqdn]
-Type = String
-Show = Install, Settings
-InitialValue = ucs-sso-ng.@%@domainname@%@
-Scope = outside
-Description = Defines the fqdn of the identity provider of this UCS domain.
-
-[keycloak/server/sso/path]
-Type = String
-Show = Install, Settings
-InitialValue = /
-Scope = outside, inside
-Description = Defines the dedicated path under which keycloak is available.
-
-[keycloak/server/sso/virtualhost]
-Type = Bool
-InitialValue = True
-Required = True
-Scope = outside
-Show = Install, Settings
-Description = Whether or not to create a dedicated virtual host apache config for the keycloak server fqdn.
-
-[keycloak/apache/config]
-Type = Bool
-InitialValue = True
-Required = True
-Scope = outside
-Show = Install, Settings
-Description = Whether or not to create an apache config for the keycloak.
+Group = Administration settings
 
 [keycloak/password/change/endpoint]
 Type = String
@@ -53,29 +125,15 @@ Show = Install, Settings
 InitialValue = @%@hostname@%@.@%@domainname@%@
 Scope = inside
 Description = Defines the fqdn of the UCS instance used to change user password.
-
-[keycloak/federation/remote/identifier]
-Type = String
-Required = True
-Show = Install, Settings
-InitialValue = univentionObjectIdentifier
-Scope = outside, inside
-Description = UDM property uniquely identifying IAM objects
-
-[keycloak/federation/source/identifier]
-Type = String
-Required = True
-Show = Install, Settings
-InitialValue = univentionSourceIAM
-Scope = outside, inside
-Description = UDM property referencing the source IAM
+Group = Administration settings
 
 [kc/db/url]
 Type = String
 Required = False
 Show = Install, Settings
 Scope = inside
-Description = Database URI (e.g. jdbc:postgresql://dbhost/keycloak?ssl=require)
+Description = Database URI (e.g. jdbc:postgresql://dbhost/keycloak?ssl=require). It is only used for connecting to the database. Change this setting only if you use an external, self-hosted database. If in doubt, consult the manual https://docs.software-univention.de/keycloak-app/latest/limitations.html#database-configuration>.
+Group = Database settings
 
 [kc/db/username]
 Type = String
@@ -83,7 +141,8 @@ Required = False
 Show = Install, Settings
 Scope = inside
 InitialValue = keycloak
-Description = Database username. Default "keycloak"
+Description = Username for the database connection. Please be aware that this setting does not change the username for the database. It is only used for connecting to the database. Change this setting only if you use an external, self-hosted database. If in doubt, consult the manual https://docs.software-univention.de/keycloak-app/latest/limitations.html#database-configuration>.
+Group = Database settings
 
 [kc/db/kind]
 Type = String
@@ -91,14 +150,16 @@ Required = False
 Show = Install, Settings
 Scope = inside,outside
 InitialValue = postgres
-Description = Database kind (e.g. postgres)
+Description = Type (kind) the database connection. It is only used for connecting to the database. Change this setting only if you use an external, self-hosted database. If in doubt, consult the manual https://docs.software-univention.de/keycloak-app/latest/limitations.html#database-configuration>.
+Group = Database settings
 
 [kc/db/password]
 Type = Password
 Required = False
 Show = Install, Settings
 Scope = inside
-Description = Database password
+Description = Password for the database connection. Please be aware that this setting does not change the password for the database. It is only used for connecting to the database. Change this setting only if you use an external, self-hosted database. If in doubt, consult the manual https://docs.software-univention.de/keycloak-app/latest/limitations.html#database-configuration>.
+Group = Database settings
 
 [kc/db/xa]
 Type = String
@@ -107,6 +168,7 @@ Show = Install, Settings
 Scope = inside, outside
 InitialValue = false
 Description = Database xa transactions flag (e.g true/false)
+Group = Database settings
 
 [kc/db/driver]
 Type = String
@@ -114,6 +176,7 @@ Required = False
 Show = Install, Settings
 Scope = inside
 Description = Database infinispan driver
+Group = Database settings
 
 [kc/db/ping/datatype]
 Type = String
@@ -121,41 +184,22 @@ Required = False
 Show = Install, Settings
 Scope = inside
 Description = Datatype for ping_data value in the database (Mariadb compatibility)
+Group = Database settings
 
-[ucs/self/registration/check_email_verification]
-Type = Bool
-InitialValue =  false
-Scope = inside
-Show = Install, Settings
-Description = Whether or not to check if a self-registered user account is verified.
-
-[keycloak/login/messages/en/accountNotVerifiedMsg]
+[keycloak/federation/remote/identifier]
 Type = String
-Required = False
+Required = True
 Show = Install, Settings
-Scope = inside, outside
-InitialValue = Your account is not verified.<br>You must <a id="loginSelfServiceLink" href="https://@%@hostname@%@.@%@domainname@%@/univention/selfservice/#/selfservice/verifyaccount" target="_blank">verify your account</a> before you can login.<br/>
-Description = English error message if self-registered user account is not yet verified
+InitialValue = univentionObjectIdentifier
+Scope = outside, inside
+Description = UDM property uniquely identifying IAM objects
+Group = Ad-hoc federation
 
-[keycloak/login/messages/de/accountNotVerifiedMsg]
+[keycloak/federation/source/identifier]
 Type = String
-Required = False
+Required = True
 Show = Install, Settings
-Scope = inside, outside
-InitialValue = Konto nicht verifiziert.<br>Sie m\u00FCssen Ihr <a id="loginSelfServiceLink" href="https://@%@hostname@%@.@%@domainname@%@/univention/selfservice/#/selfservice/verifyaccount" target="_blank">Konto verifizieren</a>, bevor Sie sich einloggen k\u00F6nnen.<br/>
-Description = German error message if self-registered user account is not yet verified
-
-[keycloak/csp/frame-ancestors]
-Type = String
-Required = False
-Show = Install, Settings
-Scope = outside
-Description = Additional frame-ancestors for the Content Security Policy response header of Keycloak.
-
-[keycloak/cookies/samesite]
-Type = String
-Required = False
-Show = Install, Settings
-Scope = outside
-InitialValue = None
-Description = Sets the "SameSite" attribute for all cookies of Keycloak. Possible values are "Lax", "Strict" and "None".
+InitialValue = univentionSourceIAM
+Scope = outside, inside
+Description = UDM property referencing the source IAM
+Group = Ad-hoc federation

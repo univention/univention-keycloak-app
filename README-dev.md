@@ -147,3 +147,22 @@ It is possible to import the signing key and certificate from `SimpleSAMLPHP` in
 * Verify that `Keycloak` uses the imported key for signatures. Check the `SAML IDP` metadata in 
 `https://{$KEYCLOAK_FQDN}/realms/ucs/protocol/saml/descriptor` and verify that the `<ds:KeyName>` is the key ID (`kid`) of the imported key in the `Keycloak Admin Console`. 
 
+## Change app settings file on-the-fly
+
+Goal is to test new app settings on an existing UCS, by just changing the
+`*.settings` file in the app cache.
+
+```
+ucr set appcenter/umc/update/always=false
+ucr set update/check/cron/enabled='no'
+ucr set update/check/boot/enabled='no'
+
+edit/vi /var/cache/univention-appcenter/appcenter-test.software-univention.de/5.0/keycloak_20230705184402.settings
+
+rm /var/cache/univention-appcenter/appcenter-test.software-univention.de/5.0/.apps.en.json
+rm /var/cache/univention-appcenter/appcenter-test.software-univention.de/5.0/.apps.de.json
+rm /var/cache/univention-appcenter/umc-query.json
+service univention-management-console-server start
+
+-> login to UMC and check app settings
+```
