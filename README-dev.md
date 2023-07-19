@@ -113,7 +113,7 @@ Copy this block to the release issue and do all of them:
  [versionchanged](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-versionchanged)
  or [deprecated](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-deprecated)
    directive.
-   1. [ ] After running the *production* job for the documentation in the pipeline, update the symlink `latest` the new version in the [keycloak-app directory of the docs.univention.de repository](https://git.knut.univention.de/univention/docs.univention.de/-/tree/master/keycloak-app).
+   1. [ ] After running the *production* job for the documentation in the pipeline, update the symlink `latest` the new version in the [keycloak-app directory of the docs.univention.de repository](https://git.knut.univention.de/univention/docs.univention.de/-/tree/master/keycloak-app). Try to update the symlink in the MR -> https://hutten.knut.univention.de/mediawiki/index.php/Docs/Automated_build_and_deployment#Cancel_automatic_merge_of_my_documentation_changes
 1. [ ] release the app:
    * go to omar
    * run TODO
@@ -162,7 +162,7 @@ edit/vi /var/cache/univention-appcenter/appcenter-test.software-univention.de/5.
 rm /var/cache/univention-appcenter/appcenter-test.software-univention.de/5.0/.apps.en.json
 rm /var/cache/univention-appcenter/appcenter-test.software-univention.de/5.0/.apps.de.json
 rm /var/cache/univention-appcenter/umc-query.json
-service univention-management-console-server start
+service univention-management-console-server restart
 
--> login to UMC and check app settings
+-> login to UMC and check app settings (disable js cache)
 ```
