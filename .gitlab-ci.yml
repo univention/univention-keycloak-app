@@ -18,6 +18,7 @@ include:
       - pre-commit.yml
 
 variables:
+  # version
   DOC_TARGET_VERSION: "21.1.2"
 
 generate-config:
