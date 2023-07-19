@@ -11,7 +11,7 @@ Type = String
 Show = Install, Settings
 InitialValue = ucs-sso-ng.@%@domainname@%@
 Scope = outside
-Description = Defines the fqdn of the identity provider of this UCS domain.
+Description = Defines the FQDN of the identity provider of this UCS domain.
 Group = Fully qualified domain name and web server settings
 
 [keycloak/server/sso/path]
@@ -28,7 +28,7 @@ InitialValue = True
 Required = True
 Scope = outside
 Show = Install, Settings
-Description = Whether or not to create a dedicated virtual host apache config for the keycloak server fqdn.
+Description = Whether or not to create a dedicated virtual host apache config for the keycloak server FQDN.
 Group = Fully qualified domain name and web server settings
 
 [keycloak/apache/config]
@@ -124,7 +124,7 @@ Type = String
 Show = Install, Settings
 InitialValue = @%@hostname@%@.@%@domainname@%@
 Scope = inside
-Description = Defines the fqdn of the UCS instance used to change user password.
+Description = Defines the FQDN of the UCS instance used to change user password.
 Group = Administration settings
 
 [kc/db/url]
@@ -132,7 +132,7 @@ Type = String
 Required = False
 Show = Install, Settings
 Scope = inside
-Description = Database URI (e.g. jdbc:postgresql://dbhost/keycloak?ssl=require). It is only used for connecting to the database. Change this setting only if you use an external, self-hosted database. If in doubt, consult the manual https://docs.software-univention.de/keycloak-app/latest/limitations.html#database-configuration>.
+Description = Database URI (e.g. jdbc:postgresql://dbhost/keycloak?ssl=require).
 Group = Database settings
 
 [kc/db/username]
@@ -141,7 +141,7 @@ Required = False
 Show = Install, Settings
 Scope = inside
 InitialValue = keycloak
-Description = Username for the database connection. Please be aware that this setting does not change the username for the database. It is only used for connecting to the database. Change this setting only if you use an external, self-hosted database. If in doubt, consult the manual https://docs.software-univention.de/keycloak-app/latest/limitations.html#database-configuration>.
+Description = Username for the database connection. Please be aware that this setting does not change the username for the database. It is only used for connecting to the database. Change this setting only if you use an external, self-hosted database. If in doubt, consult the Keycloak app <a target="_blank" href="https://docs.software-univention.de/keycloak-app/latest/limitations.html#database-configuration">manual</a>.
 Group = Database settings
 
 [kc/db/kind]
@@ -150,7 +150,8 @@ Required = False
 Show = Install, Settings
 Scope = inside,outside
 InitialValue = postgres
-Description = Type (kind) the database connection. It is only used for connecting to the database. Change this setting only if you use an external, self-hosted database. If in doubt, consult the manual https://docs.software-univention.de/keycloak-app/latest/limitations.html#database-configuration>.
+Description = Type (kind) the database connection.
+
 Group = Database settings
 
 [kc/db/password]
@@ -158,7 +159,7 @@ Type = Password
 Required = False
 Show = Install, Settings
 Scope = inside
-Description = Password for the database connection. Please be aware that this setting does not change the password for the database. It is only used for connecting to the database. Change this setting only if you use an external, self-hosted database. If in doubt, consult the manual https://docs.software-univention.de/keycloak-app/latest/limitations.html#database-configuration>.
+Description = Password for the database connection. Please be aware that this setting does not change the password for the database. It is only used for connecting to the database. Change this setting only if you use an external, self-hosted database. If in doubt, consult the Keycloak app <a target="_blank" href="https://docs.software-univention.de/keycloak-app/latest/limitations.html#database-configuration">manual</a>.
 Group = Database settings
 
 [kc/db/xa]
