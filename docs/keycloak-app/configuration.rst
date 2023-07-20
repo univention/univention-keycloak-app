@@ -413,8 +413,9 @@ Two-factor authentication for Keycloak
 
 .. warning::
 
-   The two-factor capability isn't supported. Usage isn't recommended in
-   production environments.
+   The two-factor capability is a built-in :program:`Keycloak` feature that
+   is not integrated into the UCS identity management or user lifecycle.
+   More sophisticated integration needs to be added individually.
 
 .. versionadded:: 19.0.1-ucs1
 
@@ -478,11 +479,12 @@ Keycloak ad hoc federation
 
 .. warning::
 
-   Keycloak ad hoc federation isn't supported. Usage isn't recommended in
-   production environments.
+   The ad hoc federation is a built-in :program:`Keycloak` feature that
+   is not integrated into the UCS identity management or user lifecycle.
+   More sophisticated integration needs to be added individually.
 
 .. versionadded:: 19.0.1-ucs2
-   
+
 :program:`Keycloak` |SPI| extension for ad hoc federation added.
 Keycloak offers identity brokering to delegate authentication to one or more
 identity providers for OpenID Connect or SAML 2.0.
