@@ -271,9 +271,9 @@ instance in your UCS domain.
 .. code-block:: console
 
    $ FQDN="portal.example.test"
-   $ PATH="/auth"
+   $ SSO_PATH="/auth"
    $ ucr set keycloak/server/sso/fqdn="$FQDN"
-   $ ucr set keycloak/server/sso/path="$PATH"
+   $ ucr set keycloak/server/sso/path="$SSO_PATH"
    $ ucr set keycloak/server/sso/virtualhost=false
    $ ucr set keycloak/server/sso/autoregistration=false
 
@@ -296,9 +296,9 @@ run the following commands:
 .. code-block:: console
 
    $ FQDN="portal.example.test"
-   $ PATH="/auth"
+   $ SSO_PATH="/auth"
    $ ucr set \
-     umc/saml/idp-server="https://${SSO_FQDN}${PATH}/realms/ucs/protocol/saml/descriptor"
+     umc/saml/idp-server="https://${SSO_FQDN}${SSO_PATH}/realms/ucs/protocol/saml/descriptor"
    $ service slapd restart
 
 For UCS systems joining the domain, configure a UCR policy and assign it the UCS
