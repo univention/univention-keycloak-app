@@ -298,7 +298,7 @@ run the following commands:
    $ FQDN="portal.example.test"
    $ SSO_PATH="/auth"
    $ ucr set \
-     umc/saml/idp-server="https://${SSO_FQDN}${SSO_PATH}/realms/ucs/protocol/saml/descriptor"
+     umc/saml/idp-server="https://${FQDN}${SSO_PATH}/realms/ucs/protocol/saml/descriptor"
    $ service slapd restart
 
 For UCS systems joining the domain, configure a UCR policy and assign it the UCS
