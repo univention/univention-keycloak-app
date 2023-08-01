@@ -145,6 +145,22 @@ Scope = inside, outside
 InitialValue = Konto nicht verifiziert.<br>Sie m\u00FCssen Ihr <a id="loginSelfServiceLink" href="https://@%@hostname@%@.@%@domainname@%@/univention/selfservice/#/selfservice/verifyaccount" target="_blank">Konto verifizieren</a>, bevor Sie sich einloggen k\u00F6nnen.<br/>
 Description = German error message if self-registered user account is not yet verified
 
+[keycloak/login/messages/en/accessDeniedMsg]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside, outside
+InitialValue = Access forbidden.<br>You don't have the needed privileges to access this application. Please contact the administrator that you do not have access to the service {0} if you find this to be incorrect.
+Description = The error message that is shown when a user is denied access to a service
+
+[keycloak/login/messages/de/accessDeniedMsg]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside, outside
+InitialValue = Zugriff verboten.<br>Bitte wenden Sie sich an den Administrator, dass Sie keinen Zugriff auf den Service {0} haben, wenn Sie feststellen, dass dies nicht korrekt ist.
+Description = Die angezeigte Fehlermeldung, wenn einem Benutzer der Zugriff auf einen Service verboten wird.
+
 [keycloak/csp/frame-ancestors]
 Type = String
 Required = False
