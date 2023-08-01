@@ -108,6 +108,24 @@ InitialValue = Konto nicht verifiziert.<br>Sie m\u00FCssen Ihr <a id="loginSelfS
 Description = German error message if self-registered user account is not yet verified
 Group = Self Service settings
 
+[keycloak/login/messages/en/accessDeniedMsg]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside, outside
+InitialValue = Access forbidden.<br>You don't have the needed privileges to access this application. Please contact the administrator that you do not have access to the service {0} if you find this to be incorrect.
+Description = The error message that is shown when a user is denied access to a service
+Group = App authorization settings
+
+[keycloak/login/messages/de/accessDeniedMsg]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside, outside
+InitialValue = Zugriff verboten.<br>Bitte wenden Sie sich an den Administrator, dass Sie keinen Zugriff auf den Service {0} haben, wenn Sie feststellen, dass dies nicht korrekt ist.
+Description = Die angezeigte Fehlermeldung, wenn einem Benutzer der Zugriff auf einen Service verboten wird.
+Group = App authorization settings
+
 [keycloak/log/level]
 Type = List
 Required = True

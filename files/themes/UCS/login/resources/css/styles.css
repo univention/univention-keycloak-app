@@ -107,6 +107,21 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
     margin-bottom: 3rem;
 }
 
+#kc-username {
+    display: none;
+}
+
+#kc-info {
+    margin: inherit;
+}
+
+#kc-info-wrapper {
+    font-size: inherit;
+    color: var(--font-color-contrast-high);
+    background-color: inherit;
+    text-align: left;
+}
+
 #kc-locale-dropdown a {
     color: var(--font-color-contrast-high);
 }
