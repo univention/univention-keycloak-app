@@ -1,0 +1,24 @@
+From acf018c2303b6adbfd9c8af39f1ecb4d9372bee4 Mon Sep 17 00:00:00 2001
+From: Julia Bremer <bremer@univention.de>
+Date: Wed, 2 Aug 2023 14:54:25 +0200
+Subject: [PATCH] workaround
+
+---
+ .../java/de/univention/keycloak/UniventionUpdatePassword.java    | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git univention-ldap-mapper/src/main/java/de/univention/keycloak/UniventionUpdatePassword.java univention-ldap-mapper/src/main/java/de/univention/keycloak/UniventionUpdatePassword.java
+index 584204f..730066d 100644
+--- univention-ldap-mapper/src/main/java/de/univention/keycloak/UniventionUpdatePassword.java
++++ univention-ldap-mapper/src/main/java/de/univention/keycloak/UniventionUpdatePassword.java
+@@ -193,6 +193,7 @@ public class UniventionUpdatePassword extends UpdatePassword {
+             );
+ 
+             resetPassword(resetPasswordRequest);
++            Thread.sleep(5000);
+             context.success();
+         } catch (ModelException me) {
+             errorEvent.detail(Details.REASON, me.getMessage()).error(Errors.PASSWORD_REJECTED);
+-- 
+2.25.1
+

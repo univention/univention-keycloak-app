@@ -210,7 +210,7 @@ The :program:`Keycloak` app can serve as an OpenID Connect provider
 (:term:`OIDC Provider`). The following steps explain how to configure an |OIDC|
 relying party (:term:`OIDC RP`) to use Keycloak for authentication:
 
-#. :ref:`keycloak-admin-console`.
+#. :ref:`Keycloak Admin Console <keycloak-admin-console>`.
 
 #. Navigate to :menuselection:`UCS realm --> Clients --> Create`.
 
@@ -1346,3 +1346,211 @@ You can disable this feature in the :ref:`Keycloak Admin Console <keycloak-admin
 * On the sidebar click ``User federation`` and choose the ``ldap-provider``
 
 * Go to the section ``Kerberos integration`` and disable  ``Allow Kerberos authentication``
+
+
+.._application_authorization
+
+Restricting access to Applications
+==================================
+
+.. versionadded:: 21.1.2-ucs2
+
+
+With the |UCS| :program:`simpleSAMLphp` integration, it is possible to
+restrict access of groups and users to specific SAML service providers via the |UDM| SAML settings.
+This section will explain how to restrict the access to applications
+in a similar way by configuring :program:`Keycloak`.
+
+
+.. _introduction:
+
+When to use this configuration
+------------------------------
+
+The configuration steps shown in the following sections will enable you
+to restrict access to certain SAML service providers and OIDC Relying parties
+via group membership.
+
+The complete feature including integration into the UDM UMC module is planned for
+future releases. It is recommended to wait with the configuration of App authorization
+until the feature is fully implemented and integrated into UCS,
+since a reconfiguration and migration may be necessary when it is released.
+If App authorization is a must in your environment, this guide will show you a suitable
+replacement in the meantime.
+
+
+Please note that this configuration will behave differently to the feature
+provided by :program:`simpleSAMLphp` in the following ways:
+
+* The restriction is based on group membership alone. It is not possible to restrict the access for an individual user directly
+
+* While the users and their group memberships can be managed in UDM,
+  which group provides access for which Keycloak :term:`SAML SP` or :term:`OIDC RP` can only be configured
+  in the :ref:`Keycloak Admin Console <keycloak-admin-console>` directly.
+
+* :program:`Keycloak` will allow access for all users as a default. Only if the :term:`SAML SP`/ :term:`OIDC RP` is specifically configured to use
+  App authorization, the access will be checked.
+
+
+
+.. _authorization-create-auth-flow:
+
+Create authentication flow
+--------------------------
+
+With :program:`Keycloak` version 21.1.2-ucs2, we added a :program:`Keycloak` authenticator extension
+called `Univention App authenticator`, which performs the authorization check on the user during the login.
+
+In order to use this authenticator, a new Keycloak `authentication flow`
+containing this authenticator has to be created.
+This can be done in the following way by using `univention-keycloak`. The command is not expected to give any output:
+
+.. code-block:: console
+
+  $ univention-keycloak legacy-authentication-flow create
+
+.. seealso::
+
+   For more information on authentication flows, see :cite:t:`keycloak-auth-flow`.
+.. _authorization-assign-auth-flow:
+
+Assign authentication flow
+--------------------------
+
+This new authentication flow is not used by each :term:`SAML SP`/ :term:`OIDC RP` (called `Client` in Keycloak)
+by default.
+Each :term:`Keycloak Client`, that is not supposed to be accessed by all users, needs to be explicitly configured to use this new authentication flow.
+If you have existing :term:`Keycloak Client`, you can assign a specific flow to it
+using the following command:
+
+.. code-block:: console
+
+   $ univention-keycloak client-auth-flow \
+     --clientid "REPLACE_WITH_YOUR_CLIENT_ID" \
+     --auth-flow "browser flow with legacy app authorization"
+
+Please note that you can also pass the option `--auth-browser-flow` when creating a :term:`SAML SP` or :term:`OIDC RP` as a client in :program:`Keycloak`.
+See section :ref:`saml-idp` on how to create a :term:`Keycloak Client`.
+
+.. _authorization-group-mapper:
+
+Map UDM groups to Keycloak
+--------------------------
+
+To be able to restrict access to certain :program:`Keycloak` clients by group
+membership, the necessary groups need to be mapped to :program:`Keycloak`.
+
+Therefore an appropriate `LDAP mapper` needs to be created using the :ref:`Keycloak Admin Console <keycloak-admin-console>`.
+
+
+#. In :ref:`Keycloak Admin Console <keycloak-admin-console>` follow
+   :menuselection:`UCS realm --> User Federation --> ldap-provider --> Mappers --> Add mapper`
+
+#. The `Name` of the mapper can be freely chosen.
+   The `Mapper type` `group-ldap-mapper` needs to be selected.
+
+This will extend the form with following fields to fill in:
+
+#. `LDAP Groups DN` needs to be set to the value of the base LDAP DN of your domain, e.g. `dc=example,dc=local`
+
+#. `Group Object Classes` have to be set to `univentionGroup`
+
+#. Set `Ignore Missing Groups` to `On`
+
+#. Set `Membership LDAP Attribute` to `memberUid`
+
+#. The `Membership Attribute Type` is `UID`
+
+#. `Drop non-existing groups during sync` is set to `On`
+
+.. warning::
+
+   It is strongly recommended to set an `LDAP Filter` in this group mapper
+   so that only strictly necessary groups are mapped to :program:`Keycloak`.
+   If no filter is specified all groups will be synced which, depending
+   on the size of the groups, may impact the performance of :program:`Keycloak`.
+   An example filter value that filters groups by their name, and therefore
+   only allows synchronization of two groups is:
+   `(|(cn=umcAccess)(cn=nextcloudAccess))`
+
+#. Scroll down and click on the :menuselection:`Save` button
+
+To trigger the synchronization of the groups immediately, click on the name of the
+mapper you just created to open it and from the :menuselection:`Action`
+dropdown select :menuselection:`Sync LDAP groups to Keycloak`.
+
+.. _authorization-create-client-roles:
+
+Create client roles
+-------------------
+
+The new :program:`Keycloak` authenticator called `Univention App authenticator` restricts access by evaluating the
+roles of a user in :program:`Keycloak`. It specifically checks for a client specific
+role named `univentionClientAccess`.
+If this client specific role exists, the :program:`Keycloak` authenticator
+will restrict access of all users that don't have this role.
+
+You have to create a role called `univentionClientAccess` for each client that you want
+to perform an access check for.
+
+In :ref:`Keycloak Admin Console <keycloak-admin-console>` follow
+:menuselection:`UCS realm --> Clients`. For each client of interest, do the
+following:
+
+#. click :menuselection:`YOUR_CLIENT --> Roles --> Create role`. Enter name for
+   the role: `univentionClientAccess` and click :menuselection:`Save`
+
+.. warning::
+   Please follow the next section immediately, because, at this point, after clicking :menuselection:`Save`,
+   the login restriction is enforced for the client.
+.. seealso::
+
+   For more information on roles in Keycloak, see :cite:t:`keycloak-roles`.
+
+.. _authorization-attach-role-to-groups:
+
+
+Attach the client specific role to groups
+-----------------------------------------
+
+This role now needs to be attached to groups, so that the role is inherited
+to all members of the group, which grant them the permission to log into the app.
+
+In :ref:`Keycloak Admin Console <keycloak-admin-console>` follow
+:menuselection:`UCS realm --> Groups`.  For each group of interest, do the
+following:
+
+#. click :menuselection:`YOUR_GROUP --> Role mapping --> Assign role --> Filter by clients`.
+   Find and select the app you intend to control with `univentionClientAccess` and click :menuselection:`Assign`
+   
+
+.. warning::
+
+   Nested group relationships are not evaluated. Only a direct membership
+   of a user to a group will give it the necessary role.
+
+From now on, only the users that inherited the client specific role
+`univentionClientAccess` have access to the respective application.
+
+.. _authorization-troubleshooting:
+
+Customizing the authorization error page
+----------------------------------------
+
+The error message displayed if a user is denied access can be configured via
+the App setting `keycloak/login/messages/de/accessDeniedMsg`
+and `keycloak/login/messages/en/accessDeniedMsg`.
+It is possible to include html with links in this setting to customize
+the page.
+
+.. warning::
+
+   This setting is only applied to the local Keycloak. It can be set to different
+   values on the different Keycloak installations, for example to display a link
+   to the local portal. See :ref:`language-settings` for more information.
+
+
+The default message displays the Keycloak `client ID` that the user is forbidden to
+log into. If a more human readable name should be displayed, you can set the attribute
+`Name` of the Keycloak client in the :ref:`Keycloak Admin Console <keycloak-admin-console>`. If that attribute is set,
+the `Name` will be displayed instead of the `client ID`.

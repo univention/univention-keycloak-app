@@ -1,0 +1,53 @@
+From f95dd2525e069be6aab43b9dbd0cca81be55143b Mon Sep 17 00:00:00 2001
+From: Nikola Radovanovic <nikoladsp@gmail.com>
+Date: Mon, 31 Jul 2023 14:15:51 +0200
+Subject: [PATCH] Issue #138: show error page when access is denied
+
+Authenticator pops up access denied page when user does not have permissions to access the given client. Administrator can control what is shown using `accessDeniedMsg` UCR variable
+---
+ files/themes/UCS/login/access-denied.ftl                      | 4 ++--
+ .../de/univention/keycloak/UniventionAppAuthenticator.java    | 4 +++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git files/themes/UCS/login/access-denied.ftl files/themes/UCS/login/access-denied.ftl
+index ba4cdc6..8ff6749 100644
+--- files/themes/UCS/login/access-denied.ftl
++++ files/themes/UCS/login/access-denied.ftl
+@@ -1,8 +1,8 @@
+ <#import "template.ftl" as layout>
+ <@layout.registrationLayout displayInfo=true; section>
+     <#if section = "header">
+-        ${kcSanitize(msg("accessDeniedMsg", clientId))}
++        ${kcSanitize(msg("accessDeniedMsg", clientDisplayName))}
+     <#elseif section = "form">
+-        <p class="ucs-p">${kcSanitize(msg("accessDeniedMsg", clientId))}</p>
++        <p class="ucs-p">${kcSanitize(msg("accessDeniedMsg", clientDisplayName))}</p>
+     </#if>
+ </@layout.registrationLayout>
+\ No newline at end of file
+diff --git univention-app-authenticator/src/main/java/de/univention/keycloak/UniventionAppAuthenticator.java univention-app-authenticator/src/main/java/de/univention/keycloak/UniventionAppAuthenticator.java
+index fed1d68..3d02341 100644
+--- univention-app-authenticator/src/main/java/de/univention/keycloak/UniventionAppAuthenticator.java
++++ univention-app-authenticator/src/main/java/de/univention/keycloak/UniventionAppAuthenticator.java
+@@ -24,6 +24,7 @@ public class UniventionAppAuthenticator implements Authenticator {
+         final UserModel user = context.getUser();
+         final RealmModel realm = context.getRealm();
+         final String clientId = context.getAuthenticationSession().getClient().getClientId();
++        final String clientName = context.getAuthenticationSession().getClient().getName();
+         log.debugv("Logging into clientId {0}", clientId);
+ 
+         if (user != null) {
+@@ -40,8 +41,9 @@ public class UniventionAppAuthenticator implements Authenticator {
+             } else {
+                 log.debugv("user {0} doesn't have role {1}", user, role);
+                 context.getEvent().error(Errors.ACCESS_DENIED);
++                final String clientDisplayName = clientName != null && !clientName.trim().isEmpty() ? clientName : clientId;
+                 final Response response = context.form()
+-                        .setAttribute("clientId", clientId)
++                        .setAttribute("clientDisplayName", clientDisplayName)
+                         .createForm("access-denied.ftl");
+                 context.challenge(response);
+             }
+-- 
+2.25.1
+
