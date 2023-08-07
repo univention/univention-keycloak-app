@@ -193,6 +193,7 @@ public class UniventionUpdatePassword extends UpdatePassword {
             );
 
             resetPassword(resetPasswordRequest);
+            authSession.removeRequiredAction(ID);
             context.success();
         } catch (ModelException me) {
             errorEvent.detail(Details.REASON, me.getMessage()).error(Errors.PASSWORD_REJECTED);

@@ -314,7 +314,11 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         @Override
         public void addRequiredAction(String action) {
             if (UniventionUpdatePassword.ID.equals(action)) {
-                UniventionUserAccountControlStorageMapper.logger.debugf("Going to propagate required action UPDATE_PASSWORD to Univention for ldap user '%s'. Keycloak user '%s' in realm '%s'",
+                UniventionUserAccountControlStorageMapper.logger.debugf("Trying to add required action UPDATE_PASSWORD to Univention for ldap user '%s'. But is READ_ONLY. Keycloak user '%s' in realm '%s'",
+                        ldapUser.getDn().toString(), getUsername(), getRealmName());
+
+            } else if (UniventionSelfService.ID.equals(action)) {
+                UniventionUserAccountControlStorageMapper.logger.debugf("Going to propagate required action UNIVENTION_SELF_SERVICE to Univention for ldap user '%s'. But is READ_ONLY. Keycloak user '%s' in realm '%s'",
                         ldapUser.getDn().toString(), getUsername(), getRealmName());
 
             } else {
@@ -332,7 +336,11 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         @Override
         public void removeRequiredAction(String action) {
             if (UniventionSelfService.ID.equals(action)) {
-                UniventionUserAccountControlStorageMapper.logger.debugf("Going to propagate required action UNIVENTION_SELF_SERVICE to Univention for ldap user '%s'. Keycloak user '%s' in realm '%s'",
+                UniventionUserAccountControlStorageMapper.logger.debugf("Trying to remove required action UNIVENTION_SELF_SERVICE from ldap user '%s'. But is READ_ONLY. Keycloak user '%s' in realm '%s'",
+                        ldapUser.getDn().toString(), getUsername(), getRealmName());
+
+            }else if (UniventionUpdatePassword.ID.equals(action)) {
+                UniventionUserAccountControlStorageMapper.logger.debugf("Trying to remove required action UNIVENTION_UPDATE_PASSWORD from ldap user '%s'. But is READ_ONLY. Keycloak user '%s' in realm '%s'",
                         ldapUser.getDn().toString(), getUsername(), getRealmName());
 
             } else {
@@ -343,10 +351,6 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         @Override
         public Stream<String> getRequiredActionsStream() {
             Stream<String> requiredActions  = super.getRequiredActionsStream();
-            if (accountAttributesHelper.isPasswordChangeNeeded()) {
-                UniventionUserAccountControlStorageMapper.logger.debugf("Required action UPDATE_PASSWORD is set in LDAP for user '%s' in realm '%s'", getUsername(), getRealmName());
-                requiredActions = Stream.concat(requiredActions, Stream.of(UniventionUpdatePassword.ID)).distinct();
-            }
             final String checkVerification = Optional.ofNullable(System.getenv("UCS_SELF_REGISTRATION_CHECK_EMAIL_VERIFICATION")).orElse("");
             if (checkVerification.equals("True") && !accountAttributesHelper.isAccountVerifiedThroughSelfService()) {
                 UniventionUserAccountControlStorageMapper.logger.debugf("Required action SELF_SERVICE_VERIFICATION is set in LDAP for user '%s'", requiredActions.toString());
