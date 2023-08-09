@@ -113,7 +113,7 @@ Type = String
 Required = False
 Show = Install, Settings
 Scope = inside, outside
-InitialValue = Access forbidden.<br>You don't have the needed privileges to access this application. Please contact the administrator that you do not have access to the service {0} if you find this to be incorrect.
+InitialValue = Access forbidden.<br>You do not have the needed privileges to access this application. Please contact the administrator that you do not have access to the service {0} if you find this to be incorrect.
 Description = The error message that is shown when a user is denied access to a service
 Group = App authorization settings
 

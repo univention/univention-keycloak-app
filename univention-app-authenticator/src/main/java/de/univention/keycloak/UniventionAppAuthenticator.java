@@ -41,7 +41,7 @@ public class UniventionAppAuthenticator implements Authenticator {
             } else {
                 log.debugv("user {0} doesn't have role {1}", user, role);
                 context.getEvent().error(Errors.ACCESS_DENIED);
-                final String clientDisplayName = clientName != null && !clientName.trim().isEmpty() ? clientName : clientId;
+                final String clientDisplayName = (clientName != null && !clientName.trim().isEmpty()) ? clientName : clientId;
                 final Response response = context.form()
                         .setAttribute("clientDisplayName", clientDisplayName)
                         .createForm("access-denied.ftl");
