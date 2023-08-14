@@ -40,6 +40,9 @@ Released: 18. August 2023
   that after a successful password update during the *Keycloak* login an
   error was shown. This has been fixed.
 
+* The app setting :envvar:`keycloak/theme` has been removed. The UCS theme, controlled
+  by the UCR variable :envvar:`ucs/web/theme` is now used.
+
 21.1.2-ucs1
 ===========
 

@@ -7,19 +7,6 @@
 
 action=$1
 
-theme_config() {
-	THEME_DIR="/usr/share/univention-web/themes"
-	THEME_SRC="$THEME_DIR/$(basename "$(ucr get keycloak/theme)").css"
-	THEME_DST="/var/lib/univention-appcenter/apps/keycloak/conf/UCS/login/resources/css/theme.css"
-	if [ ! -e "$THEME_SRC" ]; then
-		echo "$THEME_SRC does not exist"
-		exit 1
-	fi
-
-	[ -e "$THEME_DST" ] && rm "$THEME_DST"
-	cp "$THEME_SRC" "$THEME_DST"
-}
-
 if [ -n "$action" ] && [ "$action" = "remove" ]; then
 	exit 0
 fi
@@ -27,7 +14,6 @@ fi
 # we need to commit the apache conf because that may have changed during an update
 ucr commit /etc/apache2/sites-available/univention-keycloak.conf
 
-theme_config
 service apache2 reload
 
 chmod 640 "/etc/postgresql-keycloak.secret"

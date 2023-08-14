@@ -834,35 +834,6 @@ more information, consult :cite:t:`keycloak-docs`.
         - Installation and app configuration
 
 
-.. envvar:: keycloak/theme
-
-   Defines the theme that Keycloak uses for the login interface. A CSS file with
-   the same name must exist in the directory
-   :file:`/usr/share/univention-web/themes/`. The setting value only uses the
-   basename of the file without the extension ``css``.
-
-   Possible values
-      ``dark`` and ``light``
-
-      If you provide custom CSS files with other names, they add to the possible
-      values.
-
-   Possible values
-      ``true`` and ``false``.
-
-   .. list-table::
-      :header-rows: 1
-      :widths: 2 5 5
-
-      * - Required
-        - Default value
-        - Set
-
-      * - No
-        - Same value as UCR variable :envvar:`uv-manual:ucs/web/theme`.
-        - Installation and app configuration
-
-
 .. envvar:: keycloak/server/sso/fqdn
 
    Defines the FQDN to the identity provider in your environment's UCS domain.
