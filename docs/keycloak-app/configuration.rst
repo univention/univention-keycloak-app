@@ -1371,19 +1371,21 @@ since a reconfiguration and migration may be necessary when it is released.
 If App authorization is a must in your environment, this guide will show you a suitable
 replacement in the meantime.
 
+This configuration differs from the one provided by :program:`simpleSAMLphp` in
+the following ways:
 
-Please note that this configuration will behave differently to the feature
-provided by :program:`simpleSAMLphp` in the following ways:
+* Only the group membership restricts the access to applications. It isn't
+  possible to restrict the access for an individual user directly.
 
-* The restriction is based on group membership alone. It is not possible to restrict the access for an individual user directly
+* You must configure group access restrictions for :term:`SAML SP` and
+  :term:`OIDC RP` directly in the :ref:`Keycloak Admin Console
+  <keycloak-admin-console>`, although you manage users and their group
+  memberships in |UDM|.
 
-* While the users and their group memberships can be managed in UDM,
-  which group provides access for which Keycloak :term:`SAML SP` or :term:`OIDC RP` can only be configured
-  in the :ref:`Keycloak Admin Console <keycloak-admin-console>` directly.
-
-* :program:`Keycloak` will allow access for all users as a default. Only if the :term:`SAML SP`/ :term:`OIDC RP` is specifically configured to use
-  App authorization, the access will be checked.
-
+* By default, :program:`Keycloak` allows access to all users. Only when you
+  specifically configure the :term:`SAML SP` or :term:`OIDC RP` to use app
+  authorization will :program:`Keycloak` evaluate the access restriction to
+  applications.
 
 
 .. _authorization-create-auth-flow:
@@ -1391,86 +1393,103 @@ provided by :program:`simpleSAMLphp` in the following ways:
 Create authentication flow
 --------------------------
 
-With :program:`Keycloak` version 21.1.2-ucs2, we added a :program:`Keycloak` authenticator extension
-called `Univention App authenticator`, which performs the authorization check on the user during the login.
+:program:`Keycloak` version 21.1.2-ucs2 provides an authenticator extension
+called *Univention App authenticator*, which performs the authorization
+validation on the user during the sign-in.
 
-In order to use this authenticator, a new Keycloak `authentication flow`
-containing this authenticator has to be created.
-This can be done in the following way by using `univention-keycloak`. The command is not expected to give any output:
+To use this authenticator, you need to create a Keycloak *authentication flow*
+that includes this authenticator. Use the command :command:`univention-keycloak`
+as follows. The command doesn't give any output:
 
 .. code-block:: console
+   :caption: Create a Keycloak *authentication flow*
 
-  $ univention-keycloak legacy-authentication-flow create
+   $ univention-keycloak legacy-authentication-flow create
 
 .. seealso::
 
    For more information on authentication flows, see :cite:t:`keycloak-auth-flow`.
+
 .. _authorization-assign-auth-flow:
 
 Assign authentication flow
 --------------------------
 
-This new authentication flow is not used by each :term:`SAML SP`/ :term:`OIDC RP` (called `Client` in Keycloak)
-by default.
-Each :term:`Keycloak Client`, that is not supposed to be accessed by all users, needs to be explicitly configured to use this new authentication flow.
-If you have existing :term:`Keycloak Client`, you can assign a specific flow to it
-using the following command:
+:program:`Keycloak` calls the :term:`SAML SP` and the :term:`OIDC RP` *Client*.
+By default, neither :term:`SAML SP` nor :term:`OIDC RP` use the created
+authentication flow. 
+
+To restrict application access, you must assign the :ref:`created authentication
+flow <authorization-create-auth-flow>` to each :term:`Keycloak Client`.
+Otherwise, the :term:`Keycloak Client` still allows access to all users. To
+assign a specific flow to an existing :term:`Keycloak Client`, use the following
+command in :numref:`authorization-assign-auth-flow-listing`.
 
 .. code-block:: console
+   :caption: Assign authentication flow to a :term:`Keycloak Client`
+   :name: authorization-assign-auth-flow-listing
 
    $ univention-keycloak client-auth-flow \
      --clientid "REPLACE_WITH_YOUR_CLIENT_ID" \
      --auth-flow "browser flow with legacy app authorization"
 
-Please note that you can also pass the option `--auth-browser-flow` when creating a :term:`SAML SP` or :term:`OIDC RP` as a client in :program:`Keycloak`.
-See section :ref:`saml-idp` on how to create a :term:`Keycloak Client`.
+.. note::
+
+   You can also pass the option ``--auth-browser-flow`` when you create a
+   :term:`SAML SP` or :term:`OIDC RP` as a :term:`Keycloak Client`. See section
+   :ref:`saml-idp` on how to create a :term:`Keycloak Client`.
+
 
 .. _authorization-group-mapper:
 
 Map UDM groups to Keycloak
 --------------------------
 
-To be able to restrict access to certain :program:`Keycloak` clients by group
-membership, the necessary groups need to be mapped to :program:`Keycloak`.
+To restrict access to certain :term:`Keycloak Client`\ s by group membership,
+you must map the necessary groups to :program:`Keycloak`. Use the
+:ref:`Keycloak Admin Console <keycloak-admin-console>` to create an appropriate
+*LDAP mapper*.
 
-Therefore an appropriate `LDAP mapper` needs to be created using the :ref:`Keycloak Admin Console <keycloak-admin-console>`.
+#. In :ref:`Keycloak Admin Console <keycloak-admin-console>` go to
+   :menuselection:`UCS realm --> User Federation --> ldap-provider --> Mappers
+   --> Add mapper`.
 
+#. Choose the *Name* of the mapper freely.
 
-#. In :ref:`Keycloak Admin Console <keycloak-admin-console>` follow
-   :menuselection:`UCS realm --> User Federation --> ldap-provider --> Mappers --> Add mapper`
+#. Select the *Mapper type* ``group-ldap-mapper`` to extend the form. Fill in
+   the fields as following:
 
-#. The `Name` of the mapper can be freely chosen.
-   The `Mapper type` `group-ldap-mapper` needs to be selected.
+   :LDAP Groups DN: Set to the value of the base LDAP DN of your domain, for
+     example ``dc=example,dc=local``.
 
-This will extend the form with following fields to fill in:
+   :Group Object Classes: ``univentionGroup``
 
-#. `LDAP Groups DN` needs to be set to the value of the base LDAP DN of your domain, e.g. `dc=example,dc=local`
+   :Ignore Missing Groups: ``On``
 
-#. `Group Object Classes` have to be set to `univentionGroup`
+   :Membership LDAP Attribute: ``memberUid``
 
-#. Set `Ignore Missing Groups` to `On`
+   :Membership Attribute Type: ``UID``
 
-#. Set `Membership LDAP Attribute` to `memberUid`
+   :Drop non-existing groups during sync: ``On``
 
-#. The `Membership Attribute Type` is `UID`
+   .. important::
 
-#. `Drop non-existing groups during sync` is set to `On`
+      It's strongly recommended to set an *LDAP Filter* in the group mapper so
+      that :program:`Keycloak` only maps strictly necessary groups. If you don't
+      specify an *LDAP filter*, :program:`Keycloak` synchronizes **all groups**
+      from the LDAP directory service. Depending on the size of the groups, it
+      may impact the performance of :program:`Keycloak`.
 
-.. warning::
+      Example
+         To filter groups by their name and only allow :program:`Keycloak` to
+         synchronize the mentioned groups, use
+         ``(|(cn=umcAccess)(cn=nextcloudAccess))``
 
-   It is strongly recommended to set an `LDAP Filter` in this group mapper
-   so that only strictly necessary groups are mapped to :program:`Keycloak`.
-   If no filter is specified all groups will be synced which, depending
-   on the size of the groups, may impact the performance of :program:`Keycloak`.
-   An example filter value that filters groups by their name, and therefore
-   only allows synchronization of two groups is:
-   `(|(cn=umcAccess)(cn=nextcloudAccess))`
+#. Scroll down and click :guilabel:`Save`.
 
-#. Scroll down and click on the :menuselection:`Save` button
-
-To trigger the synchronization of the groups immediately, click on the name of the
-mapper you just created to open it and from the :menuselection:`Action`
-dropdown select :menuselection:`Sync LDAP groups to Keycloak`.
+To trigger the synchronization of the groups immediately, click the name of the
+mapper you just created to open it and select :guilabel:`Sync LDAP groups to
+Keycloak` from the *Action* drop-down.
 
 .. _authorization-create-client-roles:
 
