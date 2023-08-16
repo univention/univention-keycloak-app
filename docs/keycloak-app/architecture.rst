@@ -74,8 +74,9 @@ The following list describes the elements in more detail.
       interface outsources its user authentication function to an *OP*.
 
    Keycloak Client
-      A *Keycloak Client* is any entity that can request Keycloak to authenticate
-      a user. This includes all *OIDC Relying Parties*  and *SAML Service Providers*.
+      A *Keycloak Client* is any entity that can request Keycloak to
+      authenticate a user. This includes all :term:`OIDC Relying Parties <OIDC
+      RP>` and :term:`SAML Service Providers <SAML SP>`.
 
 .. _app-design-decisions:
 
