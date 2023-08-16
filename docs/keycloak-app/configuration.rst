@@ -1348,28 +1348,21 @@ You can disable this feature in the :ref:`Keycloak Admin Console <keycloak-admin
 * Go to the section ``Kerberos integration`` and disable  ``Allow Kerberos authentication``
 
 
-.._application_authorization
+.. _application-authorization:
 
-Restricting access to Applications
-==================================
+Restrict access to applications
+===============================
 
 .. versionadded:: 21.1.2-ucs2
 
 
-With the |UCS| :program:`simpleSAMLphp` integration, it is possible to
-restrict access of groups and users to specific SAML service providers via the |UDM| SAML settings.
-This section will explain how to restrict the access to applications
-in a similar way by configuring :program:`Keycloak`.
+With the |UCS| :program:`simpleSAMLphp` integration, you can restrict access of
+groups and users to specific :term:`SAML service providers <SAML SP>` through
+the |UDM| SAML settings.
 
-
-.. _introduction:
-
-When to use this configuration
-------------------------------
-
-The configuration steps shown in the following sections will enable you
-to restrict access to certain SAML service providers and OIDC Relying parties
-via group membership.
+The configuration steps in the following sections restrict access to certain
+:term:`SAML service providers <SAML SP>` and :term:`OIDC Relying parties <OIDC
+RP>` through group membership in a similar way with :program:`Keycloak`.
 
 The complete feature including integration into the UDM UMC module is planned for
 future releases. It is recommended to wait with the configuration of App authorization
