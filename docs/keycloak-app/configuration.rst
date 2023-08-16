@@ -1496,73 +1496,89 @@ Keycloak` from the *Action* drop-down.
 Create client roles
 -------------------
 
-The new :program:`Keycloak` authenticator called `Univention App authenticator` restricts access by evaluating the
-roles of a user in :program:`Keycloak`. It specifically checks for a client specific
-role named `univentionClientAccess`.
-If this client specific role exists, the :program:`Keycloak` authenticator
-will restrict access of all users that don't have this role.
+Create Keycloak client roles
+----------------------------
 
-You have to create a role called `univentionClientAccess` for each client that you want
-to perform an access check for.
+The authenticator extension *Univention App authenticator* restricts access by
+evaluating the roles of a user in :program:`Keycloak`. It specifically checks
+for a client specific role named ``univentionClientAccess``. If this client
+specific role exists, the authenticator extension restricts access of all users
+that don't have this role.
 
-In :ref:`Keycloak Admin Console <keycloak-admin-console>` follow
-:menuselection:`UCS realm --> Clients`. For each client of interest, do the
-following:
+For each :term:`Keycloak Client` that you want to check access restrictions, you
+need to create the role ``univentionClientAccess``. In :ref:`Keycloak Admin
+Console <keycloak-admin-console>` go to :menuselection:`UCS realm --> Clients`.
+For each client of interest, run the following steps:
 
-#. click :menuselection:`YOUR_CLIENT --> Roles --> Create role`. Enter name for
-   the role: `univentionClientAccess` and click :menuselection:`Save`
+#. Select :menuselection:`YOUR_CLIENT --> Roles --> Create role`.
 
-.. warning::
-   Please follow the next section immediately, because, at this point, after clicking :menuselection:`Save`,
-   the login restriction is enforced for the client.
+#. Enter name for the role ``univentionClientAccess``.
+
+#. Click :guilabel:`Save`.
+
+   .. important::
+
+      Follow the next section :ref:`authorization-attach-role-to-groups`
+      immediately, because saving the client role enforces the sign-in restriction
+      for the :term:`Keycloak Client`.
+
 .. seealso::
 
    For more information on roles in Keycloak, see :cite:t:`keycloak-roles`.
 
 .. _authorization-attach-role-to-groups:
 
-
 Attach the client specific role to groups
 -----------------------------------------
 
-This role now needs to be attached to groups, so that the role is inherited
-to all members of the group, which grant them the permission to log into the app.
+To grant access permission to group members of a group so that they can sign in
+to an app, you need to attach the :term:`Keycloak Client` role to the groups.
+All group members then inherit the client role.
 
-In :ref:`Keycloak Admin Console <keycloak-admin-console>` follow
-:menuselection:`UCS realm --> Groups`.  For each group of interest, do the
-following:
+In :ref:`Keycloak Admin Console <keycloak-admin-console>` go to
+:menuselection:`UCS realm --> Groups`. For each group of interest, run the
+following steps:
 
-#. click :menuselection:`YOUR_GROUP --> Role mapping --> Assign role --> Filter by clients`.
-   Find and select the app you intend to control with `univentionClientAccess` and click :menuselection:`Assign`
-   
+#. Select :menuselection:`YOUR_GROUP --> Role mapping --> Assign role --> Filter by clients`.
 
-.. warning::
+#. Find and select the app you intend to control with ``univentionClientAccess``.
 
-   Nested group relationships are not evaluated. Only a direct membership
-   of a user to a group will give it the necessary role.
+   .. warning::
 
-From now on, only the users that inherited the client specific role
-`univentionClientAccess` have access to the respective application.
+      :program:`Keycloak` doesn't evaluate nested group memberships. Only direct
+      group membership of a user give the user the necessary client role.
 
-.. _authorization-troubleshooting:
+#. Click :guilabel:`Assign`.
 
-Customizing the authorization error page
-----------------------------------------
+From now on, only the users that inherited the :term:`Keycloak Client` specific
+role ``univentionClientAccess`` have access to the respective applications.
 
-The error message displayed if a user is denied access can be configured via
-the App setting `keycloak/login/messages/de/accessDeniedMsg`
-and `keycloak/login/messages/en/accessDeniedMsg`.
-It is possible to include html with links in this setting to customize
-the page.
+.. _authorization-error-page:
 
-.. warning::
+Customize the authorization error page
+--------------------------------------
 
-   This setting is only applied to the local Keycloak. It can be set to different
-   values on the different Keycloak installations, for example to display a link
-   to the local portal. See :ref:`language-settings` for more information.
+:program:`Keycloak` shows an error page, if a user doesn't have access to an
+application because the access restriction applies to them.
 
+You can configure the error page through the following App settings:
 
-The default message displays the Keycloak `client ID` that the user is forbidden to
-log into. If a more human readable name should be displayed, you can set the attribute
-`Name` of the Keycloak client in the :ref:`Keycloak Admin Console <keycloak-admin-console>`. If that attribute is set,
-the `Name` will be displayed instead of the `client ID`.
+:German: :envvar:`keycloak/login/messages/de/accessDeniedMsg`
+:English: :envvar:`keycloak/login/messages/en/accessDeniedMsg`
+
+You can include HTML format with links in this setting to customize the error
+page.
+
+The default message shows the ``client ID`` of the :term:`Keycloak Client` that
+forbids access to the user. If you need a human readable name, you can set the
+attribute *Name* of the :term:`Keycloak Client` in the :ref:`Keycloak Admin
+Console <keycloak-admin-console>`. With the attribute set, Keycloak shows the
+*Name* instead of the ``client ID``.
+
+.. important::
+
+   The app setting only applies to the local Keycloak instance. You can use
+   different values on the different Keycloak installations, for example, to
+   show a link to the local portal.
+
+   For more information, refer to :ref:`language-settings`.
