@@ -39,6 +39,7 @@ with open(pwdfile, 'r') as fd:
       - /etc/ssl/certs/ca-certificates.crt:/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem:ro
       - /etc/univention/ssl/ucsCA/CAcert.pem:/etc/pki/ca-trust/extracted/pem/ucsCAcert.pem:ro
       - /var/lib/univention-appcenter/apps/keycloak/conf/UCS:/opt/keycloak/themes/UCS
+      - @%@keycloak/theme/logo@%@:/opt/keycloak/themes/UCS/login/resources/img/login_logo.svg:ro
       #- /var/lib/univention-appcenter/apps/keycloak/data/development:/opt/jboss/keycloak/standalone/deployments/
     ports:
       # does not work, see https://forge.univention.org/bugzilla/show_bug.cgi?id=53878

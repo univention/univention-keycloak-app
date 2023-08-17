@@ -100,9 +100,6 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
 }
 
 .login-pf-page .login-pf-header {
-    background-image: url("../img/login_logo.svg");
-    background-repeat: no-repeat;
-    background-position: center;
     padding: 1.7rem 0;
     margin-bottom: 3rem;
 }
@@ -204,4 +201,10 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
 .login-pf .ucs-p a:hover, .login-pf .ucs-p a:focus {
     text-decoration: underline;
     text-decoration-thickness: 3px;
+}
+
+.kc-realm-logo {
+    background-image: url("../img/login_logo.svg");
+    background-repeat: no-repeat;
+    background-position: center;
 }
