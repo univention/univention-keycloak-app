@@ -1364,12 +1364,17 @@ The configuration steps in the following sections restrict access to certain
 :term:`SAML service providers <SAML SP>` and :term:`OIDC Relying parties <OIDC
 RP>` through group membership in a similar way with :program:`Keycloak`.
 
-The complete feature including integration into the UDM UMC module is planned for
-future releases. It is recommended to wait with the configuration of App authorization
-until the feature is fully implemented and integrated into UCS,
-since a reconfiguration and migration may be necessary when it is released.
-If App authorization is a must in your environment, this guide will show you a suitable
-replacement in the meantime.
+.. attention::
+
+   Application access restriction isn't yet integrated into the UDM UMC module
+   yet.
+
+   If you already need the application access restriction for groups at this
+   time, read on and follow the steps outlined below. Note that you may need to
+   perform manual migration steps after the integration is complete.
+
+   If you don't have an immediate need, it's recommended that you wait until the
+   integration is complete in a future version of the :program:`Keycloak` app.
 
 This configuration differs from the one provided by :program:`simpleSAMLphp` in
 the following ways:
