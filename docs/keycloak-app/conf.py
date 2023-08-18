@@ -110,6 +110,9 @@ doc_base = os.path.basename(os.path.dirname(__file__))
 html_theme_options = {
     "pdf_download_filename": f"{doc_base}.pdf",
     "show_source_license": True,
+    "typesense_search": True,
+    "typesense_document": doc_base,
+    "typesense_document_version": version,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
