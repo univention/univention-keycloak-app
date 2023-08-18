@@ -16,6 +16,22 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+21.1.2-ucs2
+===========
+
+Released: 18. August 2023
+
+* The app can now be configured to restrict access to certain apps
+  using group memberships. For more information about the
+  configuration of this feature, see :ref:`application-authorization`.
+
+* If the *Keycloak* hostname is accessed using http, you are now
+  directly redirected to https
+
+* Due to longer replication times during password updates, it could happen
+  that after a successful password update during the *Keycloak* login an
+  error was shown. This has been fixed.
+
 21.1.2-ucs1
 ===========
 
