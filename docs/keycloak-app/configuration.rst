@@ -1600,4 +1600,3 @@ Console <keycloak-admin-console>`. With the attribute set, Keycloak shows the
    show a link to the local portal.
 
    For more information, refer to :ref:`language-settings`.
->>>>>>> 0f12c0b... Issue #135: document app authenticator
