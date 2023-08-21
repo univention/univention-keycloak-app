@@ -13,10 +13,6 @@ RUN mvn clean package --file univention-directory-manager
 RUN mvn install --file univention-directory-manager
 RUN mvn clean package --file univention-authenticator
 
-COPY univention-ldap-mapper/ ./univention-ldap-mapper
-RUN mvn clean package --file univention-ldap-mapper \
- && mvn install --file univention-ldap-mapper
-
 COPY univention-user-attribute-nameid-mapper-base64/ ./univention-user-attribute-nameid-mapper-base64
 RUN mvn clean package --file univention-user-attribute-nameid-mapper-base64 \
  && mvn install --file univention-user-attribute-nameid-mapper-base64
@@ -24,6 +20,11 @@ RUN mvn clean package --file univention-user-attribute-nameid-mapper-base64 \
 COPY univention-app-authenticator/ ./univention-app-authenticator
 RUN mvn clean package --file univention-app-authenticator \
  && mvn install --file univention-app-authenticator
+
+COPY univention-ldap-mapper/ ./univention-ldap-mapper
+RUN mvn clean package --file univention-ldap-mapper \
+ && mvn install --file univention-ldap-mapper
+
 
 RUN cp /tmp/build/univention-directory-manager/target/univention-directory-manager.jar /tmp/artifacts/\
  && cp /tmp/build/univention-authenticator/target/univention-authenticator-16.1.0-jar-with-dependencies.jar /tmp/artifacts/\
