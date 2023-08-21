@@ -1,4 +1,4 @@
-FROM maven:3.8.3-openjdk-17 as maven
+FROM maven:3.8.2-openjdk-11 as maven
 
 RUN mkdir /tmp/artifacts/
 COPY dependencies/*.jar /tmp/artifacts/
@@ -27,11 +27,11 @@ RUN mvn clean package --file univention-app-authenticator \
 
 RUN cp /tmp/build/univention-directory-manager/target/univention-directory-manager.jar /tmp/artifacts/\
  && cp /tmp/build/univention-authenticator/target/univention-authenticator-16.1.0-jar-with-dependencies.jar /tmp/artifacts/\
- && cp /tmp/build/univention-ldap-mapper/target/univention-ldap-mapper-22.0.1.jar /tmp/artifacts/ \
- && cp /tmp/build/univention-user-attribute-nameid-mapper-base64/target/univention-user-attribute-nameid-mapper-base64-22.0.1.jar /tmp/artifacts/ \
- && cp /tmp/build/univention-app-authenticator/target/univention-app-authenticator-22.0.1.jar /tmp/artifacts/
+ && cp /tmp/build/univention-ldap-mapper/target/univention-ldap-mapper-21.1.1.jar /tmp/artifacts/ \
+ && cp /tmp/build/univention-user-attribute-nameid-mapper-base64/target/univention-user-attribute-nameid-mapper-base64-21.1.1.jar /tmp/artifacts/ \
+ && cp /tmp/build/univention-app-authenticator/target/univention-app-authenticator-21.1.1.jar /tmp/artifacts/
 
-FROM quay.io/keycloak/keycloak:22.0.1
+FROM quay.io/keycloak/keycloak:21.1.2
 
 COPY --from=maven --chown=keycloak /tmp/artifacts/ /tmp/artifacts/
 
