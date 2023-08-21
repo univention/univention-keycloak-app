@@ -1217,6 +1217,27 @@ more information, consult :cite:t:`keycloak-docs`.
         - Installation and app configuration
 
 
+.. _css-settings:
+
+Customize the appearance
+========================
+
+The App includes the theme configured in UCS. The UCR variable
+:envvar:`ucs/web/theme` applies to Keycloak as well. You can adjust it
+following
+:ref:`uv-manual:creating-a-custom-theme-adjusting-the-design-of-ucswebs` in the
+:cite:t:`ucs-manual`. Important variables specifically for Keycloak are the CSS
+variables :envvar:`--login-background`, :envvar:`--login-box-background`,
+:envvar:`--login-logo`.
+
+Keycloak also includes
+:file:`/usr/share/univention-management-console-login/css/custom.css`, or, more
+specifically, whatever it finds at the URL `/univention/login/css/custom.css`.
+This file is meant to give more control than the theme, but it is not as
+stable; CSS selectors may fail on updates. Please regularly check your
+customizations.
+
+
 .. _language-settings:
 
 Adjusting texts on the Keycloak login page
