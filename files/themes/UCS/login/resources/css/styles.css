@@ -100,7 +100,7 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
 }
 
 .login-pf-page .login-pf-header {
-    background: var(--login-logo, url("../img/login_logo.svg") no-repeat center);
+    background: var(--login-logo, url("/univention/js/dijit/themes/umc/images/login_logo.svg") no-repeat center);
     padding: 1.7rem 0;
     margin-bottom: 2.35rem;
 }

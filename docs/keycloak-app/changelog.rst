@@ -23,6 +23,8 @@ Released: 30. August 2023
 
 * The app updates to *Keycloak* version 22.0.1 of the upstream Docker image from
   https://quay.io/repository/keycloak/keycloak.
+* The app setting :envvar:`keycloak/theme` has been removed. The UCS theme, controlled
+  by the UCR variable :envvar:`ucs/web/theme` is now used.
 
 21.1.2-ucs2
 ===========
@@ -39,9 +41,6 @@ Released: 18. August 2023
 * Due to longer replication times during password updates, it could happen
   that after a successful password update during the *Keycloak* login an
   error was shown. This has been fixed.
-
-* The app setting :envvar:`keycloak/theme` has been removed. The UCS theme, controlled
-  by the UCR variable :envvar:`ucs/web/theme` is now used.
 
 21.1.2-ucs1
 ===========
