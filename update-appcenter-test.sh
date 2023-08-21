@@ -106,9 +106,6 @@ done
 cp app/preinst.tmpl app/preinst
 
 ## Then they simply teplace the some keywords by the actual files like:
-tar cjf - -C files/themes UCS | base64 >> files/tmp_base64
-sed -i -e "/%ARCHIVE_CONTENT%/r files/tmp_base64" -e "/%ARCHIVE_CONTENT%/d" app/preinst
-
 sed -i -e "/%KEYCLOAK-ACL%/r files/67keycloak.acl" -e "/%KEYCLOAK-ACL%/d" app/preinst
 
 sed -i -e "/%KEYCLOAK-TEMPLATE-APACHE%/r files/univention-keycloak.conf" -e "/%KEYCLOAK-TEMPLATE-APACHE%/d" app/preinst

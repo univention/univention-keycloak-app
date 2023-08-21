@@ -1,6 +1,3 @@
-@import "./theme.css";
-/* The file needs to be inside the container. Symlink doesn't work, file inside works */
-
 :root {
     --pf-global--primary-color--100: var(--button-primary-bgc);
     --pf-global--primary-color--200: var(--button-primary-bgc-hover);

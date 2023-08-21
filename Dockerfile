@@ -3,9 +3,14 @@ FROM maven:3.8.3-openjdk-17 as maven
 ARG ARTIFACTS_DIR=/tmp/artifacts/
 
 RUN mkdir -p ${ARTIFACTS_DIR}
-COPY dependencies/*.jar ${ARTIFACTS_DIR}
+
+# workaround: https://github.com/GoogleContainerTools/kaniko/issues/1080
+WORKDIR ${ARTIFACTS_DIR}
+COPY dependencies/*.jar .
+
 COPY files/cache-ispn-jdbc-ping.xml ${ARTIFACTS_DIR}
 COPY files/keycloak-healthcheck ${ARTIFACTS_DIR}
+COPY files/themes/UCS/ ${ARTIFACTS_DIR}/UCS/
 
 RUN mkdir /tmp/build/
 WORKDIR /tmp/build/
@@ -34,9 +39,10 @@ ARG ARTIFACTS_DIR=/tmp/artifacts/
 
 COPY --from=maven --chown=keycloak ${ARTIFACTS_DIR} ${ARTIFACTS_DIR}
 
-RUN cp ${ARTIFACTS_DIR}/*.jar /opt/keycloak/providers\
+RUN cp ${ARTIFACTS_DIR}/*.jar /opt/keycloak/providers/\
  && cp ${ARTIFACTS_DIR}/cache-ispn-jdbc-ping.xml /opt/keycloak/conf/cache-ispn-jdbc-ping.xml\
  && cp ${ARTIFACTS_DIR}/keycloak-healthcheck /opt/keycloak/bin/\
+ && cp -r ${ARTIFACTS_DIR}/UCS /opt/keycloak/themes/\
  && rm -rf ${ARTIFACTS_DIR}
 
 EXPOSE 7600

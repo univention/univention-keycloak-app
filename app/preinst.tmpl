@@ -38,12 +38,6 @@ command -v jq || {
 	apt-get -qq -y install jq
 }
 
-# theme
-echo "Installing Keycloak UCS theme"
-base64 -d <<%EOF  | tar xjf - --one-top-level=/var/lib/univention-appcenter/apps/keycloak/conf/
-%ARCHIVE_CONTENT%
-%EOF
-
 # apache template
 keycloak_template_path=/etc/univention/templates/files/etc/apache2/sites-available/univention-keycloak.conf
 echo "Installing univention-keycloak apache template"
@@ -53,6 +47,7 @@ echo "Installing univention-keycloak apache template"
 chmod 644 "$keycloak_template_path"
 
 # keycloak settings/data acl
+mkdir -p /var/lib/univention-appcenter/apps/keycloak/conf/
 keycloak_acl_path=/var/lib/univention-appcenter/apps/keycloak/conf/67keycloak.acl
 echo "Installing Keycloak data/settings acl"
 	cat <<%EOF >"$keycloak_acl_path"
