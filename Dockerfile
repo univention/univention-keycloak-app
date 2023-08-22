@@ -1,6 +1,10 @@
-FROM maven:3.8.3-openjdk-17 as maven
-
+ARG KEYCLOAK_VERSION=22.0.1
 ARG ARTIFACTS_DIR=/tmp/artifacts/
+
+FROM quay.io/keycloak/keycloak:${KEYCLOAK_VERSION} as ftl
+
+ARG KEYCLOAK_VERSION
+ARG ARTIFACTS_DIR
 
 RUN mkdir -p ${ARTIFACTS_DIR}
 
@@ -24,18 +28,24 @@ COPY extensions/ ./extensions/
 RUN mvn install --file extensions/pom.xml
 
 RUN cp /tmp/build/univention-directory-manager/target/univention-directory-manager.jar ${ARTIFACTS_DIR}\
- && cp /tmp/build/univention-authenticator/target/univention-authenticator-16.1.0-jar-with-dependencies.jar ${ARTIFACTS_DIR}\
+ && cp /tmp/build/univention-authenticator/target/univention-authenticator-22.0.1-jar-with-dependencies.jar ${ARTIFACTS_DIR}\
  && cp /tmp/build/extensions/lib/univention*.jar ${ARTIFACTS_DIR}
 
-RUN cp /tmp/build/univention-directory-manager/target/univention-directory-manager.jar /tmp/artifacts/\
- && cp /tmp/build/univention-authenticator/target/univention-authenticator-22.0.1-jar-with-dependencies.jar /tmp/artifacts/\
- && cp /tmp/build/univention-ldap-mapper/target/univention-ldap-mapper-22.0.1.jar /tmp/artifacts/ \
- && cp /tmp/build/univention-user-attribute-nameid-mapper-base64/target/univention-user-attribute-nameid-mapper-base64-22.0.1.jar /tmp/artifacts/ \
- && cp /tmp/build/univention-app-authenticator/target/univention-app-authenticator-22.0.1.jar /tmp/artifacts/
+# patch login's template.ftl if template.ftl.patch is not empty
+ARG TEMPLATE_FTL_PATCH=${ARTIFACTS_DIR}/UCS/login/template.ftl.patch
+COPY --from=ftl /opt/keycloak/lib/lib/main/org.keycloak.keycloak-themes-${KEYCLOAK_VERSION}.jar ${ARTIFACTS_DIR}
 
-FROM quay.io/keycloak/keycloak:22.0.1
+RUN unzip ${ARTIFACTS_DIR}/org.keycloak.keycloak-themes-${KEYCLOAK_VERSION}.jar "theme/base/login/template.ftl"\
+ && cp theme/base/login/template.ftl template.ftl\
+ && cp theme/base/login/template.ftl template.ftl.orig\
+ && git apply -v "${TEMPLATE_FTL_PATCH}"\
+ && cp template.ftl ${ARTIFACTS_DIR}/UCS/login/\
+ && rm -rf ${ARTIFACTS_DIR}/UCS/login/*.patch
 
-ARG ARTIFACTS_DIR=/tmp/artifacts/
+FROM quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
+
+ARG KEYCLOAK_VERSION
+ARG ARTIFACTS_DIR
 
 COPY --from=maven --chown=keycloak ${ARTIFACTS_DIR} ${ARTIFACTS_DIR}
 
