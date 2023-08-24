@@ -1,58 +1,46 @@
 ARG KEYCLOAK_VERSION=22.0.1
-ARG ARTIFACTS_DIR=/tmp/artifacts/
 
+# to get the original template files
 FROM quay.io/keycloak/keycloak:${KEYCLOAK_VERSION} as ftl
 
-ARG KEYCLOAK_VERSION
-ARG ARTIFACTS_DIR
-
-RUN mkdir -p ${ARTIFACTS_DIR}
-
-# workaround: https://github.com/GoogleContainerTools/kaniko/issues/1080
-WORKDIR ${ARTIFACTS_DIR}
-COPY dependencies/*.jar .
-
-COPY files/cache-ispn-jdbc-ping.xml ${ARTIFACTS_DIR}
-COPY files/keycloak-healthcheck ${ARTIFACTS_DIR}
-COPY files/themes/UCS/ ${ARTIFACTS_DIR}/UCS/
-
-RUN mkdir /tmp/build/
-WORKDIR /tmp/build/
-
+# buíld ad hoc federation and our extensions
+FROM maven:3.8.2-openjdk-17 as maven
+WORKDIR /ad-hoc
 COPY ad-hoc/ ./
 RUN mvn clean package --file univention-directory-manager
 RUN mvn install --file univention-directory-manager
 RUN mvn clean package --file univention-authenticator
+RUN ls univention-authenticator/target/
+WORKDIR /extensions
+COPY extensions ./
+RUN mvn clean package --file pom.xml
 
-COPY extensions/ ./extensions/
-RUN mvn install --file extensions/pom.xml
-
-RUN cp /tmp/build/univention-directory-manager/target/univention-directory-manager.jar ${ARTIFACTS_DIR}\
- && cp /tmp/build/univention-authenticator/target/univention-authenticator-22.0.1-jar-with-dependencies.jar ${ARTIFACTS_DIR}\
- && cp /tmp/build/extensions/lib/univention*.jar ${ARTIFACTS_DIR}
-
-# patch login's template.ftl if template.ftl.patch is not empty
-ARG TEMPLATE_FTL_PATCH=${ARTIFACTS_DIR}/UCS/login/template.ftl.patch
-COPY --from=ftl /opt/keycloak/lib/lib/main/org.keycloak.keycloak-themes-${KEYCLOAK_VERSION}.jar ${ARTIFACTS_DIR}
-
-RUN unzip ${ARTIFACTS_DIR}/org.keycloak.keycloak-themes-${KEYCLOAK_VERSION}.jar "theme/base/login/template.ftl"\
- && cp theme/base/login/template.ftl template.ftl\
- && cp theme/base/login/template.ftl template.ftl.orig\
- && git apply -v "${TEMPLATE_FTL_PATCH}"\
- && cp template.ftl ${ARTIFACTS_DIR}/UCS/login/\
- && rm -rf ${ARTIFACTS_DIR}/UCS/login/*.patch
-
-FROM quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
-
+# build login/template patch
+FROM docker-registry.knut.univention.de/knut/pipeline_helper as theme
 ARG KEYCLOAK_VERSION
-ARG ARTIFACTS_DIR
+WORKDIR /themes
+COPY --from=ftl /opt/keycloak/lib/lib/main/org.keycloak.keycloak-themes-${KEYCLOAK_VERSION}.jar /
+COPY files/themes ./
+RUN cd UCS/login \
+ && unzip /org.keycloak.keycloak-themes-${KEYCLOAK_VERSION}.jar "theme/base/login/template.ftl" \
+ && cp theme/base/login/template.ftl template.ftl \
+ && cp theme/base/login/template.ftl template.ftl.orig \
+ && rm -rf theme \
+ && git apply -v template.ftl.patch
 
-COPY --from=maven --chown=keycloak ${ARTIFACTS_DIR} ${ARTIFACTS_DIR}
+# copy everything together so that we can use ine COPY statement for the final image
+FROM docker-registry.knut.univention.de/knut/pipeline_helper as artifacts
+COPY dependencies/*.jar /opt/keycloak/providers/
+COPY files/cache-ispn-jdbc-ping.xml /opt/keycloak/conf/cache-ispn-jdbc-ping.xml
+COPY files/keycloak-healthcheck /opt/keycloak/bin/
+COPY --from=theme /themes /opt/keycloak/themes/
+COPY --from=maven /extensions/lib/univention-app-authenticator-*.jar /opt/keycloak/providers/
+COPY --from=maven /extensions/lib/univention-ldap-mapper-*.jar /opt/keycloak/providers/
+COPY --from=maven /extensions/lib/univention-user-attribute-nameid-mapper-base64-*.jar /opt/keycloak/providers/
+COPY --from=maven /ad-hoc/univention-directory-manager/target/univention-directory-manager.jar /opt/keycloak/providers/
+COPY --from=maven /ad-hoc/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
 
-RUN cp ${ARTIFACTS_DIR}/*.jar /opt/keycloak/providers/\
- && cp ${ARTIFACTS_DIR}/cache-ispn-jdbc-ping.xml /opt/keycloak/conf/cache-ispn-jdbc-ping.xml\
- && cp ${ARTIFACTS_DIR}/keycloak-healthcheck /opt/keycloak/bin/\
- && cp -r ${ARTIFACTS_DIR}/UCS /opt/keycloak/themes/\
- && rm -rf ${ARTIFACTS_DIR}
-
+# the keycloak image
+FROM quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
+COPY --from=artifacts --chown=keycloak /opt/keycloak /opt/keycloak
 EXPOSE 7600
