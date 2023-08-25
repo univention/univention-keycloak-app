@@ -30,9 +30,12 @@
 
 package de.univention.authenticator;
 
+import org.openapitools.client.ApiClient;
 import org.openapitools.client.api.UsersUserApi;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.model.UsersUser;
+import org.openapitools.client.model.UsersUserList;
+import org.openapitools.client.model.UsersUserListEmbedded;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +44,7 @@ import java.util.Base64;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 import java.io.UnsupportedEncodingException;
+import java.util.Random;
 
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
@@ -69,14 +73,14 @@ public class UniventionAuthenticator implements Authenticator {
     @Override
     public void authenticate(AuthenticationFlowContext context) {
         logger.infof("Univention Authenticator, authenticate has been called.");
-        var config = getValidConfig(context);
-        var api = getUsersUserApiReference(config);
+        List<String> config = getValidConfig(context);
+        UsersUserApi api = getUsersUserApiReference(config);
 
         UserModel user = context.getUser();
-        var firstname = user.getFirstName();
-        var lastname = user.getLastName();
-        var username = user.getUsername();
-        var email = user.getEmail();
+        String firstname = user.getFirstName();
+        String lastname = user.getLastName();
+        String username = user.getUsername();
+        String email = user.getEmail();
 
         String remIdGUID_key = System.getenv("keycloak/federation/remote/identifier");
         String remSourceID_key = System.getenv("keycloak/federation/source/identifier");
@@ -92,23 +96,23 @@ public class UniventionAuthenticator implements Authenticator {
         // but UDM curently needs a non null password, so we generate one
         // TODO: Get rid of this as soon as it is possible to create a user
         // via UDM without a password
-        var numberOfRandomBytes = 256;
-        var token = new byte[numberOfRandomBytes];
-        var secureRandom = new java.security.SecureRandom();
+        int numberOfRandomBytes = 256;
+        byte[] token = new byte[numberOfRandomBytes];
+        java.security.SecureRandom secureRandom = new java.security.SecureRandom();
         secureRandom.nextBytes(token);
-        var password = java.util.Base64.getEncoder().encodeToString(token); // Base64 encoding
+        String password = java.util.Base64.getEncoder().encodeToString(token); // Base64 encoding
 
         // TODO: Find out if this is even the right way of handling the Ad-hoc federation data
         // Univention Ad-Hoc Federation specific attributes:
-        var remIdGUID_value = user.getFirstAttribute("objectGUID");
-        var remSourceID_value =  user.getFirstAttribute(remSourceID_key);
+        String remIdGUID_value = user.getFirstAttribute("objectGUID");
+        String remSourceID_value =  user.getFirstAttribute(remSourceID_key);
 
         // This attribute is only for Keycloak, this won't be propagated via UDM
         // TODO: Currently it doesn't seem to be possible to set a mapper for this in KC
         // because normal attribute mappers would write into the { "attributes": { "federationLink"}} field
         // instead of the top level { "federationLink"} field. Only keep this mechanism/code
         // if it's absolutely certain, that there is no way to simply configure keycloak to set the desired field.
-        var univentionTargetFederationLink =  user.getFirstAttribute("univentionTargetFederationLink");
+        String univentionTargetFederationLink =  user.getFirstAttribute("univentionTargetFederationLink");
 
         logger.infof(remIdGUID_key + ":" + remIdGUID_value);
         logger.infof(remSourceID_key + ":" + remSourceID_value);
@@ -145,15 +149,15 @@ public class UniventionAuthenticator implements Authenticator {
         // and ENSURE THAT THIS STOPS the flow!!!
         // So far the observation is that s, simply returning after failure here doesn't stop the flow
         // which has grave consequences, so fix that!
-        var userInUcs = createUserViaUDM(api, userData);
+        UsersUser userInUcs = createUserViaUDM(api, userData);
 
         if (null == userInUcs) {
                 context.failure(AuthenticationFlowError.IDENTITY_PROVIDER_NOT_FOUND);
                 return;
         }
 
-        var uuid = userInUcs.getUuid().toString();
-        var dn = userInUcs.getDn();
+        String uuid = userInUcs.getUuid().toString();
+        String dn = userInUcs.getDn();
         user.setSingleAttribute("LDAP_ID", uuid);
         user.setSingleAttribute("LDAP_ENTRY_DN", dn);
         user.setSingleAttribute("uid", username);
@@ -206,18 +210,18 @@ public class UniventionAuthenticator implements Authenticator {
 
             context.failure(
                     AuthenticationFlowError.IDENTITY_PROVIDER_NOT_FOUND
-                    /* TODO: Return a more useful javax.ws.rs.core.Response response */);
+                    /* TODO: Return a more useful jakarta.ws.rs.core.Response response */);
         }
-        var config = configModel.getConfig();
+        Map<String, String> config = configModel.getConfig();
 
-        var udmConfig = new ArrayList<String>();
+        List<String> udmConfig = new ArrayList<String>();
         /* TODO: Despite the check above somehow this can still raise a NullPointerExeption
          * most probably the context.failure doesn't terminate the execution?
          */
-        for (var i: UniventionAuthenticatorFactory.configPropertyNames) {
-            var value = config.get(i);
+        for (String i: UniventionAuthenticatorFactory.configPropertyNames) {
+            String value = config.get(i);
             if (null == value) {
-                /* TODO: Return a more useful javax.ws.rs.core.Response response or something better*/
+                /* TODO: Return a more useful jakarta.ws.rs.core.Response response or something better*/
                 context.failure(AuthenticationFlowError.IDENTITY_PROVIDER_NOT_FOUND);
                 /* maybe throw an exception? */
             }
@@ -229,8 +233,8 @@ public class UniventionAuthenticator implements Authenticator {
     }
 
     private UsersUserApi getUsersUserApiReference(List<String> endpointUsernamePassword) {
-        var api = new UsersUserApi();
-        var client = api.getApiClient();
+        UsersUserApi api = new UsersUserApi();
+        ApiClient client = api.getApiClient();
 
         // TODO: There could be a number of better and fool proof ways of unpacking the endpoint data
         client.setBasePath(endpointUsernamePassword.get(0));
@@ -282,9 +286,9 @@ public class UniventionAuthenticator implements Authenticator {
             );
 
         try {
-            var listUser = api.udmUsersUserObjectSearch(null, null, "sub", query, true, "", "en_EN", "", "");
-            var luser = listUser.getEmbedded();
-            var listUserl = luser.getUdmColonObject();
+            UsersUserList listUser = api.udmUsersUserObjectSearch(null, null, "sub", query, true, "", "en_EN", "", "");
+            UsersUserListEmbedded luser = listUser.getEmbedded();
+            List<UsersUser> listUserl = luser.getUdmColonObject();
             if (listUserl != null && listUserl.size() > 0){
                 logger.infof("Univention Authenticator existsRemoteUser, listUser is greater than 0.");
                 logger.infof("Univention Authenticator existsRemoteUser, %s", listUserl.get(0));

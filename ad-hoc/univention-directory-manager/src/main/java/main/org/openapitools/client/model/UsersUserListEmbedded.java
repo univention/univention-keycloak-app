@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
   UsersUserListEmbedded.JSON_PROPERTY_UDM_COLON_OBJECT
 })
 @JsonTypeName("users_user_list__embedded")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-10-25T17:17:28.719252+02:00[Europe/Berlin]")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-10-25T17:17:28.719252+02:00[Europe/Berlin]")
 public class UsersUserListEmbedded {
   public static final String JSON_PROPERTY_UDM_COLON_OBJECT = "udm:object";
   private List<UsersUser> udmColonObject = null;
@@ -59,7 +59,7 @@ public class UsersUserListEmbedded {
    * Get udmColonObject
    * @return udmColonObject
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(value = "")
   @JsonProperty(JSON_PROPERTY_UDM_COLON_OBJECT)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)

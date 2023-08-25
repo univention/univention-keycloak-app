@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
   UsersUserOptions.JSON_PROPERTY_PKI
 })
 @JsonTypeName("users_user_options")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-10-25T17:17:28.719252+02:00[Europe/Berlin]")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-10-25T17:17:28.719252+02:00[Europe/Berlin]")
 public class UsersUserOptions {
   public static final String JSON_PROPERTY_PKI = "pki";
   private Boolean pki = false;
@@ -49,7 +49,7 @@ public class UsersUserOptions {
    * Public key infrastructure account
    * @return pki
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(example = "false", value = "Public key infrastructure account")
   @JsonProperty(JSON_PROPERTY_PKI)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)

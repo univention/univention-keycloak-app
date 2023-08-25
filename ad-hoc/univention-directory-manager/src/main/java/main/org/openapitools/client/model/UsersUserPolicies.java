@@ -37,7 +37,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
   UsersUserPolicies.JSON_PROPERTY_POLICIES_DESKTOP
 })
 @JsonTypeName("users_user_policies")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-10-25T17:17:28.719252+02:00[Europe/Berlin]")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-10-25T17:17:28.719252+02:00[Europe/Berlin]")
 public class UsersUserPolicies {
   public static final String JSON_PROPERTY_POLICIES_UMC = "policies/umc";
   private List<String> policiesUmc = null;
@@ -67,7 +67,7 @@ public class UsersUserPolicies {
    * Policy: UMC
    * @return policiesUmc
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(value = "Policy: UMC")
   @JsonProperty(JSON_PROPERTY_POLICIES_UMC)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
@@ -102,7 +102,7 @@ public class UsersUserPolicies {
    * Policy: Passwords
    * @return policiesPwhistory
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(value = "Policy: Passwords")
   @JsonProperty(JSON_PROPERTY_POLICIES_PWHISTORY)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
@@ -137,7 +137,7 @@ public class UsersUserPolicies {
    * Policy: Desktop
    * @return policiesDesktop
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(value = "Policy: Desktop")
   @JsonProperty(JSON_PROPERTY_POLICIES_DESKTOP)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)

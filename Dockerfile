@@ -1,4 +1,4 @@
-FROM maven:3.8.2-openjdk-11 as maven
+FROM maven:3.8.3-openjdk-17 as maven
 
 RUN mkdir /tmp/artifacts/
 COPY dependencies/*.jar /tmp/artifacts/
@@ -13,10 +13,6 @@ RUN mvn clean package --file univention-directory-manager
 RUN mvn install --file univention-directory-manager
 RUN mvn clean package --file univention-authenticator
 
-COPY univention-ldap-mapper/ ./univention-ldap-mapper
-RUN mvn clean package --file univention-ldap-mapper \
- && mvn install --file univention-ldap-mapper
-
 COPY univention-user-attribute-nameid-mapper-base64/ ./univention-user-attribute-nameid-mapper-base64
 RUN mvn clean package --file univention-user-attribute-nameid-mapper-base64 \
  && mvn install --file univention-user-attribute-nameid-mapper-base64
@@ -25,13 +21,18 @@ COPY univention-app-authenticator/ ./univention-app-authenticator
 RUN mvn clean package --file univention-app-authenticator \
  && mvn install --file univention-app-authenticator
 
-RUN cp /tmp/build/univention-directory-manager/target/univention-directory-manager.jar /tmp/artifacts/\
- && cp /tmp/build/univention-authenticator/target/univention-authenticator-16.1.0-jar-with-dependencies.jar /tmp/artifacts/\
- && cp /tmp/build/univention-ldap-mapper/target/univention-ldap-mapper-21.1.1.jar /tmp/artifacts/ \
- && cp /tmp/build/univention-user-attribute-nameid-mapper-base64/target/univention-user-attribute-nameid-mapper-base64-21.1.1.jar /tmp/artifacts/ \
- && cp /tmp/build/univention-app-authenticator/target/univention-app-authenticator-21.1.1.jar /tmp/artifacts/
+COPY univention-ldap-mapper/ ./univention-ldap-mapper
+RUN mvn clean package --file univention-ldap-mapper \
+ && mvn install --file univention-ldap-mapper
 
-FROM quay.io/keycloak/keycloak:21.1.2
+
+RUN cp /tmp/build/univention-directory-manager/target/univention-directory-manager.jar /tmp/artifacts/\
+ && cp /tmp/build/univention-authenticator/target/univention-authenticator-22.0.1-jar-with-dependencies.jar /tmp/artifacts/\
+ && cp /tmp/build/univention-ldap-mapper/target/univention-ldap-mapper-22.0.1.jar /tmp/artifacts/ \
+ && cp /tmp/build/univention-user-attribute-nameid-mapper-base64/target/univention-user-attribute-nameid-mapper-base64-22.0.1.jar /tmp/artifacts/ \
+ && cp /tmp/build/univention-app-authenticator/target/univention-app-authenticator-22.0.1.jar /tmp/artifacts/
+
+FROM quay.io/keycloak/keycloak:22.0.1
 
 COPY --from=maven --chown=keycloak /tmp/artifacts/ /tmp/artifacts/
 

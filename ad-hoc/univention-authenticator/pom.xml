@@ -3,13 +3,15 @@
     <parent>
         <groupId>org.keycloak</groupId>
         <artifactId>keycloak-parent</artifactId>
-        <version>16.1.0</version>
+        <version>22.0.1</version>
     </parent>
 
     <name>Univention Authenticator</name>
     <description/>
     <modelVersion>4.0.0</modelVersion>
-
+    <properties>
+        <maven.compiler.release>17</maven.compiler.release>
+    </properties>
     <artifactId>univention-authenticator</artifactId>
     <packaging>jar</packaging>
 
@@ -51,24 +53,45 @@
         <dependency>
             <groupId>org.jboss.spec.javax.ws.rs</groupId>
             <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>de.univention</groupId>
             <artifactId>univention-directory-manager</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <dependency>
-	        <groupId>org.jboss.resteasy</groupId>
-	        <artifactId>resteasy-jaxrs</artifactId>
-	        <version>3.6.0.Final</version>
-            <scope>provided</scope>
+    	<dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jaxrs</artifactId>
+            <version>3.15.6.Final</version>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.0.1</version>
-            <scope>provided</scope>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <version>6.2.5.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client-api</artifactId>
+            <version>6.2.5.Final</version>
+        </dependency>
+        <dependency>
+             <groupId>org.jboss.resteasy</groupId>
+             <artifactId>resteasy-multipart-provider</artifactId>
+            <version>6.2.5.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson2-provider</artifactId>
         </dependency>
     </dependencies>
 
@@ -83,8 +106,8 @@
                         Currently the Keycloak container image has this version of the JVM:
                         openjdk version "11.0.12" 2021-07-20 LTS
                     -->
-                    <source>11</source>
-                    <target>11</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -128,7 +151,6 @@
                               <!--exclude>org*</exclude-->
                               <exclude>com*</exclude>
                               <exclude>io*</exclude>
-                              <exclude>jakarta*</exclude>
                           </excludes>
                       </artifactSet>
                     </configuration>

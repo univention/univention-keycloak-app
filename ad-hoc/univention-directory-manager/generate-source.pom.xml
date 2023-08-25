@@ -28,8 +28,8 @@
                         Currently the Keycloak container image has this version of the JVM:
                         openjdk version "11.0.12" 2021-07-20 LTS
                     -->
-                    <source>11</source>
-                    <target>11</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -56,6 +56,7 @@
                                <library>resteasy</library>
                                <java8>true</java8>
                                <java11>true</java11>
+                               <java17>true</java17>
                             </configOptions>
                         </configuration>
                     </execution>

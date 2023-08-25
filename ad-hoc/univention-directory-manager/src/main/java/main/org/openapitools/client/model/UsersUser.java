@@ -48,7 +48,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
   UsersUser.JSON_PROPERTY_POLICIES
 })
 @JsonTypeName("users-user")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-10-25T17:17:28.719252+02:00[Europe/Berlin]")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-10-25T17:17:28.719252+02:00[Europe/Berlin]")
 public class UsersUser {
   public static final String JSON_PROPERTY_DN = "dn";
   private String dn;
@@ -85,7 +85,7 @@ public class UsersUser {
    * LDAP DN (Distinguished Name)
    * @return dn
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(example = "dc=example,dc=net", value = "LDAP DN (Distinguished Name)")
   @JsonProperty(JSON_PROPERTY_DN)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
@@ -107,7 +107,7 @@ public class UsersUser {
    * LDAP Entry-UUID
    * @return uuid
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(value = "LDAP Entry-UUID")
   @JsonProperty(JSON_PROPERTY_UUID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
@@ -128,7 +128,7 @@ public class UsersUser {
    * UDM Object-Type
    * @return objectType
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(example = "users/user", value = "UDM Object-Type")
   @JsonProperty(JSON_PROPERTY_OBJECT_TYPE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
@@ -144,7 +144,7 @@ public class UsersUser {
    * Hypertext Application Language (HAL) links
    * @return links
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(value = "Hypertext Application Language (HAL) links")
   @JsonProperty(JSON_PROPERTY_LINKS)
   @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.USE_DEFAULTS)
@@ -160,7 +160,7 @@ public class UsersUser {
    * Hypertext Application Language (HAL) embedded resources
    * @return embedded
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(value = "Hypertext Application Language (HAL) embedded resources")
   @JsonProperty(JSON_PROPERTY_EMBEDDED)
   @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.USE_DEFAULTS)
@@ -182,7 +182,7 @@ public class UsersUser {
    * DN of LDAP node below which the object is located. Changing this causes a move of the object. When chaning no other changes are applied.
    * @return position
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(example = "cn=position,dc=example,dc=net", value = "DN of LDAP node below which the object is located. Changing this causes a move of the object. When chaning no other changes are applied.")
   @JsonProperty(JSON_PROPERTY_POSITION)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
@@ -217,7 +217,7 @@ public class UsersUser {
    * Get properties
    * @return properties
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(value = "")
   @JsonProperty(JSON_PROPERTY_PROPERTIES)
   @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.USE_DEFAULTS)
@@ -244,7 +244,7 @@ public class UsersUser {
    * Get uri
    * @return uri
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(example = "http://10.200.69.10/univention/udm/users/user/uid=foo,dc=example,dc=net", value = "")
   @JsonProperty(JSON_PROPERTY_URI)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
@@ -271,7 +271,7 @@ public class UsersUser {
    * Get options
    * @return options
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(value = "")
   @JsonProperty(JSON_PROPERTY_OPTIONS)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
@@ -298,7 +298,7 @@ public class UsersUser {
    * Get policies
    * @return policies
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(value = "")
   @JsonProperty(JSON_PROPERTY_POLICIES)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)

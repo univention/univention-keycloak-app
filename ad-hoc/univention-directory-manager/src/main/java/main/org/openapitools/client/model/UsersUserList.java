@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
   UsersUserList.JSON_PROPERTY_EMBEDDED
 })
 @JsonTypeName("users-user-list")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-10-25T17:17:28.719252+02:00[Europe/Berlin]")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-10-25T17:17:28.719252+02:00[Europe/Berlin]")
 public class UsersUserList {
   public static final String JSON_PROPERTY_EMBEDDED = "_embedded";
   private UsersUserListEmbedded embedded;
@@ -49,7 +49,7 @@ public class UsersUserList {
    * Get embedded
    * @return embedded
   **/
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @ApiModelProperty(value = "")
   @JsonProperty(JSON_PROPERTY_EMBEDDED)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
