@@ -7,6 +7,14 @@
     --pf-global--BackgroundColor--100: var(--bgc-content-body);
 /*    --link-hover-color: var(--button-bgc-hover); */
     --pf-global--danger-color--100: var(--bgc-error);
+
+    /* cookie popup */
+    --layout-spacing-unit: 0.6rem;
+    --layout-spacing-unit-small: calc(var(--layout-spacing-unit)/2);
+    --layout-height-header: 3rem;
+    --layout-height-header-separator: var(--layout-spacing-unit-small);
+    --portal-transition-duration: 250ms;
+
 }
 
 #kc-header-wrapper {
@@ -238,3 +246,161 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
     text-decoration: underline;
     text-decoration-thickness: 3px;
 }
+
+/* cookie banner */
+
+.dialog {
+	padding: calc(var(--layout-spacing-unit)*2) calc(var(--layout-spacing-unit)*4);
+	background: var(--bgc-content-container);
+	border-radius: var(--border-radius-container);
+	max-width: calc(var(--layout-spacing-unit)*50);
+	box-shadow: var(--box-shadow);
+}
+
+@media only screen and (max-width:748px) {
+	.dialog {
+		max-width: calc(100% - var(--layout-spacing-unit)*8);
+		padding: calc(var(--layout-spacing-unit)*2) calc(var(--layout-spacing-unit)*2);
+		max-height: 90vh;
+		overflow: auto;
+		overflow-x: hidden
+	}
+}
+
+
+.dialog footer:not(.image-upload__footer):not(.multi-select__footer) {
+	margin-top: calc(var(--layout-spacing-unit)*2);
+	padding-top: calc(var(--layout-spacing-unit)*2);
+	border-top: thin solid var(--bgc-tab-separator);
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap
+}
+
+.dialog footer:not(.image-upload__footer):not(.multi-select__footer) button:last-of-type {
+	margin-left: auto
+}
+
+.dialog__header {
+	display: flex;
+	align-items: center
+}
+
+@media only screen and (max-width:748px) {
+	.dialog__header {
+		position: sticky;
+		top: 0;
+		z-index: 9
+	}
+
+	.dialog__header,
+	.dialog__header:before {
+		background-color: var(--bgc-content-container)
+	}
+
+	.dialog__header:before {
+		content: "";
+		width: 100%;
+		height: calc(var(--layout-spacing-unit)*2);
+		top: calc(var(--layout-spacing-unit)*-2);
+		position: absolute
+	}
+}
+
+.modal-wrapper {
+	height: 100%;
+	z-index: -999;
+	opacity: 0
+}
+
+.modal-wrapper,
+.modal-wrapper--isVisible {
+	position: fixed;
+	width: 100%;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	transition: opacity .5s ease
+}
+
+.modal-wrapper--isVisible {
+	height: 100vh;
+	z-index: 200;
+	background-color: var(--bgc-underlay);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 1
+}
+
+.modal-wrapper--isVisible>* {
+	position: relative;
+	z-index: 1
+}
+
+.modal-wrapper--isVisibleFullscreen {
+	z-index: 40000
+}
+
+.cookie-banner {
+	overflow-y: auto !important;
+}
+
+.cookie-title {
+    text-transform: none;
+    font-size: var(--font-size-3);
+    line-height: var(--font-lineheight-normal);
+    font-weight: 600;
+    letter-spacing: 0;
+    padding: 6rem 0 2.5rem;
+
+}
+
+#cookie-text {
+    font-size: var(--font-size-4);
+    line-height: var(--font-lineheight-normal);
+}
+
+.cookie-banner-button {
+    background-color: var(--pf-global--primary-color--100);
+    color: var(--button-text-color, var(--font-color-contrast-high));
+    position: relative;
+    border: none;
+    border-radius: var(--border-radius-interactable, 0.25rem);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-3);
+    text-transform: uppercase;
+    padding: 0.70rem 1rem;
+}
+
+.cookie-banner-button:hover {
+    background-color: var(--pf-global--primary-color--200);
+}
+
+.cookie-banner a {
+	color: inherit;
+	transition: color var(--portal-transition-duration), text-decoration-thickness var(--portal-transition-duration);
+	text-decoration: underline;
+	text-decoration-thickness: 1px
+}
+
+.cookie-banner a:hover {
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+}
+
+.cookie-banner-modal {
+	display: flex;
+	flex-direction: column
+}
+
+.cookie-banner a:focus {
+   color: var(--color-accent);
+   /*outline: none;*/
+   outline-offset: 2px;
+   text-decoration-thickness: 3px
+}
+
