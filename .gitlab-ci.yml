@@ -19,7 +19,7 @@ include:
 
 variables:
   # version
-  DOC_TARGET_VERSION: "21.1.2"
+  DOC_TARGET_VERSION: "22.0.1"
 
 generate-config:
   stage: prepare
