@@ -1,63 +1,71 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <parent>
+<!--     <parent>
         <groupId>org.keycloak</groupId>
         <artifactId>keycloak-parent</artifactId>
         <version>22.0.1</version>
-    </parent>
+    </parent> -->
+
+    <groupId>de.univention</groupId>
+    <artifactId>univention-authenticator</artifactId>
+    <packaging>jar</packaging>
+    <version>22.0.1</version>
+
 
     <name>Univention Authenticator</name>
     <description/>
     <modelVersion>4.0.0</modelVersion>
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
+        <resteasy.version>5.0.8.Final</resteasy.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <artifactId>univention-authenticator</artifactId>
-    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-core</artifactId>
-            <scope>provided</scope>
+            <version>22.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-ldap-federation</artifactId>
+            <version>22.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-server-spi</artifactId>
-            <scope>provided</scope>
+            <version>22.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-server-spi-private</artifactId>
-            <scope>provided</scope>
+            <version>22.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-services</artifactId>
-            <scope>provided</scope>
+            <version>22.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-saml-core-public</artifactId>
-            <scope>provided</scope>
+            <version>22.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging</artifactId>
-            <scope>provided</scope>
+            <version>3.5.3.Final</version>
         </dependency>
-        <dependency>
+<!--         <dependency>
             <groupId>org.jboss.spec.javax.ws.rs</groupId>
             <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>de.univention</groupId>
             <artifactId>univention-directory-manager</artifactId>
-            <version>1.0.0</version>
+            <version>22.0.1</version>
+            <!-- <scope>provided</scope> -->
         </dependency>
     	<dependency>
             <groupId>org.jboss.resteasy</groupId>
@@ -67,23 +75,23 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client</artifactId>
-            <version>6.2.5.Final</version>
+            <version>${resteasy.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client-api</artifactId>
-            <version>6.2.5.Final</version>
+            <version>${resteasy.version}</version>
         </dependency>
         <dependency>
              <groupId>org.jboss.resteasy</groupId>
              <artifactId>resteasy-multipart-provider</artifactId>
-            <version>6.2.5.Final</version>
+            <version>${resteasy.version}</version>
         </dependency>
-        <dependency>
+<!--         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
-            <version>3.1.0</version>
-        </dependency>
+            <version>2.1.1</version>
+        </dependency> -->
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
@@ -92,11 +100,26 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jackson2-provider</artifactId>
+            <version>${resteasy.version}</version>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>univention-authenticator</finalName>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <version>3.11.0</version>
+              <configuration>
+                <!-- <release>11</release> -->
+                <release>17</release>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+
+        <!-- <finalName>univention-authenticator</finalName> -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -110,7 +133,7 @@
                     <target>17</target>
                 </configuration>
             </plugin>
-            <plugin>
+<!--             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
                 <configuration>
@@ -148,7 +171,6 @@
                               <include>org.openapitools:jackson-databind-nullable</include>
                           </includes>
                           <excludes>
-                              <!--exclude>org*</exclude-->
                               <exclude>com*</exclude>
                               <exclude>io*</exclude>
                           </excludes>
@@ -156,7 +178,7 @@
                     </configuration>
                   </execution>
                 </executions>
-            </plugin>
+            </plugin> -->
         </plugins>
     </build>
 </project>

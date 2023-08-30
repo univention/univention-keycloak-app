@@ -1,0 +1,8 @@
+artifactId: univention-directory-manager
+groupId: de.univention
+artifactVersion: 22.0.1
+skipValidateSpec: true
+
+additionalProperties:
+  library: resteasy
+  dateLibrary: java8
