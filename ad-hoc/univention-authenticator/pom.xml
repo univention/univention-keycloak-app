@@ -57,15 +57,10 @@
             <artifactId>jboss-logging</artifactId>
             <version>3.5.3.Final</version>
         </dependency>
-<!--         <dependency>
-            <groupId>org.jboss.spec.javax.ws.rs</groupId>
-            <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
-        </dependency> -->
         <dependency>
             <groupId>de.univention</groupId>
             <artifactId>univention-directory-manager</artifactId>
             <version>22.0.1</version>
-            <!-- <scope>provided</scope> -->
         </dependency>
     	<dependency>
             <groupId>org.jboss.resteasy</groupId>
@@ -87,11 +82,11 @@
              <artifactId>resteasy-multipart-provider</artifactId>
             <version>${resteasy.version}</version>
         </dependency>
-<!--         <dependency>
+        <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
-            <version>2.1.1</version>
-        </dependency> -->
+            <version>3.1.0</version>
+        </dependency>
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
