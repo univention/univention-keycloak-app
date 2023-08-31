@@ -16,6 +16,14 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+22.0.1-ucs2
+===========
+
+Released: TODO
+
+* The app setting :envvar:`keycloak/theme` has been removed. The UCS theme, controlled
+  by the UCR variable :envvar:`ucs/web/theme` is now used.
+
 22.0.1-ucs1
 ===========
 
@@ -23,8 +31,6 @@ Released: 30. August 2023
 
 * The app updates to *Keycloak* version 22.0.1 of the upstream Docker image from
   https://quay.io/repository/keycloak/keycloak.
-* The app setting :envvar:`keycloak/theme` has been removed. The UCS theme, controlled
-  by the UCR variable :envvar:`ucs/web/theme` is now used.
 
 21.1.2-ucs2
 ===========
