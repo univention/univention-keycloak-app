@@ -3,9 +3,24 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+<!--    <properties>-->
+<!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+<!--        <resteasy-version>4.7.6.Final</resteasy-version>-->
+<!--        <jackson-version>2.13.4</jackson-version>-->
+<!--        <jackson-databind-version>2.13.4.2</jackson-databind-version>-->
+<!--        <jackson-databind-nullable-version>0.2.6</jackson-databind-nullable-version>-->
+<!--        <jakarta-annotation-version>1.3.5</jakarta-annotation-version>-->
+<!--        <threetenbp-version>2.9.10</threetenbp-version>-->
+<!--        <maven-plugin-version>1.0.0</maven-plugin-version>-->
+<!--        <junit-version>4.13</junit-version>-->
+<!--    </properties>-->
+
+
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
-        <resteasy.version>5.0.8.Final</resteasy.version>
+        <resteasy.version>6.2.5.Final</resteasy.version>
+        <jackson.version>2.13.4</jackson.version>
+<!--        <jackson.version.databind>2.13.4.2</jackson.version.databind>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -14,9 +29,11 @@
     <groupId>de.univention</groupId>
     <artifactId>univention-directory-manager</artifactId>
     <packaging>jar</packaging>
-    <version>22.0.1</version>
+    <version>1.0.0</version>
 
     <dependencies>
+
+
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
@@ -47,6 +64,18 @@
             <artifactId>jsr305</artifactId>
             <version>3.0.2</version>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>jakarta.ws.rs</groupId>-->
+<!--            <artifactId>jakarta.ws.rs-api</artifactId>-->
+<!--            <version>3.1.0</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>jakarta.annotation</groupId>-->
+<!--            <artifactId>jakarta.annotation-api</artifactId>-->
+<!--            <version>2.1.1</version>-->
+<!--        </dependency>-->
+
     </dependencies>
 
     <build>
@@ -57,7 +86,6 @@
               <artifactId>maven-compiler-plugin</artifactId>
               <version>3.11.0</version>
               <configuration>
-                <!-- <release>11</release> -->
                 <release>17</release>
               </configuration>
             </plugin>
@@ -82,7 +110,7 @@
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                                 <dateLibrary>java8</dateLibrary>
-                                <!-- <java11>true</java11> -->
+                                <useJakartaEe>true</useJakartaEe>
                                 <java17>true</java17>
                             </configOptions>
                         </configuration>
