@@ -46,7 +46,7 @@ Type = String
 Required = False
 Show = Install, Settings
 Scope = outside
-Description = Path to an existing PEM certificate file to use for the keycloak apache configuration. You need to set this if you don't use the default FQDN for keycloak.
+Description = Path to an existing PEM certificate file to use for the keycloak apache configuration. You need to set this if you don't use the default FQDN for keycloak (see Keycloak app <a target="_blank" href="https://docs.software-univention.de/keycloak-app/latest/use-cases.html#single-sign-on-through-external-public-domain-name">manual</a>).
 Group = Fully qualified domain name and web server settings
 
 [keycloak/apache2/ssl/key]
@@ -55,6 +55,14 @@ Required = False
 Show = Install, Settings
 Scope = outside
 Description = Path to an existing private key file to use for the keycloak apache configuration. You need to set this if you don't use the default FQDN for keycloak.
+Group = Fully qualified domain name and web server settings
+
+[keycloak/apache2/ssl/ca]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = outside
+Description = Path to an existing PEM ca certificate file to use for the keycloak apache configuration. You may need to set this if you don't use the default FQDN for keycloak.
 Group = Fully qualified domain name and web server settings
 
 [keycloak/csp/frame-ancestors]
