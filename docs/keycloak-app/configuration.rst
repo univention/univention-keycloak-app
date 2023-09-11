@@ -1222,20 +1222,35 @@ more information, consult :cite:t:`keycloak-docs`.
 Customize the appearance
 ========================
 
-The App includes the theme configured in UCS. The UCR variable
-:envvar:`ucs/web/theme` applies to Keycloak as well. You can adjust it
-following :ref:`uv-manual:central-theming-custom` in the :cite:t:`ucs-manual`.
-Important variables specifically for Keycloak are the CSS variables
-:envvar:`--login-background`, :envvar:`--login-box-background`,
-:envvar:`--login-logo`.
+The :program:`Keycloak` app uses the same web theme as UCS, so that the UCR
+variable :envvar:`ucs/web/theme` applies to Keycloak, as well. To adjust the web
+theme, follow the steps outlined in :ref:`uv-manual:central-theming-custom` in
+the :cite:t:`ucs-manual`.
 
-Keycloak also includes
-:file:`/usr/share/univention-management-console-login/css/custom.css`, or, more
-specifically, whatever it finds at the URL `/univention/login/css/custom.css`.
-This file is meant to give more control than the theme, but it is not as
-stable; CSS selectors may fail on updates. Please regularly check your
-customizations.
+Administrators can change the values of the following CSS variables to customize
+the appearance of the web theme for the sign-in form provided by Keycloak. These
+CSS variables are specifically relevant to Keycloak. They take their default
+values from UMC and expect CSS background values.
 
+* :envvar:`--login-background`
+* :envvar:`--login-box-background`
+* :envvar:`--login-logo`
+
+Keycloak also uses
+:file:`/usr/share/univention-management-console-login/css/custom.css` and loads
+from the URL ``/univention/login/css/custom.css``. The CSS file gives more
+control than just the theme.
+
+.. caution::
+
+   You may need to adjust your customizations in the CSS file :file:`custom.css`
+   after updates for UCS or the Keycloak app, because CSS selectors may change
+   on updates.
+
+.. seealso::
+
+   `background - CSS: Cascading Style Sheets | MDN <https://developer.mozilla.org/en-US/docs/Web/CSS/background>`_
+      for more information about the syntax for background values.
 
 .. _language-settings:
 
