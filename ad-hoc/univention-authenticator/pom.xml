@@ -9,7 +9,7 @@
     <groupId>de.univention</groupId>
     <artifactId>univention-authenticator</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>22.0.1</version>
 
 
     <name>Univention Authenticator</name>
