@@ -20,7 +20,7 @@ RUN mvn clean package --file univention-ldap-mapper
 COPY files/cache-ispn-jdbc-ping.xml .
 COPY files/keycloak-healthcheck .
 
-RUN find . -wholename '*/target/univention-*-22.0.1.jar' -print0  -exec cp {} . \;
+RUN find . ! -name '*sources*' -wholename '*/target/univention-*.jar' -print0  -exec cp {} . \;
 
 FROM quay.io/keycloak/keycloak:22.0.1
 
