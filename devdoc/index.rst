@@ -9,3 +9,4 @@ extending, developing and debugging :program:`Keycloak` and its components.
 It covers the following topics:
 
 #. `debugging <debugging.rst>`_
+#. `assorted <assorted.rst>`_

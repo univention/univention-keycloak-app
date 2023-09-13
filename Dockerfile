@@ -28,7 +28,7 @@ RUN cd UCS/login \
  && rm -rf theme \
  && git apply -v template.ftl.patch
 
-# copy everything together so that we can use ine COPY statement for the final image
+# copy everything together so that we can use one COPY statement for the final image
 FROM docker-registry.knut.univention.de/knut/pipeline_helper as artifacts
 COPY dependencies/*.jar /opt/keycloak/providers/
 COPY files/cache-ispn-jdbc-ping.xml /opt/keycloak/conf/cache-ispn-jdbc-ping.xml
