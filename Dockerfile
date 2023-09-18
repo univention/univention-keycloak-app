@@ -1,4 +1,4 @@
-ARG KEYCLOAK_VERSION=22.0.1
+ARG KEYCLOAK_VERSION=22.0.3
 
 # to get the original template files
 FROM quay.io/keycloak/keycloak:${KEYCLOAK_VERSION} as ftl
