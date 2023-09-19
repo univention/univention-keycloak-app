@@ -1391,6 +1391,12 @@ the following ways:
   authorization will :program:`Keycloak` evaluate the access restriction to
   applications.
 
+.. important::
+
+   Univention doesn't support nested groups in the group mapper between UCS and
+   :program:`Keycloak`. The reason is that :program:`Keycloak` doesn't support
+   groups as members of groups.
+
 
 .. _authorization-create-auth-flow:
 
@@ -1496,9 +1502,6 @@ mapper you just created to open it and select :guilabel:`Sync LDAP groups to
 Keycloak` from the *Action* drop-down.
 
 .. _authorization-create-client-roles:
-
-Create client roles
--------------------
 
 Create Keycloak client roles
 ----------------------------
