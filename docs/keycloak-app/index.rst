@@ -19,6 +19,7 @@ directory in Univention Corporate Server (UCS). It covers the following topics:
 
 #. :ref:`app-installation`
 #. :ref:`app-configuration`
+#. :ref:`app-database`
 #. :ref:`app-architecture`
 #. :ref:`app-limitations`
 #. :ref:`app-use-cases`
@@ -57,6 +58,7 @@ improvement.
    installation
    update
    configuration
+   database
    architecture
    limitations
    use-cases

@@ -76,24 +76,3 @@ using the command line tool :program:`univention-keycloak`. Administrators can
 adjust the generic client configuration, if they need a specific configuration.
 In this case you can use the :ref:`Keycloak Admin Console
 <keycloak-admin-console>`.
-
-.. _limitation-database-configuration:
-
-Database configuration
-======================
-
-By default, the :program:`Keycloak` app uses PostgreSQL as its database back
-end. The Keycloak app installation procedure automatically installs and
-configures the database. However, it's not mandatory to use this particular
-database instance, and administrators may decide to use another one, for
-example, if there is a need to use an already existing or clustered database.
-
-.. important::
-
-   The :ref:`app-settings` section lists all database settings required for
-   :program:`Keycloak` to work properly. Changing these settings doesn't affect
-   the database itself, no matter if you use the command line tools or the *App
-   Center*. The database settings only tell Keycloak where and how to connect to
-   the database.
-
-   Ensure that you first perform the needed changes on the database itself.

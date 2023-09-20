@@ -320,78 +320,6 @@ as in the following step:
    :program:`Keycloak` defines the scope of exported data and may not contain
    every configuration option the program offers.
 
-.. _mariadb-database-configuration:
-
-MariaDB as database
-===================
-
-The :program:`Keycloak` app uses PostgreSQL as default database back end.
-This section explains how to configure the app :program:`Keycloak` to connect
-and use a MariaDB database back end. The setup requires a configuration through
-:ref:`app-settings`. Administrators can select the database back end either
-during initial app installation of :program:`Keycloak` or change it later after
-installation.
-
-The following examples for the database configuration assume that a user account
-with the appropriate permissions for MariaDB exists. They use the database user
-account ``keycloak`` and the password ``database-password``.
-
-.. note::
-
-   The database user needs the following minimum privileges to work in a single
-   machine setup. Use the `GRANT command <mariadb-grant_>`_:
-
-   .. code-block:: sql
-
-      GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, REFERENCES, INDEX, DROP
-      ON `<database>`.* TO `<user>`@`<host>`;
-
-.. tab:: Initial installation
-
-   To specify a MariaDB database during installation, run
-
-   .. code-block:: console
-
-      $ univention-app install \
-      --set kc/db/url="jdbc:mariadb://${database_hostname}:3306/keycloak" \
-      --set kc/db/password="database-password"
-
-.. tab:: After installation
-
-   .. tab:: UMC
-
-      To specify a MariaDB database after installation in UMC:
-
-
-      #. Sign in to the UCS management system.
-      #. Go to :menuselection:`App Center --> Keycloak --> Manage Installation --> App Settings`.
-      #. Search for the variable :envvar:`Database URI`. Set the value to your
-         MariaDB endpoint, for example :samp:`jdbc:mariadb://${database_hostname}:3306/keycloak`
-         and click :guilabel:`Apply Changes`.
-
-   .. tab:: Console
-
-      To specify a MariaDB database after installation on the command line:
-
-      .. code-block:: console
-
-         $ univention-app configure keycloak \
-         --set kc/db/url "jdbc:mariadb://${database_hostname}:3306/keycloak" \
-         --set kc/db/password "database-password"
-
-   And to persist this change also in LDAP, use the following commands:
-
-   .. code-block:: console
-
-      $ univention-install jq
-      $ new_json=$(univention-ldapsearch -LLL \
-      '(&(cn=keycloak)(univentionObjectType=settings/data))' \
-      | sed -n 's/^univentionData:: //p' | base64 -d | bzip2 --decompress \
-      | jq '.uri = "jdbc:mariadb://${database_hostname}:3306/keycloak"')
-      $ udm settings/data modify \
-      --dn "cn=keycloak,cn=data,cn=univention,$(ucr get ldap/base)" \
-      --set data=$(echo "$new_json" | bzip2 -c | base64 -w0)
-
 .. _cluster-setup:
 
 Multiple installations in the domain
@@ -953,8 +881,10 @@ more information, consult :cite:t:`keycloak-docs`.
 
 .. envvar:: keycloak/database/connection
 
-   Specifies the IP addresses from which the default PostgreSQL database can receive
-   connections.
+   This is a setting for the :program:`PostgreSQL` database, the default
+   database for Keycloak on the UCS system. The setting specifies the IP
+   addresses from which the database can receive connections. The default value
+   is ``0.0.0.0``, meaning that every IP address can connect to the database.
 
    .. list-table::
       :header-rows: 1
@@ -1006,7 +936,8 @@ more information, consult :cite:t:`keycloak-docs`.
 
 .. envvar:: kc/db/kind
 
-   Specifies the kind of database. Defaults to ``postgres``.
+   Specifies the kind of database. Defaults to ``postgres``. You find the
+   available values at :cite:t:`keycloak-db`.
 
    .. list-table::
       :header-rows: 1
