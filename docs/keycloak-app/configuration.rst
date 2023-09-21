@@ -544,7 +544,7 @@ federation follow the next steps:
 
    In *Principal Attribute* select ``sAMAccountName``.
 
-#. Enable the following properties: 
+#. Enable the following properties:
 
    * ``Allow Create``
 
@@ -1186,7 +1186,7 @@ control than just the theme.
 .. _language-settings:
 
 Adjusting texts on the Keycloak login page
-==========================================
+------------------------------------------
 
 The :program:`Keycloak` app lets Administrators overwrite any messages on the
 :program:`Keycloak` login page.
@@ -1221,6 +1221,55 @@ has to be run to make the change visible in :program:`Keycloak` login page:
    These settings are local settings. The UCR variables have to be set on each
    host running :program:`Keycloak`.
 
+.. _additional-login-links:
+
+Additional links on the login page
+----------------------------------
+
+.. versionadded:: 22.0.1-ucs2 Additional links below login dialog
+
+Administrators can add links below the login dialog, for example to the user
+self service for a forgotten password or legal information such as a privacy
+statement.
+
+To manage up to 12 links, use the command line tool
+:program:`univention-keycloak`. To add links to the login page for both English
+and German run the following commands:
+
+.. code-block:: console
+   :caption: Add links below login dialog with :program:`univention-keycloak`
+
+   $ univention-keycloak login-links set en 1 "Link 1" "Link 1 description"
+   $ univention-keycloak login-links set en 2 "Link 2" "Link 2 description"
+   $ univention-keycloak login-links set de 1 "Link 1" "Beschreibung von 1"
+   $ univention-keycloak login-links set de 2 "Link 2" "Beschreibung von 2"
+
+The login page then shows the links below the login dialog as in
+:numref:`additional-login-links-image-example`.
+
+.. _additional-login-links-image-example:
+
+.. figure:: /images/login_links.png
+   :alt: Login links example
+   :width: 60%
+
+   Custom links below the login dialog
+
+Use :program:`univention-keycloak` to modify and remove login links.
+
+.. code-block:: console
+   :caption: Modify or delete links below login dialog with :program:`univention-keycloak`
+
+   $ univention-keycloak login-links set en 1 "Link 1 new" "Link 1 new description"
+   $ univention-keycloak login-links delete en 2
+
+To show the links that the login page has configured for a given language, use
+:command:`univention-keycloak` like in the following example:
+
+.. code-block:: console
+   :caption: Show configured links below the login dialog with :program:`univention-keycloak`
+
+   $ univention-keycloak login-links get en
 
 .. _apache-configuration:
 
@@ -1372,7 +1421,7 @@ Assign authentication flow
 
 :program:`Keycloak` calls the :term:`SAML SP` and the :term:`OIDC RP` *Client*.
 By default, neither :term:`SAML SP` nor :term:`OIDC RP` use the created
-authentication flow. 
+authentication flow.
 
 To restrict application access, you must assign the :ref:`created authentication
 flow <authorization-create-auth-flow>` to each :term:`Keycloak Client`.

@@ -24,6 +24,14 @@ Released: TODO
 * The app setting :envvar:`keycloak/theme` has been removed. The UCS theme, controlled
   by the UCR variable :envvar:`ucs/web/theme` is now used.
 
+* The :program:`Keycloak` app supports configurable links below the login dialog
+  on the login page.
+
+* When opening the login page provided by :program:`Keycloak` for the first
+  time, the page shows a cookie banner, if the administrator has configured it.
+  Users must accept the cookie banner, otherwise they can't continue to use
+  :program:`Keycloak`.
+
 22.0.1-ucs1
 ===========
 
