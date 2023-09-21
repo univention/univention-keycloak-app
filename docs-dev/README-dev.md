@@ -136,6 +136,11 @@ For local documentation builds, see [Build Sphinx documents locally](https://hut
 docker run -ti --rm -v "$PWD:/project" -w /project -u $UID --network=host --pull=always docker-registry.knut.univention.de/knut/sphinx-base:latest make -C docs/keycloak-app clean livehtml
 ```
 
+# AD hoc
+
+* Presentation `Keycloak and SPI extensions in Phoenix ` from Ferenc Géczi on
+  https://hutten.knut.univention.de/mediawiki/index.php/Uttuusch
+
 # Configuration tricks
 
 ## Import SimpleSAMLPHP signing certificate pair to Keycloak
