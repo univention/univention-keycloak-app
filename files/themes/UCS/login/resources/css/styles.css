@@ -161,9 +161,24 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
 
 #kc-locale-dropdown a {
     color: var(--font-color-contrast-high);
+    border-radius: var(--border-radius-interactable, 0.25rem);
+}
+
+#kc-locale-dropdown ul {
+    border-radius: var(--border-radius-interactable, 0.25rem);
+}
+
+#kc-locale-dropdown a:focus{
+    color: var(--font-color-contrast-high);
+    background-color: var(--pf-global--primary-color--dark-100);
 }
 
 #kc-locale-dropdown ul a:hover {
+    color: var(--button-text-color, var(--font-color-contrast-high));
+}
+
+#kc-locale-dropdown:focus-within ul {
+    display:block;
     color: var(--button-text-color, var(--font-color-contrast-high));
 }
 
