@@ -16,7 +16,7 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
-22.0.1-ucs2
+22.0.3-ucs1
 ===========
 
 Released: TODO
@@ -31,6 +31,9 @@ Released: TODO
   time, the page shows a cookie banner, if the administrator has configured it.
   Users must accept the cookie banner, otherwise they can't continue to use
   :program:`Keycloak`.
+
+* The app updates to *Keycloak* version 22.0.3 of the upstream Docker image from
+  https://quay.io/repository/keycloak/keycloak.
 
 22.0.1-ucs1
 ===========
