@@ -65,11 +65,11 @@ try:
     obj = mod.get(f'cn={app_name},cn=data,{superordinate}')
 
     data = json.loads(obj.props.data.raw)
-    kc_db_url = kc_db_url or data['uri']
-    kc_db_password = kc_db_password or data['password']
-    kc_db_username = kc_db_username or data['username']
-    kc_db_driver = kc_db_driver or data['driver']
-    kc_db_ping_datatype = kc_db_ping_datatype or data['ping_datatype']
+    kc_db_url = data['uri'] or kc_db_url
+    kc_db_password = data['password'] or kc_db_password
+    kc_db_username = data['username'] or kc_db_username
+    kc_db_driver = data['driver'] or kc_db_driver
+    kc_db_ping_datatype = data['ping_datatype'] or kc_db_ping_datatype
     data['installations'].append(fqdn)
     data['installations'] = list(set(data['installations']))
 # (3) no domain settings use app settings (or local defaults) as fallback
