@@ -99,7 +99,7 @@ systemctl restart apache2
 ## TODO: Is this needed on non "master" kc installations ?
 [ -x /usr/sbin/univention-config-registry ] && univention-config-registry register 50-keycloak || true
 ucr commit /etc/postgresql/11/main/pg_hba.conf
-service postgresql restart
+service postgresql reload
 
 sso_hostname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 1)"
 sso_domainname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 2-)"
