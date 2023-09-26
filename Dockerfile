@@ -5,14 +5,12 @@ FROM quay.io/keycloak/keycloak:${KEYCLOAK_VERSION} as ftl
 
 # buíld ad hoc federation and our extensions
 FROM maven:3.8.2-openjdk-17 as maven
-WORKDIR /ad-hoc
-COPY ad-hoc/ ./
+WORKDIR /extensions
+COPY extensions ./
 RUN mvn clean package --file univention-directory-manager
 RUN mvn install --file univention-directory-manager
 RUN mvn clean package --file univention-authenticator
 RUN ls univention-authenticator/target/
-WORKDIR /extensions
-COPY extensions ./
 RUN mvn clean package --file pom.xml
 
 # build login/template patch
@@ -37,8 +35,8 @@ COPY --from=theme /themes /opt/keycloak/themes/
 COPY --from=maven /extensions/lib/univention-app-authenticator-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-ldap-mapper-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-user-attribute-nameid-mapper-base64-*.jar /opt/keycloak/providers/
-COPY --from=maven /ad-hoc/univention-directory-manager/target/univention-directory-manager.jar /opt/keycloak/providers/
-COPY --from=maven /ad-hoc/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
+COPY --from=maven /extensions/univention-directory-manager/target/univention-directory-manager.jar /opt/keycloak/providers/
+COPY --from=maven /extensions/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
 
 # the keycloak image
 FROM quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
