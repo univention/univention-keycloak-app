@@ -19,7 +19,7 @@ Please also consider the `upstream release notes
 22.0.3-ucs1
 ===========
 
-Released: TODO
+Released: 27. September 2023
 
 * The app setting :envvar:`keycloak/theme` has been removed. The UCS theme, controlled
   by the UCR variable :envvar:`ucs/web/theme` is now used.
