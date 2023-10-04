@@ -62,5 +62,6 @@ https://docs.software-univention.de/app-center/5.0/en/configurations.html#instal
 For latest version of the documentation, see [Univention Keycloak app documentation](http://docs.software-univention.de/keycloak-app/latest/)
 
 # Dev Documentation
-* Test, pipelines, releases, tips & tricks [docs-dev/README-dev.md](docs-dev/README-dev.md)
-* Legacy app authorization [docs-dev/README-appauth.md](docs-dev/README-appauth.md)
+* Test, pipelines, releases, tips & tricks - [docs-dev/README-testing-release.md](docs-dev/README-testing-release.md)
+* Legacy app authorization - [docs-dev/README-appauth.md](docs-dev/README-appauth.md)
+* Themes and templates - [docs-dev/README-themes-template.md](docs-dev/README-themes-template.md)
