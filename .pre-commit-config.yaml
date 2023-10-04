@@ -1,0 +1,88 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://git.knut.univention.de/univention/dist/pre-commit-ucr
+    rev: '0.0.9'
+    hooks:
+      - id: ucr-flake8
+        additional_dependencies: ["flake8==5.0.4"]
+      - id: ucr-ruff
+        additional_dependencies: ["ruff==0.0.274"]
+      - id: ucr-autopep8
+        additional_dependencies: ["autopep8<=2.0.2"]
+        stages: [ manual ]
+      - id: ucr-ruff-fix
+        additional_dependencies: ["ruff==0.0.274"]
+        stages: [ manual ]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+    - id: check-added-large-files
+    - id: check-json
+      exclude: "/conffiles/.*[.]json$"
+    - id: check-xml
+      exclude: "/conffiles/.*[.]xml$\
+               "
+    - id: check-yaml
+      exclude: "/conffiles/.*[.]yaml$"
+    - id: check-merge-conflict
+    - id: pretty-format-json
+      exclude: "/conffiles/.*[.]json$\
+               "
+      args:
+        - --autofix
+        - --no-ensure-ascii
+    - id: trailing-whitespace
+      exclude: "[.]ai$\
+                |[.]csv$\
+                |[.]diff$\
+                |[.]patch$\
+                |[.]svg$\
+               "
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.9.0
+    hooks:
+    - id: python-check-blanket-noqa
+    - id: python-no-eval
+    #- id: rst-backticks
+    - id: rst-directive-colons
+    - id: rst-inline-touching-normal
+  - repo: https://github.com/pycqa/flake8
+    rev: '5.0.4'
+    hooks:
+    - id: flake8
+  - repo: https://git.knut.univention.de/univention/dist/pre-commit-ucs.git
+    rev: v1.4.0
+    hooks:
+      - id: missing-executable-flag-for-python-file
+      - id: missing-executable-flag-for-shell-file
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: 'v0.0.274'
+    hooks:
+      - id: ruff
+      - id: ruff
+        alias: "ruff-fix"
+        stages: [ manual ]
+        args: ["--fix"]
+      - id: ruff
+        alias: "ruff-statistics"
+        stages: [ manual ]
+        args: ["--statistics"]
+  - repo: https://github.com/pycqa/isort
+    rev: 5.11.5
+    hooks:
+      - id: isort
+        entry: isort -c
+      - id: isort
+        alias: "isort-fix"
+        stages: [ manual ]
+        entry: isort
+  - repo: https://github.com/pre-commit/mirrors-autopep8
+    rev: v2.0.1
+    hooks:
+    -   id: autopep8
+        args: ["-d"]
+    -   id: autopep8
+        alias: "autopep8-fix"
+        stages: [ manual ]
+        args: ["-i"]

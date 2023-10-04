@@ -1,0 +1,16 @@
+[flake8]
+exclude =
+	oidc/python-keycloak/,
+	services/univention-ldb-modules/buildtools/,
+max-complexity = 139
+ignore =
+	# E501 line too long
+	E501,
+	# E265 block comment should start with '# '
+	E265,
+	# E266 too many leading '#' for block comment
+	E266,
+	# F811 redefinition of unused
+	F811,
+	# W503 line break before binary operator
+	W503,

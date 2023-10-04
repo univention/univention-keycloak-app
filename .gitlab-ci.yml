@@ -1,4 +1,5 @@
 stages:
+  - test
   - prepare
   - build
   - merge
@@ -20,6 +21,10 @@ include:
 variables:
   # version
   DOC_TARGET_VERSION: "22.0.3"
+
+pre-commit:
+  stage: test
+  extends: .pre-commit
 
 generate-config:
   stage: prepare

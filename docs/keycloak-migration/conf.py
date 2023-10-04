@@ -16,8 +16,8 @@
 #
 import os
 import sys
-
 from datetime import date
+
 
 # -- Project information -----------------------------------------------------
 
@@ -113,7 +113,10 @@ rst_epilog = """
 
 intersphinx_mapping = {
     "uv-manual": ("https://docs.software-univention.de/manual/5.0/en", None),
-    "uv-keycloak-app": ("https://docs.software-univention.de/keycloak-app/latest/", None),
+    "uv-keycloak-app": (
+        "https://docs.software-univention.de/keycloak-app/latest/",
+        None,
+    ),
 }
 
 latex_engine = 'lualatex'

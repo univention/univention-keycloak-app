@@ -106,23 +106,23 @@ done
 cp app/preinst.tmpl app/preinst
 
 ## Then they simply teplace the some keywords by the actual files like:
-sed -i -e "/%KEYCLOAK-ACL%/r files/67keycloak.acl" -e "/%KEYCLOAK-ACL%/d" app/preinst
+sed -i -e "/%KEYCLOAK-ACL%/r files/conffiles/67keycloak.acl" -e "/%KEYCLOAK-ACL%/d" app/preinst
 
-sed -i -e "/%KEYCLOAK-TEMPLATE-APACHE%/r files/univention-keycloak.conf" -e "/%KEYCLOAK-TEMPLATE-APACHE%/d" app/preinst
-sed -i -e "/%KEYCLOAK-INFO-APACHE%/r files/univention-keycloak.info" -e "/%KEYCLOAK-INFO-APACHE%/d" app/preinst
+sed -i -e "/%KEYCLOAK-TEMPLATE-APACHE%/r files/conffiles/univention-keycloak.conf" -e "/%KEYCLOAK-TEMPLATE-APACHE%/d" app/preinst
+sed -i -e "/%KEYCLOAK-INFO-APACHE%/r files/conffiles/univention-keycloak.info" -e "/%KEYCLOAK-INFO-APACHE%/d" app/preinst
 base64 files/keycloak.conf >> files/tmp_kconf_b64
 sed -i -e "/%KEYCLOAK-TEMPLATE-CONF%/r files/tmp_kconf_b64" -e "/%KEYCLOAK-TEMPLATE-CONF%/d" app/preinst
 
-sed -i -e "/%POSTGRESQL-KEYCLOAK-TEMPLATE%/r files/50-keycloak" -e "/%POSTGRESQL-KEYCLOAK-TEMPLATE%/d" app/preinst
-sed -i -e "/%POSTGRESQL-KEYCLOAK-INFO%/r files/50-keycloak.info" -e "/%POSTGRESQL-KEYCLOAK-INFO%/d" app/preinst
+sed -i -e "/%POSTGRESQL-KEYCLOAK-TEMPLATE%/r files/conffiles/50-keycloak" -e "/%POSTGRESQL-KEYCLOAK-TEMPLATE%/d" app/preinst
+sed -i -e "/%POSTGRESQL-KEYCLOAK-INFO%/r files/conffiles/50-keycloak.info" -e "/%POSTGRESQL-KEYCLOAK-INFO%/d" app/preinst
 
 base64 files/cache-ispn-jdbc-ping.xml >> files/tmp_ispn_kconf_b64
 sed -i -e "/%KEYCLOAK-ISPN-TEMPLATE-CONF%/r files/tmp_ispn_kconf_b64" -e "/%KEYCLOAK-ISPN-TEMPLATE-CONF%/d" app/preinst
 
-sed -i -e "/%KEYCLOAK-LOGIN-TRANSLATION-DE%/r files/messages_de.properties" -e "/KEYCLOAK-LOGIN-TRANSLATION-DE%/d" app/preinst
-sed -i -e "/%KEYCLOAK-LOGIN-TRANSLATION-EN%/r files/messages_en.properties" -e "/%KEYCLOAK-LOGIN-TRANSLATION-EN%/d" app/preinst
-sed -i -e "/%KEYCLOAK-LOGIN-TRANSLATION-INFO-DE%/r files/messages_de.properties.info" -e "/KEYCLOAK-LOGIN-TRANSLATION-INFO-DE%/d" app/preinst
-sed -i -e "/%KEYCLOAK-LOGIN-TRANSLATION-INFO-EN%/r files/messages_en.properties.info" -e "/%KEYCLOAK-LOGIN-TRANSLATION-INFO-EN%/d" app/preinst
+sed -i -e "/%KEYCLOAK-LOGIN-TRANSLATION-DE%/r files/conffiles/messages_de.properties" -e "/KEYCLOAK-LOGIN-TRANSLATION-DE%/d" app/preinst
+sed -i -e "/%KEYCLOAK-LOGIN-TRANSLATION-EN%/r files/conffiles/messages_en.properties" -e "/%KEYCLOAK-LOGIN-TRANSLATION-EN%/d" app/preinst
+sed -i -e "/%KEYCLOAK-LOGIN-TRANSLATION-INFO-DE%/r files/conffiles/messages_de.properties.info" -e "/KEYCLOAK-LOGIN-TRANSLATION-INFO-DE%/d" app/preinst
+sed -i -e "/%KEYCLOAK-LOGIN-TRANSLATION-INFO-EN%/r files/conffiles/messages_en.properties.info" -e "/%KEYCLOAK-LOGIN-TRANSLATION-INFO-EN%/d" app/preinst
 
 if "$local_copy"; then
 	for file in "${FILES_TO_COPY[@]}"; do

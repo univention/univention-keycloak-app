@@ -28,7 +28,7 @@ Overview
 ========
 
 :numref:`figure-architecture` shows the architecture with the most important
-elements. 
+elements.
 
 .. _figure-architecture:
 

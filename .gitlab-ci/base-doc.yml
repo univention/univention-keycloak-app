@@ -56,7 +56,7 @@ stages:
     - cp "$DOCS_DIR"/_build/"$language"/latex/"$DOC_NAME".pdf "$CI_PROJECT_DIR"/out/"$DOC_TARGET_PATH"/"$DOC_NAME".pdf
 
 .sphinx-linkcheck:
-  extends: 
+  extends:
     - .sphinx-doc
     - .sphinx-linkcheck-template
   script:

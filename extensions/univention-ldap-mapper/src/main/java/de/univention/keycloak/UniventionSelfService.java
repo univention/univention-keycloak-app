@@ -64,7 +64,7 @@ public class UniventionSelfService implements RequiredActionProvider, RequiredAc
 
     @Override
     public void evaluateTriggers(RequiredActionContext context) {
-    
+
     }
 
     @Override

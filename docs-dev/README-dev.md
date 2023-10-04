@@ -149,8 +149,8 @@ It is possible to import the signing key and certificate from `SimpleSAMLPHP` in
 * Import the copied private key and the certificate to `Keycloak` via the `Keycloak Admin Console` as described in https://www.keycloak.org/docs/latest/server_admin/#adding-an-existing-keypair-and-certificate
 * Make sure to *enable* and *activate* the private key and set the priority to a value greater than ``100``.
 * *Disable* and *deactivate* the standard key `rsa-generated`.
-* Verify that `Keycloak` uses the imported key for signatures. Check the `SAML IDP` metadata in 
-`https://{$KEYCLOAK_FQDN}/realms/ucs/protocol/saml/descriptor` and verify that the `<ds:KeyName>` is the key ID (`kid`) of the imported key in the `Keycloak Admin Console`. 
+* Verify that `Keycloak` uses the imported key for signatures. Check the `SAML IDP` metadata in
+`https://{$KEYCLOAK_FQDN}/realms/ucs/protocol/saml/descriptor` and verify that the `<ds:KeyName>` is the key ID (`kid`) of the imported key in the `Keycloak Admin Console`.
 
 ## Change app settings file on-the-fly
 

@@ -16,16 +16,18 @@
 #
 import os
 import sys
+from datetime import date
+
+
 # sys.path.insert(0, os.path.abspath('.'))
 
-from datetime import date
-from sphinx.locale import _
 
 # -- Project information -----------------------------------------------------
 
 
 def read_version_from_ci() -> str:
-    """Read the version for the documentation from the pipeline definition
+    """
+    Read the version for the documentation from the pipeline definition
 
     To not maintain the documentation version in different places, just define
     at one place and use it in different places.
@@ -38,14 +40,13 @@ def read_version_from_ci() -> str:
 
     :rtype: str
     """
-
     import yaml
 
-    with open("../../.gitlab-ci.yml", "r") as f:
+    with open("../../.gitlab-ci.yml") as f:
         ci = yaml.safe_load(f)
         return ci.get(
-                "variables", {"DOC_TARGET_VERSION": "18.0.0"}
-                ).get("DOC_TARGET_VERSION")
+            "variables", {"DOC_TARGET_VERSION": "18.0.0"},
+        ).get("DOC_TARGET_VERSION")
 
 
 release = read_version_from_ci()
@@ -143,7 +144,7 @@ rst_epilog = """
 """
 
 intersphinx_mapping = {
-    "uv-manual": ("https://docs.software-univention.de/manual/5.0/en", None)
+    "uv-manual": ("https://docs.software-univention.de/manual/5.0/en", None),
 }
 
 latex_engine = 'lualatex'

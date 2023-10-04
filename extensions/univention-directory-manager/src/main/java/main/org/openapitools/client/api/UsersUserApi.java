@@ -37,19 +37,19 @@ public class UsersUserApi {
 
   /**
    * Get a representation of the User object
-   * 
+   *
    * @param dn The objects DN (urlencoded) (required)
    * @return a {@code UsersUser}
    * @throws ApiException if fails to make API call
    */
   public UsersUser udmUsersUserObject(String dn) throws ApiException {
     Object localVarPostBody = null;
-    
+
     // verify the required parameter 'dn' is set
     if (dn == null) {
       throw new ApiException(400, "Missing the required parameter 'dn' when calling udmUsersUserObject");
     }
-    
+
     // create path and map variables
     String localVarPath = "/users/user/{dn}".replaceAll("\\{dn\\}", apiClient.escapeString(dn.toString()));
 
@@ -60,16 +60,16 @@ public class UsersUserApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
 
-    
-    
-    
+
+
+
     final String[] localVarAccepts = {
       "application/json"
     };
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
     final String[] localVarContentTypes = {
-      
+
     };
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
@@ -80,19 +80,19 @@ public class UsersUserApi {
       }
   /**
    * Create a new User object
-   * 
+   *
    * @param usersUser  (required)
    * @return a {@code UsersUser}
    * @throws ApiException if fails to make API call
    */
   public UsersUser udmUsersUserObjectCreate(UsersUser usersUser) throws ApiException {
     Object localVarPostBody = usersUser;
-    
+
     // verify the required parameter 'usersUser' is set
     if (usersUser == null) {
       throw new ApiException(400, "Missing the required parameter 'usersUser' when calling udmUsersUserObjectCreate");
     }
-    
+
     // create path and map variables
     String localVarPath = "/users/user/";
 
@@ -103,9 +103,9 @@ public class UsersUserApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
 
-    
-    
-    
+
+
+
     final String[] localVarAccepts = {
       "application/json"
     };
@@ -123,7 +123,7 @@ public class UsersUserApi {
       }
   /**
    * Modify or move an User object
-   * 
+   *
    * @param dn The objects DN (urlencoded) (required)
    * @param usersUser  (required)
    * @param ifMatch provide entity tag to make a condition request to not overwrite any values in a race condition (optional)
@@ -137,17 +137,17 @@ public class UsersUserApi {
    */
   public UsersUser udmUsersUserObjectModify(String dn, UsersUser usersUser, String ifMatch, String ifUnmodifiedSince, String userAgent, String acceptLanguage, String ifNoneMatch, String ifModifiedSince) throws ApiException {
     Object localVarPostBody = usersUser;
-    
+
     // verify the required parameter 'dn' is set
     if (dn == null) {
       throw new ApiException(400, "Missing the required parameter 'dn' when calling udmUsersUserObjectModify");
     }
-    
+
     // verify the required parameter 'usersUser' is set
     if (usersUser == null) {
       throw new ApiException(400, "Missing the required parameter 'usersUser' when calling udmUsersUserObjectModify");
     }
-    
+
     // create path and map variables
     String localVarPath = "/users/user/{dn}".replaceAll("\\{dn\\}", apiClient.escapeString(dn.toString()));
 
@@ -171,8 +171,8 @@ if (ifNoneMatch != null)
 if (ifModifiedSince != null)
       localVarHeaderParams.put("If-Modified-Since", apiClient.parameterToString(ifModifiedSince));
 
-    
-    
+
+
     final String[] localVarAccepts = {
       "application/json"
     };
@@ -190,7 +190,7 @@ if (ifModifiedSince != null)
       }
   /**
    * Remove a Users object
-   * 
+   *
    * @param dn The objects DN (urlencoded) (required)
    * @param cleanup Whether to perform a cleanup (e.g. of temporary objects, locks, etc). (optional, default to true)
    * @param recursive Whether to remove referring objects (e.g. DNS or DHCP references). (optional, default to true)
@@ -202,12 +202,12 @@ if (ifModifiedSince != null)
    */
   public void udmUsersUserObjectRemove(String dn, Boolean cleanup, Boolean recursive, String userAgent, String acceptLanguage, String ifNoneMatch, String ifModifiedSince) throws ApiException {
     Object localVarPostBody = null;
-    
+
     // verify the required parameter 'dn' is set
     if (dn == null) {
       throw new ApiException(400, "Missing the required parameter 'dn' when calling udmUsersUserObjectRemove");
     }
-    
+
     // create path and map variables
     String localVarPath = "/users/user/{dn}".replaceAll("\\{dn\\}", apiClient.escapeString(dn.toString()));
 
@@ -229,15 +229,15 @@ if (ifNoneMatch != null)
 if (ifModifiedSince != null)
       localVarHeaderParams.put("If-Modified-Since", apiClient.parameterToString(ifModifiedSince));
 
-    
-    
+
+
     final String[] localVarAccepts = {
-      
+
     };
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
     final String[] localVarContentTypes = {
-      
+
     };
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
@@ -263,7 +263,7 @@ if (ifModifiedSince != null)
    */
   public UsersUserList udmUsersUserObjectSearch(String filter, String position, String scope, Object query, Boolean hidden, String userAgent, String acceptLanguage, String ifNoneMatch, String ifModifiedSince) throws ApiException {
     Object localVarPostBody = null;
-    
+
     // create path and map variables
     String localVarPath = "/users/user/";
 
@@ -290,15 +290,15 @@ if (ifModifiedSince != null)
     if (ifModifiedSince != null)
       localVarHeaderParams.put("If-Modified-Since", apiClient.parameterToString(ifModifiedSince));
 
-    
-    
+
+
     final String[] localVarAccepts = {
       "application/json"
     };
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
     final String[] localVarContentTypes = {
-      
+
     };
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
@@ -312,7 +312,7 @@ if (ifModifiedSince != null)
 
   /**
    * Get a template for creating an object. Contains all properties and their default values.
-   * 
+   *
    * @param userAgent The user agent (optional)
    * @param acceptLanguage The accepted response languages (optional)
    * @param ifNoneMatch  (optional)
@@ -322,7 +322,7 @@ if (ifModifiedSince != null)
    */
   public UsersUser udmUsersUserObjectTemplate(String userAgent, String acceptLanguage, String ifNoneMatch, String ifModifiedSince) throws ApiException {
     Object localVarPostBody = null;
-    
+
     // create path and map variables
     String localVarPath = "/users/user/add";
 
@@ -342,15 +342,15 @@ if (ifModifiedSince != null)
     if (ifModifiedSince != null)
       localVarHeaderParams.put("If-Modified-Since", apiClient.parameterToString(ifModifiedSince));
 
-    
-    
+
+
     final String[] localVarAccepts = {
       "application/json"
     };
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
     final String[] localVarContentTypes = {
-      
+
     };
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
@@ -364,7 +364,7 @@ if (ifModifiedSince != null)
 
   /**
    * Modify or move an User object
-   * 
+   *
    * @param dn The objects DN (urlencoded) (required)
    * @param usersUser  (required)
    * @param ifMatch provide entity tag to make a condition request to not overwrite any values in a race condition (optional)
@@ -378,17 +378,17 @@ if (ifModifiedSince != null)
    */
   public UsersUser udmUsersUserObjectUpdate(String dn, UsersUser usersUser, String ifMatch, String ifUnmodifiedSince, String userAgent, String acceptLanguage, String ifNoneMatch, String ifModifiedSince) throws ApiException {
     Object localVarPostBody = usersUser;
-    
+
     // verify the required parameter 'dn' is set
     if (dn == null) {
       throw new ApiException(400, "Missing the required parameter 'dn' when calling udmUsersUserObjectUpdate");
     }
-    
+
     // verify the required parameter 'usersUser' is set
     if (usersUser == null) {
       throw new ApiException(400, "Missing the required parameter 'usersUser' when calling udmUsersUserObjectUpdate");
     }
-    
+
     // create path and map variables
     String localVarPath = "/users/user/{dn}".replaceAll("\\{dn\\}", apiClient.escapeString(dn.toString()));
 
@@ -412,8 +412,8 @@ if (ifNoneMatch != null)
 if (ifModifiedSince != null)
       localVarHeaderParams.put("If-Modified-Since", apiClient.parameterToString(ifModifiedSince));
 
-    
-    
+
+
     final String[] localVarAccepts = {
       "application/json"
     };

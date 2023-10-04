@@ -18,7 +18,7 @@ The general approach for the migration includes the following:
 * Get an overview of all the services that use :program:`SimpleSAMLphp` and
   their settings.
 
-* Check and create attribute mappers for LDAP. Selected LDAP attributes 
+* Check and create attribute mappers for LDAP. Selected LDAP attributes
   become available to :program:`Keycloak`.
 
 * Create a :term:`SAML SP`, the client, and necessary attribute mappers in

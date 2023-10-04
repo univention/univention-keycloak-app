@@ -1,14 +1,14 @@
 # Configure this App authenticator
 
 ## Prerequisites:
-1. Keycloak has been installed with this docker image: 
+1. Keycloak has been installed with this docker image:
    gitregistry.knut.univention.de/univention/components/keycloak-app:branch-jbremer-appauthorization
 2. The UMC has been adjusted to use Keycloak
 3. An App (Nextcloud?) has been adjusted to use Keycloak
 
 ## Configuration:
 ### 1. Create a new authentication flow
- 
+
    Go to the Keycloak admin console. Go to `Authentication`
 
    Click on the option on the flow `browser`. Duplicate it.
@@ -45,7 +45,7 @@
    Go to `Groups`. Click on the desired group and select `Role mapping`.
    Click `Assign role`. `Filter by client roles`.
    Then select the client role.
- 
+
 
 
 

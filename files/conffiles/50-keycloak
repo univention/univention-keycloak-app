@@ -1,5 +1,5 @@
 @!@
 ips = configRegistry.get('keycloak/database/connection', '0.0.0.0/0')
 for ip in ips.split():
-	print('host    keycloak         keycloak         %s          md5' % ip)
+    print('host    keycloak         keycloak         %s          md5' % ip)
 @!@
