@@ -12,7 +12,7 @@ Database configuration
 settings. By default, the :program:`Keycloak` app installs and configures a
 :program:`PostgreSQL` database.
 
-In case you want to use your own database back end, you can change the database
+In case you want to use your own database backend, you can change the database
 settings for :program:`Keycloak` prior or after the app installation.
 
 .. _app-database-default:
@@ -35,12 +35,12 @@ a need to use an already existing or clustered database.
 Custom database
 ===============
 
-:program:`Keycloak` supports a wide range of different databases as back end.
+:program:`Keycloak` supports a wide range of different databases as backend.
 For detailed information, consult the :program:`Keycloak` manual
 :cite:t:`keycloak-db`.
 
 The :program:`Keycloak` app provides app settings for the configuration of the
-database back end. For the available settings, see the :ref:`app-settings`
+database backend. For the available settings, see the :ref:`app-settings`
 section.
 
 .. important::
@@ -117,7 +117,7 @@ the database settings during the installation.
    existing configuration settings and session.
 
    You have to manually backup :program:`Keycloak` before and restore the
-   settings after changing the database back end. For more information, see
+   settings after changing the database backend. For more information, see
    :ref:`backup-and-restore`.
 
 To change the database settings for existing :program:`Keycloak` instances you
