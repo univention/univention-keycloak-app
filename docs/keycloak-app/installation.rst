@@ -122,11 +122,6 @@ initial configuration.
 
       $ univention-keycloak --binduser=admin --bindpwdfile=/etc/keycloak.secret init
 
-   .. warning::
-
-       After you deleted the realm *UCS*, create the initial configuration with the
-       following command:
-
 .. _keycloak-admin-console:
 
 Sign in to Keycloak Admin Console
@@ -142,9 +137,6 @@ UCS domain name.
 
 Example:
    https://ucs-sso-ng.example.com/admin/
-
-The username for login is the *name of the initial admin user* defined during
-installation and saved in the UCR variable :envvar:`keycloak/admin/user`.
 
 .. note::
 
@@ -175,7 +167,7 @@ automatically.
 
    .. code-block::
 
-      $ wget "https://ucs-sso-ng.$(hostname -d)/keycloak/realms/ucs/.well-known/openid-configuration"
+      $ wget "https://$(ucr get keycloak/server/sso/fqdn)/realms/ucs/.well-known/openid-configuration"
 
 .. tab:: SAML
 
@@ -183,4 +175,4 @@ automatically.
 
    .. code-block::
 
-      $ wget "https://ucs-sso-ng.$(hostname -d)/keycloak/realms/ucs/protocol/saml/descriptor"
+      $ wget "https://$(ucr get keycloak/server/sso/fqdn)/realms/ucs/protocol/saml/descriptor"

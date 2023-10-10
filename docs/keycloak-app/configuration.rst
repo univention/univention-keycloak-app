@@ -114,7 +114,7 @@ following steps on the system where you installed Keycloak:
    :samp:`slapd[…]: SASL [conn=…] Failure: SAML assertion issuer
    https://ucs-sso-ng.{$domainname}/realms/ucs is unknown`
 
-By default :program:`Keycloak` app creates a :term:`SAML SP` (client) for
+By default the :program:`Keycloak` app creates a :term:`SAML SP` (client) for
 every UCS Portal server. You can see the list of existing :term:`SAML SP`
 clients with the following command:
 
