@@ -63,5 +63,29 @@ image_build:
       - Dockerfile
       - files/**/*
       - univention-ldap-mapper/**/*
+      - .gitlab-ci.yml
   variables:
     KANIKO_ARGS: --build-arg commit="$CI_COMMIT_SHA" --build-arg date="$CI_JOB_STARTED_AT" --cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache
+
+sbom:
+  stage: build
+  variables:
+    IMAGE_SYFT: "anchore/syft:v0.84.1-debug"
+  cache:
+    - key: "container-sbom-${CI_COMMIT_REF_SLUG}"
+      paths:
+        - "${CI_PROJECT_DIR}/sbom.cdx.json"
+      policy: "push"
+    - key: "container-build-${CI_COMMIT_REF_SLUG}"
+      paths:
+        - "${CI_PROJECT_DIR}/digest"
+      policy: "pull"
+  image:
+    name: "${IMAGE_SYFT}"
+    entrypoint: ["/busybox/sh"]
+  needs:
+    - "image_build"
+  script:
+    - "export IMAGE_DIGEST=$(cat ${CI_PROJECT_DIR}/digest)"
+    - "/syft --scope all-layers -o spdx-json ${CI_REGISTRY_IMAGE}@${IMAGE_DIGEST} > ${CI_PROJECT_DIR}/sbom.cdx.json"
+    - "/syft --scope all-layers ${CI_REGISTRY_IMAGE}@${IMAGE_DIGEST}"
