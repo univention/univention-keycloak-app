@@ -18,12 +18,15 @@ This documentation is for system administrators who operate the
 directory in Univention Corporate Server (UCS). It covers the following topics:
 
 #. :ref:`app-installation`
+#. :ref:`app-update`
 #. :ref:`app-configuration`
 #. :ref:`app-database`
 #. :ref:`app-architecture`
 #. :ref:`app-limitations`
 #. :ref:`app-use-cases`
 #. :ref:`app-troubleshooting`
+#. :ref:`app-changelog`
+#. :ref:`app-bibliography`
 
 This documentation doesn't cover the following topics:
 
