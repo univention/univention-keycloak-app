@@ -65,7 +65,7 @@ image_build:
       - univention-ldap-mapper/**/*
       - .gitlab-ci.yml
   variables:
-    KANIKO_ARGS: --build-arg commit="$CI_COMMIT_SHA" --build-arg date="$CI_JOB_STARTED_AT" --cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache
+    KANIKO_ARGS: --createBOM --build-arg commit="$CI_COMMIT_SHA" --build-arg date="$CI_JOB_STARTED_AT" --cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache
 
 sbom:
   stage: build
