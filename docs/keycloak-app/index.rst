@@ -25,8 +25,6 @@ directory in Univention Corporate Server (UCS). It covers the following topics:
 #. :ref:`app-limitations`
 #. :ref:`app-use-cases`
 #. :ref:`app-troubleshooting`
-#. :ref:`app-changelog`
-#. :ref:`app-bibliography`
 
 This documentation doesn't cover the following topics:
 
