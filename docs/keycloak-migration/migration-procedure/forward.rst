@@ -13,7 +13,7 @@ This section is about single sign-on between services that already use
 This configuration can be a temporary solution for environments which
 have a lot of services to migrate, and where single sign-on between all
 services needs to be available during the time of the migration.
-Keep in mind, that the outlined setup is only an
+Keep in mind, that the outlined setup is only a
 short-term solution for your environment until all clients completed the
 migration to :program:`Keycloak`.
 
@@ -23,7 +23,7 @@ migration to :program:`Keycloak`.
    migrated services is needed during the time of the migration.
    Future releases will not support this setup.
 
-1. Download the certificate from the :program:`Keycloak` app and save it to the
+1. Download the :program:`Keycloak` IdP's signing certificate for SAML communication and save it to the
    local file :file:`/etc/ssl/certs/ucs-sso-ng.keycloak-signing.pem`:
 
    .. code-block:: console
@@ -42,7 +42,7 @@ migration to :program:`Keycloak`.
       --umc-uid-mapper \
       --metadata-url \
       "https://${ucs_sso_fqdn}/simplesamlphp/module.php/saml/sp/metadata.php/default-sp" \
-      --redirect-urls \
+      --valid-redirect-uris \
       "https://${ucs_sso_fqdn}/simplesamlphp/module.php/saml/sp/saml2-acs.php/default-sp"
 
 #. Change the default provider from ``univention-ldap`` to ``default-sp``:
@@ -61,8 +61,8 @@ migration to :program:`Keycloak`.
       $ cat <<EOF > /etc/simplesamlphp/metadata/saml20-idp-remote.php
         <?php
         \$metadata['https://${kc_provider}/realms/ucs'] = [
-          'SingleSignOnService'  => 'https://${kc_provider}/realms/ucs/protocol/saml',
-          'SingleLogoutService'  => 'https://${kc_provider}/realms/ucs/protocol/saml',
+          'SingleSignOnService'  => '${kc_provider}/realms/ucs/protocol/saml',
+          'SingleLogoutService'  => '${kc_provider}/realms/ucs/protocol/saml',
           'certificate'          => 'ucs-sso-ng.keycloak-signing.pem',
           'authproc' => array(
             50 => array(
