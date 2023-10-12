@@ -87,6 +87,5 @@ sbom:
     - "image_build"
   script:
     - "env"
-    - "export IMAGE_DIGEST=$(cat ${CI_PROJECT_DIR}/digest)"
-    - "/syft --scope all-layers -o spdx-json ${CI_REGISTRY_IMAGE}@${IMAGE_DIGEST} > ${CI_PROJECT_DIR}/sbom.cdx.json"
-    - "/syft --scope all-layers ${CI_REGISTRY_IMAGE}@${IMAGE_DIGEST}"
+    - "/syft --scope all-layers -o spdx-json ${IMAGE_TAG} > ${CI_PROJECT_DIR}/sbom.cdx.json"
+    - "/syft --scope all-layers ${IMAGE_TAG}"
