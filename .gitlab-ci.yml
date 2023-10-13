@@ -106,6 +106,7 @@ add-sbom:
     name: "${IMAGE_COSIGN}"
     entrypoint: [""]
   needs:
+    - "image_build"
     - "sbom"
   script:
     - "cosign attach sbom --type=spdx --input-format=json --sbom=sbom.cdx.json ${IMAGE_TAG}"
