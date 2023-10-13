@@ -69,63 +69,100 @@ variables:
 #    forward:
 #      pipeline_variables: true
 
-image_build:
-  stage: build
-  extends: .kaniko
-  rules:
-    - changes:
-      - ad-hoc/**/*
-      - dependencies/**/*
-      - Dockerfile
-      - files/**/*
-      - univention-ldap-mapper/**/*
-      - .gitlab-ci.yml
-  variables:
-    KANIKO_ARGS: --build-arg commit="$CI_COMMIT_SHA" --build-arg date="$CI_JOB_STARTED_AT" --cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache
+    #image_build:
+    #  stage: build
+    #  extends: .kaniko
+    #  rules:
+    #    - changes:
+    #      - ad-hoc/**/*
+    #      - dependencies/**/*
+    #      - Dockerfile
+    #      - files/**/*
+    #      - univention-ldap-mapper/**/*
+    #      - .gitlab-ci.yml
+    #  variables:
+    #    KANIKO_ARGS: --build-arg commit="$CI_COMMIT_SHA" --build-arg date="$CI_JOB_STARTED_AT" --cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache
+    #
+    #sbom:
+    #  stage: build
+    #  variables:
+    #    IMAGE_SYFT: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/anchore/syft:v0.93.0-debug"
+    #  cache:
+    #    - key: "container-sbom-${CI_COMMIT_REF_SLUG}"
+    #      paths:
+    #        - "${CI_PROJECT_DIR}/sbom.cdx.json"
+    #      policy: "push"
+    #    - key: "container-build-${CI_COMMIT_REF_SLUG}"
+    #      paths:
+    #        - "${CI_PROJECT_DIR}/digest"
+    #      policy: "pull"
+    #  image:
+    #    name: "${IMAGE_SYFT}"
+    #    entrypoint: [""]
+    #  needs:
+    #    - "image_build"
+    #  script:
+    #    - "env"
+    #    - "/syft --scope all-layers -o spdx-json ${IMAGE_TAG} > ${CI_PROJECT_DIR}/sbom.cdx.json"
+    #    - "/syft --scope all-layers ${IMAGE_TAG}"
+    #
+    #add-sbom:
+    #  variables:
+    #    IMAGE_COSIGN: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/bitnami/cosign:2.0.2"
+    #  before_script:
+    #    - *dockerconfigjson
+    #  cache:
+    #    - key: "container-sbom-${CI_COMMIT_REF_SLUG}"
+    #      paths:
+    #        - "${CI_PROJECT_DIR}/sbom.cdx.json"
+    #      policy: "pull"
+    #    - key: "container-build-${CI_COMMIT_REF_SLUG}"
+    #      paths:
+    #        - "${CI_PROJECT_DIR}/digest"
+    #      policy: "pull"
+    #  image:
+    #    name: "${IMAGE_COSIGN}"
+    #    entrypoint: [""]
+    #  needs:
+    #    - "image_build"
+    #    - "sbom"
+    #  script:
+    #    - "cosign attach sbom --type=spdx --input-format=json --sbom=sbom.cdx.json ${IMAGE_TAG}"
+    #  stage: "build"
 
-sbom:
+container_scanning:
   stage: build
-  variables:
-    IMAGE_SYFT: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/anchore/syft:v0.93.0-debug"
-  cache:
-    - key: "container-sbom-${CI_COMMIT_REF_SLUG}"
-      paths:
-        - "${CI_PROJECT_DIR}/sbom.cdx.json"
-      policy: "push"
-    - key: "container-build-${CI_COMMIT_REF_SLUG}"
-      paths:
-        - "${CI_PROJECT_DIR}/digest"
-      policy: "pull"
   image:
-    name: "${IMAGE_SYFT}"
+    name: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/aquasec/trivy:latest"
     entrypoint: [""]
-  needs:
-    - "image_build"
-  script:
-    - "env"
-    - "/syft --scope all-layers -o spdx-json ${IMAGE_TAG} > ${CI_PROJECT_DIR}/sbom.cdx.json"
-    - "/syft --scope all-layers ${IMAGE_TAG}"
-
-add-sbom:
   variables:
-    IMAGE_COSIGN: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/bitnami/cosign:2.0.2"
-  before_script:
-    - *dockerconfigjson
-  cache:
-    - key: "container-sbom-${CI_COMMIT_REF_SLUG}"
-      paths:
-        - "${CI_PROJECT_DIR}/sbom.cdx.json"
-      policy: "pull"
-    - key: "container-build-${CI_COMMIT_REF_SLUG}"
-      paths:
-        - "${CI_PROJECT_DIR}/digest"
-      policy: "pull"
-  image:
-    name: "${IMAGE_COSIGN}"
-    entrypoint: [""]
-  needs:
-    - "image_build"
-    - "sbom"
+    # No need to clone the repo, we exclusively work on artifacts.  See
+    # https://docs.gitlab.com/ee/ci/runners/README.html#git-strategy
+    GIT_STRATEGY: none
+    TRIVY_USERNAME: "$CI_REGISTRY_USER"
+    TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
+    TRIVY_AUTH_URL: "$CI_REGISTRY"
+    FULL_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
-    - "cosign attach sbom --type=spdx --input-format=json --sbom=sbom.cdx.json ${IMAGE_TAG}"
-  stage: "build"
+    - trivy --version
+    # cache cleanup is needed when scanning images with the same tags, it does not remove the database
+    - time trivy image --clear-cache
+    # update vulnerabilities db
+    - time trivy --download-db-only --no-progress --cache-dir .trivycache/
+    # Builds report and puts it in the default workdir $CI_PROJECT_DIR, so `artifacts:` can take it from there
+    - time trivy --exit-code 0 --cache-dir .trivycache/ --no-progress --format template --template "@/contrib/gitlab.tpl"
+        --output "$CI_PROJECT_DIR/gl-container-scanning-report.json" "$FULL_IMAGE_NAME"
+    # Prints full report
+    - time trivy --exit-code 0 --cache-dir .trivycache/ --no-progress "$FULL_IMAGE_NAME"
+    # Fail on critical vulnerabilities
+    - time trivy --exit-code 1 --cache-dir .trivycache/ --severity CRITICAL --no-progress "$FULL_IMAGE_NAME"
+  cache:
+    paths:
+      - .trivycache/
+  # Enables https://docs.gitlab.com/ee/user/application_security/container_scanning/ (Container Scanning report is available on GitLab EE Ultimate or GitLab.com Gold)
+  artifacts:
+    when:                          always
+    reports:
+      container_scanning:          gl-container-scanning-report.json
+  tags:
+    - docker-runner
