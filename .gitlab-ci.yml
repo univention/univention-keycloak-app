@@ -155,7 +155,7 @@ container_scanning:
     # update vulnerabilities db
     - time trivy image --download-db-only
     # Image report
-    - time trivy image --exit-code 0 --format template --template "@contrib/gitlab-codequality.tpl"
+    - time trivy image --exit-code 0 --format template --template "@/contrib/gitlab-codequality.tpl"
         --output gl-codeclimate.json "$FULL_IMAGE_NAME"
     #- ./trivy filesystem --scanners config,vuln --exit-code 0 --format template --template "@contrib/gitlab-codequality.tpl" -o gl-codeclimate-fs.json .
     ## Combine report
