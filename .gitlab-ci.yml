@@ -37,21 +37,21 @@ variables:
 #    paths:
 #      - generated-config-doc.yml
 
-doc-pipeline:
-  stage: build
-  rules:
-    - changes:
-      - "docs/keycloak-app/**/*"
-      - "docs/keycloak-migration/**/*"
-  needs:
-    - job: generate-config
-  trigger:
-    include:
-      - artifact: generated-config-doc.yml
-        job: generate-config
-    strategy: depend
-    forward:
-      pipeline_variables: true
+#doc-pipeline:
+#  stage: build
+#  rules:
+#    - changes:
+#      - "docs/keycloak-app/**/*"
+#      - "docs/keycloak-migration/**/*"
+#  needs:
+#    - job: generate-config
+#  trigger:
+#    include:
+#      - artifact: generated-config-doc.yml
+#        job: generate-config
+#    strategy: depend
+#    forward:
+#      pipeline_variables: true
 
 image_build:
   stage: build
