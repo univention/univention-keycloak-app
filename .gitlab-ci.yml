@@ -70,7 +70,7 @@ image_build:
 sbom:
   stage: build
   variables:
-    IMAGE_SYFT: "anchore/syft:v0.93.0-debug"
+    IMAGE_SYFT: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/anchore/syft:v0.93.0-debug"
   cache:
     - key: "container-sbom-${CI_COMMIT_REF_SLUG}"
       paths:
@@ -104,6 +104,7 @@ add-sbom:
       policy: "pull"
   image:
     name: "${IMAGE_COSIGN}"
+    entrypoint: [""]
   needs:
     - "sbom"
   script:
