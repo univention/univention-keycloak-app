@@ -145,7 +145,8 @@ container_scanning:
     TRIVY_CACHE_DIR: ".trivycache/"
     TRIVY_NO_PROGRESS: "false"
     #FULL_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-    FULL_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-image-tools"
+    #FULL_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-image-tools"
+    FULL_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-ucs-base-image"
   script:
     - env
 
