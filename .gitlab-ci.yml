@@ -89,3 +89,23 @@ sbom:
     - "env"
     - "/syft --scope all-layers -o spdx-json ${IMAGE_TAG} > ${CI_PROJECT_DIR}/sbom.cdx.json"
     - "/syft --scope all-layers ${IMAGE_TAG}"
+
+add-sbom:
+  variables:
+    IMAGE_COSIGN: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/bitnami/cosign:2.0.2"
+  cache:
+    - key: "container-sbom-${CI_COMMIT_REF_SLUG}"
+      paths:
+        - "${CI_PROJECT_DIR}/sbom.cdx.json"
+      policy: "pull"
+    - key: "container-build-${CI_COMMIT_REF_SLUG}"
+      paths:
+        - "${CI_PROJECT_DIR}/digest"
+      policy: "pull"
+  image:
+    name: "${IMAGE_COSIGN}"
+  needs:
+    - "sbom"
+  script:
+    - "cosign attach sbom --type=spdx --input-format=json --sbom=sbom.cdx.json ${IMAGE_TAG}"
+  stage: "build"
