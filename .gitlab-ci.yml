@@ -22,6 +22,22 @@ variables:
   # version
   DOC_TARGET_VERSION: "22.0.3"
 
+.dockerconfigjson: &dockerconfigjson
+  - "mkdir -p ~/.docker"
+  - |
+    cat << EOF > ~/.docker/config.json
+    {
+      "auths": {
+        "$CI_REGISTRY": {
+          "auth": "$(printf %s:%s ${CI_REGISTRY_USER} ${CI_REGISTRY_PASSWORD} | base64 | tr -d '\n')"
+        },
+        "$CI_DEPENDENCY_PROXY_SERVER": {
+          "auth": "$(printf %s:%s ${CI_DEPENDENCY_PROXY_USER} ${CI_DEPENDENCY_PROXY_PASSWORD} | base64 | tr -d '\n')"
+        }
+      }
+    }
+    EOF
+
 #pre-commit:
 #  stage: test
 #  extends: .pre-commit
@@ -93,6 +109,8 @@ sbom:
 add-sbom:
   variables:
     IMAGE_COSIGN: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/bitnami/cosign:2.0.2"
+  before_script:
+    - *dockerconfigjson
   cache:
     - key: "container-sbom-${CI_COMMIT_REF_SLUG}"
       paths:
