@@ -1148,6 +1148,96 @@ more information, consult :cite:t:`keycloak-docs`.
         - Installation and app configuration
 
 
+.. envvar:: keycloak/server/sso/path
+
+   This setting sets the path used to access Keycloak at the end of the
+   Keycloak URL.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``/``
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/password/change/endpoint
+
+   This setting sets the endpoint for the password change.
+   Per default, the local Univention Management Console Server is used.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``None``
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/login/messages/en/accessDeniedMsg
+
+   This setting sets the access denied message during login in English.
+   This setting only has effect, if you have configured Keycloak for application
+   specific access restriction as described in :ref:`application-authorization`.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - See default value in
+          :numref:`listing-default-login-message-en-access-denied` after the
+          table.
+        - Installation and app configuration
+
+   .. code-block::
+      :caption: Default value for :envvar:`keycloak/login/messages/en/accessDeniedMsg`
+      :name: listing-default-login-message-en-access-denied
+
+      'Access forbidden.<br>You do not have the needed privileges to access this application. Please contact the administrator that you do not have access to the service {0} if you find this to be incorrect.'
+
+
+.. envvar:: keycloak/login/messages/de/accessDeniedMsg
+
+   This setting sets the access denied message during login in German.
+   This setting only has effect, if you have configured Keycloak for application
+   specific access restriction as described in :ref:`application-authorization`.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - See default value in
+          :numref:`listing-default-login-message-de-access-denied` after the
+          table.
+        - Installation and app configuration
+
+   .. code-block::
+      :caption: Default value for :envvar:`keycloak/login/messages/de/accessDeniedMsg`
+      :name: listing-default-login-message-de-access-denied
+
+      'Zugriff verboten.<br>Bitte wenden Sie sich an den Administrator, dass Sie keinen Zugriff auf den Service {0} haben, wenn Sie feststellen, dass dies nicht korrekt ist.'
+
+
 .. _css-settings:
 
 Customize the appearance

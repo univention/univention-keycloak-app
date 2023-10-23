@@ -336,3 +336,141 @@ very specific to the service, and this document can't describe it in general
 terms. Consult the documentation of the service itself. To get a better idea of
 using |SAML| with :program:`Keycloak`, take a look at the
 :ref:`migration-example-saml` in the next section.
+
+.. _migration-ucr-variable-differences:
+
+UCR variable differences
+------------------------
+
+This section describes the differences between UCR variables when using
+:program:`SimpleSAMLphp` (SAML) and :program:`Keycloak`.
+
+Added variables
+~~~~~~~~~~~~~~~
+
+:program:`Keycloak` introduces the following UCR variables:
+
+* :envvar:`keycloak/apache/config`
+* :envvar:`keycloak/server/sso/path`
+
+Renamed variables
+~~~~~~~~~~~~~~~~~
+
+:program:`Keycloak` uses the following variables known to be used for SAML
+before:
+
+.. list-table:: UCR variable differences
+  :header-rows: 1
+  :widths: 6 6
+  :name: migration-ucr-variable-differences-table
+
+  * - SAML
+    - Keycloak
+
+  * - :envvar:`ucs/server/sso/fqdn`
+    - :envvar:`keycloak/server/sso/fqdn`
+
+  * - :envvar:`ucs/server/sso/autoregistraton`
+    - :envvar:`keycloak/server/sso/autoregistration`
+
+  * - :envvar:`ucs/server/sso/virtualhost`
+    - :envvar:`keycloak/server/sso/virtualhost`
+
+  * - :envvar:`ucs/server/sso/password/change/server`
+    - :envvar:`keycloak/password/change/endpoint`
+
+  * - :envvar:`saml/apache2/ssl/ca`
+    - :envvar:`keycloak/apache2/ssl/ca`
+
+  * - :envvar:`saml/apache2/ssl/key`
+    - :envvar:`keycloak/apache2/ssl/key`
+
+  * - :envvar:`saml/apache2/ssl/certificate`
+    - :envvar:`keycloak/apache2/ssl/certificate`
+
+  * - :envvar:`saml/apache2/content-security-policy/.*`
+    - :envvar:`keycloak/csp/frame-ancestors`
+
+  * - :envvar:`saml/idp/selfservice/check_email_verification`
+    - :envvar:`ucs/self/registration/check_email_verification`
+
+  * - :envvar:`saml/idp/log/level`
+    - :envvar:`keycloak/log/level`
+
+  * - :envvar:`saml/idp/selfservice/account-verification/error-title` and ``saml/idp/selfservice/account-verification/error-title/.*``
+    - :envvar:`keycloak/login/messages/en/accountNotVerifiedMsg` and :envvar:`keycloak/login/messages/de/accountNotVerifiedMsg`
+
+  * - :envvar:`saml/idp/selfservice/account-verification/error-descr` and ``saml/idp/selfservice/account-verification/error-descr/.*``
+    - :envvar:`keycloak/login/messages/en/accessDeniedMsg` and :envvar:`keycloak/login/messages/de/accessDeniedMsg`
+
+No longer supported variables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:program:`Keycloak` doesn't support the following UCR variables anymore:
+
+* :envvar:`saml/idp/authsource`
+* :envvar:`saml/idp/ldap/debug`
+* :envvar:`saml/idp/ldap/get_attribute`
+* :envvar:`saml/idp/ldap/user`
+* :envvar:`saml/idp/log/debug/enabled`
+* :envvar:`saml/idp/negotiate/filter-subnets`
+* :envvar:`saml/idp/session-duration`
+* :envvar:`saml/idp/show-error-reporting`
+* :envvar:`saml/idp/show-errors`
+* :envvar:`saml/idp/technicalcontactemail`
+* :envvar:`saml/idp/technicalcontactname`
+* :envvar:`saml/idp/timezone`
+* :envvar:`ucs/server/sso/certificate/download`
+* :envvar:`ucs/server/sso/certificate/generation`
+
+:program:`Keycloak` *enables* the following UCR variables with the LDAP
+federation:
+
+* :envvar:`saml/idp/ldap/enable_tls`
+* :envvar:`saml/idp/negotiate` starting with :program:`Keycloak` app version
+  ``22.0.3-ucs1``.
+
+:program:`Keycloak` *sets* the following UCR variables with the LDAP
+federation:
+
+* :envvar:`saml/idp/ldap/user`
+* :envvar:`saml/idp/ldap/search_attributes`
+
+Not used anymore
+~~~~~~~~~~~~~~~~
+
+:program:`Keycloak` doesn't use the following UCR variables anymore and
+automatically sets a respective configuration:
+
+* :envvar:`saml/apache2/ssl/certificatechain`
+* :envvar:`saml/idp/certificate/certificate`
+* :envvar:`saml/idp/certificate/privatekey`
+* :envvar:`saml/idp/https`
+
+:program:`Keycloak` redirects to HTTPS automatically.
+
+For cookies, the following UCR variables existed:
+
+* :envvar:`saml/idp/session-cookie/secure`
+* :envvar:`saml/idp/session-cookie/samesite`
+* :envvar:`saml/idp/language-cookie/secure`
+* :envvar:`saml/idp/language-cookie/samesite`
+
+To set the cookie policy for :program:`Keycloak` use the UCR variable
+:envvar:`keycloak/cookies/samesite`. For possible values, see
+:cite:t:`ucs-keycloak-doc`.
+
+SAML doesn't use the following UCR variables anymore:
+
+* :envvar:`stunnel/debuglevel`
+* :envvar:`saml/idp/lookandfeel/theme`
+
+To set the theme in :program:`Keycloak`, use the command :command:`ucr set
+ucs/web/theme=dark|light` for :envvar:`ucs/web/theme`.
+
+Use :command:`univention-keycloak saml` to handle the SAML integration done with
+the following UCR variables before:
+
+* :envvar:`saml/idp/enableSAML20-IdP`
+* :envvar:`saml/idp/entityID`
+* :envvar:`saml/idp/entityID/supplement`\ ``/.*``
