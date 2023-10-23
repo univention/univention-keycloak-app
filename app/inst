@@ -179,7 +179,7 @@ else
 
 fi
 
-ldapmodify -x -h "$ldap_master" -p "${ldap_master_port:-7389}" -D "cn=admin,$ldap_base" -y "/etc/ldap.secret" <<%EOF
+ldapmodify -x -H "ldap://$ldap_master:${ldap_master_port:-7389}" -D "cn=admin,$ldap_base" -y "/etc/ldap.secret" <<%EOF
 dn: uid=$spn_account_name,cn=users,$ldap_base
 changetype: modify
 replace: krb5PrincipalName
