@@ -17,7 +17,6 @@ ADD $KEYCLOAK_DIST .
 #COPY keycloak-${KEYCLOAK_VERSION}.tar.gz .
 RUN tar -xvf keycloak-${KEYCLOAK_VERSION}.tar.gz && rm keycloak-${KEYCLOAK_VERSION}.tar.gz
 
-
 # templates and themes
 FROM docker-registry.knut.univention.de/knut/pipeline_helper as theme
 ARG KEYCLOAK_VERSION
@@ -45,6 +44,10 @@ COPY --from=maven /extensions/lib/univention-ldap-mapper-*.jar /opt/keycloak/pro
 COPY --from=maven /extensions/lib/univention-user-attribute-nameid-mapper-base64-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/univention-directory-manager/target/univention-directory-manager.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
+COPY  empty.jar opt/keycloak/lib/lib/main/com.oracle.database.jdbc.ojdbc11-*.jar
+COPY  empty.jar opt/keycloak/lib/lib/main/com.oracle.database.nls.orai18n-*.jar
+COPY  empty.jar opt/keycloak/lib/lib/deployment/io.quarkus.quarkus-jdbc-oracle-deployment-*.Final.jar
+COPY  empty.jar opt/keycloak/lib/lib/deployment/org.jboss.metadata.jboss-metadata-web-*.Final.jar
 
 # the keycloak image
 # see https://github.com/keycloak/keycloak/tree/main/quarkus/container
