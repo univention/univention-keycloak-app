@@ -96,10 +96,11 @@ ucr commit /etc/apache2/sites-available/univention-keycloak.conf
 a2ensite univention-keycloak
 systemctl restart apache2
 
-## TODO: Is this needed on non "master" kc installations ?
+# Make keycloak DB available for other systems
 [ -x /usr/sbin/univention-config-registry ] && univention-config-registry register 50-keycloak || true
 ucr commit /etc/postgresql/11/main/pg_hba.conf
-service postgresql reload
+ucr commit /etc/postgresql/15/main/pg_hba.conf
+service postgresql reload  # don't restart here to not interrupt the keycloak init process
 
 sso_hostname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 1)"
 sso_domainname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 2-)"

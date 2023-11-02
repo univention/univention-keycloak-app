@@ -2,3 +2,8 @@ Type: subfile
 Multifile: etc/postgresql/11/main/pg_hba.conf
 Subfile: etc/postgresql/11/main/pg_hba.conf.d/50-keycloak.conf
 Variables: keycloak/database/connection
+
+Type: subfile
+Multifile: etc/postgresql/15/main/pg_hba.conf
+Subfile: etc/postgresql/15/main/pg_hba.conf.d/50-keycloak.conf
+Variables: keycloak/database/connection

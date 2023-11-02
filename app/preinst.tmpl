@@ -92,9 +92,17 @@ chmod 644 "$keycloak_translation_login_path_en"
 ucr commit /var/lib/univention-appcenter/apps/keycloak/conf/UCS/login/messages/messages_de.properties
 ucr commit /var/lib/univention-appcenter/apps/keycloak/conf/UCS/login/messages/messages_en.properties
 
-# postgresql template
+# postgresql 11 template
 postgresql_keycloak_template_path=/etc/univention/templates/files/etc/postgresql/11/main/pg_hba.conf.d/50-keycloak.conf
-echo "Installing 50-keycloak postgresql template"
+echo "Installing 50-keycloak postgresql 11 template"
+	cat <<%EOF >"$postgresql_keycloak_template_path"
+%POSTGRESQL-KEYCLOAK-TEMPLATE%
+%EOF
+chmod 644 "$postgresql_keycloak_template_path"
+
+# postgresql 15 template
+postgresql_keycloak_template_path=/etc/univention/templates/files/etc/postgresql/15/main/pg_hba.conf.d/50-keycloak.conf
+echo "Installing 50-keycloak postgresql 15 template"
 	cat <<%EOF >"$postgresql_keycloak_template_path"
 %POSTGRESQL-KEYCLOAK-TEMPLATE%
 %EOF
