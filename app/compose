@@ -10,6 +10,7 @@ services:
 ucr = configRegistry
 fqdn = f"{ucr.get('hostname')}.{ucr.get('domainname')}"
 kc_fqdn = ucr.get('keycloak/server/sso/fqdn')
+kc_fqdn = kc_fqdn if ucr.is_true('keycloak/server/sso/fqdn/casesensitive') else kc_fqdn.lower()
 sso_path = ucr.get('keycloak/server/sso/path', '/').rstrip('/')
 db_kind = ucr.get('kc/db/kind')
 db_xa = ucr.get('kc/db/xa')
