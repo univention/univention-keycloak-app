@@ -94,6 +94,7 @@ ucr commit /var/lib/univention-appcenter/apps/keycloak/conf/UCS/login/messages/m
 
 # postgresql 11 template
 postgresql_keycloak_template_path=/etc/univention/templates/files/etc/postgresql/11/main/pg_hba.conf.d/50-keycloak.conf
+mkdir -p "$(dirname "$postgresql_keycloak_template_path")"
 echo "Installing 50-keycloak postgresql 11 template"
 	cat <<%EOF >"$postgresql_keycloak_template_path"
 %POSTGRESQL-KEYCLOAK-TEMPLATE%
@@ -102,6 +103,7 @@ chmod 644 "$postgresql_keycloak_template_path"
 
 # postgresql 15 template
 postgresql_keycloak_template_path=/etc/univention/templates/files/etc/postgresql/15/main/pg_hba.conf.d/50-keycloak.conf
+mkdir -p "$(dirname "$postgresql_keycloak_template_path")"
 echo "Installing 50-keycloak postgresql 15 template"
 	cat <<%EOF >"$postgresql_keycloak_template_path"
 %POSTGRESQL-KEYCLOAK-TEMPLATE%
