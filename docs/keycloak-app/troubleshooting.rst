@@ -52,8 +52,12 @@ Keycloak Admin Console
 Debugging
 =========
 
-To increase the log level for more log information for the :program:`Keycloak`
-app, see :envvar:`keycloak/log/level`.
+To increase the log level for the :program:`Keycloak`
+app, select a level from :envvar:`keycloak/log/level` and set it with the following command, e.g.:
+
+    .. code-block::
+
+       $ univention-app configure keycloak --set keycloak/log/level=DEBUG
 
 This log level only affects the log information that Keycloak itself generates
 and writes to the Docker logs. The App Center sets the Docker container's
