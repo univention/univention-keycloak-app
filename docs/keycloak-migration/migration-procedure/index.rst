@@ -8,11 +8,11 @@
 Migration procedure
 *******************
 
-:program:`Keycloak` replaces :program:`SimpleSAMLphp` and :program:`Kopano
-Konnect` as :term:`SAML IDP` and :term:`OIDC provider` in a future release of
-|UCS|. This section provides a general overview of the migration steps and the
-required considerations to make before migrating. This migration guide focuses
-on exclusively on UCS 5.0.
+:program:`Keycloak` replaces :program:`SimpleSAMLphp` and the app
+:program:`OpenID Connect Provider` as :term:`SAML IDP` and :term:`OIDC provider`
+in a future release of |UCS|. This section provides a general overview of the
+migration steps and the required considerations to make before migrating. This
+migration guide focuses on exclusively on UCS 5.0.
 
 Before the migration can take place, please keep in mind:
 
@@ -23,8 +23,8 @@ Before the migration can take place, please keep in mind:
 * Create a backup of the current single sign-on configuration of your services
   **before** the migration, so that you can rollback in case a problem occurs.
 
-* :program:`SimpleSAMLphp` and :program:`Kopano Konnect` still work even if you
-  installed :program:`Keycloak`.
+* :program:`SimpleSAMLphp` and :program:`OpenID Connect Provider` still work
+  even if you installed :program:`Keycloak`.
 
 * After you migrated a service, existing user sessions become invalid. Users have
   to sign in to the migrated service again.

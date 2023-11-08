@@ -8,8 +8,8 @@
 Samples for migration of SAML and OIDC services
 ***********************************************
 
-This section provides detailed examples how to migrate |SAML| and |OIDC| services
-to :program:`Keycloak`.
+This section provides detailed examples how to migrate |SAML| and |OIDC|
+services to :program:`Keycloak`.
 
 .. toctree::
    :hidden:

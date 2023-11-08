@@ -8,8 +8,8 @@ Migration of services using SAML for authentication
 ===================================================
 
 This section gives a general idea about the migration of services that use
-:program:`SimpleSAMLphp` for the authentication to
-:program:`Keycloak` as a SAML client.
+:program:`SimpleSAMLphp` for the authentication to :program:`Keycloak` as a SAML
+client.
 
 The general approach for the migration includes the following:
 

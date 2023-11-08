@@ -8,18 +8,18 @@ Migration of services using OIDC for authentication
 ===================================================
 
 This section gives a general idea about the migration of services that use
-:program:`Kopano Konnect` as :term:`OIDC Provider` for the authentication to
-:program:`Keycloak` as :term:`OIDC Provider`.
+:program:`OpenID Connect Provider` as :term:`OIDC Provider` for the
+authentication to :program:`Keycloak` as :term:`OIDC Provider`.
 
 The general approach for the migration includes the following:
 
 * Install the latest version of the :program:`Keycloak` app in the UCS domain.
 
-* Get an overview of all the services that use :program:`Kopano Konnect`
-  and their settings.
+* Get an overview of all the services that use :program:`OpenID Connect
+  Provider` and their settings.
 
 * Create an :term:`OIDC RP`, the client, in :program:`Keycloak` for every
-  service that uses :program:`Kopano Konnect` as :term:`OIDC Provider`.
+  service that uses :program:`OpenID Connect Provider` as :term:`OIDC Provider`.
 
 * Change the |OIDC| settings in the services to use :program:`Keycloak` as
   :term:`OIDC Provider` and validate the setup.
@@ -27,11 +27,11 @@ The general approach for the migration includes the following:
 To setup a service for |OIDC| with :program:`Keycloak` use the following steps:
 
 #. The |UDM| module ``oidc/rpservice`` configures services that use
-   :program:`Kopano Konnect`. To get a list of all the services and settings, run
-   the following command on the UCS *Primary Directory Node*:
+   :program:`OpenID Connect Provider`. To get a list of all the services and
+   settings, run the following command on the UCS *Primary Directory Node*:
 
    .. code-block:: console
-      :caption: List all services that use *Kopano Konnect* for |OIDC|
+      :caption: List all services that use *OpenID Connect Provider* for |OIDC|
 
       $ udm oidc/rpservice list
 
@@ -50,9 +50,9 @@ To setup a service for |OIDC| with :program:`Keycloak` use the following steps:
 
    .. note::
 
-      In case you made custom settings of your :program:`Kopano Konnect`
-      installation, review the following files on your UCS system, that has
-      the app installed:
+      In case you made custom settings of your :program:`OpenID Connect
+      Provider` installation, review the following files on your UCS system,
+      that has the app installed:
 
       * :file:`/etc/kopano/konnectd.cfg`
       * :file:`/etc/kopano/konnectd-identifier-registration.yaml`

@@ -7,8 +7,8 @@
 Services using OIDC
 ===================
 
-The following examples demonstrate the migration of services that use |OIDC|
-for authentication and :program:`Kopano Konnect` as |IDP| to
+The following examples demonstrate the migration of services that use |OIDC| for
+authentication and :program:`OpenID Connect Provider` as |IDP| to
 :program:`Keycloak` as |IDP|.
 
 .. _migration-ownCloud:
@@ -22,8 +22,7 @@ environment meets the following requirements:
 
 * The configuration of the app :program:`ownCloud` is complete and done.
 
-* The |OIDC| sign-in for :program:`ownCloud` works with :program:`Kopano
-  Connect` as :term:`OIDC Provider`.
+* The |OIDC| sign-in for :program:`ownCloud` works with :program:`OpenID Connect Provider` as :term:`OIDC Provider`.
 
 * The UCS domain has the latest version of the app :program:`Keycloak`
   installed.
