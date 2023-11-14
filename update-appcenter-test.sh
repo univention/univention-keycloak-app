@@ -19,8 +19,6 @@ FILES_TO_COPY=(
 	"app/uinst"
 	"app/README_UPDATE_DE"
 	"app/README_UPDATE_EN"
-	"app/LICENSE_AGREEMENT_DE"
-	"app/LICENSE_AGREEMENT_EN"
 )
 
 selfservice () {
