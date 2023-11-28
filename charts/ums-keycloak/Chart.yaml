@@ -20,5 +20,5 @@ name: "ums-keycloak"
 sources:
   - "https://gitlab.souvap-univention.de/souvap/tooling/charts/opendesk-best-practises"
 type: "application"
-version: "1.0.2"
+version: "1.0.0"
 ...
