@@ -39,6 +39,14 @@ Custom database
 For detailed information, consult the :program:`Keycloak` manual
 :cite:t:`keycloak-db`.
 
+.. note::
+
+   On the contrary to the official :program:`Keycloak` container image, the
+   custom image that the :program:`Keycloak` App provides, does not contain
+   the drivers that support an Oracle Database.
+   Using an Oracle Database as a backend for :program:`Keycloak` is currently
+   not supported.
+
 The :program:`Keycloak` app provides app settings for the configuration of the
 database backend. For the available settings, see the :ref:`app-settings`
 section.
