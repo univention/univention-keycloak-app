@@ -61,8 +61,8 @@ public class UniventionUserAccountControlStorageMapperTest {
         // introducing a new class just for testing.
         mapper = new UniventionUserAccountControlStorageMapper(mapperModel, ldapProvider) {
             @Override
-            public boolean processAuthErrorCode(String errorCode, UserModel user, Map<String, Set<String>> attributes) {
-                return super.processAuthErrorCode(errorCode, user, attributes);
+            public boolean processAuthError(UserModel user, Map<String, Set<String>> attributes) {
+                return super.processAuthError(user, attributes);
             }
 
             @Override
@@ -86,7 +86,7 @@ public class UniventionUserAccountControlStorageMapperTest {
         final boolean res = spyMapper.onAuthenticationFailure(ldapUser, user, exc, realm);
         assertFalse(res);
 
-        Mockito.verify(spyMapper, times(0)).processAuthErrorCode("", user, null);
+        Mockito.verify(spyMapper, times(0)).processAuthError(user, null);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class UniventionUserAccountControlStorageMapperTest {
         final boolean res = spyMapper.onAuthenticationFailure(ldapUser, user, exc, realm);
         assertFalse(res);
 
-        Mockito.verify(spyMapper, times(1)).processAuthErrorCode("80", user, attrs);
+        Mockito.verify(spyMapper, times(1)).processAuthError(user, attrs);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class UniventionUserAccountControlStorageMapperTest {
         final boolean res = spyMapper.onAuthenticationFailure(ldapUser, user, exc, realm);
         assertFalse(res);
 
-        Mockito.verify(spyMapper, times(0)).processAuthErrorCode("", user, null);
+        Mockito.verify(spyMapper, times(0)).processAuthError(user, null);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class UniventionUserAccountControlStorageMapperTest {
         final boolean res = spyMapper.onAuthenticationFailure(ldapUser, user, exc, realm);
         assertFalse(res);
 
-        Mockito.verify(spyMapper, times(1)).processAuthErrorCode("49", user, attrs);
+        Mockito.verify(spyMapper, times(1)).processAuthError(user, attrs);
     }
 
     @Test
@@ -136,7 +136,7 @@ public class UniventionUserAccountControlStorageMapperTest {
             final boolean res = spyMapper.onAuthenticationFailure(ldapUser, user, exc, realm);
             assertTrue(res);
 
-            Mockito.verify(spyMapper, times(1)).processAuthErrorCode("49", user, attrs);
+            Mockito.verify(spyMapper, times(1)).processAuthError(user, attrs);
         }
     }
 }

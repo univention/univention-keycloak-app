@@ -31,40 +31,4 @@ public class AccountDisabledTest {
 
         assertTrue(helper.isAccountDisabled());
     }
-
-    @Test
-    public void sambaAcctFlagNotContainL() {
-        Map<String, Set<String>> attributes = new HashMap<>();
-        attributes.put(SAMBA_ACCT_FLAGS, Collections.singleton("[U          ]"));
-        final AccountAttributesHelper helper = new AccountAttributesHelper(attributes);
-
-        assertFalse(helper.isAccountDisabled());
-    }
-
-    @Test
-    public void sambaAcctFlagContainL() {
-        Map<String, Set<String>> attributes = new HashMap<>();
-        attributes.put(SAMBA_ACCT_FLAGS, Collections.singleton("[L          ]"));
-        final AccountAttributesHelper helper = new AccountAttributesHelper(attributes);
-
-        assertTrue(helper.isAccountDisabled());
-    }
-
-    @Test
-    public void krb5KdcFlagsIsNot254() {
-        Map<String, Set<String>> attributes = new HashMap<>();
-        attributes.put(KRB5_KDC_FLAGS, Collections.singleton("255"));
-        final AccountAttributesHelper helper = new AccountAttributesHelper(attributes);
-
-        assertFalse(helper.isAccountDisabled());
-    }
-
-    @Test
-    public void krb5KdcFlagsIs254() {
-        Map<String, Set<String>> attributes = new HashMap<>();
-        attributes.put(KRB5_KDC_FLAGS, Collections.singleton("254"));
-        final AccountAttributesHelper helper = new AccountAttributesHelper(attributes);
-
-        assertTrue(helper.isAccountDisabled());
-    }
 }

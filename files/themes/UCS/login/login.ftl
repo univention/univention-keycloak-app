@@ -12,7 +12,11 @@
                     <span class="${properties.kcFeedbackErrorIcon!}"></span>
                 </div>
                 <span class="${properties.kcAlertTitleClass!}">
+                    <#if errorDetail?has_content>
+                        ${kcSanitize(msg(errorDetail))?no_esc}
+                    <#else>
                         ${kcSanitize(messagesPerField.getFirstError('username','password'))?no_esc}
+                    </#if>
                 </span>
             </div>
         </div>

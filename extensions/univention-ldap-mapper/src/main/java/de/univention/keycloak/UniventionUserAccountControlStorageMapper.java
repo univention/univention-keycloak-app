@@ -41,6 +41,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
     public static final String SELF_SERVICE_REGISTERED = "univentionRegisteredThroughSelfService";
     public static final String LDAP_PASSWORD_POLICY_HINTS_ENABLED = "ldap.password.policy.hints.enabled";
     private static final Pattern AUTH_EXCEPTION_REGEX = Pattern.compile("^(?=.*LDAP: error code ([0-9]+))(?!.*Invalid Credentials).*");
+    private static final Pattern ACCOUNT_EXPIRED_REGEX = Pattern.compile(".*((password expired)|(The password has expired\\.)|(account expired)).*");
     private static final Logger logger = Logger.getLogger(UniventionUserAccountControlStorageMapper.class);
     private static final SimpleDateFormat krb5Format = new SimpleDateFormat("yyyyMMddHHmmss'Z'");
 
@@ -81,31 +82,35 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
 
     public boolean onAuthenticationFailure(LDAPObject ldapUser, UserModel user, AuthenticationException ldapException, RealmModel realm) {
         final String exceptionMessage = ldapException.getMessage();
-        Matcher m = AUTH_EXCEPTION_REGEX.matcher(exceptionMessage);
-        if (m.matches()) {
+        final Matcher m = AUTH_EXCEPTION_REGEX.matcher(exceptionMessage);
+        if (m.matches() && ACCOUNT_EXPIRED_REGEX.matcher(exceptionMessage).matches()) {
             final String errorCode = m.group(1);
-            return processAuthErrorCode(errorCode, user, ldapUser.getAttributes());
-        } else {
-            return false;
+            logger.debugf("Univention Error code is '%s' after failed LDAP login of user '%s'. Realm is '%s'", errorCode, user.getUsername(), getRealmName());
+
+            if (errorCode.equals("49")) {
+                return processAuthError(user, ldapUser.getAttributes());
+            }
         }
+
+        return false;
     }
 
-    protected boolean processAuthErrorCode(String errorCode, UserModel user, Map<String, Set<String>> attributes) {
-        logger.debugf("Univention Error code is '%s' after failed LDAP login of user '%s'. Realm is '%s'", errorCode, user.getUsername(), getRealmName());
+    protected boolean processAuthError(UserModel user, Map<String, Set<String>> attributes) {
+        final AccountAttributesHelper accountAttributesHelper = new AccountAttributesHelper(attributes);
+        final String ERROR_DETAIL = "errorDetail";
 
-        if (errorCode.equals("49")) {
-            final AccountAttributesHelper accountAttributesHelper = new AccountAttributesHelper(attributes);
-
-            if (accountAttributesHelper.isAccountDisabled()) {
-                logger.debugf("Disabled user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
-            } else if (accountAttributesHelper.isAccountExpired()) {
-                logger.debugf("Expired user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
-            } else if (accountAttributesHelper.isAccountLocked()) {
-                logger.debugf("Locked user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
-            } else if (accountAttributesHelper.isPasswordChangeNeeded()) {
-                addPasswordChangeAction(user);
-                return true;
-            }
+        if (accountAttributesHelper.isAccountDisabled()) {
+            logger.debugf("Disabled user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
+            this.session.setAttribute(ERROR_DETAIL, "accountDisabled");
+        } else if (accountAttributesHelper.isAccountExpired()) {
+            logger.debugf("Expired user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
+            this.session.setAttribute(ERROR_DETAIL, "accountExpired");
+        } else if (accountAttributesHelper.isPasswordChangeNeeded()) {
+            addPasswordChangeAction(user);
+            return true;
+        } else if (accountAttributesHelper.isAccountLocked()) {
+            logger.debugf("Locked user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
+            this.session.setAttribute(ERROR_DETAIL, "accountLocked");
         }
 
         return false;
@@ -207,16 +212,6 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
                     return true;
                 }
             }
-            if (attributes.containsKey(SAMBA_ACCT_FLAGS)) {
-                if (attributes.get(SAMBA_ACCT_FLAGS).iterator().next().contains("L")) {
-                    return true;
-                }
-            }
-            if (attributes.containsKey(KRB5_KDC_FLAGS)) {
-                if (254 == Long.parseLong(attributes.get(KRB5_KDC_FLAGS).iterator().next())) {
-                    return true;
-                }
-            }
 
             return false;
         }
@@ -236,14 +231,24 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
                     logger.errorf("Could not parse krb5ValidEnd Attribute: %s", e.getMessage());
                 }
             }
+            if (attributes.containsKey(SAMBA_KICKOFF_TIME)) {
+                final long timeKickOff = Long.parseLong(attributes.get(SAMBA_KICKOFF_TIME).iterator().next());
+                return timeKickOff < now.getEpochSecond();
+            }
 
             return false;
         }
 
         public boolean isAccountLocked() {
-            if (attributes.containsKey(SAMBA_KICKOFF_TIME)) {
-                final long timeKickOff = Long.parseLong(attributes.get(SAMBA_KICKOFF_TIME).iterator().next());
-                return timeKickOff < now.getEpochSecond();
+            if (attributes.containsKey(SAMBA_ACCT_FLAGS)) {
+                if (attributes.get(SAMBA_ACCT_FLAGS).iterator().next().contains("L")) {
+                    return true;
+                }
+            }
+            if (attributes.containsKey(KRB5_KDC_FLAGS)) {
+                if (254 == Long.parseLong(attributes.get(KRB5_KDC_FLAGS).iterator().next())) {
+                    return true;
+                }
             }
 
             return false;
@@ -285,6 +290,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
                    return true;
                }
             }
+
             return false;
         }
     }

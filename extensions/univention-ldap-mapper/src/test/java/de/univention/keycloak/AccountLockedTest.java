@@ -12,8 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static de.univention.keycloak.UniventionUserAccountControlStorageMapper.AccountAttributesHelper;
-import static de.univention.keycloak.UniventionUserAccountControlStorageMapper.SAMBA_KICKOFF_TIME;
+import static de.univention.keycloak.UniventionUserAccountControlStorageMapper.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -28,37 +27,38 @@ public class AccountLockedTest {
     }
 
     @Test
-    public void sambaKickOffSetToPastTime() {
-        final Long expireAt = Instant.now().plus(-1, ChronoUnit.SECONDS).getEpochSecond()/86400;
-
+    public void sambaAcctFlagNotContainL() {
         Map<String, Set<String>> attributes = new HashMap<>();
-        attributes.put(SAMBA_KICKOFF_TIME, Collections.singleton(expireAt.toString()));
-        final UniventionUserAccountControlStorageMapper.AccountAttributesHelper helper = new UniventionUserAccountControlStorageMapper.AccountAttributesHelper(attributes);
+        attributes.put(SAMBA_ACCT_FLAGS, Collections.singleton("[U          ]"));
+        final AccountAttributesHelper helper = new AccountAttributesHelper(attributes);
+
+        assertFalse(helper.isAccountLocked());
+    }
+
+    @Test
+    public void sambaAcctFlagContainL() {
+        Map<String, Set<String>> attributes = new HashMap<>();
+        attributes.put(SAMBA_ACCT_FLAGS, Collections.singleton("[L          ]"));
+        final AccountAttributesHelper helper = new AccountAttributesHelper(attributes);
 
         assertTrue(helper.isAccountLocked());
     }
 
     @Test
-    public void sambaKickOffSetToCurrentTime() throws IllegalAccessException {
-        final Long expireAt = Instant.now().toEpochMilli();
-
+    public void krb5KdcFlagsIsNot254() {
         Map<String, Set<String>> attributes = new HashMap<>();
-        attributes.put(SAMBA_KICKOFF_TIME, Collections.singleton(expireAt.toString()));
+        attributes.put(KRB5_KDC_FLAGS, Collections.singleton("255"));
         final AccountAttributesHelper helper = new AccountAttributesHelper(attributes);
-        nowField.set(helper, Instant.ofEpochMilli(expireAt));
 
-        assertFalse(helper.isAccountExpired());
+        assertFalse(helper.isAccountLocked());
     }
 
     @Test
-    public void sambaKickOffSetToFutureTime() throws IllegalAccessException {
-        final Long expireAt = Instant.now().toEpochMilli();
-
+    public void krb5KdcFlagsIs254() {
         Map<String, Set<String>> attributes = new HashMap<>();
-        attributes.put(SAMBA_KICKOFF_TIME, Collections.singleton(expireAt.toString()));
+        attributes.put(KRB5_KDC_FLAGS, Collections.singleton("254"));
         final AccountAttributesHelper helper = new AccountAttributesHelper(attributes);
-        nowField.set(helper, Instant.ofEpochMilli(expireAt).plus(-1, ChronoUnit.SECONDS));
 
-        assertFalse(helper.isAccountLocked());
+        assertTrue(helper.isAccountLocked());
     }
 }

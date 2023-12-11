@@ -105,4 +105,39 @@ public class AccountExpiredTest {
 
         assertFalse(helper.isAccountExpired());
     }
+
+    @Test
+    public void sambaKickOffSetToPastTime() {
+        final Long expireAt = Instant.now().plus(-1, ChronoUnit.SECONDS).getEpochSecond()/86400;
+
+        Map<String, Set<String>> attributes = new HashMap<>();
+        attributes.put(SAMBA_KICKOFF_TIME, Collections.singleton(expireAt.toString()));
+        final UniventionUserAccountControlStorageMapper.AccountAttributesHelper helper = new UniventionUserAccountControlStorageMapper.AccountAttributesHelper(attributes);
+
+        assertTrue(helper.isAccountExpired());
+    }
+
+    @Test
+    public void sambaKickOffSetToCurrentTime() throws IllegalAccessException {
+        final Long expireAt = Instant.now().toEpochMilli();
+
+        Map<String, Set<String>> attributes = new HashMap<>();
+        attributes.put(SAMBA_KICKOFF_TIME, Collections.singleton(expireAt.toString()));
+        final AccountAttributesHelper helper = new AccountAttributesHelper(attributes);
+        nowField.set(helper, Instant.ofEpochMilli(expireAt));
+
+        assertFalse(helper.isAccountExpired());
+    }
+
+    @Test
+    public void sambaKickOffSetToFutureTime() throws IllegalAccessException {
+        final Long expireAt = Instant.now().toEpochMilli();
+
+        Map<String, Set<String>> attributes = new HashMap<>();
+        attributes.put(SAMBA_KICKOFF_TIME, Collections.singleton(expireAt.toString()));
+        final AccountAttributesHelper helper = new AccountAttributesHelper(attributes);
+        nowField.set(helper, Instant.ofEpochMilli(expireAt).plus(-1, ChronoUnit.SECONDS));
+
+        assertFalse(helper.isAccountExpired());
+    }
 }
