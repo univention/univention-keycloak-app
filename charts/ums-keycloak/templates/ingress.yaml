@@ -34,10 +34,22 @@ spec:
     - host: {{ .Values.ingress.host | default (printf "%s.%s" .Values.global.hosts.keycloak .Values.global.domain) | quote }}
       http:
         paths:
-          - path: {{ .Values.ingress.path }}
+          - path: /realms
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "common.names.fullname" .) "servicePort" "http" "context" .) | nindent 14 }}
             {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
             pathType: {{ .Values.ingress.pathType }}
             {{- end }}
+          - path: /resources
             backend: {{- include "common.ingress.backend" (dict "serviceName" (include "common.names.fullname" .) "servicePort" "http" "context" .) | nindent 14 }}
+            {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
+            pathType: {{ .Values.ingress.pathType }}
+            {{- end }}
+          {{- if .Values.config.exposeAdminConsole }}
+          - path: /admin
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "common.names.fullname" .) "servicePort" "http" "context" .) | nindent 14 }}
+            {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
+            pathType: {{ .Values.ingress.pathType }}
+            {{- end }}
+          {{- end }}
 ...
 {{- end }}

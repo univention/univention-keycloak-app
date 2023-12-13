@@ -79,6 +79,9 @@ spec:
           {{- with .Values.config.features.disabled }}
             - "--features-disabled={{ join "," . }}"
           {{- end }}
+          {{- if .Values.config.enableMetrics }}
+            - "--metrics-enabled=true"
+          {{- end }}
           env:
             - name: "KEYCLOAK_ADMIN"
               value: {{ .Values.config.admin.username | quote }}
@@ -131,6 +134,12 @@ spec:
           {{- with .Values.extraEnvVars }}
             {{- . | toYaml | nindent 12 }}
           {{- end }}
+          ports:
+            {{- range $key, $value := .Values.service.ports }}
+            - name: {{ $key }}
+              containerPort: {{ $value.containerPort }}
+              protocol: {{ $value.protocol }}
+            {{- end }}
           livenessProbe:
             httpGet:
               path: "/realms/master"

@@ -44,6 +44,15 @@ config:
   # Ref.: https://www.keycloak.org/server/reverseproxy
   proxy: "edge"
 
+  # -- Expose admin console, if set to true no Ingress path restrictions are applied.
+  # Otherwise only /realms/ and /resources/ are made available to the public internet.
+  # Ref.: https://www.keycloak.org/server/reverseproxy#_exposed_path_recommendations
+  exposeAdminConsole: false
+
+  # -- Enables Keycloak metrics endpoint
+  # Ref.: https://www.keycloak.org/server/configuration-metrics
+  enableMetrics: true
+
   # Keycloak admin user settings.
   admin:
     # -- Admin username.
