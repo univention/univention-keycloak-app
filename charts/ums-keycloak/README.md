@@ -13,13 +13,13 @@ To install the chart with the release name `my-release`, you have two options:
 ### Install via Repository
 ```console
 helm repo add univention-keycloak https://gitlab.souvap-univention.de/api/v4/projects/161/packages/helm/stable
-helm install my-release --version 1.0.0 univention-keycloak/ums-keycloak
+helm install my-release --version 1.0.1 univention-keycloak/ums-keycloak
 ```
 
 ### Install via OCI Registry
 ```console
 helm repo add univention-keycloak oci://registry.souvap-univention.de/souvap/tooling/charts/univention-keycloak
-helm install my-release --version 1.0.0 univention-keycloak/ums-keycloak
+helm install my-release --version 1.0.1 univention-keycloak/ums-keycloak
 ```
 
 ## Requirements
@@ -48,6 +48,8 @@ helm install my-release --version 1.0.0 univention-keycloak/ums-keycloak
 | config.database.properties | string | `""` | Database properties. |
 | config.database.type | string | `"postgres"` | Database vendor. Possible values: dev-file (default), dev-mem, mariadb, mssql, mysql, oracle, postgres |
 | config.database.username | string | `"keycloak_user"` | Database username. |
+| config.enableMetrics | bool | `true` | Enables Keycloak metrics endpoint Ref.: https://www.keycloak.org/server/configuration-metrics |
+| config.exposeAdminConsole | bool | `false` | Expose admin console, if set to true no Ingress path restrictions are applied. Otherwise only /realms/ and /resources/ are made available to the public internet. Ref.: https://www.keycloak.org/server/reverseproxy#_exposed_path_recommendations |
 | config.features.disabled | list | `[]` | Disables a set of one or more features for keycloak. |
 | config.features.enabled | list | `["admin-fine-grained-authz","token-exchange"]` | Enables a set of one or more features for keycloak. |
 | config.hostname | string | `""` | Hostname. Ref.: https://www.keycloak.org/server/hostname Default: {{ .Values.global.hosts.keycloak }}.{{ .Values.global.domain }} |
