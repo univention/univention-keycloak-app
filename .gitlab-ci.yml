@@ -17,6 +17,7 @@ include:
     file:
       - kaniko.yml
       - pre-commit.yml
+  - template: Security/Container-Scanning.gitlab-ci.yml
 
 variables:
   # version
