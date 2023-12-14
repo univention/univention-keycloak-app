@@ -21,11 +21,11 @@ include:
     file:
       - "templates/container-security-scan-trivy.yaml"
 
-        #myscan:
-        #  stage: test
-        #  extends: .container-security-scan
-        #  variables:
-        #    IMAGE_NAME:
+myscan:
+  stage: test
+  extends: .container-security-scan
+  variables:
+    TRIVY_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-ucs-base-image"
 
 variables:
   # version
