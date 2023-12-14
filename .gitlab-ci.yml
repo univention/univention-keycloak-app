@@ -21,12 +21,6 @@ include:
     file:
       - "templates/container-security-scan-trivy.yaml"
 
-myscan:
-  stage: test
-  extends: .container-security-scan
-  variables:
-    TRIVY_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-ucs-base-image"
-
 variables:
   # version
   DOC_TARGET_VERSION: "22.0.3"
@@ -78,19 +72,19 @@ variables:
 #    forward:
 #      pipeline_variables: true
 
-    #image_build:
-    #  stage: build
-    #  extends: .kaniko
-    #  rules:
-    #    - changes:
-    #      - ad-hoc/**/*
-    #      - dependencies/**/*
-    #      - Dockerfile
-    #      - files/**/*
-    #      - univention-ldap-mapper/**/*
-    #      - .gitlab-ci.yml
-    #  variables:
-    #    KANIKO_ARGS: --build-arg commit="$CI_COMMIT_SHA" --build-arg date="$CI_JOB_STARTED_AT" --cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache
+image_build:
+  stage: build
+  extends: .kaniko
+  rules:
+    - changes:
+      - ad-hoc/**/*
+      - dependencies/**/*
+      - Dockerfile
+      - files/**/*
+      - univention-ldap-mapper/**/*
+      - .gitlab-ci.yml
+  variables:
+    KANIKO_ARGS: --build-arg commit="$CI_COMMIT_SHA" --build-arg date="$CI_JOB_STARTED_AT" --cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache
     #
     #sbom:
     #  stage: build
@@ -184,3 +178,11 @@ acontainer_scanning:
       - gl-codeclimate.json
     reports:
       codequality: gl-codeclimate.json
+
+myscan:
+  stage: test
+  extends: .container-security-scan
+  variables:
+    TRIVY_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-ucs-base-image"
+
+
