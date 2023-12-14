@@ -23,6 +23,10 @@ variables:
   # version
   DOC_TARGET_VERSION: "22.0.3"
 
+container_scanning:
+  variables:
+    CS_IMAGE: gitregistry.knut.univention.de/univention/components/keycloak-app:branch-ucs-base-image
+
 .dockerconfigjson: &dockerconfigjson
   - "mkdir -p ~/.docker"
   - |
@@ -131,7 +135,7 @@ variables:
     #    - "cosign attach sbom --type=spdx --input-format=json --sbom=sbom.cdx.json ${IMAGE_TAG}"
     #  stage: "build"
 
-container_scanning:
+ccontainer_scanning:
   stage: build
   image:
     name: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/aquasec/trivy:latest"
