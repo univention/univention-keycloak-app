@@ -21,9 +21,11 @@ include:
     file:
       - "templates/container-security-scan-trivy.yaml"
 
-myscan:
-  stage: test
-  extends: .container-security-scan
+        #myscan:
+        #  stage: test
+        #  extends: .container-security-scan
+        #  variables:
+        #    IMAGE_NAME:
 
 variables:
   # version
@@ -137,7 +139,7 @@ variables:
     #    - "cosign attach sbom --type=spdx --input-format=json --sbom=sbom.cdx.json ${IMAGE_TAG}"
     #  stage: "build"
 
-ccontainer_scanning:
+acontainer_scanning:
   stage: build
   image:
     name: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/aquasec/trivy:latest"
