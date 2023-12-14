@@ -19,7 +19,7 @@ include:
       - pre-commit.yml
   - project: univention/customers/dataport/upx/common-ci
     file:
-      - "jobs/container-security-scan-trivy.yaml"
+      - "templates/container-security-scan-trivy.yaml"
 
 myscan:
   stage: test
