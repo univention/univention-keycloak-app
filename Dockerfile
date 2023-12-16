@@ -34,6 +34,8 @@ RUN unzip org.keycloak.keycloak-themes-${KEYCLOAK_VERSION}.jar "theme/base/login
 # copy everything together so that we can use one COPY statement for the final image
 FROM docker-registry.knut.univention.de/knut/pipeline_helper as artifacts
 ARG KEYCLOAK_VERSION
+RUN apt-get update && apt-get install -y zip
+RUN touch empty && zip empty.jar empty
 COPY dependencies/*.jar /opt/keycloak/providers/
 COPY files/cache-ispn-jdbc-ping.xml /opt/keycloak/conf/cache-ispn-jdbc-ping.xml
 COPY files/keycloak-healthcheck /opt/keycloak/bin/
@@ -44,10 +46,10 @@ COPY --from=maven /extensions/lib/univention-ldap-mapper-*.jar /opt/keycloak/pro
 COPY --from=maven /extensions/lib/univention-user-attribute-nameid-mapper-base64-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/univention-directory-manager/target/univention-directory-manager.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
-COPY  empty.jar opt/keycloak/lib/lib/main/com.oracle.database.jdbc.ojdbc11-*.jar
-COPY  empty.jar opt/keycloak/lib/lib/main/com.oracle.database.nls.orai18n-*.jar
-COPY  empty.jar opt/keycloak/lib/lib/deployment/io.quarkus.quarkus-jdbc-oracle-deployment-*.Final.jar
-COPY  empty.jar opt/keycloak/lib/lib/deployment/org.jboss.metadata.jboss-metadata-web-*.Final.jar
+RUN cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.jdbc.ojdbc11-*.jar \
+ && cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.nls.orai18n-*.jar \
+ && cp empty.jar opt/keycloak/lib/lib/deployment/io.quarkus.quarkus-jdbc-oracle-deployment-*.Final.jar \
+ && cp empty.jar opt/keycloak/lib/lib/deployment/org.jboss.metadata.jboss-metadata-web-*.Final.jar
 
 # the keycloak image
 # see https://github.com/keycloak/keycloak/tree/main/quarkus/container
