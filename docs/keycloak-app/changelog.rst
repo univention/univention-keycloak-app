@@ -16,6 +16,20 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+22.0.3-ucs2
+===========
+
+Released: TODO
+
+* Using an Oracle DB backend for :program:`Keycloak` is no longer possible. The Oracle DB
+  drivers that were provided by :program:`Keycloak` have been removed. If you are currently
+  using an Oracle DB as a backend for :program:`Keycloak`, a migration according to
+  ref:`app-database-custom` is necessary to continue using this app.
+
+* The container of the :program:`Keycloak` app has been changed from the upstream `Redhat`
+  `ubi-micro-build` to the ucs-base-image, which is based on Debian.
+
+
 22.0.3-ucs1
 ===========
 
