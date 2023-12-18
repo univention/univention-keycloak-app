@@ -328,12 +328,13 @@ use the following steps:
       $domain = "YOUR AZURE DOMAIN NAME"
       $username = "YOUR AZURE DOMAIN ADMIN"
       $password = "PASSWORD OF YOUR AZURE DOMAIN ADMIN"
+      $realm = "REALM OF CHOICE (usually ucs)"
       # CHANGE end
 
-      $issuer_uri = "$sso_url/realms/ucs"
-      $logon_uri = "$sso_url/realms/ucs/protocol/saml"
-      $passive_logon_uri = "$sso_url/realms/ucs/protocol/saml"
-      $logoff_uri = "$sso_url/realms/ucs/protocol/saml"
+      $issuer_uri = "$sso_url/realms/$realm"
+      $logon_uri = "$sso_url/$realm/ucs/protocol/saml"
+      $passive_logon_uri = "$sso_url/realms/$realm/protocol/saml"
+      $logoff_uri = "$sso_url/realms/$realm/protocol/saml"
       $pass = ConvertTo-SecureString -String "$password" -AsPlainText -Force
       $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $username, $pass
       $o365cred = Get-Credential $credential
@@ -368,7 +369,7 @@ use the following steps:
       $ SSO_URL="REPLACE WITH SSO_URL"
       $ udm portals/entry modify \
         --dn "cn=office365,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
-        --set link='"en_US" "'"$SSO_URL"'/realms/ucs/protocol/saml/clients/MicrosoftOnline"'
+        --set link='"en_US" "'"$SSO_URL"'/realms/$realm/protocol/saml/clients/MicrosoftOnline"'
 
 To validate the setup, visit https://www.microsoft365.com/ and sign in with one
 of the UCS user accounts enabled for *Microsoft 365*. Also, verify the UCS
@@ -379,7 +380,44 @@ portal entry *Microsoft 365 Login* for the |IDP| initiated single sign-on.
    The automatic redirect after the single sign-out doesn't work with
    :program:`Keycloak`.
 
+.. _migration-365-connector-multiple-connection:
+
+Migration of additional Azure AD connections
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is possible to configure additional Azure AD connections for single-sign on using the Microsoft 365 Connector wizard.
+If multiple AD connections were configured according to :ref:`uv-manual:domain-saml-extended-configuration`, each connection
+needs to be migrated individually to :program:`Keycloak`.
+Since Azure AD explicitly needs different entity IDs for each connection, this entails the creation of a new |IDP| and therefore a new realm for each connection.
+
+To create a new logical |IDP| in :program:`Keycloak`, run the following commands on your UCS :program:`Keycloak` host.
+
+.. code-block:: console
+   :caption: Create a new logical |IDP| in Keycloak
+   :name: create-proxy-realm
+
+   $ AD_CONNECTION="REPLACE WITH MICROSOFT 365 AD CONNECTION NAME"
+   $ univention-keycloak proxy-realms create "$AD_CONNECTION"
+
+
+Use the following call to get the certificate of your newly created |IDP|
+
+.. code-block:: console
+   :caption: Get the certificate of the newly created Realm
+   :name: get-certificate-of-realm
+
+   $ univention-keycloak saml/idp/cert get \
+      --realm-id="$AD_CONNECTION" \
+      --output "/tmp/keycloak-"$AD_CONNECTION".cert"
+    cat /tmp/keycloak-"$AD_CONNECTION".cert
+
+Using this certificate as :samp:`$signing_cert` and the :samp:`AD_CONNECTION` as :samp:`$realm`, follow the steps from
+:ref:`migration-365-connector-windows-change` onward to update the |SAML| settings for the *Azure Active Directory* domain.
+
+Repeat these steps for each additional configured Azure AD connection.
+
 .. seealso::
 
    `Microsoft 365 Connector <https://www.univention.com/products/univention-app-center/app-catalog/microsoft365/>`_
       in Univention App Catalog
+
