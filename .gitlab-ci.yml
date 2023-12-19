@@ -5,6 +5,18 @@ stages:
   - merge
   - production
 
+scan:
+  image: python:latest
+  stage: prepare
+  before_script:
+    - pip install app-security-monitoring --index-url https://git.knut.univention.de/api/v4/projects/715/packages/pypi/simple
+  script:
+    - appsecmonit show fixes -o keycloak -a keycloak -p github -t "$GITHUB_TOKEN" -s "$KEYCLOAK_VERSION" -r html -r console
+    - appsecmonit notify email-by-gitlab -r 'iam-team@univention.de' -s 'Keycloak security scan' -p kctimestamp.txt
+  artifacts:
+    paths: ['kctimestamp.txt']
+    expire_in: 1 month
+
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "web"
