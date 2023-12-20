@@ -246,7 +246,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
                 }
             }
             if (attributes.containsKey(KRB5_KDC_FLAGS)) {
-                if (254 == Long.parseLong(attributes.get(KRB5_KDC_FLAGS).iterator().next())) {
+                if ((Long.parseLong(attributes.get(KRB5_KDC_FLAGS).iterator().next()) & (1 << 7)) == (1 << 7)) {
                     return true;
                 }
             }
