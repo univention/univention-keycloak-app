@@ -28,17 +28,19 @@ secret_detection:
 
 gemnasium-dependency_scanning:
   stage: test
+  variables:
+    DS_MAX_DEPTH: -1
 
 
 container_scanning:
   variables:
     CS_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-ucs-base-image"
     CS_SEVERITY_THRESHOLD: "CRITICAL"
-  artifacts:
-    paths:
-    - gl-codeclimate.json
-    reports:
-      codequality: gl-codeclimate.json
+      #artifacts:
+      #  paths:
+      #  - gl-codeclimate.json
+      #  reports:
+      #    codequality: gl-codeclimate.json
 
 
 
