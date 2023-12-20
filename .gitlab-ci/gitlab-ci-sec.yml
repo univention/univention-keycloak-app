@@ -35,7 +35,7 @@ gemnasium-dependency_scanning:
 container_scanning:
   variables:
     CS_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-ucs-base-image"
-    CS_SEVERITY_THRESHOLD: "CRITICAL"
+    CS_SEVERITY_THRESHOLD: "Critical"
   artifacts:
     paths:
     - gl-container-scanning-report.json
