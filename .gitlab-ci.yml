@@ -1,93 +1,40 @@
-stages:
-  - test
-  - prepare
-  - build
-  - merge
-  - production
+variables:
+  RUN_RENOVATE:
+    value: "no"
+    options:
+      - "yes"
+      - "no"
+    description: "Set to yes if you want to run renovate"
+
+
+#variables:
+#  SECURITY_MONITORING:
+#    value: "no"
+#    options:
+#      - "yes"
+#      - "no"
+#    description: "Set to yes if you want to run the security monitoring jobs"
+#  # version
+#  PACKAGE_REGISTRY: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/keycloak-tar"
+#  KEYCLOAK_VERSION: "22.0.3"
+#  # this is where we get keycloak from
+#  KEYCLOAK_SOURCE: "https://github.com/keycloak/keycloak/releases/download/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
+#  # this is where we keycloak store and use from during the image build
+#  KEYCLOAK_DIST: "${PACKAGE_REGISTRY}/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
+#  DOC_TARGET_VERSION: "${KEYCLOAK_VERSION}"
 
 workflow:
   rules:
-    - if: $CI_PIPELINE_SOURCE == "web"
-    - if: $CI_PIPELINE_SOURCE == "webide"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_OPEN_MERGE_REQUESTS
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true"
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_PIPELINE_SOURCE == "webide"
+    - if: $SECURITY_MONITORING == "yes"
 
 include:
-  - project: univention/dist/docker-services
-    file:
-      - kaniko.yml
-      - pre-commit.yml
-
-variables:
-  # version
-  PACKAGE_REGISTRY: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/keycloak-tar"
-  KEYCLOAK_VERSION: "22.0.3"
-  # this is where we get keycloak from
-  KEYCLOAK_SOURCE: "https://github.com/keycloak/keycloak/releases/download/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
-  # this is where we keycloak store and use from during the image build
-  KEYCLOAK_DIST: "${PACKAGE_REGISTRY}/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
-  DOC_TARGET_VERSION: "${KEYCLOAK_VERSION}"
-
-pre-commit:
-  stage: test
-  extends: .pre-commit
-
-# download keycloak archive and store in gitlab
-mirror-keycloak:
-  stage: prepare
-  image:
-    name: docker-registry.knut.univention.de/knut/pipeline_helper
-  script:
-    - |
-      export KEYCLOAK_FILE="$(basename "${KEYCLOAK_SOURCE}")"
-      export KEYCLOAK_FILE_SHA="$(basename "${KEYCLOAK_SOURCE}.sha1")"
-      export GITLAB_FILE_SHA="${PACKAGE_REGISTRY}/${KEYCLOAK_VERSION}/${KEYCLOAK_FILE_SHA}"
-      export GITLAB_FILE="${PACKAGE_REGISTRY}/${KEYCLOAK_VERSION}/${KEYCLOAK_FILE}"
-      if ! curl -s -X HEAD --fail --head -L "${GITLAB_FILE_SHA}"; then
-        curl -s -L -o "${KEYCLOAK_FILE_SHA}" "${KEYCLOAK_SOURCE}.sha1"
-        curl -s --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "${KEYCLOAK_FILE_SHA}" "${GITLAB_FILE_SHA}"
-      fi
-      if ! curl -s -X HEAD --fail --head -L "${GITLAB_FILE}"; then
-        curl -s -L -o "${KEYCLOAK_FILE}" "${KEYCLOAK_SOURCE}"
-        curl -s --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "${KEYCLOAK_FILE}" "${GITLAB_FILE}"
-      fi
-
-generate-config:
-  stage: prepare
-  image:
-    name: docker-registry.knut.univention.de/knut/deb-builder
-    entrypoint: [""]
-  script:
-    - .gitlab-ci/build-ci
-  artifacts:
-    paths:
-      - generated-config-doc.yml
-
-doc-pipeline:
-  stage: build
-  rules:
-    - changes:
-      - "docs/keycloak-app/**/*"
-      - "docs/keycloak-migration/**/*"
-  needs:
-    - job: generate-config
-  trigger:
-    include:
-      - artifact: generated-config-doc.yml
-        job: generate-config
-    strategy: depend
-    forward:
-      pipeline_variables: true
-
-image_build:
-  stage: build
-  extends: .kaniko
-  rules:
-    - changes:
-      - ad-hoc/**/*
-      - dependencies/**/*
-      - Dockerfile
-      - files/**/*
-      - univention-ldap-mapper/**/*
-  variables:
-    KANIKO_ARGS: --build-arg commit="$CI_COMMIT_SHA" --build-arg date="$CI_JOB_STARTED_AT" --cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache --build-arg KEYCLOAK_VERSION=$KEYCLOAK_VERSION --build-arg KEYCLOAK_DIST=$KEYCLOAK_DIST
+  - local: /.gitlab-ci/gitlab-ci.yml
+    rules:
+      - if: $SECURITY_MONITORING != "yes"
+  - local: /.gitlab-ci/gitlab-ci-sec.yml
+    rules:
+      - if: $SECURITY_MONITORING == "yes"
