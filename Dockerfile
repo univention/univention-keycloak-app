@@ -52,6 +52,7 @@ FROM gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-bas
 RUN apt-get update \
  && apt-get install -y --no-install-recommends --no-install-suggests openjdk-17-jre-headless \
  && apt-get -y dist-upgrade \
+ && apt-get install -y --no-install-recommends curl \
  && echo "keycloak:x:0:root" >> /etc/group \
  && echo "keycloak:x:1000:0:keycloak user:/opt/keycloak:/sbin/nologin" >> /etc/passwd \
  && apt-get clean autoclean && rm -rf /var/lib/{apt,dpkg,cache,log} /var/cache/apt/archives \
