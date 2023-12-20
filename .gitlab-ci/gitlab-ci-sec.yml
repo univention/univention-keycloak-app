@@ -10,14 +10,36 @@ include:
 
 sast:
   stage: test
+  artifacts:
+    paths:
+      - gl-sast-report.json
+    reports:
+      sast: gl-sast-report.json
+
+
+secret_detection:
+  stage: test
+  artifacts:
+    paths:
+      - gl-secret-detection-report.json
+    reports:
+      sast: gl-secret-detection-report.json
+
 
 gemnasium-dependency_scanning:
   stage: test
+
 
 container_scanning:
   variables:
     CS_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-ucs-base-image"
     CS_SEVERITY_THRESHOLD: "CRITICAL"
+  artifacts:
+    paths:
+    - gl-codeclimate.json
+    reports:
+      codequality: gl-codeclimate.json
+
 
 
 
