@@ -1,6 +1,9 @@
 stages:
   - security-scanning
 
+include:
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+
 # TODO just a test, replace with a propper job
 container_scanning:
   stage: security-scanning
