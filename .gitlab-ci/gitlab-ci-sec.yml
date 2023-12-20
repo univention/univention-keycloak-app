@@ -1,5 +1,6 @@
 stages:
   - security-scanning
+  - test
 
 include:
   - template: Security/Dependency-Scanning.gitlab-ci.yml
