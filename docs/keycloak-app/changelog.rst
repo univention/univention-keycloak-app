@@ -29,7 +29,7 @@ Released: 20. December 2023
 * The container of the :program:`Keycloak` app has been changed from the upstream `Redhat`
   `ubi-micro-build` to the ucs-base-image, which is based on Debian.
 
-* The :program:`Keycloak` app added support for postgres 15 databases.
+* The :program:`Keycloak` app added support for PostgreSQL 15 databases.
 
 * The error messages shown during login using :program:`Keycloak` have been
   adapted to show more detailed information in case an account is locked, expired or disabled.
