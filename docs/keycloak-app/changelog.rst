@@ -19,7 +19,7 @@ Please also consider the `upstream release notes
 22.0.3-ucs2
 ===========
 
-Released: TODO
+Released: 20. December 2023
 
 * Using an Oracle DB backend for :program:`Keycloak` is no longer possible. The Oracle DB
   drivers that were provided by :program:`Keycloak` have been removed. If you are currently
@@ -28,6 +28,11 @@ Released: TODO
 
 * The container of the :program:`Keycloak` app has been changed from the upstream `Redhat`
   `ubi-micro-build` to the ucs-base-image, which is based on Debian.
+
+* The :program:`Keycloak` app added support for postgres 15 databases.
+
+* The error messages shown during login using :program:`Keycloak` have been
+  adapted to show more detailed information in case an account is locked, expired or disabled.
 
 
 22.0.3-ucs1
