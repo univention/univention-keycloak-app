@@ -39,7 +39,6 @@ container_scanning:
     artifacts:
       paths:
       - gl-container-scanning-report.json
-      - gl-dependency-scanning-report.json
       reports:
         codequality: gl-container-scanning-report.json
 
