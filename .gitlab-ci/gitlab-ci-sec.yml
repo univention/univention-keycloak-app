@@ -5,6 +5,7 @@ stages:
 include:
   - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
+  - template: Jobs/Container-Scanning.gitlab-ci.yml
 
 sast:
   stage: test
@@ -12,49 +13,51 @@ sast:
 gemnasium-dependency_scanning:
   stage: test
 
-# TODO just a test, replace with a propper job
-container_scanning:
-  stage: security-scanning
-  image:
-    name: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/aquasec/trivy:latest"
-    entrypoint: [""]
-  variables:
-    # No need to clone the repo, we exclusively work on artifacts.  See
-    # https://docs.gitlab.com/ee/ci/runners/README.html#git-strategy
-    GIT_STRATEGY: none
-    TRIVY_USERNAME: "$CI_REGISTRY_USER"
-    TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
-    TRIVY_AUTH_URL: "$CI_REGISTRY"
-    TRIVY_CACHE_DIR: ".trivycache/"
-    TRIVY_NO_PROGRESS: "false"
-    #FULL_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-    #FULL_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-image-tools"
-    FULL_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-ucs-base-image"
-  script:
-    - env
 
-    - trivy --version
-    # cache cleanup is needed when scanning images with the same tags, it does not remove the database
-    - time trivy image --clear-cache
-    # update vulnerabilities db
-    - time trivy image --download-db-only
-    # Image report
-    - time trivy image --exit-code 0 --format template --template "@/contrib/gitlab-codequality.tpl"
-        --output gl-codeclimate.json "$FULL_IMAGE_NAME"
-    #- ./trivy filesystem --scanners config,vuln --exit-code 0 --format template --template "@contrib/gitlab-codequality.tpl" -o gl-codeclimate-fs.json .
-    ## Combine report
-    #- apk update && apk add jq
-    #- jq -s 'add' gl-codeclimate-image.json gl-codeclimate-fs.json > gl-codeclimate.json
-    # Prints full report
-    - time trivy image --exit-code 0 "$FULL_IMAGE_NAME"
-    # Fail on critical vulnerabilities
-    - time trivy image --exit-code 1 --severity CRITICAL "$FULL_IMAGE_NAME"
-  cache:
-    paths:
-      - .trivycache/
-  # Enables https://docs.gitlab.com/ee/user/application_security/container_scanning/ (Container Scanning report is available on GitLab EE Ultimate or GitLab.com Gold)
-  artifacts:
-    paths:
-      - gl-codeclimate.json
-    reports:
-      codequality: gl-codeclimate.json
+
+    ## TODO just a test, replace with a propper job
+    #container_scanning:
+    #  stage: security-scanning
+    #  image:
+    #    name: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/aquasec/trivy:latest"
+    #    entrypoint: [""]
+    #  variables:
+    #    # No need to clone the repo, we exclusively work on artifacts.  See
+    #    # https://docs.gitlab.com/ee/ci/runners/README.html#git-strategy
+    #    GIT_STRATEGY: none
+    #    TRIVY_USERNAME: "$CI_REGISTRY_USER"
+    #    TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
+    #    TRIVY_AUTH_URL: "$CI_REGISTRY"
+    #    TRIVY_CACHE_DIR: ".trivycache/"
+    #    TRIVY_NO_PROGRESS: "false"
+    #    #FULL_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    #    #FULL_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-image-tools"
+    #    FULL_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-ucs-base-image"
+    #  script:
+    #    - env
+    #
+    #    - trivy --version
+    #    # cache cleanup is needed when scanning images with the same tags, it does not remove the database
+    #    - time trivy image --clear-cache
+    #    # update vulnerabilities db
+    #    - time trivy image --download-db-only
+    #    # Image report
+    #    - time trivy image --exit-code 0 --format template --template "@/contrib/gitlab-codequality.tpl"
+    #        --output gl-codeclimate.json "$FULL_IMAGE_NAME"
+    #    #- ./trivy filesystem --scanners config,vuln --exit-code 0 --format template --template "@contrib/gitlab-codequality.tpl" -o gl-codeclimate-fs.json .
+    #    ## Combine report
+    #    #- apk update && apk add jq
+    #    #- jq -s 'add' gl-codeclimate-image.json gl-codeclimate-fs.json > gl-codeclimate.json
+    #    # Prints full report
+    #    - time trivy image --exit-code 0 "$FULL_IMAGE_NAME"
+    #    # Fail on critical vulnerabilities
+    #    - time trivy image --exit-code 1 --severity CRITICAL "$FULL_IMAGE_NAME"
+    #  cache:
+    #    paths:
+    #      - .trivycache/
+    #  # Enables https://docs.gitlab.com/ee/user/application_security/container_scanning/ (Container Scanning report is available on GitLab EE Ultimate or GitLab.com Gold)
+    #  artifacts:
+    #    paths:
+    #      - gl-codeclimate.json
+    #    reports:
+    #      codequality: gl-codeclimate.json
