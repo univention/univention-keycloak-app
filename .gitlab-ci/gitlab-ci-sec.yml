@@ -36,11 +36,12 @@ container_scanning:
   variables:
     CS_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-ucs-base-image"
     CS_SEVERITY_THRESHOLD: "CRITICAL"
-    artifacts:
-      paths:
-      - gl-container-scanning-report.json
-      reports:
-        codequality: gl-container-scanning-report.json
+  artifacts:
+    paths:
+    - gl-container-scanning-report.json
+    - gl-dependency-scanning-report.json
+    reports:
+      codequality: gl-container-scanning-report.json
 
 
 
