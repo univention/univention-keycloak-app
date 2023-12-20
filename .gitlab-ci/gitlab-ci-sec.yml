@@ -1,6 +1,7 @@
 stages:
   - security-scanning
 
+# TODO just a test, replace with a propper job
 container_scanning:
   stage: security-scanning
   image:
