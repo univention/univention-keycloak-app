@@ -6,6 +6,7 @@ include:
   - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
   - template: Jobs/Container-Scanning.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
 
 sast:
   stage: test
@@ -16,7 +17,7 @@ gemnasium-dependency_scanning:
 container_scanning:
   variables:
     CS_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-ucs-base-image"
-    CS_DISABLE_DEPENDENCY_LIST: "true"
+    CS_SEVERITY_THRESHOLD: "CRITICAL"
 
 
 
