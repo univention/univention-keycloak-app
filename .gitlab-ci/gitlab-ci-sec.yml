@@ -13,6 +13,11 @@ sast:
 gemnasium-dependency_scanning:
   stage: test
 
+container_scanning:
+  variables:
+    CS_IMAGE: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-ucs-base-image"
+    CS_DISABLE_DEPENDENCY_LIST: "true"
+
 
 
     ## TODO just a test, replace with a propper job
