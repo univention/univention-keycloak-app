@@ -100,7 +100,7 @@ spec:
             {{- end }}
             - name: "KEYCLOAK_PASSWORD_CHANGE_ENDPOINT"
               value: {{ printf "%s.%s" .Values.global.hosts.univentionManagementStack .Values.global.domain | quote }}
-            - name: "KEYCLOAK_LOG_LEVEL"
+            - name: "KC_LOG_LEVEL"
               value: {{ .Values.config.logLevel | quote }}
             - name: "KC_HOSTNAME"
               value: {{ .Values.config.hostname | default (printf "%s.%s" .Values.global.hosts.keycloak .Values.global.domain) | quote }}
