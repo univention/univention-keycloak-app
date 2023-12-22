@@ -32,12 +32,6 @@ pwdfile="/etc/keycloak.secret"
 [ -e "$pwdfile" ] || makepasswd --chars 20 > "$pwdfile"
 chmod 640 "$pwdfile"
 
-# install jq TODO remove
-command -v jq || {
-	apt-get -qq update
-	apt-get -qq -y install jq
-}
-
 # apache template
 keycloak_template_path=/etc/univention/templates/files/etc/apache2/sites-available/univention-keycloak.conf
 echo "Installing univention-keycloak apache template"
