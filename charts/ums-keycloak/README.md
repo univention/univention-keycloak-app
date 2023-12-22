@@ -13,13 +13,13 @@ To install the chart with the release name `my-release`, you have two options:
 ### Install via Repository
 ```console
 helm repo add univention-keycloak https://gitlab.souvap-univention.de/api/v4/projects/161/packages/helm/stable
-helm install my-release --version 1.0.1 univention-keycloak/ums-keycloak
+helm install my-release --version 1.0.2 univention-keycloak/ums-keycloak
 ```
 
 ### Install via OCI Registry
 ```console
 helm repo add univention-keycloak oci://registry.souvap-univention.de/souvap/tooling/charts/univention-keycloak
-helm install my-release --version 1.0.1 univention-keycloak/ums-keycloak
+helm install my-release --version 1.0.2 univention-keycloak/ums-keycloak
 ```
 
 ## Requirements
@@ -53,6 +53,7 @@ helm install my-release --version 1.0.1 univention-keycloak/ums-keycloak
 | config.features.disabled | list | `[]` | Disables a set of one or more features for keycloak. |
 | config.features.enabled | list | `["admin-fine-grained-authz","token-exchange"]` | Enables a set of one or more features for keycloak. |
 | config.hostname | string | `""` | Hostname. Ref.: https://www.keycloak.org/server/hostname Default: {{ .Values.global.hosts.keycloak }}.{{ .Values.global.domain }} |
+| config.logLevel | string | `"INFO"` | Set log level Ref.: https://docs.software-univention.de/keycloak-app/latest/configuration.html#envvar-keycloak-log-level |
 | config.proxy | string | `"edge"` | Proxy mode. Ref.: https://www.keycloak.org/server/reverseproxy |
 | containerSecurityContext.allowPrivilegeEscalation | bool | `false` | Enable container privileged escalation. |
 | containerSecurityContext.capabilities | object | `{"drop":["ALL"]}` | Security capabilities for container. |
@@ -68,7 +69,8 @@ helm install my-release --version 1.0.1 univention-keycloak/ums-keycloak
 | extraVolumes | list | `[]` | Optionally specify extra list of additional volumes |
 | fullnameOverride | string | `""` | Provide a name to substitute for the full names of resources. |
 | global.domain | string | `"open-desk.cloud"` | Define the domain name. |
-| global.hosts.keycloak | string | `"id"` | Subdomain for Keycloak. |
+| global.hosts.keycloak | string | `"id"` | Subdomain for Univention Keycloak. |
+| global.hosts.univentionManagementStack | string | `"portal"` | Subdomain for the rest of the Univention Management Stack |
 | global.imagePullSecrets | list | `[]` | Credentials to fetch images from private registry Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/  imagePullSecrets:   - "docker-registry"  |
 | global.imageRegistry | string | `"docker.software-univention.de"` | Container registry address. |
 | image.imagePullPolicy | string | `"IfNotPresent"` | Define an ImagePullPolicy.  Ref.: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy  "IfNotPresent" => The image is pulled only if it is not already present locally. "Always" => Every time the kubelet launches a container, the kubelet queries the container image registry to             resolve the name to an image digest. If the kubelet has a container image with that exact digest cached             locally, the kubelet uses its cached image; otherwise, the kubelet pulls the image with the resolved             digest, and uses that image to launch the container. "Never" => The kubelet does not try fetching the image. If the image is somehow already present locally, the            kubelet attempts to start the container; otherwise, startup fails  |
