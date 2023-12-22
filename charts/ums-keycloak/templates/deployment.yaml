@@ -82,6 +82,7 @@ spec:
           {{- if .Values.config.enableMetrics }}
             - "--metrics-enabled=true"
           {{- end }}
+          # Find the available variables here: https://github.com/univention/univention-keycloak-app/blob/main/app/settings
           env:
             - name: "KEYCLOAK_ADMIN"
               value: {{ .Values.config.admin.username | quote }}
@@ -97,6 +98,10 @@ spec:
                   key: "adminPassword"
                   {{- end }}
             {{- end }}
+            - name: "KEYCLOAK_PASSWORD_CHANGE_ENDPOINT"
+              value: {{ printf "%s.%s" .Values.global.hosts.univentionManagementStack .Values.global.domain | quote }}
+            - name: "KEYCLOAK_LOG_LEVEL"
+              value: {{ .Values.config.logLevel | quote }}
             - name: "KC_HOSTNAME"
               value: {{ .Values.config.hostname | default (printf "%s.%s" .Values.global.hosts.keycloak .Values.global.domain) | quote }}
             - name: "KC_PROXY"

@@ -9,8 +9,10 @@ global:
 
   # Define hosts.
   hosts:
-    # -- Subdomain for Keycloak.
+    # -- Subdomain for Univention Keycloak.
     keycloak: "id"
+    # -- Subdomain for the rest of the Univention Management Stack
+    univentionManagementStack: "portal"
 
   # -- Container registry address.
   imageRegistry: "docker.software-univention.de"
@@ -52,6 +54,10 @@ config:
   # -- Enables Keycloak metrics endpoint
   # Ref.: https://www.keycloak.org/server/configuration-metrics
   enableMetrics: true
+
+  # -- Set log level
+  # Ref.: https://docs.software-univention.de/keycloak-app/latest/configuration.html#envvar-keycloak-log-level
+  logLevel: "INFO"
 
   # Keycloak admin user settings.
   admin:
