@@ -1,0 +1,76 @@
+stages:
+  - test
+  - prepare
+  - build
+  - merge
+  - production
+  - check
+  - renovate
+
+include:
+  - project: univention/dist/docker-services
+    file:
+      - kaniko.yml
+      - pre-commit.yml
+
+pre-commit:
+  stage: test
+  extends: .pre-commit
+
+# download keycloak archive and store in gitlab
+mirror-keycloak:
+  stage: prepare
+  image:
+    name: docker-registry.knut.univention.de/knut/pipeline_helper
+  script:
+    - |
+      export KEYCLOAK_FILE="$(basename "${KEYCLOAK_SOURCE}")"
+      export KEYCLOAK_FILE_SHA="$(basename "${KEYCLOAK_SOURCE}.sha1")"
+      export GITLAB_FILE_SHA="${PACKAGE_REGISTRY}/${KEYCLOAK_VERSION}/${KEYCLOAK_FILE_SHA}"
+      export GITLAB_FILE="${PACKAGE_REGISTRY}/${KEYCLOAK_VERSION}/${KEYCLOAK_FILE}"
+      if ! curl -s -X HEAD --fail --head -L "${GITLAB_FILE_SHA}"; then
+        curl -s -L -o "${KEYCLOAK_FILE_SHA}" "${KEYCLOAK_SOURCE}.sha1"
+        curl -s --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "${KEYCLOAK_FILE_SHA}" "${GITLAB_FILE_SHA}"
+      fi
+      if ! curl -s -X HEAD --fail --head -L "${GITLAB_FILE}"; then
+        curl -s -L -o "${KEYCLOAK_FILE}" "${KEYCLOAK_SOURCE}"
+        curl -s --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "${KEYCLOAK_FILE}" "${GITLAB_FILE}"
+      fi
+
+generate-config:
+  stage: prepare
+  image:
+    name: docker-registry.knut.univention.de/knut/deb-builder
+    entrypoint: [""]
+  script:
+    - .gitlab-ci/build-ci
+  artifacts:
+    paths:
+      - generated-config-doc.yml
+
+doc-pipeline:
+  stage: build
+  rules:
+    - changes:
+      - "docs/keycloak-app/**/*"
+      - "docs/keycloak-migration/**/*"
+  needs:
+    - job: generate-config
+  trigger:
+    include:
+      - artifact: generated-config-doc.yml
+        job: generate-config
+    strategy: depend
+    forward:
+      pipeline_variables: true
+
+image_build:
+  stage: build
+  extends: .kaniko
+  rules:
+    - changes:
+      - ad-hoc/**/*
+      - dependencies/**/*
+      - Dockerfile
+      - files/**/*
+      - univention-ldap-mapper/**/*

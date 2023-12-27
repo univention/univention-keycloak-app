@@ -1,0 +1,114 @@
+variables:
+  RENOVATE_EXTRA_FLAGS: "$CI_PROJECT_PATH"
+  RUN_RENOVATE: "yes"
+  RENOVATE_TOKEN: "glpat-MHYoU453KH4qioGay7HR"
+
+include:
+  - project: univention/dist/docker-services
+    file:
+      - renovatebot/renovate.gitlab-ci.yml
+  - project: univention/dist/docker-services
+    file:
+      - kaniko.yml
+
+stages:
+  - security-pipeline-build
+  - security-pipeline-prepare
+  - security-pipeline-test
+  - test # for renovate
+  - deploy # for renovate
+
+# TODO just a test, replace with a propper job
+container_scanning:
+  stage: security-pipeline-test
+  image:
+    name: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/aquasec/trivy:latest"
+    entrypoint: [""]
+  variables:
+    # No need to clone the repo, we exclusively work on artifacts.  See
+    # https://docs.gitlab.com/ee/ci/runners/README.html#git-strategy
+    GIT_STRATEGY: none
+    TRIVY_USERNAME: "$CI_REGISTRY_USER"
+    TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
+    TRIVY_AUTH_URL: "$CI_REGISTRY"
+    TRIVY_CACHE_DIR: ".trivycache/"
+    TRIVY_NO_PROGRESS: "false"
+    #FULL_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    #FULL_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-image-tools"
+    FULL_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:latest"
+  script:
+    - trivy --version
+    # cache cleanup is needed when scanning images with the same tags, it does not remove the database
+    - time trivy image --clear-cache
+    # update vulnerabilities db
+    - time trivy image --download-db-only
+    # Image report
+    - time trivy image --exit-code 0 --format template --template "@/contrib/gitlab-codequality.tpl"
+        --output gl-codeclimate.json "$FULL_IMAGE_NAME"
+    #- ./trivy filesystem --scanners config,vuln --exit-code 0 --format template --template "@contrib/gitlab-codequality.tpl" -o gl-codeclimate-fs.json .
+    ## Combine report
+    #- apk update && apk add jq
+    #- jq -s 'add' gl-codeclimate-image.json gl-codeclimate-fs.json > gl-codeclimate.json
+    # Prints full report
+    - time trivy image --exit-code 0 "$FULL_IMAGE_NAME"
+    # Fail on critical vulnerabilities
+    - time trivy image --exit-code 1 --severity HIGH --ignore-unfixed "$FULL_IMAGE_NAME"
+  cache:
+    paths:
+      - .trivycache/
+  # Enables https://docs.gitlab.com/ee/user/application_security/container_scanning/ (Container Scanning report is available on GitLab EE Ultimate or GitLab.com Gold)
+  artifacts:
+    paths:
+      - gl-codeclimate.json
+    reports:
+      codequality: gl-codeclimate.json
+  allow_failure: true
+
+check_released_container:
+  stage: security-pipeline-prepare
+  image:
+    name: docker.software-univention.de/keycloak-keycloak:${LATEST_RELEASED_KEYCLOAK_VERSION}
+    entrypoint: [""]
+  artifacts:
+    paths:
+      - package-list-released.txt
+  script:
+    - dpkg-query --showformat='${Package};${Version}\n' --show | sort > package-list-released.txt
+
+check_staged_container:
+  stage: security-pipeline-test
+  dependencies:
+    - check_released_container
+  image:
+    name: gitregistry.knut.univention.de/univention/components/keycloak-app:latest
+    entrypoint: [""]
+  artifacts:
+    when: on_failure
+    paths:
+      - package-list-diff.txt
+  script:
+    - dpkg-query --showformat='${Package};${Version}\n' --show | sort > package-list-latest.txt
+    - echo "Packages to be updated:" > package-list-diff.txt
+    - diff -u package-list-released.txt package-list-latest.txt >> package-list-diff.txt
+
+check_keycloak_version:
+  image: python:latest
+  stage: security-pipeline-test
+  before_script:
+    - pip install app-security-monitoring --index-url https://git.knut.univention.de/api/v4/projects/715/packages/pypi/simple
+  script:
+    - env
+    - appsecmonit show fixes -o keycloak -a keycloak -p github -t "$GITHUB_TOKEN" -s "$KEYCLOAK_VERSION" -r html -r console -c 6 -w 6
+  # not yet a feature of our gitlab version
+  #allow_failure:
+  #  exit_codes:
+  #    - 2
+  artifacts:
+    when: always
+    paths:
+      - report.html
+    expire_in: 1 month
+
+image_build:
+  stage: security-pipeline-build
+  extends: .kaniko
