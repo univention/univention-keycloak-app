@@ -16,6 +16,15 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+23.0.3-ucs1
+===========
+
+Released: TODO
+
+* The app updates to *Keycloak* version 23.0.0 of the upstream Docker image from
+  https://quay.io/repository/keycloak/keycloak.
+
+
 22.0.3-ucs2
 ===========
 
