@@ -22,7 +22,7 @@ from datetime import date
 # -- Project information -----------------------------------------------------
 
 project = "Migration guide: SimpleSAMLPHP to Keycloak"
-copyright = '{}, Univention GmbH'.format(date.today().year)
+copyright = '2023-{}, Univention GmbH'.format(date.today().year)
 author = 'Univention GmbH'
 html_show_copyright = True
 language = 'en'

@@ -52,7 +52,7 @@ def read_version_from_ci() -> str:
 release = read_version_from_ci()
 version = release
 project = "Keycloak app {}".format(release)
-copyright = '{}, Univention GmbH'.format(date.today().year)
+copyright = '2022-{}, Univention GmbH'.format(date.today().year)
 author = 'Univention GmbH'
 html_show_copyright = True
 language = 'en'
