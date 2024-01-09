@@ -446,6 +446,19 @@ automatically sets a respective configuration:
 * :envvar:`saml/idp/certificate/certificate`
 * :envvar:`saml/idp/certificate/privatekey`
 * :envvar:`saml/idp/https`
+* :envvar:`umc/saml/assertion-lifetime`
+
+.. _migration-saml-assertion-lifetime:
+
+In order to change SAML assertion lifespan (5 minutes by default), you can:
+
+#. Visit :ref:`Keycloak Admin Console <keycloak-admin-console>`.
+
+#. Navigate to :menuselection:`UCS realm --> Clients`.
+
+#. Select specific SAML ``client-id`` and go to :menuselection:`Advanced --> Advanced Settings`.
+
+#. Under `Assertion Lifespan` set the appropriate value.
 
 :program:`Keycloak` redirects to HTTPS automatically.
 
