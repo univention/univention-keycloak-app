@@ -70,6 +70,7 @@ image_build:
   rules:
     - changes:
       - ad-hoc/**/*
+      - extensions/**/*
       - dependencies/**/*
       - Dockerfile
       - files/**/*
