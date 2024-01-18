@@ -1,0 +1,17 @@
+artifactId: univention-directory-manager
+groupId: de.univention
+artifactVersion: 1.0.0
+skipValidateSpec: true
+
+additionalProperties:
+  dateLibrary: java8
+  useJakartaEe: true
+  hideGenerationTimestamp: true
+#  modelPackage: org.openapitools.client.model
+#  apiPackage: org.openapitools.client
+#  invokerPackage: org.openapitools.client
+  serializableModel: true
+  useTags: true
+  useGzipFeature: true
+#  interfaceOnly: true
+  java17 : true

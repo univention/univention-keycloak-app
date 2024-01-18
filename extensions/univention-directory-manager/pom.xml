@@ -1,49 +1,34 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>de.univention</groupId>
-    <version>1.0.0</version>
+    <parent>
+        <groupId>de.univention.keycloak</groupId>
+        <artifactId>keycloak-parent</artifactId>
+        <version>${revision}</version>
+    </parent>
 
     <name>Univention Directory Manager</name>
-    <description/>
     <artifactId>univention-directory-manager</artifactId>
-    <packaging>jar</packaging>
+    <groupId>de.univention.keycloak</groupId>
+    <version>1.0.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <swagger-annotations-version>1.5.8</swagger-annotations-version>
         <jackson-version>2.13.1</jackson-version>
-        <jackson-databind-nullable-version>0.2.1</jackson-databind-nullable-version>
+        <resteasy.version>6.2.4.Final</resteasy.version>
+        <jackson-databind-nullable-version>0.2.6</jackson-databind-nullable-version>
         <maven-compiler-plugin-version>3.8.1</maven-compiler-plugin-version>
     </properties>
 
-    <build>
-        <finalName>univention-directory-manager</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin-version}</version>
-                <configuration>
-                    <!--
-                        Currently the Keycloak container image has this version of the JVM:
-                        openjdk version "11.0.12" 2021-07-20 LTS
-                    -->
-                    <source>17</source>
-                    <target>17</target>
-                    <compilerArgs>
-                      <arg>-Xlint:unchecked</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     <dependencies>
         <!-- dependencies are needed for the client being generated -->
         <dependency>
-          <groupId>io.swagger</groupId>
-          <artifactId>swagger-annotations</artifactId>
-          <version>${swagger-annotations-version}</version>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger-annotations-version}</version>
         </dependency>
 
         <!-- You can find the dependencies for the library configuration you chose by looking in JavaClientCodegen.
@@ -53,7 +38,7 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client</artifactId>
-            <version>6.2.5.Final</version>
+            <version>6.2.4.Final</version>
         </dependency>
         <!-- @Nullable annotation -->
         <dependency>
@@ -65,22 +50,17 @@
         <dependency>
             <groupId>org.wildfly</groupId>
             <artifactId>wildfly-client-all</artifactId>
-            <version>29.0.0.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-client</artifactId>
-            <version>6.2.5.Final</version>
+            <version>29.0.1.Final</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client-api</artifactId>
-            <version>6.2.5.Final</version>
+            <version>6.2.4.Final</version>
         </dependency>
         <dependency>
-             <groupId>org.jboss.resteasy</groupId>
-             <artifactId>resteasy-multipart-provider</artifactId>
-            <version>6.2.5.Final</version>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-multipart-provider</artifactId>
+            <version>6.2.4.Final</version>
         </dependency>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
@@ -90,7 +70,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.6</version>
+            <version>${jackson-databind-nullable-version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
@@ -98,34 +78,77 @@
             <version>${jackson-version}</version>
         </dependency>
         <dependency>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-core</artifactId>
-          <version>${jackson-version}</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson-version}</version>
         </dependency>
         <dependency>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-annotations</artifactId>
-          <version>${jackson-version}</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson-version}</version>
         </dependency>
         <dependency>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-databind</artifactId>
-          <version>${jackson-version}</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-version}</version>
         </dependency>
         <dependency>
-          <groupId>com.fasterxml.jackson.jaxrs</groupId>
-          <artifactId>jackson-jaxrs-json-provider</artifactId>
-          <version>${jackson-version}</version>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>${jackson-version}</version>
         </dependency>
         <dependency>
-          <groupId>com.fasterxml.jackson.datatype</groupId>
-          <artifactId>jackson-datatype-jsr310</artifactId>
-          <version>${jackson-version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.openapitools</groupId>
-          <artifactId>jackson-databind-nullable</artifactId>
-          <version>${jackson-databind-nullable-version}</version>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson-version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
+                    <configuration>
+                        <release>17</release>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>6.4.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi.json</inputSpec>
+                            <configurationFile>${project.basedir}/src/main/resources/config.yml</configurationFile>
+                            <generatorName>java</generatorName>
+                            <additionalProperties>useSwaggerAnnotations=false,returnResponse=true</additionalProperties>
+                            <skipValidateSpec>true</skipValidateSpec>
+                            <library>resteasy</library>
+                            <generateSupportingFiles>true</generateSupportingFiles>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <configOptions>
+                                <sourceFolder>src/gen/java/main</sourceFolder>
+                                <dateLibrary>java8</dateLibrary>
+                                <useJakartaEe>true</useJakartaEe>
+                                <java17>true</java17>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

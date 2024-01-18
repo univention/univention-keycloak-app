@@ -5,15 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.keycloak</groupId>
+        <groupId>de.univention.keycloak</groupId>
         <artifactId>keycloak-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>de.univention.keycloak</groupId>
     <artifactId>univention-user-attribute-nameid-mapper-base64</artifactId>
-    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

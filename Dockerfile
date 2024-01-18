@@ -1,12 +1,9 @@
 # buíld ad hoc federation and our extensions
 FROM maven:3.8.2-openjdk-17 as maven
+ARG SKIP_TEST=false
 WORKDIR /extensions
 COPY extensions ./
-RUN mvn clean package --file univention-directory-manager
-RUN mvn install --file univention-directory-manager
-RUN mvn clean package --file univention-authenticator
-RUN ls univention-authenticator/target/
-RUN mvn clean package --file pom.xml
+RUN mvn package -Dmaven.test.skip=${SKIP_TEST}
 
 # keycloak itself
 FROM docker-registry.knut.univention.de/knut/pipeline_helper as keycloak
@@ -44,7 +41,7 @@ COPY --from=theme /themes /opt/keycloak/themes/
 COPY --from=maven /extensions/lib/univention-app-authenticator-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-ldap-mapper-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-user-attribute-nameid-mapper-base64-*.jar /opt/keycloak/providers/
-COPY --from=maven /extensions/univention-directory-manager/target/univention-directory-manager.jar /opt/keycloak/providers/
+COPY --from=maven /extensions/univention-directory-manager/target/univention-directory-manager-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
 RUN cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.jdbc.ojdbc11-*.jar \
  && cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.nls.orai18n-*.jar \

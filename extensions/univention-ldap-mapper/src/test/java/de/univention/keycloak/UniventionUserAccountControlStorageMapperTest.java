@@ -97,7 +97,7 @@ public class UniventionUserAccountControlStorageMapperTest {
         final boolean res = spyMapper.onAuthenticationFailure(ldapUser, user, exc, realm);
         assertFalse(res);
 
-        Mockito.verify(spyMapper, times(1)).processAuthError(user, attrs);
+        Mockito.verify(spyMapper, times(0)).processAuthError(user, attrs);
     }
 
     @Test

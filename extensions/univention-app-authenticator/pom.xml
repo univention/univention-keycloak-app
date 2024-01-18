@@ -5,15 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.keycloak</groupId>
+        <groupId>de.univention.keycloak</groupId>
         <artifactId>keycloak-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>de.univention.keycloak</groupId>
     <artifactId>univention-app-authenticator</artifactId>
-    <packaging>jar</packaging>
+<!--    <packaging>jar</packaging>-->
 
     <dependencies>
         <dependency>

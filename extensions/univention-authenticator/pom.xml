@@ -1,65 +1,82 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <groupId>org.keycloak</groupId>
+        <groupId>de.univention.keycloak</groupId>
         <artifactId>keycloak-parent</artifactId>
-        <version>23.0.3</version>
+        <version>${revision}</version>
     </parent>
 
     <name>Univention Authenticator</name>
-    <description/>
     <modelVersion>4.0.0</modelVersion>
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
     </properties>
+    <groupId>de.univention.keycloak</groupId>
     <artifactId>univention-authenticator</artifactId>
-    <packaging>jar</packaging>
+    <version>1.0.0</version>
+<!--    <packaging>jar</packaging>-->
 
     <dependencies>
+<!--        <dependency>-->
+<!--            <groupId>org.openapitools</groupId>-->
+<!--            <artifactId>openapi-generator</artifactId>-->
+<!--            <version>6.4.0</version>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-core</artifactId>
+            <version>${keycloak.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-ldap-federation</artifactId>
+            <version>${keycloak.version}</version>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-server-spi</artifactId>
+            <version>${keycloak.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-server-spi-private</artifactId>
+            <version>${keycloak.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-services</artifactId>
+            <version>${keycloak.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-saml-core-public</artifactId>
+            <version>${keycloak.version}</version>
             <scope>provided</scope>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.jboss.logging</groupId>-->
+<!--            <artifactId>jboss-logging</artifactId>-->
+<!--            <version>3.5.1.Final</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.jboss.spec.javax.ws.rs</groupId>-->
+<!--            <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>-->
+<!--            <version>2.0.2.Final</version>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>org.jboss.logging</groupId>
-            <artifactId>jboss-logging</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.spec.javax.ws.rs</groupId>
-            <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.univention</groupId>
+            <groupId>de.univention.keycloak</groupId>
             <artifactId>univention-directory-manager</artifactId>
             <version>1.0.0</version>
         </dependency>
-    	<dependency>
+        <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
             <version>3.15.6.Final</version>
@@ -67,17 +84,17 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client</artifactId>
-            <version>6.2.5.Final</version>
+            <version>6.2.4.Final</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client-api</artifactId>
-            <version>6.2.5.Final</version>
+            <version>6.2.4.Final</version>
         </dependency>
         <dependency>
-             <groupId>org.jboss.resteasy</groupId>
-             <artifactId>resteasy-multipart-provider</artifactId>
-            <version>6.2.5.Final</version>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-multipart-provider</artifactId>
+            <version>6.2.4.Final</version>
         </dependency>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
@@ -92,6 +109,7 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jackson2-provider</artifactId>
+            <version>6.2.4.Final</version>
         </dependency>
     </dependencies>
 
@@ -113,6 +131,7 @@
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
+                <version>4.2.2.Final</version>
                 <configuration>
                     <skip>false</skip>
                 </configuration>
@@ -124,38 +143,44 @@
                 <configuration>
                 </configuration>
                 <executions>
-                  <execution>
-                    <phase>package</phase>
-                    <goals>
-                      <goal>shade</goal>
-                    </goals>
-                    <configuration>
-                        <finalName>univention-authenticator</finalName>
-                        <shadedArtifactAttached>true</shadedArtifactAttached>
-                        <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
-                      <filters>
-                          <filter>
-                              <artifact>*:*</artifact>
-                              <excludes>
-                                  <exclude>META-INF/*</exclude>
-                              </excludes>
-                          </filter>
-                      </filters>
-                      <artifactSet>
-                          <includes>
-                              <include>org.keycloak/univention-authenticator:*</include>
-                              <include>de.univention:univention-directory-manager</include>
-                              <include>org.openapitools:jackson-databind-nullable</include>
-                          </includes>
-                          <excludes>
-                              <!--exclude>org*</exclude-->
-                              <exclude>com*</exclude>
-                              <exclude>io*</exclude>
-                          </excludes>
-                      </artifactSet>
-                    </configuration>
-                  </execution>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>univention-authenticator</finalName>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <artifactSet>
+                                <includes>
+                                    <include>org.keycloak/univention-authenticator:*</include>
+                                    <include>de.univention:univention-directory-manager</include>
+                                    <include>org.openapitools:jackson-databind-nullable</include>
+                                </includes>
+                                <excludes>
+                                    <!--exclude>org*</exclude-->
+                                    <exclude>com*</exclude>
+                                    <exclude>io*</exclude>
+                                </excludes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
                 </executions>
+            </plugin>
+            <!-- deploy extension -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <!-- config is defined in parent pom -->
             </plugin>
         </plugins>
     </build>
