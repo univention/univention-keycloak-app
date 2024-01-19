@@ -37,15 +37,15 @@ import org.openapitools.client.model.UsersUser;
 import org.openapitools.client.model.UsersUserList;
 import org.openapitools.client.model.UsersUserListEmbedded;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
-import java.util.Base64;
-import java.nio.ByteBuffer;
 import java.util.Objects;
-import java.util.UUID;
-import java.io.UnsupportedEncodingException;
 import java.util.Random;
+import java.util.UUID;
 
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
