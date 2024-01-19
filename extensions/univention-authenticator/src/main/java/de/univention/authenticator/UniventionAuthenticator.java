@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Base64;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 import java.util.UUID;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
@@ -61,6 +62,9 @@ import org.keycloak.storage.ldap.idm.store.ldap.LDAPUtil;
 // it is rather likely that some other SPI
 // perhaps the user storage spi would be better for this job
 public class UniventionAuthenticator implements Authenticator {
+
+    private static final String REM_ID_GUID_KEY_DEFAULT = "univentionObjectIdentifier";
+    private static final String REM_SOURCE_ID_KEY_DEFAULT = "univentionSourceIAM";
 
     private static final Logger logger =
         Logger.getLogger(UniventionAuthenticator.class);
@@ -82,8 +86,10 @@ public class UniventionAuthenticator implements Authenticator {
         String username = user.getUsername();
         String email = user.getEmail();
 
-        String remIdGUID_key = Optional.ofNullable(System.getenv("KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER")).orElse("univentionObjectIdentifier");
-        String remSourceID_key = Optional.ofNullable(System.getenv("KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER")).orElse("univentionSourceIAM");
+        String remIdGUID_key = Objects.requireNonNullElse(
+            System.getenv("KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER"), REM_ID_GUID_KEY_DEFAULT);
+        String remSourceID_key = Objects.requireNonNullElse(
+            System.getenv("KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER"), REM_SOURCE_ID_KEY_DEFAULT);
 
         logger.infof("User:" + firstname);
         logger.infof("lastname:" + lastname);
