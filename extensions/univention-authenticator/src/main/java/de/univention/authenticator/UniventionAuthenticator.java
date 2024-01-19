@@ -123,15 +123,27 @@ public class UniventionAuthenticator implements Authenticator {
         logger.infof("User attempted login. First name: %s, Last name: %s, Username: %s, E-Mail: %s",
                      firstname, lastname, username, email);
 
+        // TODO: (Assumption) The approach to handle this could be improved if
+        // the concern of handling the encoding/decoding is implemented as part
+        // of the attribute mapping. This code could then just use the attribute
+        // value without worrying about the encoding at all.
         String decoded_remoteGUID;
         try{
             decoded_remoteGUID = LDAPUtil.decodeObjectGUID(Base64.getDecoder().decode(remIdGUID_value.getBytes("UTF-8")));
         } catch (UnsupportedEncodingException e){
             decoded_remoteGUID = remIdGUID_value;
-            //propagate the error
-            context.failure(AuthenticationFlowError.INTERNAL_ERROR);
+            // propagate the error
+            // TODO: Interim commented out to allow to use a value which is not base64 encoded
+            // context.failure(AuthenticationFlowError.INTERNAL_ERROR);
+            logger.infof(remIdGUID_key + " was not base64 encoded. Using value without decoding it.");
         }
+
         // TODO: When the UDM allows it, avoid passing the password here
+        // TODO: The set of attributes is currently hardcoded.
+        // The UDM does allow many more attributes and a customization may make attributes
+        // required which are not provided here. An option might be to make this dynamic and
+        // try to use all configured attributes or filter the available attributes based on
+        // the generated API client.
         Map<String, Object> userData = Map.of(
             "firstname", firstname,
             "lastname", lastname,
