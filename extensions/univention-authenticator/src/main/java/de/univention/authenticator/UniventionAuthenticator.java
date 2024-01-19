@@ -82,8 +82,8 @@ public class UniventionAuthenticator implements Authenticator {
         String username = user.getUsername();
         String email = user.getEmail();
 
-        String remIdGUID_key = System.getenv("KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER");
-        String remSourceID_key = System.getenv("KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER");
+        String remIdGUID_key = Optional.ofNullable(System.getenv("KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER")).orElse("univentionObjectIdentifier");
+        String remSourceID_key = Optional.ofNullable(System.getenv("KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER")).orElse("univentionSourceIAM");
 
         logger.infof("User:" + firstname);
         logger.infof("lastname:" + lastname);
