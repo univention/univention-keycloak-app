@@ -123,7 +123,6 @@ public class UniventionAuthenticator implements Authenticator {
         logger.infof("User attempted login. First name: %s, Last name: %s, Username: %s, E-Mail: %s",
                      firstname, lastname, username, email);
 
-        // TODO: When the UDM allows it, avoid passing the password here
         String decoded_remoteGUID;
         try{
             decoded_remoteGUID = LDAPUtil.decodeObjectGUID(Base64.getDecoder().decode(remIdGUID_value.getBytes("UTF-8")));
@@ -132,6 +131,7 @@ public class UniventionAuthenticator implements Authenticator {
             //propagate the error
             context.failure(AuthenticationFlowError.INTERNAL_ERROR);
         }
+        // TODO: When the UDM allows it, avoid passing the password here
         Map<String, Object> userData = Map.of(
             "firstname", firstname,
             "lastname", lastname,
