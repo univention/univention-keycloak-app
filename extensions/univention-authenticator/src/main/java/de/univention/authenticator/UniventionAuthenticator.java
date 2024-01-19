@@ -91,9 +91,9 @@ public class UniventionAuthenticator implements Authenticator {
         String remSourceID_key = Objects.requireNonNullElse(
             System.getenv("KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER"), REM_SOURCE_ID_KEY_DEFAULT);
 
-        logger.infof("User:" + firstname);
-        logger.infof("lastname:" + lastname);
-        logger.infof("username:" + username);
+        logger.infof("User: " + firstname);
+        logger.infof("lastname: " + lastname);
+        logger.infof("username: " + username);
         logger.infof("user: " + user.getAttributes());
         logger.infof("remSourceIden_key: " + remSourceID_key);
         logger.infof("remObjIden_key: " + remIdGUID_key);
@@ -120,10 +120,10 @@ public class UniventionAuthenticator implements Authenticator {
         // if it's absolutely certain, that there is no way to simply configure keycloak to set the desired field.
         String univentionTargetFederationLink =  user.getFirstAttribute("univentionTargetFederationLink");
 
-        logger.infof(remIdGUID_key + ":" + remIdGUID_value);
-        logger.infof(remSourceID_key + ":" + remSourceID_value);
+        logger.infof(remIdGUID_key + ": " + remIdGUID_value);
+        logger.infof(remSourceID_key + ": " + remSourceID_value);
         //logger.infof("univentionTenant:" + univentionTenant);
-        logger.infof("targetFederationLink:" + univentionTargetFederationLink);
+        logger.infof("targetFederationLink: " + univentionTargetFederationLink);
         // TODO: Perhaps do some real life performance testing
         // and change this to debug remove if not needed.
         logger.infof("User attempted login. First name: %s, Last name: %s, Username: %s, E-Mail: %s",
