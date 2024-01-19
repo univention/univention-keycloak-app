@@ -65,3 +65,4 @@ For latest version of the documentation, see [Univention Keycloak app documentat
 * Test, pipelines, releases, tips & tricks - [docs-dev/README-testing-release.md](docs-dev/README-testing-release.md)
 * Legacy app authorization - [docs-dev/README-appauth.md](docs-dev/README-appauth.md)
 * Themes and templates - [docs-dev/README-themes-template.md](docs-dev/README-themes-template.md)
+* Building the container image locally - [docs-dev/README-build.md](docs-dev/README-build.md)
