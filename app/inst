@@ -158,7 +158,7 @@ if ! is_ucr_false keycloak/auto-migration; then
 	univention-keycloak "$@" --binduser "${keycloak_admin_user:-admin}" upgrade-config || die
 fi
 
-for umc in $(univention-ldapsearch -LLL univentionService="Univention Management Console" displayName | sed -n 's/displayName: //p' | tr ";" "\n")
+for umc in $(univention-ldapsearch -LLL univentionService="Univention Management Console" cn | sed -ne 's/^cn: //p' | tr ";" "\n")
 do
 	univention-keycloak "$@" --binduser "${keycloak_admin_user:-admin}" saml/sp create --metadata-url="https://$umc.$domainname/univention/saml/metadata" --umc-uid-mapper
 	if [ "$?" != "0" ]; then
