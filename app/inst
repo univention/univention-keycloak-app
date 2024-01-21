@@ -91,7 +91,7 @@ if [ -z "$keycloak_db_host_dn" ]; then
 else
 	if [[ "$ldap_hostdn" != "$keycloak_db_host_dn" ]]; then
 		keycloak_db_host=$(ucs_getAttrOfDN "cn" "$keycloak_db_host_dn")
-		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host:/etc/keycloak.secret /etc/keycloak.secret" || die
+		univention-scp "$machine_secret" "-r $hostname\$@$keycloak_db_host:/etc/keycloak.secret /etc/keycloak.secret" || die
 	fi
 fi
 
