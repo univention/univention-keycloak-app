@@ -86,7 +86,7 @@ if [ -z "$keycloak_db_host_dn" ]; then
        ucs_addServiceToLocalhost "$app_id DB" "$@"
 else
        keycloak_db_host=$(ucs_getAttrOfDN "cn" "$keycloak_db_host_dn")
-       univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host:/etc/keycloak.secret /etc/keycloak.secret" || die
+       univention-scp "$machine_secret" "-r $hostname\$@$keycloak_db_host:/etc/keycloak.secret /etc/keycloak.secret" || die
 fi
 
 
