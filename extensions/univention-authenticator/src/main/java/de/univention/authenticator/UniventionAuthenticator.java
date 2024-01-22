@@ -136,7 +136,7 @@ public class UniventionAuthenticator implements Authenticator {
         String decoded_remoteGUID;
         try{
             decoded_remoteGUID = LDAPUtil.decodeObjectGUID(Base64.getDecoder().decode(remIdGUID_value.getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException e){
+        } catch (IllegalArgumentException | UnsupportedEncodingException e){
             decoded_remoteGUID = remIdGUID_value;
             // propagate the error
             // TODO: Interim commented out to allow to use a value which is not base64 encoded
