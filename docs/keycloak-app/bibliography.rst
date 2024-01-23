@@ -4,8 +4,10 @@
 
 .. _app-bibliography:
 
-************
-Bibliography
-************
+.. only:: html
+
+   ************
+   Bibliography
+   ************
 
 .. bibliography::
