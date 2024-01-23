@@ -104,7 +104,7 @@ linkcheck_ignore = [
     r'https://ucs-sso-ng.example.com/admin/',
 ]
 
-root_doc = "index"
+root_doc = "contents"
 
 rst_epilog = """
 .. include:: /../links.txt

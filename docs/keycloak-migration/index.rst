@@ -4,9 +4,9 @@
 
 .. _doc-entry:
 
-##################################################################
-Migration guide: SimpleSAMLphp/OpenID Connect Provider to Keycloak
-##################################################################
+************
+Introduction
+************
 
 This documentation is for system administrators
 who already operate |UCS| 5.0
@@ -17,9 +17,8 @@ and :program:`OpenID Connect Provider` to the app :program:`Keycloak`.
 The app :program:`OpenID Connect Provider` uses
 :program:`Kopano Konnect` to provide OpenID Connect capability to |UCS|.
 
-*******************
 Notes about UCS 5.2
-*******************
+===================
 
 Starting with |UCS| 5.2
 the :program:`Keycloak` app replaces the apps
@@ -45,9 +44,8 @@ in your |UCS| domain, you can skip the migration part and just prepare your
 domain for the update to |UCS| 5.2, following the steps in
 :ref:`update-to-ucs-5.2`.
 
-*******************
 About this document
-*******************
+===================
 
 This document covers the following topics:
 
@@ -83,14 +81,3 @@ suggestions, or criticism, please `send your feedback
 <https://www.univention.com/feedback/?keycloak-migration=generic>`_ for document
 improvement.
 
-.. toctree::
-   :maxdepth: 1
-   :numbered:
-   :hidden:
-
-   limitations
-   migration-procedure/index
-   migration-examples/index
-   troubleshooting
-   finish-and-update
-   bibliography
