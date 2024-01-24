@@ -123,8 +123,6 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = []  # value is usally ['_static']
 
-html_last_updated_fmt = "%a, %d. %b %Y at %H:%m (UTC%z)"
-
 numfig = True
 
 if "spelling" in sys.argv:
@@ -164,3 +162,6 @@ univention_feedback = True
 # Information about the license statement for the source files
 univention_pdf_show_source_license = True
 univention_doc_basename = doc_base
+
+sitemap_url_scheme = "{version}{link}"
+html_baseurl = f"https://docs.software-univention.de/{doc_base}/"

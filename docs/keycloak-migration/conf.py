@@ -137,3 +137,6 @@ univention_feedback = True
 # Information about the license statement for the source files
 univention_pdf_show_source_license = True
 univention_doc_basename = doc_base
+
+sitemap_url_scheme = "{link}"
+html_baseurl = f"https://docs.software-univention.de/{doc_base}/"
