@@ -41,8 +41,9 @@ COPY --from=theme /themes /opt/keycloak/themes/
 COPY --from=maven /extensions/lib/univention-app-authenticator-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-ldap-mapper-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-user-attribute-nameid-mapper-base64-*.jar /opt/keycloak/providers/
-COPY --from=maven /extensions/univention-directory-manager/target/univention-directory-manager-*.jar /opt/keycloak/providers/
-COPY --from=maven /extensions/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
+# ad hoc federation is removed for now
+#COPY --from=maven /extensions/univention-directory-manager/target/univention-directory-manager-*.jar /opt/keycloak/providers/
+#COPY --from=maven /extensions/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
 RUN cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.jdbc.ojdbc11-*.jar \
  && cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.nls.orai18n-*.jar \
  && cp empty.jar opt/keycloak/lib/lib/deployment/io.quarkus.quarkus-jdbc-oracle-deployment-*.Final.jar \
