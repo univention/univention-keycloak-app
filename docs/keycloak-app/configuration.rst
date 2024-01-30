@@ -1370,36 +1370,8 @@ The :program:`Keycloak` app allows the configuration of a cookie consent banner
 dialog on the login page. The UCS portal, the UMC and the login page provided by
 the :program:`Keycloak` app share the same configuration for the cookie banner.
 
-Use the following UCR variables to configure the cookie banner dialog.
-
-.. envvar:: umc/cookie-banner/cookie
-
-   The variable sets the name of the cookie.
-
-.. envvar:: umc/cookie-banner/show
-
-   The variable controls, if the browser displays the cookie consent banner. The
-   default value is ``false``. To show the cookie consent banner, set the
-   variable to ``true``.
-
-.. envvar:: umc/cookie-banner/title
-
-   Sets the title for the consent banner dialog. Use
-   :samp:`umc/cookie-banner/title/{LANGUAGE}` with a two letter language code
-   from `ISO 639-1 <https://en.wikipedia.org/wiki/ISO_639-1>`_ for
-   :samp:`{LANGUAGE}` to set titles for different languages.
-
-.. envvar:: umc/cookie-banner/text
-
-   Sets the text for the cookie consent banner dialog. Use
-   :samp:`umc/cookie-banner/text/{LANGUAGE}` with a two letter language code
-   from ISO 639-1 for :samp:`{LANGUAGE}` to set text content for different
-   languages.
-
-.. envvar:: umc/cookie-banner/domains
-
-   Optional setting for the domains for which the cookie consent banner dialog
-   is active, default is the |FQDN| of :program:`Keycloak`.
+For more information about how to configure the cookie consent banner, see
+:external+uv-manual:ref:`banner`.
 
 .. _apache-configuration:
 
