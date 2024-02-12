@@ -12,7 +12,8 @@ This section provides detailed examples how to migrate |SAML| and |OIDC|
 services to :program:`Keycloak`.
 
 .. toctree::
-   :hidden:
+   :caption: Contents
+   :maxdepth: 2
 
    saml
    oidc

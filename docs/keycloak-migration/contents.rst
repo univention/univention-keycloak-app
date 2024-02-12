@@ -3,9 +3,8 @@ Migration guide: SimpleSAMLphp/OpenID Connect Provider to Keycloak
 ##################################################################
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
    :numbered:
-   :hidden:
 
    index
    limitations

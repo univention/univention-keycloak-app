@@ -47,7 +47,8 @@ following steps:
 * The verification that single sign-on works with :program:`Keycloak` as |IDP|
 
 .. toctree::
-   :hidden:
+   :caption: Contents
+   :maxdepth: 3
 
    prerequisites
    oidc
