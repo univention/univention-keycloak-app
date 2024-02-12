@@ -4,7 +4,7 @@
 
 .. _app-bibliography:
 
-.. only:: html
+.. only:: html or spelling or linkcheck
 
    ************
    Bibliography
