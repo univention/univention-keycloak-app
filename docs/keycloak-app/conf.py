@@ -51,7 +51,7 @@ def read_version_from_ci() -> str:
 
 release = read_version_from_ci()
 version = release
-project = "Keycloak app {}".format(release)
+project = "Univention Keycloak app manual {}".format(release)
 copyright = '2022-{}, Univention GmbH'.format(date.today().year)
 author = 'Univention GmbH'
 html_show_copyright = True
@@ -134,7 +134,7 @@ linkcheck_ignore = [
     r'https://ucs-sso-ng.example.com/admin/',
 ]
 
-root_doc = "index"
+root_doc = "contents"
 
 rst_epilog = """
 .. include:: /../links.txt

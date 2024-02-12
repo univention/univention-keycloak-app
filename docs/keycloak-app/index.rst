@@ -4,9 +4,9 @@
 
 .. _doc-entry:
 
-#####################################
-Univention Keycloak app documentation
-#####################################
+************
+Introduction
+************
 
 Welcome to the documentation about the Univention :program:`Keycloak` app. The
 app installs `Keycloak <keycloak_>`_, an open source software product for single
@@ -50,19 +50,3 @@ Your feedback is welcome and highly appreciated. If you have comments,
 suggestions, or criticism, please `send your feedback
 <https://www.univention.com/feedback/?keycloak-app=generic>`_ for document
 improvement.
-
-.. toctree::
-   :maxdepth: 1
-   :numbered:
-   :hidden:
-
-   installation
-   update
-   configuration
-   database
-   architecture
-   limitations
-   use-cases
-   troubleshooting
-   changelog
-   bibliography
