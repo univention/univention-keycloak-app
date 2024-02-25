@@ -16,6 +16,18 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+
+
+Released: TODO
+
+* The app updates to *Keycloak* version 23.0.7 of the upstream Docker image from
+  https://quay.io/repository/keycloak/keycloak.
+
+* The ad hoc federation feature has been removed from the App due to incompatibility
+  with the new :program:`Keycloak` version. If you used this feature in production,
+  do not upgrade and contact the support of Univention.
+
+
 22.0.3-ucs2
 ===========
 
