@@ -13,13 +13,13 @@ To install the chart with the release name `my-release`, you have two options:
 ### Install via Repository
 ```console
 helm repo add univention-keycloak https://gitlab.souvap-univention.de/api/v4/projects/161/packages/helm/stable
-helm install my-release --version 1.0.4 univention-keycloak/ums-keycloak
+helm install my-release --version 1.0.5 univention-keycloak/ums-keycloak
 ```
 
 ### Install via OCI Registry
 ```console
 helm repo add univention-keycloak oci://registry.souvap-univention.de/souvap/tooling/charts/univention-keycloak
-helm install my-release --version 1.0.4 univention-keycloak/ums-keycloak
+helm install my-release --version 1.0.5 univention-keycloak/ums-keycloak
 ```
 
 ## Requirements
