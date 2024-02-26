@@ -124,8 +124,6 @@ spec:
               value: {{ .Values.theme.univentionCustomTheme | quote }}
             - name: "UNIVENTION_FAVICON"
               value: {{ .Values.theme.favIcon | quote }}
-            - name: "UNIVENTION_META_JSON"
-              value: {{ printf "https://%s.%s/univention/meta.json" .Values.global.hosts.univentionManagementStack .Values.global.domain | quote }}
             {{- with .Values.config.database }}
             - name: "KC_DB_PASSWORD"
               valueFrom:
