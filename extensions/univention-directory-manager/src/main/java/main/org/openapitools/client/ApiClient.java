@@ -39,6 +39,7 @@ import jakarta.ws.rs.core.Response.Status;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.client.jaxrs.internal.ClientConfiguration;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
+import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import org.openapitools.client.auth.Authentication;
@@ -514,6 +515,7 @@ public class ApiClient extends JavaTimeFormatter {
     if (response == null || returnType == null) {
       return null;
     }
+    ResteasyJackson2Provider jacksonProvider = new ResteasyJackson2Provider() {};
 
     if ("byte[]".equals(returnType.toString())) {
       // Handle binary response (byte array).
