@@ -69,11 +69,6 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-client</artifactId>
-            <version>6.2.5.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client-api</artifactId>
             <version>6.2.5.Final</version>
         </dependency>
@@ -121,11 +116,6 @@
           <groupId>com.fasterxml.jackson.datatype</groupId>
           <artifactId>jackson-datatype-jsr310</artifactId>
           <version>${jackson-version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.openapitools</groupId>
-          <artifactId>jackson-databind-nullable</artifactId>
-          <version>${jackson-databind-nullable-version}</version>
         </dependency>
     </dependencies>
 </project>

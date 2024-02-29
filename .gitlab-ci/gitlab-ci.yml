@@ -74,3 +74,4 @@ image_build:
       - Dockerfile
       - files/**/*
       - univention-ldap-mapper/**/*
+      - extensions/**/*
