@@ -1,33 +1,45 @@
-<h1>Hinweise zum Update</h1>
+<h1>
+	Hinweise zum Update
+</h1>
 <p>
-Wenn die App auf mehreren Systemen in der Domäne installiert ist,
-müssen Sie sicherstellen, dass alle Installationen auf die gleiche
-Version der Keycloak App aktualisiert werden, um einen
-ordnungsgemäßen Betrieb sicherzustellen.
+	Wenn die App auf mehreren Systemen in der Domäne installiert ist, müssen Sie sicherstellen, dass alle Installationen auf die gleiche Version der Keycloak App aktualisiert werden, um einen ordnungsgemäßen Betrieb sicherzustellen.
 </p>
 <p>
-Eine Übersicht zu den Änderungen und Fehlerbehebungen finden Sie im
-<a href="http://docs.software-univention.de/keycloak-app/latest/changelog.html">
-Keycloak App Changelog</a>.
+	Eine Übersicht zu den Änderungen und Fehlerbehebungen finden Sie im <a href="http://docs.software-univention.de/keycloak-app/latest/changelog.html"> Keycloak App Changelog</a>.
+	<br>
+	<b>
+	<br>
+	<br>
+	Version: 23.0.7-ucs1</b>
+	<br>
+	<br>
 </p>
-<p>
-<b>Version: 21.0.1-ucs3</b>
 <ul>
-    <li>
-      Die UCR Variable <strong>ucs/server/sso/virtualhost</strong> wurde durch <strong>keycloak/apache/config</strong> ersetzt.
-      Falls Sie diese Variable verwendet haben um die UCS Apache Konfiguration für Keycloak zu deaktivieren, setzen Sie
-      bitte <strong>keycloak/apache/config=true</strong> vor dem Update.
-    </li>
+	<li>
+		Das Feature Ad-hoc Föderation wurde aus der App aufgrund von Inkompatibilitäten mit der neuen Keycloak version entfernt. Falls diese Funktion produktiv verwendet wurde, updaten Sie nicht und kontaktieren Sie den Univention support (support@univention.de)
+	</li>
 </ul>
+<p>
+	<br>
 </p>
 <p>
-<b>Version: 21.0.1-ucs1</b>
-<ul>
-    <li>
-      Ab dieser Version benötigt die App ein CPU die das Microarchitecture Level x86-64-v2 unterstützt (siehe auch <a href="https://help.univention.com/t/21420">help.univention.de</a>)
-    </li>
-    <li>
-      Für den Zugriff auf den <i>userinfo</i> Endpunkt (openid) wird nun der Scope <i>openid</i> in der Liste der angefordert Scopes benötigt (siehe auch <a href="https://github.com/keycloak/keycloak/issues/14184">https://github.com/keycloak/keycloak/issues/14184</a>).
-    </li>
-</ul>
+	<b>Version: 21.0.1-ucs3</b>
 </p>
+<ul>
+	<li>
+		Die UCR Variable <b>ucs/server/sso/virtualhost</b> wurde durch <b>keycloak/apache/config</b> ersetzt. Falls Sie diese Variable verwendet haben um die UCS Apache Konfiguration für Keycloak zu deaktivieren, setzen Sie bitte <b>keycloak/apache/config=true</b> vor dem Update.
+	</li>
+</ul>
+<p>
+</p>
+<p>
+	<b>Version: 21.0.1-ucs1</b>
+</p>
+<ul>
+	<li>
+		Ab dieser Version benötigt die App ein CPU die das Microarchitecture Level x86-64-v2 unterstützt (siehe auch <a href="https://help.univention.com/t/21420">help.univention.de</a>)
+	</li>
+	<li>
+		Für den Zugriff auf den <i>userinfo</i> Endpunkt (openid) wird nun der Scope <i>openid</i> in der Liste der angefordert Scopes benötigt (siehe auch <a href="https://github.com/keycloak/keycloak/issues/14184">https://github.com/keycloak/keycloak/issues/14184</a>).
+	</li>
+</ul>
