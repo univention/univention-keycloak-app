@@ -20,19 +20,17 @@ impression about what is going wrong.
 =========================
 
 By default, |SAML| assertions are valid for ``300`` seconds and must be
-renewed by clients no later than then to continue using them. In scenarios
+renewed by clients no later than that to continue using them. In scenarios
 where refreshing |SAML| assertions at such short intervals is too expensive
-(for clients or servers), the lifetime of |SAML| assertions can be increased.
+(for clients or servers) you have to increase the lifetime of |SAML| assertions.
 
-In order to change |SAML| assertion lifespan of a client, you can:
+To change |SAML| assertion lifespan of a client, you need to:
 
-* Visit :ref:`Keycloak Admin Console <keycloak-admin-console>`.
-
-* Navigate to :menuselection:`UCS realm --> Clients`
-
-* Select specific SAML ``client-id`` and go to :menuselection:`Advanced --> Advanced Settings`.
-
-* Under `Assertion Lifespan` set the appropriate value.
+#. Open :ref:`Keycloak Admin Console <keycloak-admin-console>`.
+#. Navigate to :menuselection:`UCS realm --> Clients`.
+#. Select the specific SAML ``client-id`` and go to :menuselection:`Advanced --> Advanced Settings`.
+#. Set the appropriate value (e.g. 1 hour) in the section *Assertion Lifespan*.
+#. Save your change by clicking on the ``Save`` button.
 
 .. _app-log-files:
 
