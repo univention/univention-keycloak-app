@@ -16,12 +16,27 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
-
+24.0.3-ucs1
+===========
 
 Released: TODO
 
-* The app updates to *Keycloak* version 23.0.7 of the upstream Docker image from
-  https://quay.io/repository/keycloak/keycloak.
+* The app updates to :program:`Keycloak` version 24.0.3
+  (https://www.keycloak.org/docs/24.0.0/release_notes/).
+
+* From this version on :program:`Keycloak` automatically redirects from the
+  welcome page to the login page of the *Keycloak Admin Console*.
+  The internal docker health check script has been changed to no longer expect
+  the welcome page, but instead ask the :program:`Keycloak` health endpoints
+  (enabled by the option ``--health-enabled=true``) for the status.
+
+23.0.7-ucs1
+===========
+
+Released: 6. May 2024
+
+* The app updates to :program:`Keycloak`  version 23.0.7 of the upstream Docker
+  image from https://quay.io/repository/keycloak/keycloak.
 
 * The ad hoc federation feature has been removed from the App due to incompatibility
   with the new :program:`Keycloak` version. If you used this feature in production,
