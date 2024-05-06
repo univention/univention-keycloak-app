@@ -1,0 +1,49 @@
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.description" . }}
+
+- **Version**: {{ template "chart.version" . }}
+- **Type**: {{ template "chart.type" . }}
+- **AppVersion**: {{ template "chart.appVersion" . }}
+- {{ template "chart.homepageLine" . }}
+
+## TL;DR
+
+```console
+helm upgrade --install keycloak oci://gitregistry.knut.univention.de/univention/components/keycloak/helm/keycloak
+```
+
+
+## Introduction
+
+This chart does install the REST API for the Univention Directory Manager.
+
+The server provides an abstraction layer for interacting with the LDAP.
+
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+
+## Installing
+
+To install the chart with the release name `keycloak`:
+
+```console
+helm upgrade --install keycloak oci://gitregistry.knut.univention.de/univention/components/keycloak/helm/keycloak
+```
+
+
+## Uninstalling
+
+To uninstall the chart with the release name `keycloak`:
+
+```console
+helm uninstall keycloak
+```
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSectionHtml" . }}

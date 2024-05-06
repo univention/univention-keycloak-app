@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2024 Univention GmbH
+# SPDX-License-Identifier: AGPL-3.0-only
+---
+apiVersion: "v2"
+type: "application"
+name: "keycloak"
+home: "https://www.univention.de"
+icon: "https://www.univention.com/wp-content/themes/univention/assets/images/univention.svg"
+
+version: "0.1.0"
+
+dependencies:
+  - name: "common"
+    version: "^2.x.x"
+    repository: "oci://registry.souvap-univention.de/souvap/tooling/charts/bitnami-charts"
+...
