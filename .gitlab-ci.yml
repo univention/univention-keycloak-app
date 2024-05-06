@@ -16,7 +16,7 @@ variables:
   # Documentation build uses this variable to determine the artifact output directory.
   DOC_TARGET_VERSION: "${KEYCLOAK_VERSION}"
   KANIKO_ARGS: --build-arg commit="$CI_COMMIT_SHA" --build-arg date="$CI_JOB_STARTED_AT" --cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache --build-arg KEYCLOAK_VERSION=$KEYCLOAK_VERSION --build-arg KEYCLOAK_DIST=$KEYCLOAK_DIST
-  LATEST_RELEASED_KEYCLOAK_VERSION: "23.0.7-ucs1"
+  LATEST_RELEASED_KEYCLOAK_VERSION: "24.0.3-ucs1"
 
 workflow:
   rules:
