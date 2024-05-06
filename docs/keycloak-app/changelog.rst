@@ -19,7 +19,7 @@ Please also consider the `upstream release notes
 24.0.3-ucs1
 ===========
 
-Released: TODO
+Released: 6. May 2024
 
 * The app updates to :program:`Keycloak` version 24.0.3
   (https://www.keycloak.org/docs/24.0.0/release_notes/).
@@ -33,7 +33,7 @@ Released: TODO
 23.0.7-ucs1
 ===========
 
-Released: 6. May 2024
+Released: 6. April 2024
 
 * The app updates to :program:`Keycloak`  version 23.0.7 of the upstream Docker
   image from https://quay.io/repository/keycloak/keycloak.
