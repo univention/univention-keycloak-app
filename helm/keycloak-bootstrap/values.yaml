@@ -1,0 +1,257 @@
+# SPDX-FileCopyrightText: 2023 Univention GmbH
+# SPDX-License-Identifier: AGPL-3.0-only
+---
+# The global properties are used to configure multiple charts at once.
+global:
+  # -- The Top-Level-Domain (TLD) name which is used in f.e. in Ingress component.
+  domain: "example.org"
+
+  # Define the Subdomain for components used in f.e. in Ingress component.
+  hosts:
+    # -- Subdomain for Keycloak, results in "https://{{ keycloak }}.{{ domain }}".
+    keycloak: "id"
+
+  # -- Container registry address.
+  imageRegistry: "artifacts.software-univention.de"
+
+  # -- Credentials to fetch images from private registry
+  # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  #
+  # imagePullSecrets:
+  #   - "docker-registry"
+  #
+  imagePullSecrets: []
+
+# -- Affinity for pod assignment
+# Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+# Note: podAffinityPreset, podAntiAffinityPreset, and  nodeAffinityPreset will be ignored when it's set
+affinity: {}
+
+# -- Additional custom annotations to add to all deployed objects.
+additionalAnnotations: {}
+
+# -- Additional custom labels to add to all deployed objects.
+additionalLabels: {}
+
+# Helm release cleanup setting.
+cleanup:
+  # -- Keep Pods/Job logs after successful run.
+  deletePodsOnSuccess: false
+  # -- Keep persistence on delete of this release.
+  keepPVCOnDelete: false
+
+# Whether to allocate persistent volume disk for the data directory.
+# In case of node failure, the node data directory will still persist.
+#
+# Keycloak configuration.
+config:
+  # Debugging related settings
+  debug:
+    # -- Enable debug output of included Ansible scripts
+    enabled: false
+    # -- Seconds for the job to pause before starting the actual bootstrapping.
+    pauseBeforeScriptStart: 0
+  # -- Name of the external ConfigMap with additional Ansible based Keycloak configuration
+  keycloak:
+    # Allow cluster internal communication for configuring Keycloak.
+    # Required in case the /admin console of Keycloak is not exposed to the public internet
+    intraCluster:
+      # -- Enable internal communication
+      enabled: true
+      # -- Internal hostname including protocol and port
+      # Currently only http and https with valid certificates are supported.
+      internalBaseUrl: "http://ums-keycloak:8080"
+    # --
+    # -- The Keycloak master realm admin user
+    adminUser: "kcadmin"
+    # -- The Keycloak master realm admin user's password as input for the secret
+    adminPassword: ""
+    # -- The name of the realm that is going to contain all the configuration
+    realm: "ucs"
+    # Define links that are rendered on the login page of Keycloak
+    loginLinks: []
+    #   # You can and might want to specify links on the login page of Keycloak, please find more details here:
+    #   # https://docs.software-univention.de/keycloak-app/latest/configuration.html#additional-links-on-the-login-page
+    #   - link_number: 1
+    #     language: "en"
+    #     description: "Forgot password?"
+    #     href: "https://portal.example.org/univention/portal/#/selfservice/passwordforgotten"
+    #   - link_number: 1
+    #     language: "de"
+    #     description: "Passwort vergessen?"
+    #     href: "https://portal.example.org/univention/portal/#/selfservice/passwordforgotten"
+  # Univention Management Stack specific attributes.
+  ums:
+    # LDAP related settings
+    ldap:
+      # -- Resource locator of the internal LDAP host
+      internalHostname: "internal_ldap_hostname"
+      # -- The LDAP's base DN
+      baseDN: "dc=example,dc=org"
+      # -- The LDAP search user's DN
+      readUserDN: "uid=keycloak-search-user,dc=users,dc=example,dc=org"
+      # -- The LDAP search user's password provided as secret
+      readUserPassword: ""
+      # Support for additional attributes to be mapped from the LDAP to the Keycloak user object
+      ldapMappers: []
+    # SAML related settings
+    saml:
+      # -- Univention Management Stack service provider public hostname
+      serviceProviderHostname: "portal.example.org"
+  twoFactorAuthentcation:
+    # -- Enable Keycloak's built-in 2FA support
+    enabled: false
+    # -- LDAP group DN which memberships enabled 2FA for users
+    group: "cn=2fa-users,cn=groups,dc=example,dc=org"
+
+# Security Context.
+# Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+containerSecurityContext:
+  # -- Enable security context.
+  enabled: true
+
+  # -- Enable container privileged escalation.
+  allowPrivilegeEscalation: false
+
+  # -- Security capabilities for container.
+  capabilities:
+    drop:
+      - "ALL"
+
+  # -- Mounts the container's root filesystem as read-only.
+  readOnlyRootFilesystem: false
+
+  # -- Process group id.
+  runAsGroup: 1000
+
+  # -- Run container as user.
+  runAsNonRoot: true
+
+  # -- Process user id.
+  runAsUser: 1000
+
+  # Set Seccomp profile.
+  seccompProfile:
+    # -- Disallow custom Seccomp profile by setting it to RuntimeDefault.
+    type: "RuntimeDefault"
+
+
+# -- Array with extra environment variables to add to containers.
+#
+# extraEnvVars:
+#   - name: FOO
+#     value: "bar"
+#
+extraEnvVars: []
+
+# -- Optionally specify an extra list of additional volumes.
+extraVolumes: []
+
+# -- Optionally specify an extra list of additional volumeMounts.
+extraVolumeMounts: []
+
+# -- Credentials to fetch images from private registry
+# Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+#
+# imagePullSecrets:
+#   - "docker-registry"
+#
+imagePullSecrets: []
+
+# Container image section.
+image:
+  # -- Container registry address. This setting has higher precedence than global.registry.
+  registry: ""
+
+  # -- Container repository string.
+  repository: "nubus-dev/images/keycloak-bootstrap"
+
+  # -- Define an ImagePullPolicy.
+  #
+  # Ref.: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
+  #
+  # "IfNotPresent" => The image is pulled only if it is not already present locally.
+  # "Always" => Every time the kubelet launches a container, the kubelet queries the container image registry to
+  #             resolve the name to an image digest. If the kubelet has a container image with that exact digest cached
+  #             locally, the kubelet uses its cached image; otherwise, the kubelet pulls the image with the resolved
+  #             digest, and uses that image to launch the container.
+  # "Never" => The kubelet does not try fetching the image. If the image is somehow already present locally, the
+  #            kubelet attempts to start the container; otherwise, startup fails
+  #
+  imagePullPolicy: "IfNotPresent"
+
+  # -- Define image tag.
+  tag: "latest"
+
+# -- Node labels for pod assignment
+# Ref: https://kubernetes.io/docs/user-guide/node-selection/
+nodeSelector: {}
+
+# -- Pod Annotations.
+# Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+podAnnotations: {}
+
+# -- Pod Labels.
+# Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+podLabels: {}
+
+# Pod Security Context.
+# Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+podSecurityContext:
+  # -- Enable security context.
+  enabled: false
+
+  # -- If specified, all processes of the container are also part of the supplementary group.
+  fsGroup: 1000
+
+  # -- Change ownership and permission of the volume before being exposed inside a Pod.
+  fsGroupChangePolicy: "Always"
+
+# Configure resource requests and limits.
+#
+# http://kubernetes.io/docs/user-guide/compute-resources/
+#
+resources:
+  limits:
+    # -- The max amount of RAM to consume.
+    memory: "1Gi"
+  requests:
+    # -- The amount of CPUs which has to be available on the scheduled node.
+    cpu: "100m"
+    # -- The amount of RAM which has to be available on the scheduled node.
+    memory: "256Mi"
+
+# Service account to use.
+# Ref.: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+serviceAccount:
+  # -- Additional custom annotations for the ServiceAccount.
+  annotations: {}
+
+  # -- Allows auto mount of ServiceAccountToken on the serviceAccount created. Can be set to false if pods using this
+  # serviceAccount do not need to use K8s API.
+  automountServiceAccountToken: false
+
+  # -- Enable creation of ServiceAccount for pod.
+  create: true
+
+  # -- Additional custom labels for the ServiceAccount.
+  labels: {}
+
+# -- In seconds, time the given to the pod needs to terminate gracefully.
+# Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+terminationGracePeriodSeconds: ""
+
+# -- Tolerations for pod assignment
+# Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+tolerations: []
+
+# -- Topology spread constraints rely on node labels to identify the topology domain(s) that each Node is in
+# Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+#
+# topologySpreadConstraints:
+#   - maxSkew: 1
+#     topologyKey: failure-domain.beta.kubernetes.io/zone
+#     whenUnsatisfiable: DoNotSchedule
+topologySpreadConstraints: []
+
+...

@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: 2023 Univention GmbH
+# SPDX-License-Identifier: AGPL-3.0-only
+---
+- name: "Check for mandatory values (defined)"
+  when: "loginLink.language is not defined or
+         loginLink.link_number is not defined or
+         loginLink.description is not defined or
+         loginLink.href is not defined"
+  ansible.builtin.fail:
+    msg: "Mandatory key(s) for loginLinks (link_number, description, language, href) not defined: {{ loginLink }}"
+
+- name: "Check for mandatory values (not empty)"
+  when: "loginLink.language == '' or
+         loginLink.link_number == '' or
+         loginLink.description == '' or
+         loginLink.href == ''"
+  ansible.builtin.fail:
+    msg: "Mandatory key(s) for loginLinks (link_number, description, language, href) is empty: {{ loginLink }}"
+
+- name: "Create loginLink"
+  changed_when: "_loginlink_create.rc == 0"
+  register: "_loginlink_create"
+  ansible.builtin.shell: |
+    /app/univention-keycloak \
+      --keycloak-url {{ global_keycloak_url }} \
+      --realm {{ global_ums_realm }} \
+      --binduser {{ global_admin_username }} \
+    login-links set \
+      {{ loginLink.language }} \
+      {{ loginLink.link_number }} \
+      "{{ loginLink.description }}" \
+      "{{ loginLink.href }}"
+...

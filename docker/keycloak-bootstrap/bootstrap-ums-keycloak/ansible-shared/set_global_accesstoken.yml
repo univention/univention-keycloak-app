@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2023 Univention GmbH
+# SPDX-License-Identifier: AGPL-3.0-only
+---
+- name: "Get authentication token"
+  ansible.builtin.uri:
+    url: "{{ global_keycloak_url }}/realms/master/protocol/openid-connect/token"
+    method: "POST"
+    body_format: "form-urlencoded"
+    body:
+      client_id: "admin-cli"
+      username: "{{ global_admin_username }}"
+      password: "{{ global_admin_password }}"
+      grant_type: "password"
+  register: "access_token_response"
+  # Keycloak is required to be up and running, so we allow some retries
+  until: "access_token_response.status == 200"
+  retries: 30
+  delay: 10
+
+- name: "Set fact global_accesstoken"
+  ansible.builtin.set_fact:
+    global_accesstoken: "{{ access_token_response['json']['access_token'] }}"
+...

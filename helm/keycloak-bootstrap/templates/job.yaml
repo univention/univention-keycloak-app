@@ -1,0 +1,109 @@
+{{/*
+SPDX-FileCopyrightText: 2023 Univention GmbH
+SPDX-License-Identifier: AGPL-3.0-only
+*/}}
+---
+apiVersion: "batch/v1"
+kind: "Job"
+metadata:
+  name: "{{ include "common.names.fullname" . }}-bootstrap-{{ .Release.Revision }}"
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    {{- if .Values.cleanup.deletePodsOnSuccess }}
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    {{- end }}
+    {{- if .Values.additionalAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+    {{- end }}
+spec:
+  template:
+    metadata:
+      annotations:
+        {{- if .Values.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "common.labels.standard" . | nindent 8 }}
+    spec:
+      restartPolicy: "Never"
+      {{- if or .Values.imagePullSecrets .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.global.imagePullSecrets }}
+        - name: "{{ . }}"
+        {{- end }}
+        {{- range .Values.imagePullSecrets }}
+        - name: "{{ . }}"
+        {{- end }}
+      {{- end }}
+      {{- if .Values.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.affinity "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ include "common.names.fullname" . }}
+      {{- end }}
+      {{- if .Values.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" .) | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: "univention-keycloak-bootstrap"
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          image: "{{ coalesce .Values.image.registry .Values.global.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command:
+            - "/app/entrypoint.sh"
+          volumeMounts:
+            - mountPath: "/app/values.yaml"
+              name: "secrets-volume"
+              subPath: "values.yaml"
+            - mountPath: "/etc/ldapread.secret"
+              name: "secrets-volume"
+              subPath: "ldapread.secret"
+            - mountPath: "/etc/keycloak.secret"
+              name: "secrets-volume"
+              subPath: "keycloak.secret"
+            - mountPath: "/tmp"
+              name: "temp-dir"
+            {{- if .Values.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" .) | nindent 12 }}
+            {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{ toYaml . | nindent 12 | trim }}
+          {{- end }}
+          env:
+            - name: "UNIVENTION_KEYCLOAK_BOOTSTRAP_TEMP_DIR"
+              value: "/tmp"
+            - name: "UNIVENTION_KEYCLOAK_BOOTSTRAP_DEBUG_PAUSE_BEFORE_SCRIPT_START"
+              value: "{{ .Values.config.debug.pauseBeforeScriptStart }}"
+          {{- with .Values.extraEnvVars }}
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: "secrets-volume"
+          secret:
+            secretName: "{{ include "common.names.fullname" . }}"
+        - name: "temp-dir"
+          emptyDir:
+            sizeLimit: "20Mi"
+        {{- if .Values.extraVolumes }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes  "context" .) | nindent 8 }}
+        {{- end }}
+...

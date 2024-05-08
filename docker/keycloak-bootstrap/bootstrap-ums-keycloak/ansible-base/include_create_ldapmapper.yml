@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: 2023 Univention GmbH
+# SPDX-License-Identifier: AGPL-3.0-only
+---
+- name: "Check for mandatory values (defined)"
+  when: "ldapMapper.ldapAndUserModelAttributeName is not defined"
+  ansible.builtin.fail:
+    msg: "Mandatory key(s) for an LDAP mapper (ldapAndUserModelAttributeName) not defined: {{ ldapMapper }}"
+
+- name: "Check for mandatory values (not empty)"
+  when: "ldapMapper.ldapAndUserModelAttributeName == ''"
+  ansible.builtin.fail:
+    msg: "Mandatory key(s) for an LDAP mapper (ldapAndUserModelAttributeName) is empty: {{ ldapMapper }}"
+
+- name: "Create ldap mapper"
+  changed_when: "_ldap_mapper_create.rc == 0"
+  register: "_ldap_mapper_create"
+  ansible.builtin.shell: |
+    /app/univention-keycloak \
+      --keycloak-url {{ global_keycloak_url }} \
+      --realm {{ global_ums_realm }} \
+      --binduser {{ global_admin_username }} \
+    user-attribute-ldap-mapper create \
+      {{ ldapMapper.ldapAndUserModelAttributeName }}
+...

@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2024 Univention GmbH
+
+---
+apiVersion: "v2"
+type: "application"
+name: "keycloak-bootstrap"
+description: "A Helm chart to bootstrap Keycloak"
+home: "https://www.univention.de/"
+icon: "https://www.univention.com/wp-content/themes/univention/assets/images/univention.svg"
+
+# Chart version
+# Apply Semantic Versioning (https://semver.org/)
+version: "0.0.1"
+
+# keycloak-bootstrap Version
+appVersion: "0.0.1"
+
+dependencies:
+  - name: "common"
+    repository: "https://charts.bitnami.com/bitnami"
+    version: "^2.x.x"
+...

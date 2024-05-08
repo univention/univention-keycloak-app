@@ -1,0 +1,87 @@
+# SPDX-FileCopyrightText: 2023 Univention GmbH
+# SPDX-License-Identifier: AGPL-3.0-only
+---
+- name: "Keycloak Bootstrap"
+  hosts: "localhost"
+  tasks:
+    - name: "Include global facts"
+      ansible.builtin.include_tasks: "../ansible-shared/set_global_facts.yml"
+
+    - name: "Debug output"
+      when: "global_cfgobj.config.debug.enabled | bool"
+      block:
+        - name: "Debug output"
+          ansible.builtin.debug:
+            var: "global_cfgobj"
+        - name: "Debug output"
+          ansible.builtin.find:
+            paths: "/app"
+            recurse: true
+          register: "filefind_results"
+        - name: "Debug output"
+          ansible.builtin.debug:
+            var: "filefind_results"
+
+    - name: "When the first access token request was successful we want to wait 30sec
+             until the full config is loaded - there are probably better ways to handle this ;)"
+      ansible.builtin.pause:
+        seconds: 30
+
+    - name: "Execute UMS init"
+      changed_when: "_ums_init.rc == 0"
+      register: "_ums_init"
+      # yamllint disable rule:line-length
+      ansible.builtin.shell: |
+        /app/univention-keycloak \
+          --keycloak-url {{ global_keycloak_url }} \
+          --realm {{ global_ums_realm }} \
+          --binduser {{ global_admin_username }} \
+        init \
+          --reverse-proxy-url="{{ global_keycloak_url }}" \
+          --ldap="ldap://{{ global_cfgobj.config.ums.ldap.internalHostname }}" \
+          --ldap-base="{{ global_cfgobj.config.ums.ldap.baseDN }}" \
+          --ldap-system-user-dn="{{ global_cfgobj.config.ums.ldap.readUserDN }}" \
+          --ldap-system-user-pwdfile="/etc/ldapread.secret" \
+          --host-fqdn="{{ global_keycloak_host }}" \
+          --umc-saml-sp-server="{{ global_cfgobj.config.ums.saml.serviceProviderHostname }}" \
+          --domainname="{{ global_cfgobj.global.domain }}" \
+          --locales="en_US.UTF-8:UTF-8 de_DE.UTF-8:UTF-8" \
+          --default-locale="de_DE.UTF-8:UTF-8" \
+          --no-starttls \
+          --no-kerberos \
+          --no-saml-assertion-request \
+          --frontchannel-logout-off
+      # yamllint enable rule:line-length
+
+    - name: "Set global access token"
+      ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"
+    - name: "Looping to create additional (non default) LDAP mappers"
+      ansible.builtin.include_tasks: "include_create_ldapmapper.yml"
+      loop: "{{ global_cfgobj.config.ums.ldap.mappers }}"
+      loop_control:
+        loop_var: "ldapMapper"
+
+    - name: "Set global access token"
+      ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"
+    - name: "Looping to create login links"
+      ansible.builtin.include_tasks: "include_set_loginlinks.yml"
+      loop: "{{ global_cfgobj.config.keycloak.loginLinks }}"
+      loop_control:
+        loop_var: "loginLink"
+
+    - name: "Set global access token"
+      ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"
+    - name: "Enable Two-Factor-Authentication"
+      when: "global_cfgobj.config.twoFactorAuthentication.enabled"
+      changed_when: "_2fa_enable.rc == 0"
+      register: "_2fa_enable"
+      ansible.builtin.shell: |
+        /app/univention-keycloak \
+          --keycloak-url {{ global_keycloak_url }} \
+          --realm {{ global_ums_realm }} \
+          --binduser {{ global_admin_username }} \
+        2fa enable \
+          --group-2fa="{{ global_cfgobj.config.twoFactorAuthentication.group }}" \
+          --ldap-base="{{ global_cfgobj.config.ums.ldap.baseDN }}"
+
+...
