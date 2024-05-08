@@ -24,6 +24,7 @@ spec:
   template:
     metadata:
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- if .Values.podAnnotations }}
         {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" .) | nindent 8 }}
         {{- end }}
@@ -66,19 +67,29 @@ spec:
           {{- if .Values.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
-          image: "{{ coalesce .Values.image.registry .Values.global.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           command:
             - "/app/entrypoint.sh"
+          envFrom:
+            - configMapRef:
+                name: {{ include "common.names.fullname" .  | quote }}
+          env:
+            - name: KEYCLOAK_PASSWORD
+              {{- include "keycloak-bootstrap.keycloak.auth.password" . | nindent 14 }}
+            - name: LDAP_BIND_PW
+              {{- include "keycloak-bootstrap.ldap.auth.password" . | nindent 14 }}
+          {{- with .Values.extraEnvVars }}
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
-            - mountPath: "/app/values.yaml"
-              name: "secrets-volume"
-              subPath: "values.yaml"
-            - mountPath: "/etc/ldapread.secret"
-              name: "secrets-volume"
-              subPath: "ldapread.secret"
-            - mountPath: "/etc/keycloak.secret"
-              name: "secrets-volume"
-              subPath: "keycloak.secret"
+            - mountPath: "/bootstrap"
+              name: "bootstrap-volume"
+            - mountPath: "/credentials/ldapread.secret"
+              name: "ldap-credentials-volume"
+              subPath: {{ .Values.ldap.auth.credentialSecret.key | quote }}
+            - mountPath: "/credentials/keycloak.secret"
+              name: "keycloak-credentials-volume"
+              subPath: {{ .Values.keycloak.auth.credentialSecret.key | quote }}
             - mountPath: "/tmp"
               name: "temp-dir"
             {{- if .Values.extraVolumeMounts }}
@@ -88,18 +99,16 @@ spec:
           resources:
             {{ toYaml . | nindent 12 | trim }}
           {{- end }}
-          env:
-            - name: "UNIVENTION_KEYCLOAK_BOOTSTRAP_TEMP_DIR"
-              value: "/tmp"
-            - name: "UNIVENTION_KEYCLOAK_BOOTSTRAP_DEBUG_PAUSE_BEFORE_SCRIPT_START"
-              value: "{{ .Values.config.debug.pauseBeforeScriptStart }}"
-          {{- with .Values.extraEnvVars }}
-            {{- . | toYaml | nindent 12 }}
-          {{- end }}
       volumes:
-        - name: "secrets-volume"
+        - name:  "keycloak-credentials-volume"
           secret:
-            secretName: "{{ include "common.names.fullname" . }}"
+            secretName: {{ (include "keycloak-bootstrap.keycloak.auth.credentialSecret.name" . ) | quote }}
+        - name:  "ldap-credentials-volume"
+          secret:
+            secretName: {{ (include "keycloak-bootstrap.ldap.auth.credentialSecret.name" . ) | quote }}
+        - name: "bootstrap-volume"
+          configMap:
+            name: {{ printf "%s-bootstrap-data" (include "common.names.fullname" .) | quote }}
         - name: "temp-dir"
           emptyDir:
             sizeLimit: "20Mi"

@@ -8,11 +8,17 @@
       ansible.builtin.include_tasks: "../ansible-shared/set_global_facts.yml"
 
     - name: "Debug output"
-      when: "global_cfgobj.config.debug.enabled | bool"
+      when: "global_debug | bool"
       block:
-        - name: "Debug output"
+        - name: "Debug output for global_ldap_mappers"
           ansible.builtin.debug:
-            var: "global_cfgobj"
+            var: "global_ldap_mappers"
+        - name: "Debug output for global_login_links"
+          ansible.builtin.debug:
+            var: "global_login_links"
+        - name: "Debug output for global_2fa"
+          ansible.builtin.debug:
+            var: "global_2fa"
         - name: "Debug output"
           ansible.builtin.find:
             paths: "/app"
@@ -34,17 +40,17 @@
       ansible.builtin.shell: |
         /app/univention-keycloak \
           --keycloak-url {{ global_keycloak_url }} \
-          --realm {{ global_ums_realm }} \
+          --realm {{ global_keycloak_realm }} \
           --binduser {{ global_admin_username }} \
         init \
           --reverse-proxy-url="{{ global_keycloak_url }}" \
-          --ldap="ldap://{{ global_cfgobj.config.ums.ldap.internalHostname }}" \
-          --ldap-base="{{ global_cfgobj.config.ums.ldap.baseDN }}" \
-          --ldap-system-user-dn="{{ global_cfgobj.config.ums.ldap.readUserDN }}" \
-          --ldap-system-user-pwdfile="/etc/ldapread.secret" \
+          --ldap="{{ global_ldap_uri }}" \
+          --ldap-base="{{ global_ldap_base_dn }}" \
+          --ldap-system-user-dn="{{ global_ldap_bind_dn }}" \
+          --ldap-system-user-pwdfile="/credentials/ldapread.secret" \
           --host-fqdn="{{ global_keycloak_host }}" \
-          --umc-saml-sp-server="{{ global_cfgobj.config.ums.saml.serviceProviderHostname }}" \
-          --domainname="{{ global_cfgobj.global.domain }}" \
+          --umc-saml-sp-server="{{ global_saml_service_provider_hostname }}" \
+          --domainname="{{ global_domain }}" \
           --locales="en_US.UTF-8:UTF-8 de_DE.UTF-8:UTF-8" \
           --default-locale="de_DE.UTF-8:UTF-8" \
           --no-starttls \
@@ -57,7 +63,7 @@
       ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"
     - name: "Looping to create additional (non default) LDAP mappers"
       ansible.builtin.include_tasks: "include_create_ldapmapper.yml"
-      loop: "{{ global_cfgobj.config.ums.ldap.mappers }}"
+      loop: "{{ global_ldap_mappers }}"
       loop_control:
         loop_var: "ldapMapper"
 
@@ -65,23 +71,23 @@
       ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"
     - name: "Looping to create login links"
       ansible.builtin.include_tasks: "include_set_loginlinks.yml"
-      loop: "{{ global_cfgobj.config.keycloak.loginLinks }}"
+      loop: "{{ global_login_links }}"
       loop_control:
         loop_var: "loginLink"
 
     - name: "Set global access token"
       ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"
     - name: "Enable Two-Factor-Authentication"
-      when: "global_cfgobj.config.twoFactorAuthentication.enabled"
+      when: "global_2fa.enabled"
       changed_when: "_2fa_enable.rc == 0"
       register: "_2fa_enable"
       ansible.builtin.shell: |
         /app/univention-keycloak \
           --keycloak-url {{ global_keycloak_url }} \
-          --realm {{ global_ums_realm }} \
+          --realm {{ global_keycloak_realm }} \
           --binduser {{ global_admin_username }} \
         2fa enable \
-          --group-2fa="{{ global_cfgobj.config.twoFactorAuthentication.group }}" \
-          --ldap-base="{{ global_cfgobj.config.ums.ldap.baseDN }}"
+          --group-2fa="{{ global_2fa.group }}" \
+          --ldap-base="{{ global_ldap_base_dn }}"
 
 ...

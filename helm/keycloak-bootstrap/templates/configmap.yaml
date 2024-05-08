@@ -1,0 +1,55 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2024 Univention GmbH
+
+---
+kind: "ConfigMap"
+apiVersion: "v1"
+metadata:
+  name: "{{ include "common.names.fullname" . }}"
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.additionalAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+  {{- end }}
+data:
+  DEBUG: {{ .Values.config.debug.enabled | quote }}
+  DOMAIN: {{ .Values.global.domain | quote }}
+  SUBDOMAIN_PORTAL: {{ .Values.global.subDomains.portal | quote }}
+  KEYCLOAK_USERNAME: {{ include "keycloak-bootstrap.keycloak.auth.username" . | quote }}
+  KEYCLOAK_HOST: {{ include "keycloak-bootstrap.keycloak.connection.host" . | quote }}
+  KEYCLOAK_REALM: {{ include "keycloak-bootstrap.keycloak.auth.realm" . | quote }}
+  KEYCLOAK_URL: {{ include "keycloak-bootstrap.keycloak.connection.baseUrl" . | quote }}
+  UNIVENTION_KEYCLOAK_BOOTSTRAP_TEMP_DIR: "/tmp"
+  UNIVENTION_KEYCLOAK_BOOTSTRAP_DEBUG_PAUSE_BEFORE_SCRIPT_START: {{ .Values.config.debug.pauseBeforeScriptStart  | quote }}
+  LDAP_BASE_DN: {{ include "keycloak-bootstrap.ldap.baseDn" . | quote }}
+  LDAP_BIND_DN: {{ include "keycloak-bootstrap.ldap.auth.bindDn" . | quote }}
+  LDAP_URI: {{ include "keycloak-bootstrap.ldap.connection.uri" . | quote }}
+  SAML_SERVICE_PROVIDER_HOSTNAME: {{ include "keycloak-bootstrap.saml.serviceProviderHostname" . | quote }}
+...
+
+---
+kind: "ConfigMap"
+apiVersion: "v1"
+metadata:
+  name: {{ printf "%s-bootstrap-data" (include "common.names.fullname" .) | quote }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.additionalAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+  {{- end }}
+data:
+  ldap.mappers.yaml: |
+    {{ .Values.bootstrap.ldapMappers | toYaml | nindent 4 }}
+  loginlinks.yaml: |
+    {{ .Values.bootstrap.loginLinks | toYaml | nindent 4 }}
+  2fa.yaml: |
+    {{ .Values.bootstrap.twoFactorAuthentication | toYaml | nindent 4 }}
+...

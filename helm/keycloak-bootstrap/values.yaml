@@ -3,13 +3,14 @@
 ---
 # The global properties are used to configure multiple charts at once.
 global:
-  # -- The Top-Level-Domain (TLD) name which is used in f.e. in Ingress component.
-  domain: "example.org"
+  # -- Indicates wether this chart is part of a Nubus deployment.
+  nubusDeployment: false
 
-  # Define the Subdomain for components used in f.e. in Ingress component.
-  hosts:
-    # -- Subdomain for Keycloak, results in "https://{{ keycloak }}.{{ domain }}".
-    keycloak: "id"
+  domain: ""
+
+  subDomains:
+    keycloak: ""
+    portal: "portal"
 
   # -- Container registry address.
   imageRegistry: "artifacts.software-univention.de"
@@ -39,70 +40,6 @@ cleanup:
   deletePodsOnSuccess: false
   # -- Keep persistence on delete of this release.
   keepPVCOnDelete: false
-
-# Whether to allocate persistent volume disk for the data directory.
-# In case of node failure, the node data directory will still persist.
-#
-# Keycloak configuration.
-config:
-  # Debugging related settings
-  debug:
-    # -- Enable debug output of included Ansible scripts
-    enabled: false
-    # -- Seconds for the job to pause before starting the actual bootstrapping.
-    pauseBeforeScriptStart: 0
-  # -- Name of the external ConfigMap with additional Ansible based Keycloak configuration
-  keycloak:
-    # Allow cluster internal communication for configuring Keycloak.
-    # Required in case the /admin console of Keycloak is not exposed to the public internet
-    intraCluster:
-      # -- Enable internal communication
-      enabled: true
-      # -- Internal hostname including protocol and port
-      # Currently only http and https with valid certificates are supported.
-      internalBaseUrl: "http://ums-keycloak:8080"
-    # --
-    # -- The Keycloak master realm admin user
-    adminUser: "kcadmin"
-    # -- The Keycloak master realm admin user's password as input for the secret
-    adminPassword: ""
-    # -- The name of the realm that is going to contain all the configuration
-    realm: "ucs"
-    # Define links that are rendered on the login page of Keycloak
-    loginLinks: []
-    #   # You can and might want to specify links on the login page of Keycloak, please find more details here:
-    #   # https://docs.software-univention.de/keycloak-app/latest/configuration.html#additional-links-on-the-login-page
-    #   - link_number: 1
-    #     language: "en"
-    #     description: "Forgot password?"
-    #     href: "https://portal.example.org/univention/portal/#/selfservice/passwordforgotten"
-    #   - link_number: 1
-    #     language: "de"
-    #     description: "Passwort vergessen?"
-    #     href: "https://portal.example.org/univention/portal/#/selfservice/passwordforgotten"
-  # Univention Management Stack specific attributes.
-  ums:
-    # LDAP related settings
-    ldap:
-      # -- Resource locator of the internal LDAP host
-      internalHostname: "internal_ldap_hostname"
-      # -- The LDAP's base DN
-      baseDN: "dc=example,dc=org"
-      # -- The LDAP search user's DN
-      readUserDN: "uid=keycloak-search-user,dc=users,dc=example,dc=org"
-      # -- The LDAP search user's password provided as secret
-      readUserPassword: ""
-      # Support for additional attributes to be mapped from the LDAP to the Keycloak user object
-      ldapMappers: []
-    # SAML related settings
-    saml:
-      # -- Univention Management Stack service provider public hostname
-      serviceProviderHostname: "portal.example.org"
-  twoFactorAuthentcation:
-    # -- Enable Keycloak's built-in 2FA support
-    enabled: false
-    # -- LDAP group DN which memberships enabled 2FA for users
-    group: "cn=2fa-users,cn=groups,dc=example,dc=org"
 
 # Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
@@ -253,5 +190,87 @@ tolerations: []
 #     topologyKey: failure-domain.beta.kubernetes.io/zone
 #     whenUnsatisfiable: DoNotSchedule
 topologySpreadConstraints: []
+
+# -- Keycloak settings.
+keycloak:
+  # -- Connection parameters.
+  connection:
+    # -- Keycloak host.
+    host: ""
+    # -- Keycloak port.
+    port: ""
+  auth:
+    # -- Keycloak user.
+    username: ""
+    # -- Keycloak password.
+    password: ""
+    # -- Keycloak realm.
+    realm: ""
+    # -- Keycloak password secret reference.
+    credentialSecret:
+      name: ""
+      key: "password"
+
+# -- LDAP settings.
+ldap:
+  # -- LDAP connection parameters.
+  connection:
+    # -- LDAP host.
+    host: ""
+    # -- LDAP port.
+    port: ""
+    # -- LDAP protocol.
+    protocol: ""
+    # -- TLS settings.
+    tls:
+      # -- Enable TLS.
+      enabled: false
+      # -- TLS certificate secret reference.
+      cert:
+        secretKeyRef:
+          key: "tls.crt"
+          name: ""
+      # -- TLS key secret reference.
+      key:
+        secretKeyRef:
+          key: "tls.key"
+          name: ""
+      # -- TLS CA secret reference.
+      ca:
+        secretKeyRef:
+          key: "ca.crt"
+          name: ""
+  # -- LDAP authentication parameters.
+  auth:
+    # -- LDAP bind DN. (user to authenticate with LDAP server)
+    bindDn: ""
+    # -- LDAP bind password secret reference.
+    credentialSecret:
+      key: "password"
+      name: ""
+
+bootstrap:
+  # Support for additional attributes to be mapped from the LDAP to the Keycloak user object
+  ldapMappers: []
+  # Define links that are rendered on the login page of Keycloak
+  loginLinks: []
+  twoFactorAuthentication:
+    # -- Enable Keycloak's built-in 2FA support
+    enabled: false
+    # -- LDAP group DN which membership enables 2FA for users
+    group: ""
+
+# keycloak-bootstrap configuration.
+config:
+  # Debugging related settings
+  debug:
+    # -- Enable debug output of included Ansible scripts
+    enabled: false
+    # -- Seconds for the job to pause before starting the actual bootstrapping.
+    pauseBeforeScriptStart: 0
+  # SAML related settings
+  saml:
+    # -- Service provider public hostname
+    serviceProviderHostname: ""
 
 ...

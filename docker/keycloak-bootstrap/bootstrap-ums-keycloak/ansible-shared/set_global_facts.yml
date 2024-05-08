@@ -3,24 +3,25 @@
 ---
 - name: "Global: Read and parse config.yaml"
   ansible.builtin.set_fact:
-    global_cfgobj: "{{ lookup('file', '/app/values.yaml') | from_yaml }}"
+    global_ldap_mappers: "{{ lookup('file', '/bootstrap/ldap.mappers.yaml') | from_yaml }}"
+    global_login_links: "{{ lookup('file', '/bootstrap/loginlinks.yaml') | from_yaml }}"
+    global_2fa: "{{ lookup('file', '/bootstrap/2fa.yaml') | from_yaml }}"
 
 - name: "Global: Set variables"
   ansible.builtin.set_fact:
-    global_admin_username: "{{ global_cfgobj.config.keycloak.adminUser }}"
-    global_admin_password: "{{ global_cfgobj.config.keycloak.adminPassword }}"
-    global_keycloak_host: "{{ global_cfgobj.global.hosts.keycloak }}.{{ global_cfgobj.global.domain }}"
-    global_ums_realm: "{{ global_cfgobj.config.keycloak.realm }}"
-
-- name: "Global: Set derived variable for external connection"
-  ansible.builtin.set_fact:
-    global_keycloak_url: "https://{{ global_keycloak_host }}"
-  when: "not global_cfgobj.config.keycloak.intraCluster.enabled"
-
-- name: "Global: Set derived variable for internal connection"
-  ansible.builtin.set_fact:
-    global_keycloak_url: "{{ global_cfgobj.config.keycloak.intraCluster.internalBaseUrl }}"
-  when: "global_cfgobj.config.keycloak.intraCluster.enabled"
+    global_debug: "{{ lookup('ansible.builtin.env', 'DEBUG') }}"
+    global_domain: "{{ lookup('ansible.builtin.env', 'DOMAIN') }}"
+    global_subdomain_portal: "{{ lookup('ansible.builtin.env', 'SUBDOMAIN_PORTAL') }}"
+    global_admin_username: "{{ lookup('ansible.builtin.env', 'KEYCLOAK_USERNAME') }}"
+    global_admin_password: "{{ lookup('ansible.builtin.env', 'KEYCLOAK_PASSWORD') }}"
+    global_keycloak_host: "{{ lookup('ansible.builtin.env', 'KEYCLOAK_HOST') }}"
+    global_keycloak_realm: "{{ lookup('ansible.builtin.env', 'KEYCLOAK_REALM') }}"
+    global_ldap_bind_dn: "{{ lookup('ansible.builtin.env', 'LDAP_BIND_DN') }}"
+    global_ldap_bind_pw: "{{ lookup('ansible.builtin.env', 'LDAP_BIND_PW') }}"
+    global_ldap_base_dn: "{{ lookup('ansible.builtin.env', 'LDAP_BASE_DN') }}"
+    global_ldap_uri: "{{ lookup('ansible.builtin.env', 'LDAP_URI') }}"
+    global_saml_service_provider_hostname: "{{ lookup('ansible.builtin.env', 'SAML_SERVICE_PROVIDER_HOSTNAME') }}"
+    global_keycloak_url: "{{ lookup('ansible.builtin.env', 'KEYCLOAK_URL') }}"
 
 - name: "Set global access token"
   ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"

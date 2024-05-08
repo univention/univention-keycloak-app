@@ -19,24 +19,15 @@ A Helm chart to bootstrap Keycloak
 | additionalAnnotations | object | `{}` | Additional custom annotations to add to all deployed objects. |
 | additionalLabels | object | `{}` | Additional custom labels to add to all deployed objects. |
 | affinity | object | `{}` | Affinity for pod assignment Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity Note: podAffinityPreset, podAntiAffinityPreset, and  nodeAffinityPreset will be ignored when it's set |
+| bootstrap.ldapMappers | list | `[]` |  |
+| bootstrap.loginLinks | list | `[]` |  |
+| bootstrap.twoFactorAuthentication.enabled | bool | `false` | Enable Keycloak's built-in 2FA support |
+| bootstrap.twoFactorAuthentication.group | string | `""` | LDAP group DN which membership enables 2FA for users |
 | cleanup.deletePodsOnSuccess | bool | `false` | Keep Pods/Job logs after successful run. |
 | cleanup.keepPVCOnDelete | bool | `false` | Keep persistence on delete of this release. |
 | config.debug.enabled | bool | `false` | Enable debug output of included Ansible scripts |
 | config.debug.pauseBeforeScriptStart | int | `0` | Seconds for the job to pause before starting the actual bootstrapping. |
-| config.keycloak | object | `{"adminPassword":"","adminUser":"kcadmin","intraCluster":{"enabled":true,"internalBaseUrl":"http://ums-keycloak:8080"},"loginLinks":[],"realm":"ucs"}` | Name of the external ConfigMap with additional Ansible based Keycloak configuration |
-| config.keycloak.adminPassword | string | `""` | The Keycloak master realm admin user's password as input for the secret |
-| config.keycloak.adminUser | string | `"kcadmin"` | The Keycloak master realm admin user |
-| config.keycloak.intraCluster.enabled | bool | `true` | Enable internal communication |
-| config.keycloak.intraCluster.internalBaseUrl | string | `"http://ums-keycloak:8080"` | Internal hostname including protocol and port Currently only http and https with valid certificates are supported. |
-| config.keycloak.realm | string | `"ucs"` | The name of the realm that is going to contain all the configuration |
-| config.twoFactorAuthentcation.enabled | bool | `false` | Enable Keycloak's built-in 2FA support |
-| config.twoFactorAuthentcation.group | string | `"cn=2fa-users,cn=groups,dc=example,dc=org"` | LDAP group DN which memberships enabled 2FA for users |
-| config.ums.ldap.baseDN | string | `"dc=example,dc=org"` | The LDAP's base DN |
-| config.ums.ldap.internalHostname | string | `"internal_ldap_hostname"` | Resource locator of the internal LDAP host |
-| config.ums.ldap.ldapMappers | list | `[]` |  |
-| config.ums.ldap.readUserDN | string | `"uid=keycloak-search-user,dc=users,dc=example,dc=org"` | The LDAP search user's DN |
-| config.ums.ldap.readUserPassword | string | `""` | The LDAP search user's password provided as secret |
-| config.ums.saml.serviceProviderHostname | string | `"portal.example.org"` | Univention Management Stack service provider public hostname |
+| config.saml.serviceProviderHostname | string | `""` | Service provider public hostname |
 | containerSecurityContext.allowPrivilegeEscalation | bool | `false` | Enable container privileged escalation. |
 | containerSecurityContext.capabilities | object | `{"drop":["ALL"]}` | Security capabilities for container. |
 | containerSecurityContext.enabled | bool | `true` | Enable security context. |
@@ -48,15 +39,38 @@ A Helm chart to bootstrap Keycloak
 | extraEnvVars | list | `[]` | Array with extra environment variables to add to containers.  extraEnvVars:   - name: FOO     value: "bar"  |
 | extraVolumeMounts | list | `[]` | Optionally specify an extra list of additional volumeMounts. |
 | extraVolumes | list | `[]` | Optionally specify an extra list of additional volumes. |
-| global.domain | string | `"example.org"` | The Top-Level-Domain (TLD) name which is used in f.e. in Ingress component. |
-| global.hosts.keycloak | string | `"id"` | Subdomain for Keycloak, results in "https://{{ keycloak }}.{{ domain }}". |
+| global.domain | string | `""` |  |
 | global.imagePullSecrets | list | `[]` | Credentials to fetch images from private registry Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/  imagePullSecrets:   - "docker-registry"  |
 | global.imageRegistry | string | `"artifacts.software-univention.de"` | Container registry address. |
+| global.nubusDeployment | bool | `false` | Indicates wether this chart is part of a Nubus deployment. |
+| global.subDomains.keycloak | string | `""` |  |
+| global.subDomains.portal | string | `"portal"` |  |
 | image.imagePullPolicy | string | `"IfNotPresent"` | Define an ImagePullPolicy.  Ref.: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy  "IfNotPresent" => The image is pulled only if it is not already present locally. "Always" => Every time the kubelet launches a container, the kubelet queries the container image registry to             resolve the name to an image digest. If the kubelet has a container image with that exact digest cached             locally, the kubelet uses its cached image; otherwise, the kubelet pulls the image with the resolved             digest, and uses that image to launch the container. "Never" => The kubelet does not try fetching the image. If the image is somehow already present locally, the            kubelet attempts to start the container; otherwise, startup fails  |
 | image.registry | string | `""` | Container registry address. This setting has higher precedence than global.registry. |
 | image.repository | string | `"nubus-dev/images/keycloak-bootstrap"` | Container repository string. |
 | image.tag | string | `"latest"` | Define image tag. |
 | imagePullSecrets | list | `[]` | Credentials to fetch images from private registry Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/  imagePullSecrets:   - "docker-registry"  |
+| keycloak | object | `{"auth":{"credentialSecret":{"key":"password","name":""},"password":"","realm":"","username":""},"connection":{"host":"","port":""}}` | Keycloak settings. |
+| keycloak.auth.credentialSecret | object | `{"key":"password","name":""}` | Keycloak password secret reference. |
+| keycloak.auth.password | string | `""` | Keycloak password. |
+| keycloak.auth.realm | string | `""` | Keycloak realm. |
+| keycloak.auth.username | string | `""` | Keycloak user. |
+| keycloak.connection | object | `{"host":"","port":""}` | Connection parameters. |
+| keycloak.connection.host | string | `""` | Keycloak host. |
+| keycloak.connection.port | string | `""` | Keycloak port. |
+| ldap | object | `{"auth":{"bindDn":"","credentialSecret":{"key":"password","name":""}},"connection":{"host":"","port":"","protocol":"","tls":{"ca":{"secretKeyRef":{"key":"ca.crt","name":""}},"cert":{"secretKeyRef":{"key":"tls.crt","name":""}},"enabled":false,"key":{"secretKeyRef":{"key":"tls.key","name":""}}}}}` | LDAP settings. |
+| ldap.auth | object | `{"bindDn":"","credentialSecret":{"key":"password","name":""}}` | LDAP authentication parameters. |
+| ldap.auth.bindDn | string | `""` | LDAP bind DN. (user to authenticate with LDAP server) |
+| ldap.auth.credentialSecret | object | `{"key":"password","name":""}` | LDAP bind password secret reference. |
+| ldap.connection | object | `{"host":"","port":"","protocol":"","tls":{"ca":{"secretKeyRef":{"key":"ca.crt","name":""}},"cert":{"secretKeyRef":{"key":"tls.crt","name":""}},"enabled":false,"key":{"secretKeyRef":{"key":"tls.key","name":""}}}}` | LDAP connection parameters. |
+| ldap.connection.host | string | `""` | LDAP host. |
+| ldap.connection.port | string | `""` | LDAP port. |
+| ldap.connection.protocol | string | `""` | LDAP protocol. |
+| ldap.connection.tls | object | `{"ca":{"secretKeyRef":{"key":"ca.crt","name":""}},"cert":{"secretKeyRef":{"key":"tls.crt","name":""}},"enabled":false,"key":{"secretKeyRef":{"key":"tls.key","name":""}}}` | TLS settings. |
+| ldap.connection.tls.ca | object | `{"secretKeyRef":{"key":"ca.crt","name":""}}` | TLS CA secret reference. |
+| ldap.connection.tls.cert | object | `{"secretKeyRef":{"key":"tls.crt","name":""}}` | TLS certificate secret reference. |
+| ldap.connection.tls.enabled | bool | `false` | Enable TLS. |
+| ldap.connection.tls.key | object | `{"secretKeyRef":{"key":"tls.key","name":""}}` | TLS key secret reference. |
 | nodeSelector | object | `{}` | Node labels for pod assignment Ref: https://kubernetes.io/docs/user-guide/node-selection/ |
 | podAnnotations | object | `{}` | Pod Annotations. Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
 | podLabels | object | `{}` | Pod Labels. Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |

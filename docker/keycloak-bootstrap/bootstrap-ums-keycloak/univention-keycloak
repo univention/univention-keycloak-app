@@ -1276,7 +1276,7 @@ def parse_args(args: list[str] | None = None) -> Namespace:
     parser.add_argument("--binddn", default="")
     parser.add_argument("--binduser", default="admin")
     parser.add_argument("--bindpwd", default="")
-    parser.add_argument("--bindpwdfile", default="/etc/keycloak.secret")
+    parser.add_argument("--bindpwdfile", default="/credentials/keycloak.secret")
     parser.add_argument("--realm", default="ucs")
     parser.add_argument("--keycloak-pwd", default="")
     parser.add_argument("--keycloak-url", required=no_ucr_available, default=keycloak_url)

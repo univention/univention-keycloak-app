@@ -4,14 +4,7 @@
 ARG UCS_BASE_IMAGE_TAG=0.12.0
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
 
-FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG}
-
-# We want to fetch it from upstream and not place it statically into the image but first our changes need to be merged:
-# ARG UV_KC_PY=https://raw.githubusercontent.com/rossnet/univention-keycloak/5.0-5/services/univention-keycloak/scripts/univention-keycloak
-#    wget=1.21.3-1+b2 \
-#  && wget -q -nv ${UV_KC_PY} \
-#  && apt-get purge --assume-yes wget \
-#  && chmod +x univention-keycloak \
+FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} as base
 
 WORKDIR /app
 
@@ -25,6 +18,8 @@ RUN apt-get update \
     ansible=7.3.0+dfsg-1 \
   && apt-get autoremove --assume-yes \
   && rm -rf /var/lib/apt/lists/*
+
+FROM base
 
 COPY bootstrap-ums-keycloak/ /app
 
