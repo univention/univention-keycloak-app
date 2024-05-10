@@ -40,12 +40,10 @@ ldap
 {{- end -}}
 
 {{- define "keycloak-bootstrap.ldap.connection.uri" -}}
-{{- if .Values.global.nubusDeployment -}}
 {{- $protocol := include "keycloak-bootstrap.ldap.connection.protocol" . -}}
 {{- $host := include "keycloak-bootstrap.ldap.connection.host" . -}}
 {{- $port := include "keycloak-bootstrap.ldap.connection.port" . -}}
 {{- printf "%s://%s:%s" $protocol $host $port -}}
-{{- end -}}
 {{- end -}}
 
 {{- define "keycloak-bootstrap.ldap.baseDn" -}}
@@ -75,7 +73,7 @@ http
 {{- .Values.keycloak.connection.host -}}
 {{- else if .Values.global.nubusDeployment -}}
 {{- printf "%s-keycloak" .Release.Name -}}
-{{- else -}}
+{{- else if not .Values.keycloak.connection.baseUrl -}}
 {{- required ".Values.keycloak.connection.host must be defined." .Values.keycloak.connection.host -}}
 {{- end -}}
 {{- end -}}

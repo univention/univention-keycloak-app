@@ -23,6 +23,46 @@
     global_saml_service_provider_hostname: "{{ lookup('ansible.builtin.env', 'SAML_SERVICE_PROVIDER_HOSTNAME') }}"
     global_keycloak_url: "{{ lookup('ansible.builtin.env', 'KEYCLOAK_URL') }}"
 
+- name: "Global: Assert environment variables are non-empty strings"
+  ansible.builtin.assert:
+    that:
+      - "global_debug | type_debug == 'string'"
+      - "global_debug | length > 0"
+      - "global_domain | type_debug == 'string'"
+      - "global_domain | length > 0"
+      - "global_subdomain_portal | type_debug == 'string'"
+      - "global_subdomain_portal | length > 0"
+      - "global_admin_username | type_debug == 'string'"
+      - "global_admin_username | length > 0"
+      - "global_admin_password | type_debug == 'string'"
+      - "global_admin_password | length > 0"
+      - "global_keycloak_host | type_debug == 'string'"
+      - "global_keycloak_host | length > 0"
+      - "global_keycloak_realm | type_debug == 'string'"
+      - "global_keycloak_realm | length > 0"
+      - "global_ldap_bind_dn | type_debug == 'string'"
+      - "global_ldap_bind_dn | length > 0"
+      - "global_ldap_bind_pw | type_debug == 'string'"
+      - "global_ldap_bind_pw | length > 0"
+      - "global_ldap_base_dn | type_debug == 'string'"
+      - "global_ldap_base_dn | length > 0"
+      - "global_ldap_uri | type_debug == 'string'"
+      - "global_ldap_uri | length > 0"
+      - "global_saml_service_provider_hostname | type_debug == 'string'"
+      - "global_saml_service_provider_hostname | length > 0"
+      - "global_keycloak_url | type_debug == 'string'"
+      - "global_keycloak_url | length > 0"
+    fail_msg: "One or more environment variables are empty or not defined as strings."
+
+- name: "Global: Assert variables from YAML files are arrays"
+  ansible.builtin.assert:
+    that:
+      - "global_ldap_mappers | type_debug == 'list'"
+      - "global_login_links | type_debug == 'list'"
+      - "global_2fa | type_debug == 'dict'"
+    fail_msg: "One or more variables read from YAML files are not arrays."
+
 - name: "Set global access token"
   ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"
+
 ...
