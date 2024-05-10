@@ -8,8 +8,8 @@
     body_format: "form-urlencoded"
     body:
       client_id: "admin-cli"
-      username: "{{ global_admin_username }}"
-      password: "{{ global_admin_password }}"
+      username: "{{ global_keycloak_username }}"
+      password: "{{ global_keycloak_password }}"
       grant_type: "password"
   register: "access_token_response"
   # Keycloak is required to be up and running, so we allow some retries

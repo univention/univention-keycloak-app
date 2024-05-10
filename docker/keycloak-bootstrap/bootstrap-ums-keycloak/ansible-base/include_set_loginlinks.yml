@@ -24,7 +24,7 @@
     /app/univention-keycloak \
       --keycloak-url {{ global_keycloak_url }} \
       --realm {{ global_keycloak_realm }} \
-      --binduser {{ global_admin_username }} \
+      --binduser {{ global_keycloak_username }} \
     login-links set \
       {{ loginLink.language }} \
       {{ loginLink.link_number }} \

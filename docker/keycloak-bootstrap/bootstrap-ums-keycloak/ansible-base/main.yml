@@ -41,7 +41,7 @@
         /app/univention-keycloak \
           --keycloak-url {{ global_keycloak_url }} \
           --realm {{ global_keycloak_realm }} \
-          --binduser {{ global_admin_username }} \
+          --binduser {{ global_keycloak_username }} \
         init \
           --reverse-proxy-url="{{ global_keycloak_url }}" \
           --ldap="{{ global_ldap_uri }}" \
@@ -85,7 +85,7 @@
         /app/univention-keycloak \
           --keycloak-url {{ global_keycloak_url }} \
           --realm {{ global_keycloak_realm }} \
-          --binduser {{ global_admin_username }} \
+          --binduser {{ global_keycloak_username }} \
         2fa enable \
           --group-2fa="{{ global_2fa.group }}" \
           --ldap-base="{{ global_ldap_base_dn }}"
