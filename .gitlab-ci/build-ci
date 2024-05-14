@@ -10,13 +10,11 @@ doc_job () { # <extends> [<suffix> [<language>]]
     echo "build ${pkg}${3:+ "$3"}${2:+ "$2"}:"
     echo '  variables:'
     echo "    DOCS_DIR: $path"
-    echo "    DOC_NAME: ${path##*/}"
+    echo "    DOC_TARGET_NAME: ${path##*/}"
     if [ "$pkg" = "keycloak-app" ]
     then
-        echo -n "    DOC_TARGET_PATH: \"${pkg}/"
+        echo -n '    DOC_TARGET_PATH: "$DOC_TARGET_NAME/'
         echo '$DOC_TARGET_VERSION"'
-    else
-        echo "    DOC_TARGET_PATH: ${path##*/}"
     fi
     [ -n "${3+empty}" ] && echo "    language: $3"
 
@@ -78,10 +76,10 @@ do
             language="${l_path##*/}"
             [ "$language" = '*' ] && continue
 
-            doc_job '.sphinx-html' html "$language"
-            doc_job '.sphinx-pdf' pdf "$language"
-            doc_job '.sphinx-linkcheck' linkcheck "$language"
-            doc_job '.sphinx-spelling' spelling "$language"
+            doc_job '.sphinx-html-template' html "$language"
+            doc_job '.sphinx-pdf-template' pdf "$language"
+            doc_job '.sphinx-linkcheck-template' linkcheck "$language"
+            doc_job '.sphinx-spelling-template' spelling "$language"
         done
     fi
 done
