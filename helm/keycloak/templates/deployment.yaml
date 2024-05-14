@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/configmap: {{ include (print .Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/configmap: {{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- if .Values.podAnnotations }}
         {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" .) | nindent 8 }}
         {{- end }}
@@ -73,69 +73,27 @@ spec:
           {{- range .Values.extraStartupArgs }}
             - {{ . | quote }}
           {{- end }}
-          {{- with .Values.config.features.enabled }}
+          {{- with .Values.keycloak.features.enabled }}
             - "--features={{ join "," . }}"
           {{- end }}
-          {{- with .Values.config.features.disabled }}
+          {{- with .Values.keycloak.features.disabled }}
             - "--features-disabled={{ join "," . }}"
           {{- end }}
           {{- if .Values.config.enableMetrics }}
             - "--metrics-enabled=true"
           {{- end }}
           # Find the available variables here: https://github.com/univention/univention-keycloak-app/blob/main/app/settings
+          envFrom:
+            - configMapRef:
+                name: {{ include "common.names.fullname" . | quote }}
+
           env:
             - name: "KEYCLOAK_ADMIN"
-              value: {{ .Values.config.admin.username | quote }}
-            {{- with .Values.config.admin }}
+              value: {{ include "keycloak.keycloak.auth.username" . | quote }}
             - name: "KEYCLOAK_ADMIN_PASSWORD"
-              valueFrom:
-                secretKeyRef:
-                  {{- if .existingSecret.name }}
-                  name: {{ .existingSecret.name | quote }}
-                  key: {{ .existingSecret.key | quote }}
-                  {{- else }}
-                  name: "{{ include "common.names.fullname" $ }}"
-                  key: "adminPassword"
-                  {{- end }}
-            {{- end }}
-            - name: "KEYCLOAK_PASSWORD_CHANGE_ENDPOINT"
-              value: {{ printf "%s.%s" .Values.global.hosts.univentionManagementStack .Values.global.domain | quote }}
-            - name: "KC_LOG_LEVEL"
-              value: {{ .Values.config.logLevel | quote }}
-            - name: "KC_HOSTNAME"
-              value: {{ .Values.config.hostname | default (printf "%s.%s" .Values.global.hosts.keycloak .Values.global.domain) | quote }}
-            - name: "KC_PROXY"
-              value: {{ .Values.config.proxy | quote }}
-            - name: "KC_DB"
-              value: {{ .Values.config.database.type | quote }}
-            - name: "KC_DB_URL_DATABASE"
-              value: {{ .Values.config.database.name | quote }}
-            - name: "KC_DB_URL_HOST"
-              value: {{ .Values.config.database.host | quote }}
-            - name: "KC_DB_URL_PORT"
-              value: {{ .Values.config.database.port | quote }}
-            - name: "KC_DB_URL_PROPERTIES"
-              value: {{ .Values.config.database.properties | quote }}
-            - name: "KC_DB_USERNAME"
-              value: {{ .Values.config.database.username | quote }}
-            - name: "UNIVENTION_THEME"
-              value: {{ .Values.theme.univentionTheme | quote }}
-            - name: "UNIVENTION_CUSTOM_THEME"
-              value: {{ .Values.theme.univentionCustomTheme | quote }}
-            - name: "UNIVENTION_FAVICON"
-              value: {{ .Values.theme.favIcon | quote }}
-            {{- with .Values.config.database }}
+              {{- include "keycloak.keycloak.auth.password" . | nindent 14 }}
             - name: "KC_DB_PASSWORD"
-              valueFrom:
-                secretKeyRef:
-                  {{- if .existingSecret.name }}
-                  name: {{ .existingSecret.name | quote }}
-                  key: {{ .existingSecret.key | quote }}
-                  {{- else }}
-                  name: "{{ include "common.names.fullname" $ }}"
-                  key: "databasePassword"
-                  {{- end }}
-            {{- end }}
+              {{- include "keycloak.postgresql.auth.password" . | nindent 14 }}
           {{- with .Values.extraEnvVars }}
             {{- . | toYaml | nindent 12 }}
           {{- end }}

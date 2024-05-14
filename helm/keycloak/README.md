@@ -37,7 +37,7 @@ helm uninstall keycloak
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://registry.souvap-univention.de/souvap/tooling/charts/bitnami-charts | common | ^2.x.x |
+| https://charts.bitnami.com/bitnami | common | ^2.x.x |
 
 ## Values
 
@@ -77,121 +77,13 @@ helm uninstall keycloak
 			<td>Additional custom labels to add to all deployed objects.</td>
 		</tr>
 		<tr>
-			<td>config.admin.existingSecret.key</td>
+			<td>config.baseUrl</td>
 			<td>string</td>
 			<td><pre lang="json">
 ""
 </pre>
 </td>
-			<td>The key which identifies the password in the secret file.</td>
-		</tr>
-		<tr>
-			<td>config.admin.existingSecret.name</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>Existing secret which contains the keycloak admin password.</td>
-		</tr>
-		<tr>
-			<td>config.admin.password</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>Admin password or as secret via existingSecret.</td>
-		</tr>
-		<tr>
-			<td>config.admin.username</td>
-			<td>string</td>
-			<td><pre lang="json">
-"kcadmin"
-</pre>
-</td>
-			<td>Admin username.</td>
-		</tr>
-		<tr>
-			<td>config.database.existingSecret.key</td>
-			<td>string</td>
-			<td><pre lang="json">
-"databasePassword"
-</pre>
-</td>
-			<td>The key which identifies the password in the secret file.</td>
-		</tr>
-		<tr>
-			<td>config.database.existingSecret.name</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>Existing secret which contains the keycloak database password.</td>
-		</tr>
-		<tr>
-			<td>config.database.host</td>
-			<td>string</td>
-			<td><pre lang="json">
-"postgresql"
-</pre>
-</td>
-			<td>Database host.</td>
-		</tr>
-		<tr>
-			<td>config.database.name</td>
-			<td>string</td>
-			<td><pre lang="json">
-"keycloak"
-</pre>
-</td>
-			<td>Database name.</td>
-		</tr>
-		<tr>
-			<td>config.database.password</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>Database password or as secret via existingSecret.</td>
-		</tr>
-		<tr>
-			<td>config.database.port</td>
-			<td>int</td>
-			<td><pre lang="json">
-5432
-</pre>
-</td>
-			<td>Database port.</td>
-		</tr>
-		<tr>
-			<td>config.database.properties</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>Database properties.</td>
-		</tr>
-		<tr>
-			<td>config.database.type</td>
-			<td>string</td>
-			<td><pre lang="json">
-"postgres"
-</pre>
-</td>
-			<td>Database vendor. Possible values: dev-file (default), dev-mem, mariadb, mssql, mysql, oracle, postgres</td>
-		</tr>
-		<tr>
-			<td>config.database.username</td>
-			<td>string</td>
-			<td><pre lang="json">
-"keycloak_user"
-</pre>
-</td>
-			<td>Database username.</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>config.enableMetrics</td>
@@ -212,34 +104,13 @@ false
 			<td>Expose admin console, if set to true no Ingress path restrictions are applied. Otherwise only /realms/ and /resources/ are made available to the public internet. Ref.: https://www.keycloak.org/server/reverseproxy#_exposed_path_recommendations</td>
 		</tr>
 		<tr>
-			<td>config.features.disabled</td>
-			<td>list</td>
-			<td><pre lang="json">
-[]
-</pre>
-</td>
-			<td>Disables a set of one or more features for keycloak.</td>
-		</tr>
-		<tr>
-			<td>config.features.enabled</td>
-			<td>list</td>
-			<td><pre lang="json">
-[
-  "admin-fine-grained-authz",
-  "token-exchange"
-]
-</pre>
-</td>
-			<td>Enables a set of one or more features for keycloak.</td>
-		</tr>
-		<tr>
 			<td>config.hostname</td>
 			<td>string</td>
 			<td><pre lang="json">
 ""
 </pre>
 </td>
-			<td>Hostname. Ref.: https://www.keycloak.org/server/hostname Default: {{ .Values.global.hosts.keycloak }}.{{ .Values.global.domain }}</td>
+			<td>Hostname. Ref.: https://www.keycloak.org/server/hostname Default: {{ .Values.global.subDomains.keycloak }}.{{ .Values.global.domain }}</td>
 		</tr>
 		<tr>
 			<td>config.logLevel</td>
@@ -384,28 +255,10 @@ true
 			<td>global.domain</td>
 			<td>string</td>
 			<td><pre lang="json">
-"open-desk.cloud"
+""
 </pre>
 </td>
 			<td>Define the domain name.</td>
-		</tr>
-		<tr>
-			<td>global.hosts.keycloak</td>
-			<td>string</td>
-			<td><pre lang="json">
-"id"
-</pre>
-</td>
-			<td>Subdomain for Univention Keycloak.</td>
-		</tr>
-		<tr>
-			<td>global.hosts.univentionManagementStack</td>
-			<td>string</td>
-			<td><pre lang="json">
-"portal"
-</pre>
-</td>
-			<td>Subdomain for the rest of the Univention Management Stack</td>
 		</tr>
 		<tr>
 			<td>global.imagePullSecrets</td>
@@ -424,6 +277,33 @@ true
 </pre>
 </td>
 			<td>Container registry address.</td>
+		</tr>
+		<tr>
+			<td>global.nubusDeployment</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Indicates wether this chart is part of a Nubus deployment.</td>
+		</tr>
+		<tr>
+			<td>global.subDomains.keycloak</td>
+			<td>string</td>
+			<td><pre lang="json">
+"id"
+</pre>
+</td>
+			<td>Subdomain for keycloak.</td>
+		</tr>
+		<tr>
+			<td>global.subDomains.portal</td>
+			<td>string</td>
+			<td><pre lang="json">
+"portal"
+</pre>
+</td>
+			<td>Subdomain for the Nubus portal.</td>
 		</tr>
 		<tr>
 			<td>image.imagePullPolicy</td>
@@ -501,7 +381,7 @@ false
 			<td>ingress.ingressClassName</td>
 			<td>string</td>
 			<td><pre lang="json">
-"nginx"
+""
 </pre>
 </td>
 			<td>The Ingress controller class name.</td>
@@ -553,6 +433,82 @@ true
 </pre>
 </td>
 			<td>The name of the kubernetes secret which contains a TLS private key and certificate. Hint: This secret is not created by this chart and must be provided.</td>
+		</tr>
+		<tr>
+			<td>keycloak</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "auth": {
+    "credentialSecret": {
+      "key": "admin_password",
+      "name": ""
+    },
+    "password": "",
+    "username": ""
+  },
+  "features": {
+    "disabled": [],
+    "enabled": [
+      "admin-fine-grained-authz",
+      "token-exchange"
+    ]
+  }
+}
+</pre>
+</td>
+			<td>Keycloak settings.</td>
+		</tr>
+		<tr>
+			<td>keycloak.auth.credentialSecret</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "key": "admin_password",
+  "name": ""
+}
+</pre>
+</td>
+			<td>Keycloak password secret reference.</td>
+		</tr>
+		<tr>
+			<td>keycloak.auth.password</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Keycloak password.</td>
+		</tr>
+		<tr>
+			<td>keycloak.auth.username</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Keycloak user.</td>
+		</tr>
+		<tr>
+			<td>keycloak.features.disabled</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Disables a set of one or more features for keycloak.</td>
+		</tr>
+		<tr>
+			<td>keycloak.features.enabled</td>
+			<td>list</td>
+			<td><pre lang="json">
+[
+  "admin-fine-grained-authz",
+  "token-exchange"
+]
+</pre>
+</td>
+			<td>Enables a set of one or more features for keycloak.</td>
 		</tr>
 		<tr>
 			<td>lifecycleHooks</td>
@@ -679,6 +635,98 @@ true
 </pre>
 </td>
 			<td>Change ownership and permission of the volume before being exposed inside a Pod.</td>
+		</tr>
+		<tr>
+			<td>postgresql</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "auth": {
+    "credentialSecret": {
+      "key": "password",
+      "name": ""
+    },
+    "database": "",
+    "password": "",
+    "username": ""
+  },
+  "connection": {
+    "host": "",
+    "port": ""
+  }
+}
+</pre>
+</td>
+			<td>PostgreSQL settings.</td>
+		</tr>
+		<tr>
+			<td>postgresql.auth.credentialSecret</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "key": "password",
+  "name": ""
+}
+</pre>
+</td>
+			<td>PostgreSQL password secret reference.</td>
+		</tr>
+		<tr>
+			<td>postgresql.auth.database</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>PostgreSQL database.</td>
+		</tr>
+		<tr>
+			<td>postgresql.auth.password</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>PostgreSQL user password.</td>
+		</tr>
+		<tr>
+			<td>postgresql.auth.username</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>PostgreSQL user.</td>
+		</tr>
+		<tr>
+			<td>postgresql.connection</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "host": "",
+  "port": ""
+}
+</pre>
+</td>
+			<td>Connection parameters.</td>
+		</tr>
+		<tr>
+			<td>postgresql.connection.host</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>PostgreSQL host.</td>
+		</tr>
+		<tr>
+			<td>postgresql.connection.port</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>PostgreSQL port.</td>
 		</tr>
 		<tr>
 			<td>readinessProbe.enabled</td>
@@ -972,7 +1020,7 @@ true
 			<td>theme.favIcon</td>
 			<td>string</td>
 			<td><pre lang="json">
-"https://ums.example.org/favicon.ico"
+""
 </pre>
 </td>
 			<td>Logo as SVG content.</td>
@@ -990,7 +1038,7 @@ true
 			<td>theme.univentionCustomTheme</td>
 			<td>string</td>
 			<td><pre lang="json">
-"https://ums.example.org/login/css/custom.css"
+""
 </pre>
 </td>
 			<td></td>
@@ -999,7 +1047,7 @@ true
 			<td>theme.univentionTheme</td>
 			<td>string</td>
 			<td><pre lang="json">
-"https://ums.example.org/univention/theme.css"
+""
 </pre>
 </td>
 			<td>URI to the base theme</td>

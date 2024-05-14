@@ -1,0 +1,36 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2024 Univention GmbH
+
+---
+
+apiVersion: "v1"
+kind: ConfigMap
+metadata:
+  name: {{ include "common.names.fullname" . | quote }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+    {{- $uiLabels := dict "app.kubernetes.io/name" (include "common.names.fullname" .) }}
+    {{- $mergedLabels := merge $uiLabels $commonLabels}}
+    {{- toYaml $mergedLabels | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.additionalAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+  {{- end }}
+data:
+  KEYCLOAK_PASSWORD_CHANGE_ENDPOINT: {{ printf "%s.%s" .Values.global.subDomains.portal .Values.global.domain | quote }}
+  KC_LOG_LEVEL: {{ .Values.config.logLevel | quote }}
+  KC_HOSTNAME: {{ .Values.config.hostname | default (printf "%s.%s" .Values.global.subDomains.keycloak .Values.global.domain) | quote }}
+  KC_PROXY: {{ .Values.config.proxy | quote }}
+  KC_DB: postgres
+
+  KC_DB_URL_HOST: {{ include "keycloak.postgresql.connection.host" . | quote }}
+  KC_DB_URL_PORT: {{ include "keycloak.postgresql.connection.port" . | quote }}
+  KC_DB_USERNAME: {{ include "keycloak.postgresql.auth.username" . | quote }}
+  KC_DB_URL_DATABASE: {{ include "keycloak.postgresql.auth.database" . | quote }}
+
+  UNIVENTION_THEME: {{ include "keycloak.style.themeUrl" . | quote }}
+  UNIVENTION_CUSTOM_THEME: {{ include "keycloak.style.customUrl" . | quote }}
+  UNIVENTION_FAVICON: {{ include "keycloak.style.faviconUrl" . | quote }}

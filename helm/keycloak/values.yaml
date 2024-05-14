@@ -3,16 +3,17 @@
 ---
 # The global properties are used to configure multiple charts at once.
 global:
+  # -- Indicates wether this chart is part of a Nubus deployment.
+  nubusDeployment: false
 
   # -- Define the domain name.
-  domain: "open-desk.cloud"
+  domain: ""
 
-  # Define hosts.
-  hosts:
-    # -- Subdomain for Univention Keycloak.
+  subDomains:
+    # -- Subdomain for the Nubus portal.
+    portal: "portal"
+    # -- Subdomain for keycloak.
     keycloak: "id"
-    # -- Subdomain for the rest of the Univention Management Stack
-    univentionManagementStack: "portal"
 
   # -- Container registry address.
   imageRegistry: "docker.software-univention.de"
@@ -24,6 +25,53 @@ global:
   #   - "docker-registry"
   #
   imagePullSecrets: []
+
+# -- PostgreSQL settings.
+postgresql:
+  # -- Connection parameters.
+  connection:
+    # -- PostgreSQL host.
+    host: ""
+    # -- PostgreSQL port.
+    port: ""
+  auth:
+    # -- PostgreSQL user.
+    username: ""
+    # -- PostgreSQL database.
+    database: ""
+    # -- PostgreSQL user password.
+    password: ""
+    # -- PostgreSQL password secret reference.
+    credentialSecret:
+      name: ""
+      key: "password"
+
+# -- Keycloak settings.
+keycloak:
+  auth:
+    # -- Keycloak user.
+    username: ""
+    # -- Keycloak password.
+    password: ""
+    # -- Keycloak password secret reference.
+    credentialSecret:
+      name: ""
+      key: "admin_password"
+
+  # Keycloak feature settings.
+  # Possible values are: account-api, account2, account3, admin-api, admin-fine-grained-authz, admin2, authorization,
+  #                      ciba, client-policies, client-secret-rotation, declarative-user-profile, docker,
+  #                      dynamic-scopes, fips, impersonation, js-adapter, kerberos, linkedin-oauth, map-storage, par,
+  #                      preview, recovery-codes, scripts, step-up-authentication, token-exchange, update-email,
+  #                      web-authn.
+  features:
+    # -- Enables a set of one or more features for keycloak.
+    enabled:
+      - "admin-fine-grained-authz"
+      - "token-exchange"
+
+    # -- Disables a set of one or more features for keycloak.
+    disabled: []
 
 # -- Affinity for pod assignment
 # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
@@ -39,7 +87,7 @@ commonLabels: {}
 config:
   # -- Hostname.
   # Ref.: https://www.keycloak.org/server/hostname
-  # Default: {{ .Values.global.hosts.keycloak }}.{{ .Values.global.domain }}
+  # Default: {{ .Values.global.subDomains.keycloak }}.{{ .Values.global.domain }}
   hostname: ""
 
   # -- Proxy mode.
@@ -59,70 +107,7 @@ config:
   # Ref.: https://docs.software-univention.de/keycloak-app/latest/configuration.html#envvar-keycloak-log-level
   logLevel: "INFO"
 
-  # Keycloak admin user settings.
-  admin:
-    # -- Admin username.
-    username: "kcadmin"
-
-    # -- Admin password or as secret via existingSecret.
-    password: ""
-
-    # Reference password as already existing secret.
-    existingSecret:
-      # -- Existing secret which contains the keycloak admin password.
-      name: ""
-
-      # -- The key which identifies the password in the secret file.
-      key: ""
-
-  # Database related settings.
-  # Ref.: https://www.keycloak.org/server/db
-  database:
-    # -- Database vendor.
-    # Possible values: dev-file (default), dev-mem, mariadb, mssql, mysql, oracle, postgres
-    type: "postgres"
-
-    # -- Database host.
-    host: "postgresql"
-
-    # -- Database port.
-    port: 5432
-
-    # -- Database name.
-    name: "keycloak"
-
-    # -- Database properties.
-    properties: ""
-
-    # -- Database username.
-    username: "keycloak_user"
-
-    # -- Database password or as secret via existingSecret.
-    password: ""
-
-    # Reference password as already existing secret.
-    existingSecret:
-      # -- Existing secret which contains the keycloak database password.
-      name: ""
-
-      # -- The key which identifies the password in the secret file.
-      key: "databasePassword"
-
-  # Keycloak feature settings.
-  # Possible values are: account-api, account2, account3, admin-api, admin-fine-grained-authz, admin2, authorization,
-  #                      ciba, client-policies, client-secret-rotation, declarative-user-profile, docker,
-  #                      dynamic-scopes, fips, impersonation, js-adapter, kerberos, linkedin-oauth, map-storage, par,
-  #                      preview, recovery-codes, scripts, step-up-authentication, token-exchange, update-email,
-  #                      web-authn.
-  features:
-    # -- Enables a set of one or more features for keycloak.
-    enabled:
-      - "admin-fine-grained-authz"
-      - "token-exchange"
-
-    # -- Disables a set of one or more features for keycloak.
-    disabled: []
-
+  baseUrl: ""
 
 # Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
@@ -234,7 +219,7 @@ ingress:
   pathType: "Prefix"
 
   # -- The Ingress controller class name.
-  ingressClassName: "nginx"
+  ingressClassName: ""
 
   # -- Define custom ingress annotations.
   # annotations:
@@ -408,11 +393,11 @@ terminationGracePeriodSeconds: ""
 # Theming related settings.
 theme:
   # -- URI to the base theme
-  univentionTheme: "https://ums.example.org/univention/theme.css"
+  univentionTheme: ""
   # -- URL to the custom theme, set the logo in there `:root { --login-logo: url("..") no-repeat center; }`
-  univentionCustomTheme: "https://ums.example.org/login/css/custom.css"
+  univentionCustomTheme: ""
   # -- Logo as SVG content.
-  favIcon: "https://ums.example.org/favicon.ico"
+  favIcon: ""
 
   # Theme colors.
   colors:

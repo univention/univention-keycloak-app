@@ -21,17 +21,15 @@ metadata:
     {{- include "common.tplvalues.render" ( dict "value" .Values.ingress.annotations "context" . ) | nindent 4 }}
     {{- end }}
 spec:
-  {{- if .Values.ingress.ingressClassName }}
-  ingressClassName: {{ .Values.ingress.ingressClassName | quote }}
-  {{- end }}
+  ingressClassName: {{ include "keycloak.ingress.ingressClassName" .}}
   {{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.ingress.host | default (printf "%s.%s" .Values.global.hosts.keycloak .Values.global.domain) | quote }}
+        - {{ .Values.ingress.host | default (printf "%s.%s" .Values.global.subDomains.keycloak .Values.global.domain) | quote }}
       secretName: "{{ .Values.ingress.tls.secretName | default (printf "%s-tls" (include "common.names.fullname" . )) }}"
   {{- end }}
   rules:
-    - host: {{ .Values.ingress.host | default (printf "%s.%s" .Values.global.hosts.keycloak .Values.global.domain) | quote }}
+    - host: {{ .Values.ingress.host | default (printf "%s.%s" .Values.global.subDomains.keycloak .Values.global.domain) | quote }}
       http:
         paths:
           - path: /realms

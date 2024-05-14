@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2024 Univention GmbH
+
+---
+
+postgresql:
+  connection:
+    host: "postgres"
+    port: "5432"
+  auth:
+    username: "postgres"
+    database: "postgres"
+    password: "secret"
+    credentialSecret:
+      name: "postgres-credentials"
+      key: "password"
+
+keycloak:
+  auth:
+    username: "admin"
+    password: "secret"
+    credentialSecret:
+      name: "keycloak-credentials"
+      key: "admin_password"
+
+...

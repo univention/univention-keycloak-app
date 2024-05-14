@@ -1,0 +1,164 @@
+{{- /*
+SPDX-FileCopyrightText: 2024 Univention GmbH
+SPDX-License-Identifier: AGPL-3.0-only
+*/}}
+
+{{- /*
+These template definitions are only used in this chart and do not relate to templates defined elsewhere.
+*/}}
+{{- define "keycloak.postgresql.connection.host" -}}
+{{- if .Values.postgresql.connection.host -}}
+{{- .Values.postgresql.connection.host -}}
+{{- else if .Values.global.nubusDeployment -}}
+{{- printf "%s-postgresql" .Release.Name -}}
+{{- else -}}
+{{- required ".Values.postgresql.connection.host must be defined." .Values.postgresql.connection.host -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.postgresql.connection.port" -}}
+{{- if .Values.postgresql.connection.port -}}
+{{- .Values.postgresql.connection.port -}}
+{{- else -}}
+5432
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.postgresql.auth.username" -}}
+{{- if .Values.postgresql.auth.username -}}
+{{- .Values.postgresql.auth.username -}}
+{{- else if .Values.global.nubusDeployment -}}
+keycloak
+{{- else -}}
+{{- required ".Values.postgresql.auth.username must be defined." .Values.postgresql.auth.username -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.postgresql.auth.credentialSecret.name" -}}
+{{- if .Values.postgresql.auth.credentialSecret.name -}}
+{{- .Values.postgresql.auth.credentialSecret.name -}}
+{{- else if .Values.global.nubusDeployment -}}
+{{- printf "%s-keycloak-postgresql-credentials" .Release.Name -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.postgresql.auth.password" -}}
+{{- if .Values.postgresql.auth.credentialSecret.name -}}
+valueFrom:
+  secretKeyRef:
+    name: {{ .Values.postgresql.auth.credentialSecret.name | quote }}
+    key: {{ .Values.postgresql.auth.credentialSecret.key | quote }}
+{{- else if .Values.global.nubusDeployment -}}
+valueFrom:
+  secretKeyRef:
+    name: {{ include "keycloak.postgresql.auth.credentialSecret.name" . | quote }}
+    key: {{ .Values.postgresql.auth.credentialSecret.key | quote }}
+{{- else -}}
+value: {{ required ".Values.postgresql.auth.password is required." .Values.postgresql.auth.password | quote }}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.postgresql.auth.database" -}}
+{{- if .Values.postgresql.auth.database -}}
+{{- .Values.postgresql.auth.database -}}
+{{- else if .Values.global.nubusDeployment -}}
+keycloak
+{{- else -}}
+{{- required ".Values.postgresql.auth.database must be defined." .Values.postgresql.auth.database -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.service.baseUrl" -}}
+{{- if .Values.config.baseUrl -}}
+{{- .Values.config.baseUrl -}}
+{{- else if .Values.global.nubusDeployment -}}
+{{- printf "https://%s.%s" .Values.global.subDomains.portal .Values.global.domain -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.style.themeUrl" -}}
+{{- if .Values.theme.univentionTheme -}}
+{{- .Values.theme.univentionTheme -}}
+{{- else -}}
+{{- $baseUrl := include "keycloak.service.baseUrl" . -}}
+{{- printf "%s/univention/theme.css" $baseUrl -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.style.customUrl" -}}
+{{- if .Values.theme.univentionCustomTheme -}}
+{{- .Values.theme.univentionCustomTheme -}}
+{{- else -}}
+{{- $baseUrl := include "keycloak.service.baseUrl" . -}}
+{{- printf "%s/univention/portal/css/custom.css" $baseUrl -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.style.faviconUrl" -}}
+{{- if .Values.theme.favIcon -}}
+{{- .Values.theme.favIcon -}}
+{{- else -}}
+{{- $baseUrl := include "keycloak.service.baseUrl" . -}}
+{{- printf "%s/favicon.ico" $baseUrl -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.keycloak.auth.username" -}}
+{{- if .Values.keycloak.auth.username -}}
+{{- .Values.keycloak.auth.username -}}
+{{- else if .Values.global.nubusDeployment -}}
+kcadmin
+{{- else -}}
+{{- required ".Values.keycloak.auth.username must be defined." .Values.keycloak.auth.username -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.keycloak.auth.credentialSecret.name" -}}
+{{- if .Values.keycloak.auth.credentialSecret.name -}}
+{{- .Values.keycloak.auth.credentialSecret.name -}}
+{{- else if .Values.global.nubusDeployment -}}
+{{- printf "%s-keycloak-credentials" .Release.Name -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.keycloak.auth.password" -}}
+{{- if .Values.keycloak.auth.credentialSecret.name -}}
+valueFrom:
+  secretKeyRef:
+    name: {{ .Values.keycloak.auth.credentialSecret.name | quote }}
+    key: {{ .Values.keycloak.auth.credentialSecret.key | quote }}
+{{- else if .Values.global.nubusDeployment -}}
+valueFrom:
+  secretKeyRef:
+    name: {{ include "keycloak.keycloak.auth.credentialSecret.name" . | quote }}
+    key: {{ .Values.keycloak.auth.credentialSecret.key | quote }}
+{{- else -}}
+value: {{ required ".Values.keycloak.auth.password is required." .Values.keycloak.auth.password | quote }}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.ingress.certManagerIssuer" -}}
+{{- if .Values.global.certManagerIssuer -}}
+{{- .Values.global.certManagerIssuer -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.ingress.ingressClassName" -}}
+{{- required "Either .Values.ingress.ingressClassName or .Values.global.ingressClass must be defined. " (coalesce .Values.ingress.ingressClassName .Values.global.ingressClass) -}}
+{{- end -}}
+
+{{- define "keycloak.ingress.host" -}}
+{{- if .Values.ingress.host -}}
+{{- .Values.ingress.host -}}
+{{- else if .Values.global.nubusDeployment -}}
+{{- printf "%s.%s" .Values.global.subDomains.keycloak .Values.global.domain -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.ingress.tls.secretName" -}}
+{{- if .Values.global.nubusDeployment -}}
+{{- printf "%s-keycloak-tls" .Release.Name -}}
+{{- else -}}
+{{- required ".Values.ingress.tls.secretName must be defined." .Values.ingress.tls.secretName -}}
+{{- end -}}
+{{- end -}}
