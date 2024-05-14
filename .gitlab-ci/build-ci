@@ -39,7 +39,7 @@ document_paths () {
 merge_one_artifact () {
     echo
     echo 'docs-merge-to-one-artifact:'
-    echo '  extends: .sphinx-merge-template'
+    echo '  extends: .docs-merge'
     echo '  rules:'
     echo '    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
     echo '      changes:'
@@ -48,6 +48,17 @@ merge_one_artifact () {
     echo '      changes:'
     document_paths
     echo '      when: manual'
+}
+
+review_job () {
+    echo
+    echo 'review:'
+    echo '  extends: .sphinx-review-template'
+    echo '  needs:'
+    echo '    - job: docs-merge-to-one-artifact'
+    echo '  rules:'
+    echo '    - changes:'
+    document_paths
 }
 
 create_production_merge_request () {
@@ -84,4 +95,5 @@ do
     fi
 done
 merge_one_artifact
+review_job
 create_production_merge_request

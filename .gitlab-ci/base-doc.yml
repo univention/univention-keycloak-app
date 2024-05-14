@@ -26,3 +26,10 @@ stages:
   - build
   - merge
   - production
+
+.docs-merge:
+  extends: .sphinx-merge-template
+  script:
+    - echo "DOC_ARTIFACT_URL=$CI_API_V4_URL/projects/$CI_PROJECT_ID/jobs/$CI_JOB_ID/artifacts" > doc.env
+    - export ENTRY="$(find out -maxdepth 3 -name index.html | sort | head -n 1)"
+    - echo "DOC_REVIEW_URL=${CI_SERVER_PROTOCOL}://${CI_PROJECT_ROOT_NAMESPACE}.${CI_PAGES_DOMAIN}/-/${CI_PROJECT_PATH#${CI_PROJECT_ROOT_NAMESPACE}/}/-/jobs/$CI_JOB_ID/artifacts/$ENTRY" >> doc.env
