@@ -767,6 +767,8 @@ more information, consult :cite:t:`keycloak-docs`.
 
    Defines the FQDN to the identity provider in your environment's UCS domain.
    Defaults to :samp:`ucs-sso-ng.{$domainname}`.
+   Please note that uppercase letters in this setting can lead to problems
+   regarding the Keycloak admin console.
 
    .. list-table::
       :header-rows: 1
