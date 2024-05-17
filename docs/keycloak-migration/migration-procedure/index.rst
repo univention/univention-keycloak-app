@@ -54,3 +54,4 @@ following steps:
    oidc
    saml
    forward
+   kerberos
