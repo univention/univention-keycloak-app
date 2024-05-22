@@ -1435,13 +1435,15 @@ for example in the UCS portal.
 To enable the web browser to send the :program:`Kerberos` tickets, you must
 change the following settings:
 
-Mozilla Firefox
-   Open a new tab and enter ``about:config`` in the address bar to open the
+.. tab:: Mozilla Firefox
+
+   Open a tab and enter ``about:config`` in the address bar to open the
    Firefox configuration. Search for ``network.negotiate-auth.trusted-uris`` and
    add the |FQDN| of your :program:`Keycloak` server, which is
    :samp:`ucs-sso-ng.{[Domain name]}` by default.
 
-Microsoft Edge
+.. tab:: Microsoft Edge
+
    For Microsoft Edge on Windows, you need to configure Kerberos authentication
    in the general settings of the operating system. Open the *Control Panel* and
    move to :menuselection:`Security --> Local Intranet --> Sites --> Advanced`.
