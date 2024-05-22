@@ -1378,27 +1378,47 @@ For more information about how to configure the cookie consent banner, see
 
 .. _apache-configuration:
 
-Adjusting the Keycloak apache configuration
-===========================================
+Customize web server configuration for Keycloak
+===============================================
 
-The :program:`Keycloak` app ships an apache configuration in
-`/etc/apache2/sites-available/univention-keycloak.conf`.
-This file is created by the app and will be overwritten during updates.
+The :program:`Keycloak` app ships a configuration for the Apache HTTP web server
+in :file:`/etc/apache2/sites-available/univention-keycloak.conf`.
+The Keycloak app creates the file and overwrites any changes during app updates.
+Therefore, administrators shouldn't edit this file.
 
+You as administrator can customize the web server configuration for Keycloak
+by creating the file :file:`/var/lib/univention-appcenter/apps/keycloak/data/local-univention-keycloak.conf`.
 
-This configuration can be customized by creating the file
-`/var/lib/univention-appcenter/apps/keycloak/data/local-univention-keycloak.conf`.
+For example, an administrator may want to restrict the access to the
+*Keycloak Admin Console* to a specific IP subnet
+and writes the appropriate configuration into :file:`local-univention-keycloak.conf`.
 
-For example, an Administrator may want to restrict the access to the :program:`Keycloak`
-administration console to a specific IP subnet by putting this in the `local-univention-keycloak.conf`.
-
-.. code-block:: console
+.. code-block:: apache
 
   <LocationMatch "^(/admin/|/realms/master/)">
                 deny from all
                 allow from 10.207.0.0/16
   </LocationMatch>
 
+To activate the configuration, you need to validate the configuration
+and then tell the web server to reload it.
+Use the following commands on the command line as super user.
+
+#. The validation of the configuration is necessary,
+   because the Apache HTTP web server terminates upon errors without error message.
+   The Apache HTTP web server offers a dedicated command to validate the configuration.
+
+   .. code-block:: console
+
+      $ apachectl configtest
+      Syntax OK
+
+#. After the validation didn't show any errors,
+   you can restart the Apache HTTP web server to activate your custom changes.
+
+   .. code-block:: console
+
+      $ service apache2 restart
 
 .. _kerberos-authentication:
 
