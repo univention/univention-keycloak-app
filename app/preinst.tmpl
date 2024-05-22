@@ -32,6 +32,10 @@ pwdfile="/etc/keycloak.secret"
 [ -e "$pwdfile" ] || makepasswd --chars 20 > "$pwdfile"
 chmod 640 "$pwdfile"
 
+default_sso_fqdn="ucs-sso-ng.$(ucr get domainname)"
+ussl_path="/etc/univention/ssl"
+[[ "$default_sso_fqdn" != ${default_sso_fqdn,,} ]] && ln -s "$ussl_path/$default_sso_fqdn" "$ussl_path/${default_sso_fqdn,,}" || true
+
 # apache template
 keycloak_template_path=/etc/univention/templates/files/etc/apache2/sites-available/univention-keycloak.conf
 echo "Installing univention-keycloak apache template"
