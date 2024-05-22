@@ -73,7 +73,7 @@ identify a service. For more information, see :cite:t:`wikipedia-fqdn`.
 
 The use case *single sign-on through external, public domain name* addresses
 administrators who want single sign-on availability from the internet.
-Administrators find the steps to reconfigure the |FQDN| for the single sing-on
+Administrators find the steps to reconfigure the |FQDN| for the single sign-on
 and the UCS portal in this section. The configuration for this scenario
 recommends two UCS servers or more for serving the different |FQDN|\ s. If you
 encounter problems during the steps below, see :ref:`troubleshoot-custom-fqdn`.
@@ -170,7 +170,7 @@ follow the steps below:
 
       $ udm portals/entry modify \
         --dn "cn=keycloak,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
-        --set link='"en_US "https://sso.internet.domain/admin/"'
+        --set link='"en_US" "https://sso.internet.domain/admin/"'
 
 
 .. warning::
@@ -307,10 +307,10 @@ systems before you install them. The UCR policy must set
 
 .. _use-case-lets-encrypt:
 
-Official (:program:`Let's Encrypt`) certificates for single sing-on
+Official (:program:`Let's Encrypt`) certificates for single sign-on
 -------------------------------------------------------------------
 
-If the single sing-on endpoint is exposed to the internet, usually an
+If the single sign-on endpoint is exposed to the internet, usually an
 official certificate for the server is required. This can be achieved
 with the :program:`Let's Encrypt` app (but it is not required to use this
 app to create the official certificate).
@@ -322,7 +322,7 @@ app to create the official certificate).
    certificate and key can differ depending on which mechanism
    was used to create the certificate.
 
-Dedicated |FQDN| for single sing-on endpoint
+Dedicated |FQDN| for single sign-on endpoint
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In case you use the :program:`Let's Encrypt` app, you have to configure
@@ -343,7 +343,7 @@ and :program:`Keycloak`. Apply the following app settings for the
    * - Use certificate in Apache
      - :samp:`yes`
 
-In this scenario the single sing-on endpoint has its own web server
+In this scenario the single sign-on endpoint has its own web server
 configuration, as web server virtual host. To configure the certificate files
 for :program:`Keycloak`, set the following UCR variables:
 
@@ -358,7 +358,7 @@ for :program:`Keycloak`, set the following UCR variables:
 
 .. _use-case-lets-encrypt-identical-fqdn:
 
-Single sing-on |FQDN| identical to UCS Portal |FQDN| (or internal name)
+Single sign-on |FQDN| identical to UCS Portal |FQDN| (or internal name)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you use the :program:`Let's Encrypt` app to generate the certificates, you

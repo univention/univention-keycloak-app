@@ -21,7 +21,7 @@ Keycloak* page, you can change the settings and apply them to the app with a
 click on :guilabel:`Apply Changes`.
 
 The App Center then *reinitializes* the Docker container for the Keycloak app.
-*Reinitilize* means the App Center throws away the running Keycloak Docker
+*Reinitialize* means the App Center throws away the running Keycloak Docker
 container and creates a fresh Keycloak Docker container with the just changed
 settings.
 
@@ -785,8 +785,8 @@ more information, consult :cite:t:`keycloak-docs`.
 
 .. envvar:: keycloak/server/sso/autoregistration
 
-   If set to ``true`` (default), the UCS system with the Keycloak app installed
-   registers its IP address at the hostname of the identity provider defined in
+   If set to ``true`` (default), the joinscript of the Keycloak app
+   registers a name server entry for the hostname of the identity provider defined in
    :envvar:`keycloak/server/sso/fqdn`.
 
    Possible values:
