@@ -202,8 +202,8 @@ Configuration of UCS Portal to use external fully qualified domain name
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As an example use case to expose the UCS portal to the internet, follow the
-steps below. Apply the steps only to the UCS system that exposes the UCS portal
-to the internet.
+steps below. Apply the steps on all UCS systems that expose the UCS portal to
+the internet and also on the UCS Primary Node.
 
 #. Store the certificate files for the UCS portal in the following locations on
    your UCS system:

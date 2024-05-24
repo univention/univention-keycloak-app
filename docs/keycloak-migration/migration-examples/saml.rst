@@ -332,7 +332,7 @@ use the following steps:
       # CHANGE end
 
       $issuer_uri = "$sso_url/realms/$realm"
-      $logon_uri = "$sso_url/$realm/ucs/protocol/saml"
+      $logon_uri = "$sso_url/realms/$realm/protocol/saml"
       $passive_logon_uri = "$sso_url/realms/$realm/protocol/saml"
       $logoff_uri = "$sso_url/realms/$realm/protocol/saml"
       $pass = ConvertTo-SecureString -String "$password" -AsPlainText -Force
@@ -367,9 +367,10 @@ use the following steps:
       :name: migration-365-connector-portal-entry
 
       $ SSO_URL="REPLACE WITH SSO_URL"
+      $ realm="ucs"
       $ udm portals/entry modify \
         --dn "cn=office365,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
-        --set link='"en_US" "'"$SSO_URL"'/realms/$realm/protocol/saml/clients/MicrosoftOnline"'
+        --set link='"en_US" "'"$SSO_URL"'/realms/"'"$realm"'"/protocol/saml/clients/MicrosoftOnline"'
 
 To validate the setup, visit https://www.microsoft365.com/ and sign in with one
 of the UCS user accounts enabled for *Microsoft 365*. Also, verify the UCS
