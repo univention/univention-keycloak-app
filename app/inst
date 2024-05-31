@@ -231,7 +231,7 @@ configure_umc_keycloak () {
 		'{"attributes": {"saml.assertion.lifespan": "'"$umc_saml_assertion_lifetime"'"}}'
 	if is_ucr_true 'umc/web/sso/enabled' && [ -z "$umc_saml_idp_server" ]; then
 		rm /usr/share/univention-management-console/saml/idp/*.xml
-		ucr --debug set umc/saml/idp-server="https://$(univention-keycloak get-keycloak-base-url)/realms/ucs/protocol/saml/descriptor" || return 1
+		ucr --debug set umc/saml/idp-server="$(univention-keycloak get-keycloak-base-url)/realms/ucs/protocol/saml/descriptor" || return 1
 		[ "$(ls -A /usr/share/univention-management-console/saml/idp/*.xml)" ] || return 1
 
 		service slapd restart
