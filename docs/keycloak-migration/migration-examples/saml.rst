@@ -275,6 +275,7 @@ use the following steps:
         --metadata-file /tmp/ms.xml \
         --metadata-url urn:federation:MicrosoftOnline \
         --idp-initiated-sso-url-name MicrosoftOnline \
+        --single-logout-service-url-redirect https://login.microsoftonline.com/login.srf
         --name-id-format persistent
 
       # create a SAML nameid mapper
@@ -284,6 +285,11 @@ use the following steps:
         --mapper-nameid-format "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent" \
         --user-attribute entryUUID \
         --base64
+
+      # allow Keycloak being included from Microsoft 365 (for logout)
+      # if already set to a value, this needs to be adapted accordingly
+      ucr set keycloak/csp/frame-ancestors=https://login.microsoftonline.com
+      service apache2 reload
 
 #. For the configuration of the |SAML| settings of your *Azure Active Directory*
    domain you need the public certificate and the base URL of the
