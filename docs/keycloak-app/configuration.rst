@@ -8,11 +8,7 @@
 Configuration
 *************
 
-The :program:`Keycloak` app offers various configuration options. Some settings
-don't allow changes after installation. Therefore, you must set them carefully
-**before** installation. You find those settings marked with *Only before
-installation* in :ref:`app-settings`. You can change all other settings at any
-time after the installation.
+The :program:`Keycloak` app offers various configuration options.
 
 To change settings after installation, sign in to the UCS management system with
 a username with administration rights and go to :menuselection:`App Center -->
