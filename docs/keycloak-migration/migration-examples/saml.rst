@@ -275,6 +275,7 @@ use the following steps:
         --metadata-file /tmp/ms.xml \
         --metadata-url urn:federation:MicrosoftOnline \
         --idp-initiated-sso-url-name MicrosoftOnline \
+        --single-logout-service-url-redirect https://login.microsoftonline.com/login.srf
         --name-id-format persistent
 
       # create a SAML nameid mapper
@@ -284,6 +285,20 @@ use the following steps:
         --mapper-nameid-format "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent" \
         --user-attribute entryUUID \
         --base64
+
+
+#. For Single Logout, :program:`Microsoft 365 Connector` needs to be able to
+   include Keycloak in its website. Normally, this is disallowed via the
+   Content Security Policy of Keycloak (preventing arbitrary web pages from
+   showing the Keycloak login form, for example). But here, we need it. So on
+   each UCS system that has Keycloak installed, run the following commands:
+
+   .. code-block:: console
+      :caption: Allow MS 365 to include Keycloak
+      :name: migration-365-connector-add-csp
+
+      ucr set keycloak/csp/frame-ancestors=https://login.microsoftonline.com
+      service apache2 reload
 
 #. For the configuration of the |SAML| settings of your *Azure Active Directory*
    domain you need the public certificate and the base URL of the
