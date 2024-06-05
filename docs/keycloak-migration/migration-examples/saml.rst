@@ -286,8 +286,17 @@ use the following steps:
         --user-attribute entryUUID \
         --base64
 
-      # allow Keycloak being included from Microsoft 365 (for logout)
-      # if already set to a value, this needs to be adapted accordingly
+
+#. For Single Logout, :program:`Microsoft 365 Connector` needs to be able to
+   include the Keycloak. Normally, this is disallowed via the Content Security
+   Policy of Keycloak (preventing arbitrary web pages from showing the Keycloak
+   login form, for example). But here, we need it. So on each UCS system that
+   has Keycloak installed, run the following commands:
+
+   .. code-block:: console
+      :caption: Allow MS 365 to include Keycloak
+      :name: migration-365-connector-add-csp
+
       ucr set keycloak/csp/frame-ancestors=https://login.microsoftonline.com
       service apache2 reload
 
