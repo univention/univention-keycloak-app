@@ -455,7 +455,7 @@ create a new one instead of modifying the original:
 
 This would make the tile visible for all users, though. You may want to limit
 visibility to certain groups, although this would in turn require users to be
-logged in before seeing the tile. See :ref:`ucs-portal-page` in
+logged in before seeing the tile. See :ref:`central-portal` in
 :cite:t:`ucs-manual`.
 
 .. seealso::
