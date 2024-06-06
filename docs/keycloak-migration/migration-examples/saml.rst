@@ -432,6 +432,32 @@ Using this certificate as :samp:`$signing_cert` and the :samp:`AD_CONNECTION` as
 
 Repeat these steps for each additional configured Azure AD connection.
 
+For the portal tile (:ref:`migration-365-connector-portal-entry`) you may want
+to slightly deviate: If you need one tile per Azure AD connection, you would
+create a new one instead of modifying the original:
+
+   .. code-block:: console
+      :caption: Change portal entry for *Microsoft 365 Login* to |IDP| initiated single sign-on
+      :name: migration-365-connector-multiple-connections-portal-entry
+
+      $ SSO_URL="REPLACE WITH SSO_URL"
+      $ realm="REPLACE WITH REALM"
+      $ udm portals/entry create \
+        --position "cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
+        --set name="office365-$realm" \
+        --set displayName='"en_US" "Microsoft 365 Login ('"$realm"')"' \
+        --set description='"en_US" "Single Sign-On Microsoft 365 ('"$realm"')"' \
+        --set icon="$(base64 /var/www/office365.png)" \
+        --set link='"en_US" "'"$SSO_URL"'/realms/"'"$realm"'"/protocol/saml/clients/MicrosoftOnline"'
+      $ udm portals/category modify \
+        --dn "cn=domain-service,cn=category,cn=portals,cn=univention,$(ucr get ldap/base)" \
+        --append entries="cn=office365-$realm,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)"
+
+This would make the tile visible for all users, though. You may want to limit
+visibility to certain groups, although this would in turn require users to be
+logged in before seeing the tile. See :ref:`ucs-portal-page` in
+:cite:t:`ucs-manual`.
+
 .. seealso::
 
    `Microsoft 365 Connector <https://www.univention.com/products/univention-app-center/app-catalog/microsoft365/>`_
