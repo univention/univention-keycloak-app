@@ -287,19 +287,6 @@ use the following steps:
         --base64
 
 
-#. For Single Logout, :program:`Microsoft 365 Connector` needs to be able to
-   include Keycloak in its website. Normally, this is disallowed via the
-   Content Security Policy of Keycloak (preventing arbitrary web pages from
-   showing the Keycloak login form, for example). But here, we need it. So on
-   each UCS system that has Keycloak installed, run the following commands:
-
-   .. code-block:: console
-      :caption: Allow MS 365 to include Keycloak
-      :name: migration-365-connector-add-csp
-
-      ucr set keycloak/csp/frame-ancestors=https://login.microsoftonline.com
-      service apache2 reload
-
 #. For the configuration of the |SAML| settings of your *Azure Active Directory*
    domain you need the public certificate and the base URL of the
    :program:`Keycloak` server. Run the following commands on the UCS system that

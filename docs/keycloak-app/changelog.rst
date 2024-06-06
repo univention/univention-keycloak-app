@@ -16,6 +16,16 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+24.0.5-ucs1
+===========
+
+* The app updates to :program:`Keycloak` version 24.0.5
+  (https://www.keycloak.org/docs/24.0.5/release_notes/).
+
+* The Content Security Policy of Keycloak is expanded to allow
+  https://login.microsoftonline.com as a frame ancestor. This is needed for
+  proper Single Logout from Microsoft 365.
+
 24.0.3-ucs1
 ===========
 
