@@ -435,6 +435,7 @@ create a new one instead of modifying the original:
         --set displayName='"en_US" "Microsoft 365 Login ('"$realm"')"' \
         --set description='"en_US" "Single Sign-On Microsoft 365 ('"$realm"')"' \
         --set icon="$(base64 /var/www/office365.png)" \
+        --set linkTarget=newwindow \
         --set link='"en_US" "'"$SSO_URL"'/realms/"'"$realm"'"/protocol/saml/clients/MicrosoftOnline"'
       $ udm portals/category modify \
         --dn "cn=domain-service,cn=category,cn=portals,cn=univention,$(ucr get ldap/base)" \
