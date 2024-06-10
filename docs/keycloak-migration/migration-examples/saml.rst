@@ -275,7 +275,7 @@ use the following steps:
         --metadata-file /tmp/ms.xml \
         --metadata-url urn:federation:MicrosoftOnline \
         --idp-initiated-sso-url-name MicrosoftOnline \
-        --single-logout-service-url-redirect https://login.microsoftonline.com/login.srf
+        --single-logout-service-url-redirect https://login.microsoftonline.com/login.srf \
         --name-id-format persistent
 
       # create a SAML nameid mapper
