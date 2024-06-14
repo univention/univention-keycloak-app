@@ -19,12 +19,18 @@ Please also consider the `upstream release notes
 24.0.5-ucs1
 ===========
 
+Released: 14. June 2024
+
 * The app updates to :program:`Keycloak` version 24.0.5
   (https://www.keycloak.org/docs/24.0.5/release_notes/).
 
 * The Content Security Policy of Keycloak is expanded to allow
   https://login.microsoftonline.com as a frame ancestor. This is needed for
   proper Single Logout from Microsoft 365.
+
+* The FQDN configured for Keycloak is now suggested as and passed to the
+  container as lower case. This should fix some problems with mixed case
+  domains caused by Keycloak checking its FQDN with case sensitivity.
 
 24.0.3-ucs1
 ===========
@@ -51,7 +57,6 @@ Released: 6. April 2024
 * The ad hoc federation feature has been removed from the App due to incompatibility
   with the new :program:`Keycloak` version. If you used this feature in production,
   do not upgrade and contact the support of Univention.
-
 
 22.0.3-ucs2
 ===========
