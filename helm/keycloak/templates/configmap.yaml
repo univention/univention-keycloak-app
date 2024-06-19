@@ -2,7 +2,6 @@
 # SPDX-FileCopyrightText: 2024 Univention GmbH
 
 ---
-
 apiVersion: "v1"
 kind: ConfigMap
 metadata:
@@ -24,7 +23,12 @@ data:
   KC_LOG_LEVEL: {{ .Values.config.logLevel | quote }}
   KC_HOSTNAME: {{ .Values.config.hostname | default (printf "%s.%s" .Values.global.subDomains.keycloak .Values.global.domain) | quote }}
   KC_PROXY: {{ .Values.config.proxy | quote }}
-  KC_DB: postgres
+  KC_DB: "postgres"
+  # https://www.keycloak.org/server/caching
+  KC_CACHE: "ispn"
+  # https://www.keycloak.org/server/caching#_available_transport_stacks
+  KC_CACHE_STACK: "kubernetes"
+  KC_METRICS_ENABLED: "true"
 
   KC_DB_URL_HOST: {{ include "keycloak.postgresql.connection.host" . | quote }}
   KC_DB_URL_PORT: {{ include "keycloak.postgresql.connection.port" . | quote }}
@@ -34,3 +38,8 @@ data:
   UNIVENTION_THEME: {{ include "keycloak.style.themeUrl" . | quote }}
   UNIVENTION_CUSTOM_THEME: {{ include "keycloak.style.customUrl" . | quote }}
   UNIVENTION_FAVICON: {{ include "keycloak.style.faviconUrl" . | quote }}
+
+  CACHE_OWNERS_COUNT: {{ .Values.replicaCount | quote }}
+  CACHE_OWNERS_AUTH_SESSIONS_COUNT: {{ .Values.replicaCount | quote }}
+  JAVA_OPTS_APPEND: {{ printf "-Djgroups.dns.query=%s.%s.svc.cluster.local" (include "common.names.fullname" . ) ( include "common.names.namespace" . ) }}
+...

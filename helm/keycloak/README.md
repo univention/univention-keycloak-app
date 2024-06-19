@@ -846,6 +846,15 @@ true
 			<td>Additional custom annotations</td>
 		</tr>
 		<tr>
+			<td>service.clusterIP</td>
+			<td>string</td>
+			<td><pre lang="json">
+"None"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>service.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -901,6 +910,33 @@ true
 		</tr>
 		<tr>
 			<td>service.ports.https.protocol</td>
+			<td>string</td>
+			<td><pre lang="json">
+"TCP"
+</pre>
+</td>
+			<td>service protocol.</td>
+		</tr>
+		<tr>
+			<td>service.ports.ispn.containerPort</td>
+			<td>int</td>
+			<td><pre lang="json">
+7800
+</pre>
+</td>
+			<td>Internal port.</td>
+		</tr>
+		<tr>
+			<td>service.ports.ispn.port</td>
+			<td>int</td>
+			<td><pre lang="json">
+7800
+</pre>
+</td>
+			<td>Accessible port.</td>
+		</tr>
+		<tr>
+			<td>service.ports.ispn.protocol</td>
 			<td>string</td>
 			<td><pre lang="json">
 "TCP"

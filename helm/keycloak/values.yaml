@@ -340,6 +340,10 @@ service:
 
   # -- Choose the kind of Service, one of "ClusterIP", "NodePort" or "LoadBalancer".
   type: "ClusterIP"
+  # This creates a headless service. Instead of load balancing, it creates a
+  # DNS A record for each pod. This allows Infinispan to discover each other
+  # via the DNS. See in combination with `KC_CACHE_STACK=kubernetes`.
+  clusterIP: "None"
 
   # Define the ports of Service.
   # You can set the port value to an arbitrary value, it will map the container port by name.
@@ -350,6 +354,13 @@ service:
       port: 8080
       # -- Internal port.
       containerPort: 8080
+      # -- service protocol.
+      protocol: "TCP"
+    ispn:
+      # -- Accessible port.
+      port: 7800
+      # -- Internal port.
+      containerPort: 7800
       # -- service protocol.
       protocol: "TCP"
     https:
