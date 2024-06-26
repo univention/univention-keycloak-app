@@ -23,11 +23,11 @@ settings.
 
 .. _login-portal:
 
-Use Keycloak for login to UCS Portal
-====================================
+Use Keycloak for login to Univention Portal
+===========================================
 
 The :program:`Keycloak` app can take over the role of the :term:`SAML IDP` for the
-UCS Portal. And the portal can use Keycloak for user authentication.
+Univention Portal. And the portal can use Keycloak for user authentication.
 
 .. warning::
 
@@ -111,7 +111,7 @@ following steps on the system where you installed Keycloak:
    https://ucs-sso-ng.{$domainname}/realms/ucs is unknown`
 
 By default the :program:`Keycloak` app creates a :term:`SAML SP` (client) for
-every UCS Portal server. You can see the list of existing :term:`SAML SP`
+every Univention Portal server. You can see the list of existing :term:`SAML SP`
 clients with the following command:
 
 .. code-block:: console
@@ -123,12 +123,12 @@ clients with the following command:
        ...
    ]
 
-If the :term:`SAML SP` for a  particular UCS Portal server doesn't exist,
+If the :term:`SAML SP` for a particular Univention Portal server doesn't exist,
 you can create it in :program:`Keycloak` with the command:
 
 .. code-block:: console
 
-   $ FQDN="the fqdn of the UCS Portal server"
+   $ FQDN="the fqdn of the Univention Portal server"
    $ univention-keycloak saml/sp create \
      --metadata-url="https://$FQDN/univention/saml/metadata" \
      --umc-uid-mapper

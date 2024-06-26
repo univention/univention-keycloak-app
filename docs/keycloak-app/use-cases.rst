@@ -202,8 +202,8 @@ Configuration of UCS Portal to use external fully qualified domain name
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As an example use case to expose the UCS portal to the internet, follow the
-steps below. Apply the steps on all UCS systems that expose the UCS portal to
-the internet and also on the UCS Primary Node.
+steps below. Apply the steps on all UCS systems that expose the Univention portal to
+the internet and also on the UCS Directory Primary Node.
 
 #. Store the certificate files for the UCS portal in the following locations on
    your UCS system:
@@ -237,7 +237,7 @@ External |FQDN| identical to internal UCS name
 .. versionadded:: 21.1.0-ucs1
 
 In this scenario the |FQDN| of the UCS system and the external name for
-accessing the UCS Portal are identical. Furthermore, the name for the single
+accessing the Univention Portal are identical. Furthermore, the name for the single
 sign-on endpoint uses the same |FQDN|. To achieve this use a
 different URL path for the single sign-on endpoint, for example:
 
@@ -358,8 +358,8 @@ for :program:`Keycloak`, set the following UCR variables:
 
 .. _use-case-lets-encrypt-identical-fqdn:
 
-Single sign-on |FQDN| identical to UCS Portal |FQDN| (or internal name)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Single sign-on |FQDN| identical to Univention Portal |FQDN| (or internal name)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you use the :program:`Let's Encrypt` app to generate the certificates, you
 need the following app settings for :program:`Let's Encrypt`:
