@@ -140,10 +140,20 @@ Pre-conditions:
    The following steps require a working network access from the UCS system to the
    external identity provider |FQDN|.
 
+For the proper setup, you must complete the steps in the following sections in the order shown:
+
+* :numref:`use-case-custom-fqdn-idp` - :ref:`use-case-custom-fqdn-idp`
+* :numref:`use-case-custom-fqdn-ucs-systems` - :ref:`use-case-custom-fqdn-ucs-systems`
+* :numref:`use-case-custom-fqdn-umc` - :ref:`use-case-custom-fqdn-umc`
+
 .. _use-case-custom-fqdn-idp:
 
 Configuration of the identity provider
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. admonition:: Apply the steps to the following systems
+
+   **Each** Keycloak instance in your UCS domain
 
 To configure single sign-on on each Keycloak instance in your UCS domain,
 follow the steps below:
@@ -152,14 +162,18 @@ follow the steps below:
    variables:
 
    .. code-block:: console
+      :caption: Configure single sign-on |FQDN| to custom value
+      :name: use-case-custom-fqdn-idp-listing-fqdn-custom-value
 
-      $ SSO_FQDN=sso.internet.domain
+      $ SSO_FQDN="sso.internet.domain"
+
       $ ucr set keycloak/server/sso/fqdn="${SSO_FQDN}"
       $ ucr set keycloak/server/sso/autoregistration=false
       $ ucr set keycloak/apache2/ssl/certificate="/path/to/${SSO_FQDN}/cert.pem"
-      $ ucr set keycloak/apache2/ssl/key='/path/certificate/${SSO_FQDN}/private.key'
+      $ ucr set keycloak/apache2/ssl/key="/path/certificate/${SSO_FQDN}/private.key"
+
       # Add the new public domain of the portal to the frame-ancestor to the CSP
-      $ ucr set keycloak/csp/frame-ancestors='https://*.internet.domain'
+      $ ucr set keycloak/csp/frame-ancestors="https://*.internet.domain"
 
       $ univention-app configure keycloak
 
@@ -167,10 +181,12 @@ follow the steps below:
    the single sign-on |FQDN|:
 
    .. code-block:: console
+      :caption: Adjust standard Keycloak portal entry
+      :name: use-case-custom-fqdn-idp-listing-adjust-portal-entry
 
       $ udm portals/entry modify \
-        --dn "cn=keycloak,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
-        --set link='"en_US" "https://sso.internet.domain/admin/"'
+         --dn "cn=keycloak,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
+         --set link='"en_US" "https://sso.internet.domain/admin/"'
 
 
 .. warning::
@@ -179,15 +195,33 @@ follow the steps below:
    steps, all services can't use that identity provider until proper
    configuration.
 
+.. seealso::
+
+   For a reference of the used UCR variables, see the following resources:
+
+   * :envvar:`keycloak/apache2/ssl/certificate`
+   * :envvar:`keycloak/apache2/ssl/key`
+   * :envvar:`keycloak/csp/frame-ancestors`
+   * :envvar:`keycloak/server/sso/autoregistration`
+   * :envvar:`keycloak/server/sso/fqdn`
+
 .. _use-case-custom-fqdn-ucs-systems:
 
 Configuration of UMC as service provider
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. admonition:: Apply the steps to the following systems
+
+   UCS systems in the domain, where you want to enable single sign-on for UMC.
+
+Before you continue here, make sure you did the steps outlined in :numref:`use-case-custom-fqdn-idp`.
+
 To re-configure single sign-on for UMC on all UCS systems in the domain,
 run the following commands:
 
 .. code-block:: console
+   :caption: Configure single sign-on for UMC
+   :name: use-case-custom-fqdn-ucs-systems-listing
 
    $ ucr set umc/saml/idp-server="https://${SSO_FQDN}/realms/ucs/protocol/saml/descriptor"
    $ service slapd restart
@@ -198,12 +232,19 @@ systems before you install them. The UCR policy must set
 
 .. _use-case-custom-fqdn-umc:
 
-Configuration of UCS Portal to use external fully qualified domain name
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Configuration of Univention Portal to use external fully qualified domain name
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. admonition:: Apply the steps to the following systems
+
+   #. The **UCS Primary Directory Node**
+   #. All UCS systems in the domain, that **expose the Univention Portal to the internet**
+
+Before you continue here, make sure you did the steps outlined in :numref:`use-case-custom-fqdn-ucs-systems`.
 
 As an example use case to expose the UCS portal to the internet, follow the
 steps below. Apply the steps on all UCS systems that expose the Univention portal to
-the internet and also on the UCS Directory Primary Node.
+the internet and also on the UCS Primary Directory Node.
 
 #. Store the certificate files for the UCS portal in the following locations on
    your UCS system:
@@ -215,19 +256,24 @@ the internet and also on the UCS Directory Primary Node.
 #. Configure the UCR variables to use the custom |FQDN| and the certificates:
 
    .. code-block:: console
+      :caption: Configure UCR variables for custom |FQDN|
+      :name: use-case-custom-fqdn-umc-listing-custom-fqdn
 
       $ SSO_FQDN=sso.internet.domain
       $ PORTAL_FQDN=portal.internet.domain
+
       $ ucr set umc/saml/sp-server="${PORTAL_FQDN}"
       $ ucr set umc/saml/idp-server="https://${SSO_FQDN}/realms/ucs/protocol/saml/descriptor"
 
 #. Run the join script to update the web server configuration:
 
    .. code-block:: console
+      :caption: Run join script to update web server configuration
+      :name: use-case-custom-fqdn-umc-listing-run-join-script
 
       $ univention-run-join-scripts \
-      --force \
-      --run-scripts 92univention-management-console-web-server.inst
+         --force \
+         --run-scripts 92univention-management-console-web-server.inst
 
 .. _use-case-same-fqdn-as-host:
 
@@ -255,6 +301,11 @@ Pre-conditions:
    #. You have obtained proper SSL certificates for this name, for example with
       the :program:`Let's Encrypt` app from the App Center.
 
+For the proper setup, you must complete the steps in the following sections in the order shown:
+
+* :numref:`use-case-same-fqdn-as-host-idp` - :ref:`use-case-same-fqdn-as-host-idp`
+* :numref:`use-case-same-fqdn-as-host-umc` - :ref:`use-case-same-fqdn-as-host-umc`
+
 .. warning::
 
    In this scenario the new :program:`Keycloak` URL path must not be ``/``
@@ -265,10 +316,16 @@ Pre-conditions:
 Configuration of the identity provider
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. admonition:: Apply the steps to the following systems
+
+   **Each** Keycloak instance in your UCS domain
+
 To configure this scenario run the following steps on each :program:`Keycloak`
 instance in your UCS domain.
 
 .. code-block:: console
+   :caption: Configure single sign-on |FQDN| to identical values
+   :name: use-case-same-fqdn-as-host-idp-listing
 
    $ FQDN="portal.example.test"
    $ SSO_PATH="/auth"
@@ -285,18 +342,36 @@ instance in your UCS domain.
    steps, all services can't use that identity provider until proper
    configuration.
 
+.. seealso::
+
+   For a reference of the used UCR variables, see the following resources:
+
+   * :envvar:`keycloak/server/sso/autoregistration`
+   * :envvar:`keycloak/server/sso/fqdn`
+   * :envvar:`keycloak/server/sso/path`
+   * :envvar:`keycloak/server/sso/virtualhost`
+
 .. _use-case-same-fqdn-as-host-umc:
 
 Configuration of UMC as service provider
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. admonition:: Apply the steps to the following systems
+
+   UCS systems in the domain, where you want to enable single sign-on for UMC.
+
+Before you continue here, make sure you did the steps outlined in :numref:`use-case-same-fqdn-as-host-idp`.
+
 To re-configure single sign-on for UMC on all UCS systems in the domain,
 run the following commands:
 
 .. code-block:: console
+   :caption: Configure UMC server as service provider
+   :name: use-case-same-fqdn-as-host-umc-listing
 
    $ FQDN="portal.example.test"
    $ SSO_PATH="/auth"
+
    $ ucr set \
      umc/saml/idp-server="https://${FQDN}${SSO_PATH}/realms/ucs/protocol/saml/descriptor"
    $ service slapd restart
