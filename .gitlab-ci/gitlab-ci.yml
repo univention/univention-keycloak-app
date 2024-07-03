@@ -69,6 +69,8 @@ image_build:
   extends: .kaniko
   rules:
     - changes:
+      - .gitlab-ci.yml
+      - .gitlab-ci/**
       - ad-hoc/**/*
       - extensions/**/*
       - dependencies/**/*
