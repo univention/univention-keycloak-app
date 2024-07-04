@@ -16,13 +16,10 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
-24.0.5-ucs1
+24.0.5-ucs2
 ===========
 
-Released: TBD
-
-* The app updates to :program:`Keycloak` version 24.0.5
-  (https://www.keycloak.org/docs/24.0.5/release_notes/).
+Released: 4. July 2024
 
 * Installing Keycloak after establishing an AD-Connection as member in MS AD
   now correctly creates a DNS record
