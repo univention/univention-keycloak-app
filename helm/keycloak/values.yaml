@@ -26,6 +26,11 @@ global:
   #
   imagePullSecrets: []
 
+  postgresql:
+    connection:
+      host: ""
+      port: ""
+
 # -- PostgreSQL settings.
 postgresql:
   # -- Connection parameters.
