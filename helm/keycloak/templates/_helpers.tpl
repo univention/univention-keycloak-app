@@ -8,7 +8,7 @@ These template definitions are only used in this chart and do not relate to temp
 */}}
 {{- define "keycloak.postgresql.connection.host" -}}
 {{- if or .Values.postgresql.connection.host .Values.global.postgresql.connection.host -}}
-{{- coalesce .Values.postgresql.connection.host .Values.global.postgresql.connection.host -}}
+{{- tpl ( coalesce .Values.postgresql.connection.host .Values.global.postgresql.connection.host ) . -}}
 {{- else if .Values.global.nubusDeployment -}}
 {{- printf "%s-postgresql" .Release.Name -}}
 {{- else -}}
@@ -18,7 +18,7 @@ These template definitions are only used in this chart and do not relate to temp
 
 {{- define "keycloak.postgresql.connection.port" -}}
 {{- if or .Values.postgresql.connection.port .Values.global.postgresql.connection.port -}}
-{{- coalesce .Values.postgresql.connection.port .Values.global.postgresql.connection.port -}}
+{{- tpl ( coalesce .Values.postgresql.connection.port .Values.global.postgresql.connection.port ) . -}}
 {{- else -}}
 5432
 {{- end -}}
