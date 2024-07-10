@@ -94,6 +94,8 @@ spec:
               {{- include "keycloak.keycloak.auth.password" . | nindent 14 }}
             - name: "KC_DB_PASSWORD"
               {{- include "keycloak.postgresql.auth.password" . | nindent 14 }}
+            - name: "UNIVENTION_META_JSON"
+              value: {{ printf "https://%s.%s/univention/meta.json" .Values.global.subDomains.portal .Values.global.domain | quote }}
           {{- with .Values.extraEnvVars }}
             {{- . | toYaml | nindent 12 }}
           {{- end }}
