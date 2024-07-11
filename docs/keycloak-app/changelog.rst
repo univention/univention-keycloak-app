@@ -19,6 +19,14 @@ Please also consider the `upstream release notes
 24.0.5-ucs2
 ===========
 
+Released: 11. July 2024
+
+* Installing Keycloak after establishing an AD-Connection as member in MS AD
+  now correctly creates a DNS record
+
+24.0.5-ucs2
+===========
+
 Released: 4. July 2024
 
 * Installing Keycloak after establishing an AD-Connection as member in MS AD
