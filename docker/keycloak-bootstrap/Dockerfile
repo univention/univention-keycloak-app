@@ -16,14 +16,12 @@ RUN apt-get update \
     python3-requests=2.28.1+dfsg-1 \
     python3-defusedxml=0.7.1-2 \
     ansible=7.3.0+dfsg-1 \
+    univention-keycloak-client=3.0.11 \
   && apt-get autoremove --assume-yes \
   && rm -rf /var/lib/apt/lists/*
 
 FROM base
 
 COPY bootstrap-ums-keycloak/ /app
-
-RUN chmod +x entrypoint.sh \
-  && chmod +x univention-keycloak
 
 CMD ["/app/entrypoint.sh"]
