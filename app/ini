@@ -18,17 +18,22 @@ DockerMainService = keycloak
 Logo = logo.svg
 LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	<p>
-	Keycloak is a SAML and OpenID Connect Identity Provider solution, offering federation to other protocol compliant identity providers.
+	Keycloak is the Identity Provider (IDP) of Univention Nubus. This App provides the installation and integration of Keycloak for UCS.
+	<br>
 	</p>
 	<p>
-	The app is configured to use the Keycloak feature &quot;User Federation&quot; for authentication of users against OpenLDAP.
+	Keycloak offers SAML and OpenID Connect Identity Provider functionality for secure Single Sign-On, including federation to other protocol compliant identity providers.
+	</p>
+	<p>
+	The app is configured to use the Keycloak feature &quot;User Federation&quot; for authentication of users against OpenLDAP, where users and groups managed by Univention Directory Manager (UDM) are stored. So all users managed in a Nubus installation are known to Keycloak and can use the provided IDP for Single Sign-On with integrated applications.
+	<br>
 	</p>
 	<p>
 	For more details go to the <a href="https://docs.software-univention.de/keycloak-app/latest/">documentation of the most recent version of the UCS Keycloak App</a>
 	</p>
 	</div>
 PortsExclusive = 8180
-SupportedUcsVersions = 5.0-4 errata791
+SupportedUcsVersions = 5.0-4 errata791, 5.1-0, 5.2-0
 ServerRole = domaincontroller_master, domaincontroller_backup
 Database = postgresql
 DatabaseUser = keycloak
@@ -44,14 +49,20 @@ MinPhysicalRam = 1024
 DockerEnvDatabaseHost = LOCAL_DB_URL_HOST
 DockerEnvDatabaseUser = LOCAL_DB_USERNAME
 DockerEnvDatabasePassword = LOCAL_DB_PASSWORD
+Thumbnails = thumbnail_1.png
 
 [de]
 LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	<p>
-	Keycloak ist ein Identity Provider für Single Sign On über die Protokolle SAML und OpenID Connect, der auch Föderierung zu anderen Identity Providern ermöglicht.
+	Keycloak ist der Identitätsprovider (IDP) von Univention Nubus. Diese App übernimmt die Installation und Konfiguration von Keycloak auf UCS.
+	<br>
 	</p>
 	<p>
-	Die App ist so konfiguriert, dass sie das Keycloak Feature &quot;User Federation&quot; verwendet um Benutzer durch OpenLDAP authentifizieren zu lassen..
+	Keycloak bietet IDP Funktionalität für sicheres Single Sign On über die Protokolle SAML und OpenID Connect, und ermöglicht die Föderierung zu anderen Identity Providern.
+	</p>
+	<p>
+	Die App ist so konfiguriert, dass sie das Keycloak Feature &quot;User Federation&quot; verwendet um Benutzer durch OpenLDAP authentifizieren zu lassen, in dem die durch den Univention Directory Manager (UDM) verwalteten Benutzer und Gruppen gespeichert werden. So können alle in einer Nubus Installation verwalteten Nutzer Keycloak als IDP für Single Sign-On mit integrierte Applikationen nutzen.
+	<br>
 	</p>
 	<p>
 	Weitere Details sind in der <a href="https://docs.software-univention.de/keycloak-app/latest/">Dokumentation der aktuellsten Version der UCS Keycloak App</a> beschrieben.&nbsp;
@@ -61,4 +72,5 @@ Description = SAML und OpenID Connect Identity Provider
 Maintainer = Univention GmbH
 WebsiteMaintainer = https://www.univention.de/
 Website = https://docs.software-univention.de/keycloak-app/latest/
+Thumbnails = thumbnail_2.png
 
