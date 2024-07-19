@@ -26,9 +26,6 @@ The script expects the following files to be available / mounted into the contai
 - `/etc/ldapread.secret`: The admin secret to access the UMS LDAP server.
 - `/etc/keycloak.secret`: The admin secret to access the Keycloak.
 
-**Note**: Currently a forked version of the `univention_keycloak` script is being used. This will be changed in the
-future when the required changes have been applied to the upstream script.
-
 ### Ansible playbook: `main.yaml`
 
 Ansible is utilized to map the Helm Chart data into CLI calls for the `univention_keycloak` script. The Helm Chart data
