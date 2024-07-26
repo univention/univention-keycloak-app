@@ -24,6 +24,12 @@ UCS offers two different ways for app installation:
 For general information about Univention App Center and how to use it for software
 installation, see :ref:`uv-manual:software-appcenter` in :cite:t:`ucs-manual`.
 
+.. note::
+  After upgrading from UCS 4.4, make sure you complete the :program:`PostgreSQL` migration from version 9.4/9.6 to version 11.
+
+  For more information, see `the help article <https://help.univention.com/t/updating-from-postgresql-9-6-or-9-4-to-postgresql-11/17531>`_.
+
+
 .. _installation-browser:
 
 Installation with the web browser

@@ -1243,6 +1243,24 @@ more information, consult :cite:t:`keycloak-docs`.
       'Zugriff verboten.<br>Bitte wenden Sie sich an den Administrator, dass Sie keinen Zugriff auf den Service {0} haben, wenn Sie feststellen, dass dies nicht korrekt ist.'
 
 
+.. envvar:: keycloak/auto-migration
+
+  Deactivate the automatic configuration migration during update process.
+  When this is off you have to manually migrate the configuration. See :ref:`app-update-configuration-auto-migration` for more information.
+
+  .. list-table::
+    :header-rows: 1
+    :widths: 2 5 5
+
+    * - Required
+      - Default value
+      - Set
+
+    * - No
+      - ``None``
+      - Installation and app configuration
+
+
 .. _css-settings:
 
 Customize the appearance
