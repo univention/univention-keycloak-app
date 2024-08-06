@@ -15,7 +15,9 @@ public class UniventionFreeMarkerLoginFormsProvider extends FreeMarkerLoginForms
     @Override
     protected Response createResponse(LoginFormsPages page) {
         final Object errorDetail = this.session.getAttribute("errorDetail");
-        this.attributes.put("errorDetail", errorDetail);
+        if (errorDetail != null) {
+            this.attributes.put("errorDetail", errorDetail);
+        }
         return super.createResponse(page);
     }
 }
