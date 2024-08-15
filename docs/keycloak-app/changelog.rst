@@ -17,8 +17,9 @@ Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
 25.0.1-ucs1
+===========
 
-Released: TODO
+Released: 15. August 2024
 
 * The Keycloak App has been updated to version 25
 
