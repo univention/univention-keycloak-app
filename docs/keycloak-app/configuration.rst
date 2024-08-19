@@ -1192,6 +1192,8 @@ more information, consult :cite:t:`keycloak-docs`.
 .. envvar:: keycloak/login/messages/en/pwdChangeSuccessMsg
 
    This setting sets the success message after password change in English.
+   Please note that this message is only shown if a new login is required
+   after the password change.
 
    .. list-table::
       :header-rows: 1
@@ -1217,6 +1219,8 @@ more information, consult :cite:t:`keycloak-docs`.
 .. envvar:: keycloak/login/messages/de/pwdChangeSuccessMsg
 
    This setting sets the success message after password change in German.
+   Please note that this message is only shown if a new login is required
+   after the password change.
 
    .. list-table::
       :header-rows: 1
