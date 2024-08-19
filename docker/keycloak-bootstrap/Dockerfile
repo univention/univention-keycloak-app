@@ -16,7 +16,7 @@ RUN apt-get update \
     python3-requests=2.28.1+dfsg-1 \
     python3-defusedxml=0.7.1-2 \
     ansible=7.3.0+dfsg-1 \
-    univention-keycloak-client=3.0.13 \
+    univention-keycloak-client=3.0.15 \
   && apt-get autoremove --assume-yes \
   && rm -rf /var/lib/apt/lists/*
 
