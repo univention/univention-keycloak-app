@@ -82,6 +82,24 @@ InitialValue = None
 Description = Sets the "SameSite" attribute for all cookies of Keycloak. Possible values are "Lax", "Strict" and "None".
 Group = Fully qualified domain name and web server settings
 
+[keycloak/login/messages/en/pwdChangeSuccessMsg]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside, outside
+InitialValue = The password has been changed successfully.<br>Please log in again.<br/>
+Description = English success message if password change was successful
+Group = Translation settings
+
+[keycloak/login/messages/de/pwdChangeSuccessMsg]
+Type = String
+Required = False
+Show = Install, Settings
+Scope = inside, outside
+InitialValue = Das Passwort wurde erfolgreich geändert.<br>Bitte melden Sie sich erneut an.<br/>
+Description = German success message if password change was successful
+Group = Translation settings
+
 [ucs/self/registration/check_email_verification]
 Type = Bool
 InitialValue =  false

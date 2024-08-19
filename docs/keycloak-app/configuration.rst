@@ -1189,6 +1189,56 @@ more information, consult :cite:t:`keycloak-docs`.
         - Installation and app configuration
 
 
+.. envvar:: keycloak/login/messages/en/pwdChangeSuccessMsg
+
+   This setting sets the success message after password change in English.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - See default value in
+          :numref:`listing-default-login-message-en-pwdchange-success` after the
+          table.
+        - Installation and app configuration
+
+   .. code-block::
+      :caption: Default value for :envvar:`keycloak/login/messages/en/pwdChangeSuccessMsg`
+      :name: listing-default-login-message-en-pwdchange-success
+
+      'The password has been changed successfully. Please log in again.'
+
+
+.. envvar:: keycloak/login/messages/de/pwdChangeSuccessMsg
+
+   This setting sets the success message after password change in German.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - See default value in
+          :numref:`listing-default-login-message-de-pwdchange-success` after the
+          table.
+        - Installation and app configuration
+
+   .. code-block::
+      :caption: Default value for :envvar:`keycloak/login/messages/de/pwdChangeSuccessMsg`
+      :name: listing-default-login-message-de-pwdchange-success
+
+      'Das Passwort wurde erfolgreich geändert. Bitte melden Sie sich erneut an.'
+
+
 .. envvar:: keycloak/login/messages/en/accessDeniedMsg
 
    This setting sets the access denied message during login in English.

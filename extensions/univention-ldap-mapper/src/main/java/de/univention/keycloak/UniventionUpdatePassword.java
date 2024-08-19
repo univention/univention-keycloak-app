@@ -2,31 +2,42 @@ package de.univention.keycloak;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import org.jboss.logging.Logger;
+import org.keycloak.authentication.AuthenticationFlowContext;
+import org.keycloak.authentication.AuthenticationProcessor;
 import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.authentication.requiredactions.UpdatePassword;
 import org.keycloak.events.Details;
 import org.keycloak.events.Errors;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
+import org.keycloak.forms.login.LoginFormsPages;
 import org.keycloak.forms.login.LoginFormsProvider;
 import org.keycloak.models.*;
 import org.keycloak.models.utils.FormMessage;
 import org.keycloak.services.managers.AuthenticationManager;
 import org.keycloak.services.messages.Messages;
+import org.keycloak.services.resources.LoginActionsService;
+import org.keycloak.services.Urls;
+import org.keycloak.services.util.AuthenticationFlowURLHelper;
 import org.keycloak.services.validation.Validation;
 import org.keycloak.sessions.AuthenticationSessionModel;
+import org.keycloak.util.JsonSerialization;
 
 import javax.net.ssl.HttpsURLConnection;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 
 import java.io.*;
+import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
+import java.util.function.Consumer;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import org.jboss.logging.Logger;
+
 
 
 class UniventionUpdatePasswordException extends IOException {
@@ -50,6 +61,9 @@ class UniventionUpdatePasswordException extends IOException {
 public class UniventionUpdatePassword extends UpdatePassword {
     public static final String ID = "UNIVENTION_UPDATE_PASSWORD";
     private static final String UPDATE_PASSWORD_FORM = "univention-login-update-password.ftl";
+
+    public static final String SuccessMsgID = "fwMessageSuccess";
+    public static final String SuccessMsgKey = "pwdChangeSuccessMsg";
 
     private static final Logger logger = Logger.getLogger(UniventionUpdatePassword.class);
     private final KeycloakSession session;
@@ -183,6 +197,7 @@ public class UniventionUpdatePassword extends UpdatePassword {
                             context.getConnection(), context.getHttpRequest().getHttpHeaders(), true));
         }
 
+        boolean pwdChangeSuccess = false;
         try {
             final ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest(
                     new ResetPasswordRequestParams.Builder()
@@ -194,8 +209,7 @@ public class UniventionUpdatePassword extends UpdatePassword {
             );
 
             resetPassword(resetPasswordRequest);
-            authSession.removeRequiredAction(ID);
-            context.success();
+            pwdChangeSuccess = true;
         } catch (ModelException me) {
             errorEvent.detail(Details.REASON, me.getMessage()).error(Errors.PASSWORD_REJECTED);
             Response challenge = context.form()
@@ -218,6 +232,31 @@ public class UniventionUpdatePassword extends UpdatePassword {
                     .createResponse(UserModel.RequiredAction.UPDATE_PASSWORD);
             context.challenge(challenge);
         }
+        /* password change was successful thus far.
+        Check if the password is valid now. If not: replication or s4-connector took too much time.
+        If the new password is not yet valid, we can't let the user through to the UMC.
+        It would do an LDAP bind, and greet the user with an error and the user would get rejected.
+        Instead, redirect the user to the beginning of the authentication flow again.
+        */
+        if (pwdChangeSuccess) {
+            final boolean valid = user.credentialManager().isValid(UserCredentialModel.password(passwordNew));
+
+            if (valid) {
+                context.success();
+            } else {
+                AuthenticationProcessor.resetFlow(authSession, LoginActionsService.AUTHENTICATE_PATH);
+
+                String clientData = AuthenticationProcessor.getClientData(session, authSession);
+                URI redirectUri = new AuthenticationFlowURLHelper(session, realm, session.getContext().getUri()).getLastExecutionUrl(authSession);
+                logger.debugf("Flow restart after password change. Redirecting to %s", redirectUri);
+                Response response = Response.status(Response.Status.FOUND).location(redirectUri).build();
+                try {
+                    authSession.setAuthNote(SuccessMsgID, JsonSerialization.writeValueAsString((new FormMessage(null, SuccessMsgKey))));
+                } catch (IOException ioe) {
+                    logger.warnf("Could not forward success message to new flow: %s", ioe.getMessage());
+                }
+                context.challenge(response);
+            }
+        }
     }
 }
-
