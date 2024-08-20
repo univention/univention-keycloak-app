@@ -16,6 +16,13 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+25.0.1-ucs2
+===========
+
+Released: 23. August 2024
+
+* The OIDC consent dialog theme has been improved.
+
 25.0.1-ucs1
 ===========
 

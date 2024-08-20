@@ -101,12 +101,14 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
 
 .card-pf {
     box-shadow: none;
-    background: var(--login-box-background, var(--bgc-content-container));
+    background: var(--bgc-content-container);
     border-radius: var(--border-radius-container, 0.5rem);
     border-top: none;
     width: 400px;
-    min-height: 400px;
-    padding: 2.4rem 1rem 3rem !important;
+    padding-top: calc(4 * var(--layout-spacing-unit)) !important;
+    padding-bottom: calc(2 * var(--layout-spacing-unit)) !important;
+    padding-left: calc(2 * var(--layout-spacing-unit)) !important;
+    padding-right: calc(2 * var(--layout-spacing-unit)) !important;
 }
 
 #kc-page-title {
