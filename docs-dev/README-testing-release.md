@@ -98,8 +98,8 @@ from the repository for the latest test app center app version
 
 Copy this block to the release issue and do all of them:
 
-1. [ ] update changelog
-1. [ ] run update-appcenter-test.sh
+1. [ ] update `docs/keycloak-app/changelog.rst`
+1. [ ] run `update-appcenter-test.sh`
 1. [ ] update docker image names (appcenter test)
 1. [ ] run keycloak product tests (errata_update and release_update == public)
 1. [ ] release the documentation:
@@ -116,7 +116,9 @@ Copy this block to the release issue and do all of them:
    1. [ ] After running the *production* job for the documentation in the pipeline, update the symlink `latest` the new version in the [keycloak-app directory of the docs.univention.de repository](https://git.knut.univention.de/univention/docs.univention.de/-/tree/master/keycloak-app). Try to update the symlink in the MR -> https://hutten.knut.univention.de/mediawiki/index.php/Docs/Automated_build_and_deployment#Cancel_automatic_merge_of_my_documentation_changes
 1. [ ] release the app:
    * go to omar
-   * run TODO
+   * `cd /var/univention/buildsystem2/mirror/appcenter`
+   * `./copy_from_appcenter.test.sh 5.0 <Component ID>` Component ID can be seen in the Provider Portal e.g. keycloak_20240815142626
+   * `sudo update_mirror.sh --verbose appcenter`
 1. [ ] check released app (currently manual testing)
 1. [ ] Write mail to app-announcement
 
