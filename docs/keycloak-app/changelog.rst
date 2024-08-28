@@ -19,9 +19,16 @@ Please also consider the `upstream release notes
 25.0.1-ucs2
 ===========
 
-Released: 23. August 2024
+Released: 28. August 2024
 
 * The OIDC consent dialog theme has been improved.
+
+* After a successful password change in the :program:`Keycloak` login flow,
+  it could happen that the new password was still not valid on the server
+  one was connecting too. This resulted in permission errors.
+  The :program:`Keycloak` password change will now redirect to the login page,
+  if the password is not valid yet.
+
 
 25.0.1-ucs1
 ===========
