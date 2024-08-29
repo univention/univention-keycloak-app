@@ -21,7 +21,7 @@ metadata:
 data:
   KEYCLOAK_PASSWORD_CHANGE_ENDPOINT: {{ printf "%s.%s" .Values.global.subDomains.portal .Values.global.domain | quote }}
   KC_LOG_LEVEL: {{ .Values.config.logLevel | quote }}
-  KC_HOSTNAME: {{ .Values.config.hostname | default (printf "%s.%s" .Values.global.subDomains.keycloak .Values.global.domain) | quote }}
+  KC_HOSTNAME: {{ .Values.config.hostname | default (printf "https://%s.%s" .Values.global.subDomains.keycloak .Values.global.domain) | quote }}
   KC_PROXY: {{ .Values.config.proxy | quote }}
   KC_DB: "postgres"
   # https://www.keycloak.org/server/caching
@@ -29,6 +29,7 @@ data:
   # https://www.keycloak.org/server/caching#_available_transport_stacks
   KC_CACHE_STACK: "kubernetes"
   KC_METRICS_ENABLED: "true"
+  KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
 
   KC_DB_URL_HOST: {{ include "keycloak.postgresql.connection.host" . | quote }}
   KC_DB_URL_PORT: {{ include "keycloak.postgresql.connection.port" . | quote }}
