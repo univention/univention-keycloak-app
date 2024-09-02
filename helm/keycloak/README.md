@@ -628,6 +628,15 @@ true
 			<td>Pod Labels. Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/</td>
 		</tr>
 		<tr>
+			<td>podManagementPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"OrderedReady"
+</pre>
+</td>
+			<td>Pod management policy. Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/</td>
+		</tr>
+		<tr>
 			<td>podSecurityContext.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">

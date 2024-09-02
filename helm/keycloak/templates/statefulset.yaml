@@ -3,8 +3,8 @@ SPDX-FileCopyrightText: 2024 Univention GmbH
 SPDX-License-Identifier: AGPL-3.0-only
 */}}
 ---
-apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
-kind: "Deployment"
+apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
+kind: "StatefulSet"
 metadata:
   name: {{ include "common.names.fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
@@ -20,7 +20,9 @@ spec:
   selector:
     matchLabels:
       {{- include "common.labels.matchLabels" . | nindent 6 }}
-  strategy: {{ include "common.tplvalues.render" (dict "value" .Values.updateStrategy "context" .) | nindent 4 }}
+  serviceName: {{ include "common.names.fullname" . }}
+  podManagementPolicy: {{ .Values.podManagementPolicy | default "OrderedReady" }}
+  updateStrategy: {{ include "common.tplvalues.render" (dict "value" .Values.updateStrategy "context" .) | nindent 4 }}
   template:
     metadata:
       annotations:
@@ -144,4 +146,3 @@ spec:
       {{- if .Values.extraVolumes }}
       volumes: {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes  "context" .) | nindent 8 }}
       {{- end }}
-...
