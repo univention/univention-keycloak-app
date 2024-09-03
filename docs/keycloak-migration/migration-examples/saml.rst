@@ -385,13 +385,17 @@ portal entry *Microsoft 365 Login* for the |IDP| initiated single sign-on.
 
 .. _migration-365-connector-multiple-connection:
 
-Migration of additional Azure AD connections
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Migration of additional logical Identity Provider instances
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It is possible to configure additional Azure AD connections for single-sign on using the Microsoft 365 Connector wizard.
-If multiple AD connections were configured according to :ref:`uv-manual:domain-saml-extended-configuration`, each connection
+It is possible to configure additional logical Identity Provider instances
+e.g. for single-sign on using the Microsoft 365 Connector wizard with multiple
+Entra ID (Azure AD) connections.
+
+If multiple logical Identity Provider instances were configured according to :ref:`uv-manual:domain-saml-extended-configuration`, each connection
 needs to be migrated individually to :program:`Keycloak`.
-Since Azure AD explicitly needs different entity IDs for each connection, this entails the creation of a new |IDP| and therefore a new realm for each connection.
+Since e.g. Entra ID (Azure AD) explicitly needs different entity IDs for each connection, this entails the creation of a new |IDP| for each Entra ID (Azure AD) connection.
+In :program:`Keycloak` this is represented by a new realm with it's own set of endpoints.
 
 To create a new logical |IDP| in :program:`Keycloak`, run the following commands on your UCS :program:`Keycloak` host.
 
@@ -399,9 +403,11 @@ To create a new logical |IDP| in :program:`Keycloak`, run the following commands
    :caption: Create a new logical |IDP| in Keycloak
    :name: create-proxy-realm
 
-   $ AD_CONNECTION="REPLACE WITH MICROSOFT 365 AD CONNECTION NAME"
-   $ univention-keycloak proxy-realms create "$AD_CONNECTION"
+   $ ADDITIONAL_LOGICAL_IDP="REPLACE WITH MICROSOFT 365 AD CONNECTION NAME"
+   $ univention-keycloak proxy-realms create "$ADDITIONAL_LOGICAL_IDP"
 
+
+Please note that this automatically creates a :term:`SAML SP` client for :program:`Microsoft 365 Connector` in the new :program:`Keycloak` realm.
 
 Use the following call to get the certificate of your newly created |IDP|
 
@@ -410,17 +416,17 @@ Use the following call to get the certificate of your newly created |IDP|
    :name: get-certificate-of-realm
 
    $ univention-keycloak saml/idp/cert get \
-      --realm-id="$AD_CONNECTION" \
-      --output "/tmp/keycloak-"$AD_CONNECTION".cert"
-    cat /tmp/keycloak-"$AD_CONNECTION".cert
+      --realm-id="$ADDITIONAL_LOGICAL_IDP" \
+      --output "/tmp/keycloak-"$ADDITIONAL_LOGICAL_IDP".cert"
+    cat /tmp/keycloak-"$ADDITIONAL_LOGICAL_IDP".cert
 
-Using this certificate as :samp:`$signing_cert` and the :samp:`AD_CONNECTION` as :samp:`$realm`, follow the steps from
-:ref:`migration-365-connector-windows-change` onward to update the |SAML| settings for the *Azure Active Directory* domain.
+Using this certificate as :samp:`$signing_cert` and the :samp:`ADDITIONAL_LOGICAL_IDP` as :samp:`$realm`, follow the steps from
+:ref:`migration-365-connector-windows-change` onward to update the |SAML| settings for the Entra ID *Azure Active Directory* domain.
 
-Repeat these steps for each additional configured Azure AD connection.
+Repeat these steps for each additional configured Entra ID (Azure AD) connection.
 
 For the portal tile (:ref:`migration-365-connector-portal-entry`) you may want
-to slightly deviate: If you need one tile per Azure AD connection, you would
+to slightly deviate: If you need one tile per Entra ID (Azure AD) connection, you would
 create a new one instead of modifying the original:
 
    .. code-block:: console
