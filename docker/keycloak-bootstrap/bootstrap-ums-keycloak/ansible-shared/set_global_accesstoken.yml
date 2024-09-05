@@ -16,8 +16,11 @@
   until: "access_token_response.status == 200"
   retries: 30
   delay: 10
+  no_log: "{{ global_hide_sensitive_output | bool }}"
 
 - name: "Set fact global_accesstoken"
   ansible.builtin.set_fact:
     global_accesstoken: "{{ access_token_response['json']['access_token'] }}"
+  no_log: "{{ global_hide_sensitive_output | bool }}"
+
 ...

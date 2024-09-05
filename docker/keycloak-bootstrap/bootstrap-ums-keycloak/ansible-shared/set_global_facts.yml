@@ -6,20 +6,25 @@
     global_ldap_mappers: "{{ lookup('file', '/bootstrap/ldap.mappers.yaml') | from_yaml }}"
     global_login_links: "{{ lookup('file', '/bootstrap/loginlinks.yaml') | from_yaml }}"
     global_2fa: "{{ lookup('file', '/bootstrap/2fa.yaml') | from_yaml }}"
+    global_hide_sensitive_output: "{{ lookup('ansible.builtin.env',  'HIDE_SENSITIVE_OUTPUT', default=true) }}"
 
-- name: "Global: Set variables"
+- name: "Global: Set sensitive variables"
+  ansible.builtin.set_fact:
+    global_keycloak_password: "{{ lookup('ansible.builtin.env', 'KEYCLOAK_PASSWORD') }}"
+    global_ldap_bind_pw: "{{ lookup('ansible.builtin.env', 'LDAP_BIND_PW') }}"
+  no_log: "{{ global_hide_sensitive_output | bool }}"
+
+- name: "Global: Set non-sensitive variables"
   ansible.builtin.set_fact:
     global_debug: "{{ lookup('ansible.builtin.env', 'DEBUG') }}"
     global_domain: "{{ lookup('ansible.builtin.env', 'DOMAIN') }}"
     global_subdomain_portal: "{{ lookup('ansible.builtin.env', 'SUBDOMAIN_PORTAL') }}"
     global_keycloak_username: "{{ lookup('ansible.builtin.env', 'KEYCLOAK_USERNAME') }}"
-    global_keycloak_password: "{{ lookup('ansible.builtin.env', 'KEYCLOAK_PASSWORD') }}"
     global_keycloak_realm: "{{ lookup('ansible.builtin.env', 'KEYCLOAK_REALM') }}"
     global_keycloak_host: "{{ lookup('ansible.builtin.env', 'KEYCLOAK_HOST') }}"
     global_keycloak_url: "{{ lookup('ansible.builtin.env', 'KEYCLOAK_URL') }}"
     global_saml_service_provider_hostname: "{{ lookup('ansible.builtin.env', 'SAML_SERVICE_PROVIDER_HOSTNAME') }}"
     global_ldap_bind_dn: "{{ lookup('ansible.builtin.env', 'LDAP_BIND_DN') }}"
-    global_ldap_bind_pw: "{{ lookup('ansible.builtin.env', 'LDAP_BIND_PW') }}"
     global_ldap_base_dn: "{{ lookup('ansible.builtin.env', 'LDAP_BASE_DN') }}"
     global_ldap_uri: "{{ lookup('ansible.builtin.env', 'LDAP_URI') }}"
 
