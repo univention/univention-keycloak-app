@@ -144,7 +144,7 @@ wait_for_dns "$keycloak_server_sso_fqdn" || die
 
 wait_for_keycloak () {
 	local i=0
-	for ((i=0; i<100; i++)); do
+	for ((i=0; i<1200; i++)); do
 		test "$(docker inspect -f "{{.State.Health.Status}}" "keycloak")" = "healthy" && univention-keycloak --binduser "${keycloak_admin_user:-admin}" realms get && return 0
 		sleep 3;
 	done
