@@ -1790,3 +1790,41 @@ Console <keycloak-admin-console>`. With the attribute set, Keycloak shows the
    show a link to the local portal.
 
    For more information, refer to :ref:`language-settings`.
+
+.. _additional-ca-certificates:
+
+Importing additional CA certificates
+====================================
+
+.. versionadded:: 25.0.1-ucs3
+
+:program:`Keycloak` in UCS runs as Docker container with its own CA
+certificates store. By default the UCS root CA certificate is imported into
+Keycloak's CA store to allow for a secure connection to the UCS LDAP
+directory.
+
+In some cases it is necessary to add additional CA certificates to Keycloak.
+
+You can do that by creating the directory
+:file:`/var/lib/univention-appcenter/apps/keycloak/conf/ca-certificates` and
+copying ``base64`` encoded CA certificate files with the ending ``.pem``
+into this directory.
+
+.. code-block:: console
+
+   $ file /var/lib/univention-appcenter/apps/keycloak/conf/ca-certificates/*.pem
+   .../keycloak/conf/ca-certificates/cert1.pem: PEM certificate
+   .../keycloak/conf/ca-certificates/cert2.pem: PEM certificate
+
+During the manual configuration of the App with
+
+.. code-block:: console
+
+   $ univention-app configure keycloak
+
+or automatically during the installation and updates,
+these certificates will be imported.
+
+.. important::
+
+   Follow the steps above on all your servers where the Keycloak app is installed.

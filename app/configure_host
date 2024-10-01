@@ -129,3 +129,13 @@ fi
 
 # add UCS rootCA to trusted CA certificates
 univention-app shell keycloak keytool -cacerts -import -alias ucsCA -file /etc/pki/ca-trust/extracted/pem/ucsCAcert.pem -storepass "changeit" -noprompt
+
+# add additional ca certificates
+docker exec -i -u root keycloak bash <<'EOF'
+test -d /var/lib/univention-appcenter/apps/keycloak/conf/ca-certificates || exit 0
+while read cert; do
+        alias="$(basename "$cert")"
+        echo "adding $alias to cacerts cert store"
+        keytool -cacerts -import -alias "$alias" -file "$cert" -storepass "changeit" -noprompt || true
+done < <(ls /var/lib/univention-appcenter/apps/keycloak/conf/ca-certificates/*.pem)
+EOF
