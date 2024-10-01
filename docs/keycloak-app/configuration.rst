@@ -1807,7 +1807,7 @@ In some cases it is necessary to add additional CA certificates to Keycloak.
 
 You can do that by creating the directory
 :file:`/var/lib/univention-appcenter/apps/keycloak/conf/ca-certificates` and
-copying ``base64`` encoded CA certificate files with the ending ``.pem``
+copying CA certificate files in the ``pem`` format with the ending ``.pem``
 into this directory.
 
 .. code-block:: console

@@ -16,6 +16,16 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+25.0.1-ucs3
+===========
+
+Released: TODO
+
+* You can now add additional CA certificates to Keycloak's CA store by
+  putting CA certificate files in the ``pem`` format into
+  :file:`/var/lib/univention-appcenter/apps/keycloak/conf/ca-certificates`
+  on the UCS system. For more information, see :ref:`additional-ca-certificates`.
+
 25.0.1-ucs2
 ===========
 
