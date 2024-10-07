@@ -16,10 +16,12 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
-25.0.1-ucs3
+25.0.6-ucs1
 ===========
 
 Released: TODO
+
+* The Keycloak App has been updated to version 25.0.6
 
 * You can now add additional CA certificates to Keycloak's CA store by
   putting CA certificate files in the ``pem`` format into
