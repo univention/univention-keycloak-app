@@ -58,7 +58,8 @@
           --no-kerberos \
           --no-saml-assertion-request \
           --frontchannel-logout-off \
-          --enable-user-events
+          --enable-user-events \
+          --cors-frame-ancestors="https://{{ global_subdomain_portal }}.{{ global_domain }}"
       # yamllint enable rule:line-length
 
     - name: "Set global access token"
