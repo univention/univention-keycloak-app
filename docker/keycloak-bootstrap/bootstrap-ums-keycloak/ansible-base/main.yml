@@ -57,7 +57,8 @@
           --no-starttls \
           --no-kerberos \
           --no-saml-assertion-request \
-          --frontchannel-logout-off
+          --frontchannel-logout-off \
+          --enable-user-events
       # yamllint enable rule:line-length
 
     - name: "Set global access token"
