@@ -203,10 +203,10 @@ imagePullSecrets: []
 # Ref.: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   # -- Enable creation of Ingress.
-  enabled: false
+  enabled: true
 
   # -- Define the Fully Qualified Domain Name (FQDN) where application should be reachable.
-  host: ""
+  # host: ""
 
   # -- Define the Ingress path.
   path: "/"
@@ -226,10 +226,23 @@ ingress:
   # -- The Ingress controller class name.
   ingressClassName: ""
 
+  certManager:
+    # -- Enable cert-manager.io annotaion.
+    enabled: true
+
+    # Issuer reference.
+    issuerRef:
+      # -- Name of cert-manager.io Issuer resource.
+      name: ""
+      # -- Type of Issuer, f.e. "Issuer" or "ClusterIssuer".
+      kind: "ClusterIssuer"
+
   # -- Define custom ingress annotations.
   # annotations:
   #   nginx.ingress.kubernetes.io/rewrite-target: /
-  annotations: {}
+  annotations:
+    nginx.org/proxy-buffer-size: "8k"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "8k"
 
   # -- Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.
   #
@@ -241,6 +254,14 @@ ingress:
     # -- The name of the kubernetes secret which contains a TLS private key and certificate.
     # Hint: This secret is not created by this chart and must be provided.
     secretName: ""
+
+  paths:
+    - pathType: "Prefix"
+      path: "/admin"
+    - pathType: "Prefix"
+      path: "/realms"
+    - pathType: "Prefix"
+      path: "/resources"
 
 # -- Lifecycle to automate configuration before or after startup
 lifecycleHooks: {}

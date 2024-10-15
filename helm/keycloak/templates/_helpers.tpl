@@ -156,7 +156,9 @@ value: {{ required ".Values.keycloak.auth.password is required." .Values.keycloa
 {{- end -}}
 
 {{- define "keycloak.ingress.tls.secretName" -}}
-{{- if .Values.global.nubusDeployment -}}
+{{- if .Values.ingress.tls.secretName -}}
+{{- tpl .Values.ingress.tls.secretName . -}}
+{{- else if .Values.global.nubusDeployment -}}
 {{- printf "%s-keycloak-tls" .Release.Name -}}
 {{- else -}}
 {{- required ".Values.ingress.tls.secretName must be defined." .Values.ingress.tls.secretName -}}

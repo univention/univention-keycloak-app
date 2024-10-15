@@ -372,28 +372,49 @@ false
 			<td>ingress.annotations</td>
 			<td>object</td>
 			<td><pre lang="json">
-{}
+{
+  "nginx.ingress.kubernetes.io/proxy-buffer-size": "8k",
+  "nginx.org/proxy-buffer-size": "8k"
+}
 </pre>
 </td>
 			<td>Define custom ingress annotations. annotations:   nginx.ingress.kubernetes.io/rewrite-target: /</td>
 		</tr>
 		<tr>
-			<td>ingress.enabled</td>
+			<td>ingress.certManager.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
-false
+true
 </pre>
 </td>
-			<td>Enable creation of Ingress.</td>
+			<td>Enable cert-manager.io annotaion.</td>
 		</tr>
 		<tr>
-			<td>ingress.host</td>
+			<td>ingress.certManager.issuerRef.kind</td>
+			<td>string</td>
+			<td><pre lang="json">
+"ClusterIssuer"
+</pre>
+</td>
+			<td>Type of Issuer, f.e. "Issuer" or "ClusterIssuer".</td>
+		</tr>
+		<tr>
+			<td>ingress.certManager.issuerRef.name</td>
 			<td>string</td>
 			<td><pre lang="json">
 ""
 </pre>
 </td>
-			<td>Define the Fully Qualified Domain Name (FQDN) where application should be reachable.</td>
+			<td>Name of cert-manager.io Issuer resource.</td>
+		</tr>
+		<tr>
+			<td>ingress.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enable creation of Ingress.</td>
 		</tr>
 		<tr>
 			<td>ingress.ingressClassName</td>
@@ -421,6 +442,60 @@ false
 </pre>
 </td>
 			<td>Each path in an Ingress is required to have a corresponding path type. Paths that do not include an explicit pathType will fail validation. There are three supported path types:  "ImplementationSpecific" => With this path type, matching is up to the IngressClass. Implementations can treat this                             as a separate pathType or treat it identically to Prefix or Exact path types. "Exact" => Matches the URL path exactly and with case sensitivity. "Prefix" => Matches based on a URL path prefix split by /.  Ref.: https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types</td>
+		</tr>
+		<tr>
+			<td>ingress.paths[0].path</td>
+			<td>string</td>
+			<td><pre lang="json">
+"/admin"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.paths[0].pathType</td>
+			<td>string</td>
+			<td><pre lang="json">
+"Prefix"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.paths[1].path</td>
+			<td>string</td>
+			<td><pre lang="json">
+"/realms"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.paths[1].pathType</td>
+			<td>string</td>
+			<td><pre lang="json">
+"Prefix"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.paths[2].path</td>
+			<td>string</td>
+			<td><pre lang="json">
+"/resources"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.paths[2].pathType</td>
+			<td>string</td>
+			<td><pre lang="json">
+"Prefix"
+</pre>
+</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>ingress.tls</td>

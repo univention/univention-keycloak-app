@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 {{- if .Values.ingress.enabled -}}
 ---
 apiVersion: "{{ include "common.capabilities.ingress.apiVersion" . }}"
-kind: "Ingress"
+kind: Ingress
 metadata:
   name: "{{ include "common.names.fullname" . }}"
   labels:
@@ -17,37 +17,31 @@ metadata:
     {{- if .Values.additionalAnnotations }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
     {{- end }}
-    {{- if .Values.ingress.annotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.ingress.annotations "context" . ) | nindent 4 }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.ingress.annotations  "context" .) | nindent 4 }}
+    {{- if .Values.ingress.certManager.enabled }}
+    cert-manager.io/{{ .Values.ingress.certManager.issuerRef.kind | kebabcase }}: "{{ coalesce .Values.global.certManagerIssuer .Values.ingress.certManager.issuerRef.name }}"
     {{- end }}
 spec:
   ingressClassName: {{ include "keycloak.ingress.ingressClassName" .}}
   {{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.ingress.host | default (printf "%s.%s" .Values.global.subDomains.keycloak .Values.global.domain) | quote }}
-      secretName: "{{ .Values.ingress.tls.secretName | default (printf "%s-tls" (include "common.names.fullname" . )) }}"
+        - {{ include "keycloak.ingress.host" . | quote }}
+      secretName: {{ include "keycloak.ingress.tls.secretName" . | quote }}
   {{- end }}
   rules:
-    - host: {{ .Values.ingress.host | default (printf "%s.%s" .Values.global.subDomains.keycloak .Values.global.domain) | quote }}
+    - host: {{ include "keycloak.ingress.host" . | quote }}
       http:
         paths:
-          - path: /realms
-            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "common.names.fullname" .) "servicePort" "http" "context" .) | nindent 14 }}
-            {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
-            pathType: {{ .Values.ingress.pathType }}
-            {{- end }}
-          - path: /resources
-            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "common.names.fullname" .) "servicePort" "http" "context" .) | nindent 14 }}
-            {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
-            pathType: {{ .Values.ingress.pathType }}
-            {{- end }}
-          {{- if .Values.config.exposeAdminConsole }}
-          - path: /admin
-            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "common.names.fullname" .) "servicePort" "http" "context" .) | nindent 14 }}
-            {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
-            pathType: {{ .Values.ingress.pathType }}
+          {{- range .Values.ingress.paths }}
+          - pathType: {{ .pathType }}
+            path: {{ .path }}
+            {{- if .backend }}
+            backend: {{- (toYaml .backend) | nindent 14 }}
+            {{- else }}
+            backend: {{- default (include "common.ingress.backend" (dict "serviceName" (printf "%s" (include "common.names.fullname" $)) "servicePort" "http" "context" $)) | nindent 14 }}
             {{- end }}
           {{- end }}
+
 ...
 {{- end }}
