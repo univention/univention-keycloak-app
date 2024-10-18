@@ -39,7 +39,7 @@ container_scanning:
   script:
     - trivy --version
     # cache cleanup is needed when scanning images with the same tags, it does not remove the database
-    - time trivy image --clear-cache
+    - time trivy image --scan-cache
     # update vulnerabilities db
     - time trivy image --download-db-only
     # Image report
