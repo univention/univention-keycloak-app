@@ -5,7 +5,6 @@ COPY extensions ./
 RUN mvn clean package --file univention-directory-manager
 RUN mvn install --file univention-directory-manager
 RUN mvn clean package --file univention-authenticator
-RUN ls univention-authenticator/target/
 RUN mvn clean package --file pom.xml
 
 # keycloak itself
@@ -14,7 +13,6 @@ ARG KEYCLOAK_DIST # downloading the archive for every pipeline job just takes to
 ARG KEYCLOAK_VERSION
 WORKDIR /keycloak
 ADD $KEYCLOAK_DIST .
-#COPY keycloak-${KEYCLOAK_VERSION}.tar.gz .
 RUN tar -xvf keycloak-${KEYCLOAK_VERSION}.tar.gz && rm keycloak-${KEYCLOAK_VERSION}.tar.gz
 
 # templates and themes
@@ -43,7 +41,10 @@ COPY --from=keycloak /keycloak/keycloak-${KEYCLOAK_VERSION} /opt/keycloak
 COPY --from=theme /themes /opt/keycloak/themes/
 COPY --from=maven /extensions/lib/univention-app-authenticator-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-ldap-mapper-*.jar /opt/keycloak/providers/
+COPY --from=maven /extensions/lib/univention-condition-ipaddress-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-user-attribute-nameid-mapper-base64-*.jar /opt/keycloak/providers/
+COPY --from=maven /extensions/lib/univention-condition-ipaddress-*.jar /opt/keycloak/providers
+COPY --from=maven /root/.m2/repository/com/github/seancfoley/ipaddress/5.5.1/ipaddress-5.5.1.jar /opt/keycloak/providers
 # COPY --from=maven /extensions/univention-directory-manager/target/univention-directory-manager.jar /opt/keycloak/providers/
 # COPY --from=maven /extensions/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
 RUN cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.jdbc.ojdbc11-*.jar \
