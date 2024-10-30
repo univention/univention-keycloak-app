@@ -45,11 +45,12 @@ postgresql:
     # -- PostgreSQL database.
     database: ""
     # -- PostgreSQL user password.
-    password: ""
+    # password: ""
     # -- PostgreSQL password secret reference.
-    credentialSecret:
-      name: ""
-      key: "password"
+    existingSecret:
+      name: null
+      keyMapping:
+        password: null
 
 # -- Keycloak settings.
 keycloak:
@@ -57,11 +58,12 @@ keycloak:
     # -- Keycloak user.
     username: ""
     # -- Keycloak password.
-    password: ""
+    # password: ""
     # -- Keycloak password secret reference.
-    credentialSecret:
-      name: ""
-      key: "admin_password"
+    existingSecret:
+      name: null
+      keyMapping:
+        adminPassword: null
 
   # Keycloak feature settings.
   # Possible values are: account-api, account2, account3, admin-api, admin-fine-grained-authz, admin2, authorization,

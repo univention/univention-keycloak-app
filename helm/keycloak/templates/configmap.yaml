@@ -33,7 +33,6 @@ data:
 
   KC_DB_URL_HOST: {{ include "keycloak.postgresql.connection.host" . | quote }}
   KC_DB_URL_PORT: {{ include "keycloak.postgresql.connection.port" . | quote }}
-  KC_DB_USERNAME: {{ include "keycloak.postgresql.auth.username" . | quote }}
   KC_DB_URL_DATABASE: {{ include "keycloak.postgresql.auth.database" . | quote }}
 
   UNIVENTION_THEME: {{ include "keycloak.style.themeUrl" . | quote }}

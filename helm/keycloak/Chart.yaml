@@ -7,7 +7,7 @@ name: "keycloak"
 home: "https://www.univention.de"
 icon: "https://www.univention.com/wp-content/themes/univention/assets/images/univention.svg"
 
-version: "0.1.0"
+version: "0.6.0"
 
 dependencies:
   - name: "common"

@@ -1,6 +1,6 @@
 # keycloak
 
-- **Version**: 0.1.0
+- **Version**: 0.6.0
 - **Type**: application
 - **AppVersion**:
 - **Homepage:** <https://www.univention.de>
@@ -533,11 +533,12 @@ true
 			<td><pre lang="json">
 {
   "auth": {
-    "credentialSecret": {
-      "key": "admin_password",
-      "name": ""
+    "existingSecret": {
+      "keyMapping": {
+        "adminPassword": null
+      },
+      "name": null
     },
-    "password": "",
     "username": ""
   },
   "features": {
@@ -553,25 +554,18 @@ true
 			<td>Keycloak settings.</td>
 		</tr>
 		<tr>
-			<td>keycloak.auth.credentialSecret</td>
+			<td>keycloak.auth.existingSecret</td>
 			<td>object</td>
 			<td><pre lang="json">
 {
-  "key": "admin_password",
-  "name": ""
+  "keyMapping": {
+    "adminPassword": null
+  },
+  "name": null
 }
 </pre>
 </td>
 			<td>Keycloak password secret reference.</td>
-		</tr>
-		<tr>
-			<td>keycloak.auth.password</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>Keycloak password.</td>
 		</tr>
 		<tr>
 			<td>keycloak.auth.username</td>
@@ -744,12 +738,13 @@ true
 			<td><pre lang="json">
 {
   "auth": {
-    "credentialSecret": {
-      "key": "password",
-      "name": ""
-    },
     "database": "",
-    "password": "",
+    "existingSecret": {
+      "keyMapping": {
+        "password": null
+      },
+      "name": null
+    },
     "username": ""
   },
   "connection": {
@@ -762,18 +757,6 @@ true
 			<td>PostgreSQL settings.</td>
 		</tr>
 		<tr>
-			<td>postgresql.auth.credentialSecret</td>
-			<td>object</td>
-			<td><pre lang="json">
-{
-  "key": "password",
-  "name": ""
-}
-</pre>
-</td>
-			<td>PostgreSQL password secret reference.</td>
-		</tr>
-		<tr>
 			<td>postgresql.auth.database</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -783,13 +766,18 @@ true
 			<td>PostgreSQL database.</td>
 		</tr>
 		<tr>
-			<td>postgresql.auth.password</td>
-			<td>string</td>
+			<td>postgresql.auth.existingSecret</td>
+			<td>object</td>
 			<td><pre lang="json">
-""
+{
+  "keyMapping": {
+    "password": null
+  },
+  "name": null
+}
 </pre>
 </td>
-			<td>PostgreSQL user password.</td>
+			<td>PostgreSQL password secret reference.</td>
 		</tr>
 		<tr>
 			<td>postgresql.auth.username</td>

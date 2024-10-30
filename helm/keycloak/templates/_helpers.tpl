@@ -24,40 +24,6 @@ These template definitions are only used in this chart and do not relate to temp
 {{- end -}}
 {{- end -}}
 
-{{- define "keycloak.postgresql.auth.username" -}}
-{{- if .Values.postgresql.auth.username -}}
-{{- .Values.postgresql.auth.username -}}
-{{- else if .Values.global.nubusDeployment -}}
-keycloak
-{{- else -}}
-{{- required ".Values.postgresql.auth.username must be defined." .Values.postgresql.auth.username -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "keycloak.postgresql.auth.credentialSecret.name" -}}
-{{- if .Values.postgresql.auth.credentialSecret.name -}}
-{{- .Values.postgresql.auth.credentialSecret.name -}}
-{{- else if .Values.global.nubusDeployment -}}
-{{- printf "%s-keycloak-postgresql-credentials" .Release.Name -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "keycloak.postgresql.auth.password" -}}
-{{- if .Values.postgresql.auth.credentialSecret.name -}}
-valueFrom:
-  secretKeyRef:
-    name: {{ .Values.postgresql.auth.credentialSecret.name | quote }}
-    key: {{ .Values.postgresql.auth.credentialSecret.key | quote }}
-{{- else if .Values.global.nubusDeployment -}}
-valueFrom:
-  secretKeyRef:
-    name: {{ include "keycloak.postgresql.auth.credentialSecret.name" . | quote }}
-    key: {{ .Values.postgresql.auth.credentialSecret.key | quote }}
-{{- else -}}
-value: {{ required ".Values.postgresql.auth.password is required." .Values.postgresql.auth.password | quote }}
-{{- end -}}
-{{- end -}}
-
 {{- define "keycloak.postgresql.auth.database" -}}
 {{- if .Values.postgresql.auth.database -}}
 {{- .Values.postgresql.auth.database -}}
@@ -100,40 +66,6 @@ keycloak
 {{- else -}}
 {{- $baseUrl := include "keycloak.service.baseUrl" . -}}
 {{- printf "%s/favicon.ico" $baseUrl -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "keycloak.keycloak.auth.username" -}}
-{{- if .Values.keycloak.auth.username -}}
-{{- .Values.keycloak.auth.username -}}
-{{- else if .Values.global.nubusDeployment -}}
-kcadmin
-{{- else -}}
-{{- required ".Values.keycloak.auth.username must be defined." .Values.keycloak.auth.username -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "keycloak.keycloak.auth.credentialSecret.name" -}}
-{{- if .Values.keycloak.auth.credentialSecret.name -}}
-{{- .Values.keycloak.auth.credentialSecret.name -}}
-{{- else if .Values.global.nubusDeployment -}}
-{{- printf "%s-keycloak-credentials" .Release.Name -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "keycloak.keycloak.auth.password" -}}
-{{- if .Values.keycloak.auth.credentialSecret.name -}}
-valueFrom:
-  secretKeyRef:
-    name: {{ .Values.keycloak.auth.credentialSecret.name | quote }}
-    key: {{ .Values.keycloak.auth.credentialSecret.key | quote }}
-{{- else if .Values.global.nubusDeployment -}}
-valueFrom:
-  secretKeyRef:
-    name: {{ include "keycloak.keycloak.auth.credentialSecret.name" . | quote }}
-    key: {{ .Values.keycloak.auth.credentialSecret.key | quote }}
-{{- else -}}
-value: {{ required ".Values.keycloak.auth.password is required." .Values.keycloak.auth.password | quote }}
 {{- end -}}
 {{- end -}}
 
