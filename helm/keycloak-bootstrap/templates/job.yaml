@@ -75,10 +75,20 @@ spec:
             - configMapRef:
                 name: {{ include "common.names.fullname" .  | quote }}
           env:
+            - name: KEYCLOAK_USERNAME
+              value: {{ tpl .Values.keycloak.auth.username . }}
             - name: KEYCLOAK_PASSWORD
-              {{- include "keycloak-bootstrap.keycloak.auth.password" . | nindent 14 }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl .Values.keycloak.auth.existingSecret.name . }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword") }}
+            - name: LDAP_BIND_DN
+              value: {{ tpl .Values.ldap.auth.bindDn . }}
             - name: LDAP_BIND_PW
-              {{- include "keycloak-bootstrap.ldap.auth.password" . | nindent 14 }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl .Values.ldap.auth.existingSecret.name . }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") }}
           {{- with .Values.extraEnvVars }}
             {{- . | toYaml | nindent 12 }}
           {{- end }}
@@ -87,10 +97,10 @@ spec:
               name: "bootstrap-volume"
             - mountPath: "/credentials/ldapread.secret"
               name: "ldap-credentials-volume"
-              subPath: {{ .Values.ldap.auth.credentialSecret.key | quote }}
+              subPath: {{ .Values.ldap.auth.existingSecret.keyMapping.password | quote }}
             - mountPath: "/credentials/keycloak.secret"
               name: "keycloak-credentials-volume"
-              subPath: {{ .Values.keycloak.auth.credentialSecret.key | quote }}
+              subPath: {{ .Values.keycloak.auth.existingSecret.keyMapping.adminPassword | quote }}
             - mountPath: "/tmp"
               name: "temp-dir"
             {{- if .Values.extraVolumeMounts }}
@@ -103,10 +113,10 @@ spec:
       volumes:
         - name:  "keycloak-credentials-volume"
           secret:
-            secretName: {{ (include "keycloak-bootstrap.keycloak.auth.credentialSecret.name" . ) | quote }}
+            secretName: {{ tpl .Values.keycloak.auth.existingSecret.name . }}
         - name:  "ldap-credentials-volume"
           secret:
-            secretName: {{ (include "keycloak-bootstrap.ldap.auth.credentialSecret.name" . ) | quote }}
+            secretName: {{ tpl .Values.ldap.auth.existingSecret.name . }}
         - name: "bootstrap-volume"
           configMap:
             name: {{ printf "%s-bootstrap-data" (include "common.names.fullname" .) | quote }}

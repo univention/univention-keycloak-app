@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2024 Univention GmbH
+
+---
+
+ldap:
+  auth:
+    bindDn: "uid=ldap-user,cn=users,dc=organization,dc=example"
+    existingSecret:
+      name: "custom-ldap-credentials"
+      keyMapping:
+        password: "custom-password"
+
+keycloak:
+  auth:
+    username: "admin"
+    existingSecret:
+      name: "custom-keycloak-credentials"
+      keyMapping:
+        adminPassword: "admin_password"
+
+...

@@ -99,44 +99,6 @@ http
 {{- end -}}
 {{- end -}}
 
-{{- define "keycloak-bootstrap.keycloak.auth.username" -}}
-{{- if .Values.keycloak.auth.username -}}
-{{- .Values.keycloak.auth.username -}}
-{{- else if .Values.global.nubusDeployment -}}
-kcadmin
-{{- else -}}
-{{- required ".Values.keycloak.auth.username must be defined." .Values.keycloak.auth.username -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "keycloak-bootstrap.keycloak.auth.credentialSecret.name" -}}
-{{- if .Values.keycloak.auth.credentialSecret.name -}}
-{{- .Values.keycloak.auth.credentialSecret.name -}}
-{{- else if .Values.keycloak.auth.password -}}
-{{ printf "%s-keycloak-credentials" (include "common.names.fullname" .) }}
-{{- else if .Values.global.nubusDeployment -}}
-{{- printf "%s-keycloak-bootstrap-keycloak-credentials" .Release.Name -}}
-{{- else -}}
-{{ required ".Values.keycloak.auth.password must be defined." .Values.keycloak.auth.password}}
-{{- end -}}
-{{- end -}}
-
-{{- define "keycloak-bootstrap.keycloak.auth.password" -}}
-{{- if .Values.keycloak.auth.credentialSecret.name -}}
-valueFrom:
-  secretKeyRef:
-    name: {{ .Values.keycloak.auth.credentialSecret.name | quote }}
-    key: {{ .Values.keycloak.auth.credentialSecret.key | quote }}
-{{- else if .Values.global.nubusDeployment -}}
-valueFrom:
-  secretKeyRef:
-    name: {{ include "keycloak-bootstrap.keycloak.auth.credentialSecret.name" . | quote }}
-    key: {{ .Values.keycloak.auth.credentialSecret.key | quote }}
-{{- else -}}
-value: {{ required ".Values.keycloak.auth.password is required." .Values.keycloak.auth.password | quote }}
-{{- end -}}
-{{- end -}}
-
 {{- define "keycloak-bootstrap.keycloak.auth.realm" -}}
 {{- if .Values.keycloak.auth.realm -}}
 {{- .Values.keycloak.auth.realm -}}
@@ -163,45 +125,5 @@ master
 {{- else if .Values.global.nubusDeployment -}}
 {{- printf "%s.%s" .Values.global.subDomains.portal .Values.global.domain }}
 {{- else -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "keycloak-bootstrap.ldap.auth.bindDn" -}}
-{{- if .Values.ldap.auth.bindDn -}}
-{{- .Values.ldap.auth.bindDn -}}
-{{- else if .Values.global.nubusDeployment -}}
-{{- $baseDn := include "nubusTemplates.ldapServer.ldap.baseDn" . -}}
-{{ printf "uid=%s,cn=users,%s" "readonly" $baseDn }}
-{{- else -}}
-{{- required ".Values.ldap.auth.bindDn must be defined." .Values.ldap.auth.bindDn -}}
-{{- end -}}
-{{- end -}}
-
-
-{{- define "keycloak-bootstrap.ldap.auth.credentialSecret.name" -}}
-{{- if .Values.ldap.auth.credentialSecret.name -}}
-{{- .Values.ldap.auth.credentialSecret.name -}}
-{{- else if .Values.ldap.auth.password -}}
-{{ printf "%s-ldap-credentials" (include "common.names.fullname" .) }}
-{{- else if .Values.global.nubusDeployment -}}
-{{- printf "%s-keycloak-bootstrap-ldap-credentials" .Release.Name -}}
-{{- else -}}
-{{ required ".Values.ldap.auth.password must be defined." .Values.ldap.auth.password}}
-{{- end -}}
-{{- end -}}
-
-{{- define "keycloak-bootstrap.ldap.auth.password" -}}
-{{- if .Values.ldap.auth.credentialSecret.name -}}
-valueFrom:
-  secretKeyRef:
-    name: {{ .Values.ldap.auth.credentialSecret.name | quote }}
-    key: {{ .Values.ldap.auth.credentialSecret.key | quote }}
-{{- else if .Values.global.nubusDeployment -}}
-valueFrom:
-  secretKeyRef:
-    name: {{ include "keycloak-bootstrap.ldap.auth.credentialSecret.name" . | quote }}
-    key: {{ .Values.ldap.auth.credentialSecret.key | quote }}
-{{- else -}}
-value: {{ required ".Values.ldap.auth.password is required." .Values.ldap.auth.password | quote }}
 {{- end -}}
 {{- end -}}
