@@ -1547,6 +1547,114 @@ Admin Console <keycloak-admin-console>` with the following steps:
 * Go to the section *Kerberos integration* and deactivate :guilabel:`Allow
   Kerberos authentication`.
 
+.. _kerberos-authentication-ipaddress:
+
+Restrict Kerberos authentication to IP subnets
+==============================================
+
+.. versionadded:: 25.0.6-ucs2
+
+   Restrict Kerberos authentication to IP subjects
+
+On Microsoft Windows clients
+that aren't joined to the Kerberos realm,
+Windows presents the user a dialog box
+before authenticating.
+To prevent this behavior in Windows,
+administrators can restrict Kerberos authentication
+to specific IPv4 and IPv6 subnets in :program:`Keycloak`.
+
+The :program:`Keycloak` app version ``25.0.6-ucs2`` provides
+a conditional authenticator extension
+called *Univention Condition IP subnet*.
+You can use this conditional authenticator
+to restrict the activation of an authenticator
+depending on the IP address of the requesting client IP address.
+
+.. seealso::
+
+   For more information on authentication flows, see :cite:t:`keycloak-auth-flow`.
+
+This section specifically describes how to create a conditional Kerberos authentication flow,
+although you can use any type of authenticator with this condition.
+To use this conditional authenticator, you need to create a Keycloak *authentication flow*
+that includes this condition.
+You can use the program :command:`univention-keycloak` as outlined in
+:numref:`kerberos-authentication-ipaddress-create-flow-listing`.
+
+The command copies an existing flow and
+replaces the Kerberos authenticator with a Keycloak sub flow.
+The sub flow activates the conditional authenticator
+that evaluates the client's IP address
+before it attempts the Kerberos authentication.
+The command copies the browser flow on default.
+
+.. code-block:: console
+   :caption: Create a Keycloak *authentication flow*
+   :name: kerberos-authentication-ipaddress-create-flow-listing
+
+   $ univention-keycloak conditional-krb-authentication-flow create \
+     --flow=REPLACE_WITH_THE_ORIGINAL_FLOW --name=REPLACE_WITH_THE_NEW_KERBEROS_FLOW_NAME" \
+     --allowed-ip=REPLACE_WITH_IPCIDRv4 --allowed-ip=REPLACE_WITH_IPCIDRv6
+
+:program:`univention-keycloak conditional-krb-authentication-flow create`
+has the following parameters:
+
+.. program:: univention-keycloak conditional-krb-authentication-flow create
+
+.. option:: --flow
+
+   The parameter ``flow`` specifies the source for the copy operation and the adjustment.
+   Use the parameter in case you want to base the flow on an existing custom flow.
+   The default value is ``browser``
+   that references the default :program:`Keycloak` browser flow.
+
+.. option:: --name
+
+   The parameter ``name`` specifies the name of the flow
+   where Keycloak saves the flow.
+
+.. option:: --allowed-ip
+
+   Use the parameter ``allowed-ip`` to specify the IP subnets
+   that you want to allow for `Kerberos` authentication.
+   You need to specify the values in CIDR format.
+   You can use the parameter multiple times to specify several subnets.
+
+   If you don't specify a value,
+   the program uses the default value ``--allowed-ip=0.0.0.0/0 --allowed-ip=::/0``.
+   The default value allows all clients of all IPv4 and of all IPv6 addresses
+   to use Kerberos authentication.
+
+.. To cross-reference any of these parameters in the text, use the following syntax:
+   :option:`univention-keycloak conditional-krb-authentication-flow create --flow`
+
+
+.. _kerberos-authentication-ipaddress-assign-authflow:
+
+Assign authentication flow
+--------------------------
+
+You can assign the authentication flow directly
+in the :ref:`Keycloak Admin Console <keycloak-admin-console>`
+or optionally through the :command:`univention-keycloak` command,
+as shown in :numref:`kerberos-condition-assign-auth-flow-listing`.
+
+.. code-block:: console
+   :caption: Assign authentication flow to a :term:`Keycloak Client`
+   :name: kerberos-condition-assign-auth-flow-listing
+
+   $ univention-keycloak client-auth-flow \
+     --clientid "REPLACE_WITH_YOUR_CLIENT_ID" \
+     --auth-flow "REPLACE_WITH_THE_NEW_FLOW_NAME"
+
+.. tip::
+
+   You can also pass the option ``--auth-browser-flow``
+   when you create a :term:`SAML SP` or :term:`OIDC RP` as a :term:`Keycloak Client`.
+   For information about how to create a :term:`Keycloak Client`,
+   see :ref:`saml-idp`.
+
 
 .. _application-authorization:
 

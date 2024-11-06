@@ -21,12 +21,13 @@ Version 25.0.6-ucs2
 
 Released: TODO
 
-* The Keycloak App now ships an additional conditional authenticator
-  which allows Administrators to configure an authentication flow which
-  executes authenticators conditionally depending on the clients IP address.
-  This is primarily done so that Kerberos authentication can be restricted
-  to certain IP address subnets to prevent popups on not joined Windows clients.
-  This new feature and its setup is documented here: TODO - link
+* The Keycloak App now ships an additional conditional authenticator.
+  This authentication flow runs
+  authenticators conditionally depending on the client's IP address.
+  Administrators can restrict the Kerberos authentication to certain IP address subnetworks
+  to prevent pop ups on Microsoft Windows clients that haven't joined the domain.
+
+  For information about the setup, see :ref:`kerberos-authentication-ipaddress`.
 
 
 
