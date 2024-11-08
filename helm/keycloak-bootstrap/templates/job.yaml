@@ -97,10 +97,10 @@ spec:
               name: "bootstrap-volume"
             - mountPath: "/credentials/ldapread.secret"
               name: "ldap-credentials-volume"
-              subPath: {{ .Values.ldap.auth.existingSecret.keyMapping.password | quote }}
+              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") }}
             - mountPath: "/credentials/keycloak.secret"
               name: "keycloak-credentials-volume"
-              subPath: {{ .Values.keycloak.auth.existingSecret.keyMapping.adminPassword | quote }}
+              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword") }}
             - mountPath: "/tmp"
               name: "temp-dir"
             {{- if .Values.extraVolumeMounts }}

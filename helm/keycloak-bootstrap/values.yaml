@@ -219,11 +219,6 @@ keycloak:
     # password: ""
     # -- Keycloak realm.
     realm: ""
-    # -- Keycloak password secret reference.
-    existingSecret:
-      name: null
-      keyMapping:
-        adminPassword: null
 
 # -- LDAP settings.
 ldap:
@@ -258,12 +253,6 @@ ldap:
   auth:
     # -- LDAP bind DN. (user to authenticate with LDAP server)
     bindDn: ""
-    # -- LDAP bind password secret reference.
-    existingSecret:
-      # -- name of the secret
-      name: null
-      keyMapping:
-        password: null
 
 bootstrap:
   # Support for additional attributes to be mapped from the LDAP to the Keycloak user object
