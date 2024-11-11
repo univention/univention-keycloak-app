@@ -16,8 +16,22 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
-25.0.6-ucs1
-===========
+Version 25.0.6-ucs2
+===================
+
+Released: TODO
+
+* The Keycloak App now ships an additional conditional authenticator
+  which allows Administrators to configure an authentication flow which
+  executes authenticators conditionally depending on the clients IP address.
+  This is primarily done so that Kerberos authentication can be restricted
+  to certain IP address subnets to prevent popups on not joined Windows clients.
+  This new feature and its setup is documented here: TODO - link
+
+
+
+Version 25.0.6-ucs1
+===================
 
 Released: 09. October 2024
 
@@ -28,8 +42,8 @@ Released: 09. October 2024
   :file:`/var/lib/univention-appcenter/apps/keycloak/conf/ca-certificates`
   on the UCS system. For more information, see :ref:`additional-ca-certificates`.
 
-25.0.1-ucs2
-===========
+Version 25.0.1-ucs2
+===================
 
 Released: 28. August 2024
 
@@ -42,8 +56,8 @@ Released: 28. August 2024
   if the password is not valid yet.
 
 
-25.0.1-ucs1
-===========
+Version 25.0.1-ucs1
+===================
 
 Released: 15. August 2024
 
@@ -54,24 +68,24 @@ Released: 15. August 2024
   A downgrade to an older version of :program:`Keycloak` is not advised.
 
 
-24.0.5-ucs2
-===========
+Version 24.0.5-ucs2
+===================
 
 Released: 11. July 2024
 
 * Installing Keycloak after establishing an AD-Connection as member in MS AD
   now correctly creates a DNS record
 
-24.0.5-ucs2
-===========
+Version 24.0.5-ucs2
+===================
 
 Released: 4. July 2024
 
 * Installing Keycloak after establishing an AD-Connection as member in MS AD
   now correctly creates a DNS record
 
-24.0.5-ucs1
-===========
+Version 24.0.5-ucs1
+===================
 
 Released: 14. June 2024
 
@@ -86,8 +100,8 @@ Released: 14. June 2024
   container as lower case. This should fix some problems with mixed case
   domains caused by Keycloak checking its FQDN with case sensitivity.
 
-24.0.3-ucs1
-===========
+Version 24.0.3-ucs1
+===================
 
 Released: 6. May 2024
 
@@ -100,8 +114,8 @@ Released: 6. May 2024
   the welcome page, but instead ask the :program:`Keycloak` health endpoints
   (enabled by the option ``--health-enabled=true``) for the status.
 
-23.0.7-ucs1
-===========
+Version 23.0.7-ucs1
+===================
 
 Released: 6. April 2024
 
@@ -112,8 +126,8 @@ Released: 6. April 2024
   with the new :program:`Keycloak` version. If you used this feature in production,
   do not upgrade and contact the support of Univention.
 
-22.0.3-ucs2
-===========
+Version 22.0.3-ucs2
+===================
 
 Released: 20. December 2023
 
@@ -131,8 +145,8 @@ Released: 20. December 2023
   adapted to show more detailed information in case an account is locked, expired or disabled.
 
 
-22.0.3-ucs1
-===========
+Version 22.0.3-ucs1
+===================
 
 Released: 27. September 2023
 
@@ -150,16 +164,16 @@ Released: 27. September 2023
 * The app updates to *Keycloak* version 22.0.3 of the upstream Docker image from
   https://quay.io/repository/keycloak/keycloak.
 
-22.0.1-ucs1
-===========
+Version 22.0.1-ucs1
+===================
 
 Released: 30. August 2023
 
 * The app updates to *Keycloak* version 22.0.1 of the upstream Docker image from
   https://quay.io/repository/keycloak/keycloak.
 
-21.1.2-ucs2
-===========
+Version 21.1.2-ucs2
+===================
 
 Released: 18. August 2023
 
@@ -174,16 +188,16 @@ Released: 18. August 2023
   that after a successful password update during the *Keycloak* login an
   error was shown. This has been fixed.
 
-21.1.2-ucs1
-===========
+Version 21.1.2-ucs1
+===================
 
 Released: 19. July 2023
 
 * The app updates to *Keycloak* version 21.1.2 of the upstream Docker image from
   https://quay.io/repository/keycloak/keycloak.
 
-21.1.1-ucs1
-===========
+Version 21.1.1-ucs1
+===================
 
 Released: 5. July 2023
 
@@ -196,8 +210,8 @@ Released: 5. July 2023
 * The app now configures :program:`Kerberos` ticket authentication through the
   web browser. For more information, see :ref:`kerberos-authentication`.
 
-21.0.1-ucs4
-===========
+Version 21.0.1-ucs4
+===================
 
 Released: 28. June 2023
 
@@ -205,8 +219,8 @@ Released: 28. June 2023
   migration of the Microsoft365 connector to
   :program:`Keycloak` possible.
 
-21.0.1-ucs3
-===========
+Version 21.0.1-ucs3
+===================
 
 Released: 31. May 2023
 
@@ -220,16 +234,16 @@ Released: 31. May 2023
   information about the configuration, see :ref:`use-case-reconfigure-sso`.
 
 
-21.0.1-ucs2
-===========
+Version 21.0.1-ucs2
+===================
 
 Released: 28. April 2023
 
 * The :program:`Keycloak` app can use an external fully qualified domain name.
   For more information about the configuration, see :ref:`use-case-reconfigure-sso`.
 
-21.0.1-ucs1
-===========
+Version 21.0.1-ucs1
+===================
 
 Released: 19. April 2023
 
@@ -247,8 +261,8 @@ Released: 19. April 2023
   the list of requested scopes. For background information, see `this upstream
   issue <https://github.com/keycloak/keycloak/issues/14184>`_.
 
-19.0.2-ucs2
-============
+Version 19.0.2-ucs2
+===================
 
 Released: 23. March 2023
 
@@ -264,8 +278,8 @@ Released: 23. March 2023
 * The app now offers a setting to deny the sign-in for unverified, self
   registered user accounts. For more information, see :ref:`use cases <app-use-cases>`.
 
-19.0.1-ucs3
-============
+Version 19.0.1-ucs3
+===================
 
 Released: 14. October 2022
 
@@ -274,8 +288,8 @@ Released: 14. October 2022
   create Keycloak *Client* configurations for :term:`SAML Service Providers
   <SAML SP>` and :term:`OpenID Connect Relying Parties <OIDC RP>`.
 
-19.0.1-ucs2
-============
+Version 19.0.1-ucs2
+===================
 
 Released: 9. September 2022
 
@@ -286,8 +300,8 @@ Released: 9. September 2022
   Primary Directory Nodes. For more information, see
   :ref:`limitation-primary-node`.
 
-19.0.1-ucs1
-============
+Version 19.0.1-ucs1
+===================
 
 Released: 7. September 2022
 
@@ -310,8 +324,8 @@ Released: 7. September 2022
   Primary Directory Nodes. For more information, see
   :ref:`limitation-primary-node`.
 
-18.0.0-ucs1
-============
+Version 18.0.0-ucs1
+===================
 
 Released: 28. June 2022
 

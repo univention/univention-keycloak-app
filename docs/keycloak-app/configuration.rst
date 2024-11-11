@@ -144,7 +144,7 @@ backend for the user accounts. During the authentication process
 certain user attributes are imported into :program:`Keycloak`. These
 attributes can be used later on in so called *Attribute Mappers* to pass
 additional information trough the |SAML| assertion or |OIDC| token to
-services (e.g. *displayName*).
+services, for example ``displayName``.
 
 By default the :program:`Keycloak` app is configured to import the following
 user attributes:
@@ -511,7 +511,7 @@ Deactivate two-factor authentication for domain administrators
 
     #. Click :guilabel:`Save`.
 
-    .. _ad-hoc-federation-create-IdP:
+    .. _ad-hoc-federation-create-idp:
 
     Create an identity provider for Microsoft Active Directory
     ----------------------------------------------------------
@@ -630,7 +630,7 @@ Deactivate two-factor authentication for domain administrators
        :User attribute: ``external-${ALIAS}-${ATTRIBUTE.sAMAccountName}``
        :Target: ``LOCAL``
 
-    .. _ad-hoc-federation-ADFS-configuration:
+    .. _ad-hoc-federation-adfs-configuration:
 
     Configure Active Directory Federation services for ad hoc federation
     --------------------------------------------------------------------
@@ -1496,8 +1496,8 @@ Use the following commands on the command line as super user.
 
 .. _kerberos-authentication:
 
-Activating Kerberos authentication
-==================================
+Activate Kerberos authentication
+================================
 
 In the default configuration, the :program:`Keycloak` app evaluates
 :program:`Kerberos` tickets during the authentication process. If you have a UCS
@@ -1793,8 +1793,8 @@ Console <keycloak-admin-console>`. With the attribute set, Keycloak shows the
 
 .. _additional-ca-certificates:
 
-Importing additional CA certificates
-====================================
+Import additional CA certificates
+=================================
 
 .. versionadded:: 25.0.1-ucs3
 
