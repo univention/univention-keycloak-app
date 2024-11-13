@@ -31,6 +31,12 @@ public class UniventionConditionIpAddress implements ConditionalAuthenticator {
 
     @Override
     public boolean matchCondition(AuthenticationFlowContext context) {
+        if (context.getAuthenticatorConfig() != null) {
+                final Map<String, String> config = context.getAuthenticatorConfig().getConfig();
+        }else {
+               log.warn("No valid client IP Address config found. Disallowing any Kerberos authentication.");
+               return false;
+        }
 
         final Map<String, String> config = context.getAuthenticatorConfig().getConfig();
         final Stream<IPAddress> ipSubnets = getConfiguredIpSubnets(config);
