@@ -2108,8 +2108,8 @@ def create_conditional_krb_subflows(session, opt, payload, flow_level, level, fl
     payload = {
         "alias": "ipaddressconfig",
         "config": {
-            "ip-subnets": "##".join(opt.allowed_ip) if opt.allowed_ip else "0.0.0.0/0##::/0"
-        }
+            "ip-subnets": "##".join(opt.allowed_ip) if opt.allowed_ip else "0.0.0.0/0##::/0",
+        },
     }
 
     condition_user_role_id = None
