@@ -48,7 +48,7 @@ You can add IP subnetworks to the UCR Variable :envvar:`saml/idp/negotiate/filte
 
 Starting with :program:`Keycloak` version ``25.0.6-ucs2``,
 you can limit authentication to select subnetworks, as well.
-For information about how to configure it, see FOR THE REFERENCE, SEE THE INLINE COMMENT.
+For information about how to configure it, see :ref:`uv-keycloak-app:kerberos-authentication-ipaddress`.
 
 ..
    :external+uv-keycloak-app:ref:`kerberos-authentication-ipaddress`.
