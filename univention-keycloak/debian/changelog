@@ -1,4 +1,4 @@
-univention-keycloak (3.0.18) unstable; urgency=medium
+univention-keycloak (3.0.19) unstable; urgency=medium
 
   * Bug #56474: Enable keycloak to add a conditional authenticator
 

@@ -2132,7 +2132,7 @@ def create_conditional_krb_authentication_flow(opt):
         "topLevel": True,
         "description": f"{opt.flow}r based authentication with conditional kerberos authentication",
     }
-    session.create_authentication_flow(payload=json.dumps(payload))
+    session.create_authentication_flow(payload=payload)
     # create all executions and sub-flows in the correct level
     flow_level = {0: flow_name}
     for payload in session.get_authentication_flow_executions(opt.flow):
