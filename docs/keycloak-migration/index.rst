@@ -8,7 +8,7 @@
 Introduction
 ************
 
- This documentation is for system administrators
+This documentation is for system administrators
 who already operate |UCS| 5.0
 and explains the required steps for the migration
 from the single sign-on identity provider apps
