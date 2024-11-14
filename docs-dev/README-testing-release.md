@@ -98,22 +98,22 @@ from the repository for the latest test app center app version
 
 Copy this block to the release issue and do all of them:
 
-1. [ ] update `docs/keycloak-app/changelog.rst`
+1. [ ] Add an appropriate changelog entry to
+ [docs/keycloak-app/changelog.rst](docs/keycloak-app/changelog.rst) and follow the recommendation at https://keepachangelog.com/en/1.0.0/.
 1. [ ] run `update-appcenter-test.sh`
-1. [ ] update docker image names (appcenter test)
-1. [ ] run keycloak product tests (errata_update and release_update == public)
-1. [ ] release the documentation:
-   1. [ ] Check the keycloak version in the documentation links in `docs/bibliography.bib`
-   1. [ ] When you release a new Keycloak version and mention it in the changelog, also add a link to the Keycloak changelog for that dedicated version. See the example for 20.0.1.
-   1. [ ] Update the `DOC_TARGET_VERSION` variable in [.gitlab-ci.yml](.gitlab-ci.yml) to the new app version. The variable makes sure that the new app version has a dedicated documentation.
-   1. [ ] Add an appropriate changelog entry to
- [docs/changelog.rst](docs/changelog.rst) and follow the recommendation at https://keepachangelog.com/en/1.0.0/.
-   1. [ ] If documentation for a new feature or for a change is part of the regular
+1. [ ] update the docker image names in [Jenkins](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/Apps/job/keycloak/job/App%20Autotest%20MultiEnv/)
+1. [ ] run the [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/UCS-5.0-9/job/Keycloak%20Product%20Tests/)
+1. [ ] update and release the documentation:
+  1. [ ] If documentation for a new feature or for a change is part of the regular
  text in the documentation, highlight it with the [versionadded](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-versionadded),
  [versionchanged](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-versionchanged)
  or [deprecated](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-deprecated)
    directive.
-   1. [ ] After running the *production* job for the documentation in the pipeline, update the symlink `latest` the new version in the [keycloak-app directory of the docs.univention.de repository](https://git.knut.univention.de/univention/docs.univention.de/-/tree/master/keycloak-app). Try to update the symlink in the MR -> https://hutten.knut.univention.de/mediawiki/index.php/Docs/Automated_build_and_deployment#Cancel_automatic_merge_of_my_documentation_changes
+  1. [ ] Do the following steps only in case of a new Keycloak version:
+    1. [ ] Check the keycloak version in the documentation links in `docs/bibliography.bib`
+    1. [ ] When you release a new Keycloak version and mention it in the changelog, also add a link to the Keycloak changelog for that dedicated version. See the example for 20.0.1.
+    1. [ ] Update the `DOC_TARGET_VERSION` variable in [.gitlab-ci.yml](.gitlab-ci.yml) to the new app version. The variable makes sure that the new app version has a dedicated documentation.
+    1. [ ] After running the *production* job for the documentation in the pipeline, cancel the auto-merge of your MR and update the symlink `latest` to the newest version in the [keycloak-app directory of the docs.univention.de repository](https://git.knut.univention.de/univention/docs.univention.de/-/tree/master/keycloak-app).
 1. [ ] release the app:
    * go to omar
    * `cd /var/univention/buildsystem2/mirror/appcenter`
