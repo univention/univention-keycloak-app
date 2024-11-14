@@ -19,7 +19,7 @@ Please also consider the `upstream release notes
 Version 25.0.6-ucs2
 ===================
 
-Released: TODO
+Released: 14. November 2024
 
 * The Keycloak App now ships an additional conditional authenticator.
   This authentication flow runs
