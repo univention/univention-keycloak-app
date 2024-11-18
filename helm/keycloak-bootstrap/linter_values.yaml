@@ -4,6 +4,10 @@
 ---
 
 ldap:
+  baseDn: "dc=organization,dc=example"
+  connection:
+    host: "ldap.example.com"
+    port: 389
   auth:
     bindDn: "uid=ldap-user,cn=users,dc=organization,dc=example"
     existingSecret:
@@ -12,11 +16,15 @@ ldap:
         password: "custom-password"
 
 keycloak:
+  connection:
+    baseUrl: "https://keycloak.example.com"
+    host: "somehost"
   auth:
     username: "admin"
     existingSecret:
       name: "custom-keycloak-credentials"
       keyMapping:
         adminPassword: "admin_password"
+    realm: "myrealm"
 
 ...

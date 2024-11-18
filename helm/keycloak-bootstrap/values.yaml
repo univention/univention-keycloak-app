@@ -57,6 +57,7 @@ cleanup:
 # Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 containerSecurityContext:
+  privileged: false
   # -- Enable security context.
   enabled: true
 
