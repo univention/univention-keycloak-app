@@ -70,7 +70,7 @@ containerSecurityContext:
       - "ALL"
 
   # -- Mounts the container's root filesystem as read-only.
-  readOnlyRootFilesystem: false
+  readOnlyRootFilesystem: true
 
   # -- Process group id.
   runAsGroup: 1000

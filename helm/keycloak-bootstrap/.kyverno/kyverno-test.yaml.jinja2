@@ -32,13 +32,12 @@ results:
     kind: "Job"
     rule: "disallow-default-serviceAccountName"
     result: "pass"
-  # keycloak-bootstrap might need a rw filesystem
-  #- resources:
-  #    - "release-name-keycloak-bootstrap-bootstrap-1"
-  #  policy: "require-containersecuritycontext"
-  #  kind: "Job"
-  #  rule: "require-ro-rootfs"
-  #  result: "pass"
+  - resources:
+      - "release-name-keycloak-bootstrap-bootstrap-1"
+    policy: "require-containersecuritycontext"
+    kind: "Job"
+    rule: "require-ro-rootfs"
+    result: "pass"
   - resources:
       - "release-name-keycloak-bootstrap-bootstrap-1"
     policy: "require-containersecuritycontext"
