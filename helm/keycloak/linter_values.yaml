@@ -3,6 +3,11 @@
 
 ---
 
+ingress:
+  ingressClassName: "nginx"
+  tls:
+    secretName: "custom-tls-secret"
+
 postgresql:
   connection:
     host: "postgres"
