@@ -20,7 +20,7 @@ if ucr.is_true("keycloak/disable/theme/caching", False):
     disable_theme_caching = "--spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false"
 
 print(f'''
-    command: start --hostname={kc_fqdn} --http-relative-path={sso_path} --http-enabled=true --proxy=edge --cache-config-file=cache-ispn-jdbc-ping.xml --db={db_kind} --transaction-xa-enabled={db_xa} {disable_theme_caching} --health-enabled=true --metrics-enabled=true
+    command: start --hostname={kc_fqdn} --http-relative-path={sso_path} --http-enabled=true --proxy-headers xforwarded --cache-config-file=cache-ispn-jdbc-ping.xml --db={db_kind} --transaction-xa-enabled={db_xa} {disable_theme_caching} --health-enabled=true --metrics-enabled=true
 ''')
 @!@
     # see https://forge.univention.org/bugzilla/show_bug.cgi?id=55360
