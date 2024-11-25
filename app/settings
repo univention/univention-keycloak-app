@@ -3,7 +3,7 @@ Type = String
 Show = Install, Settings
 InitialValue = ucs-sso-ng.@!@ucr = configRegistry;print(ucr.get("domainname").lower(), end='')@!@
 Scope = outside
-Description = Defines the FQDN of the identity provider of this UCS domain.
+Description = Defines the FQDN of the identity provider of this UCS domain. This setting needs to be set on all servers in the domain via UCR if the value deviates from the default.
 Group = Fully qualified domain name and web server settings
 
 [keycloak/server/sso/path]
@@ -11,7 +11,7 @@ Type = String
 Show = Install, Settings
 InitialValue = /
 Scope = outside, inside
-Description = Defines the dedicated path under which keycloak is available.
+Description = Defines the dedicated path under which keycloak is available. This setting needs to be set on all servers in the domain via UCR if the value deviates from the default.
 Group = Fully qualified domain name and web server settings
 
 [keycloak/server/sso/virtualhost]

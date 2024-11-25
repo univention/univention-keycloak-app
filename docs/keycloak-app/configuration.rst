@@ -769,6 +769,8 @@ more information, consult :cite:t:`keycloak-docs`.
 
    Defines the FQDN to the identity provider in your environment's UCS domain.
    Defaults to :samp:`ucs-sso-ng.{$domainname}`.
+   If this setting deviates from the default, you need to set this setting via UCR
+   on all UCS servers in the domain, so that these servers can connect to Keycloak.
    Please note that uppercase letters in this setting can lead to problems
    regarding the Keycloak admin console.
 
@@ -1157,6 +1159,8 @@ more information, consult :cite:t:`keycloak-docs`.
 
    This setting sets the path used to access Keycloak at the end of the
    Keycloak URL.
+   If this setting deviates from the default, you need to set this setting via UCR
+   on all UCS servers in the domain, so that these servers can connect to Keycloak.
 
    .. list-table::
       :header-rows: 1
