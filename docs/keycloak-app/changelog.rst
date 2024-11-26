@@ -16,6 +16,15 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+Version 25.0.6-ucs3
+===================
+
+Released: 26. November 2024
+
+* Security updates for the base docker image of the Keycloak app have been added.
+
+
+
 Version 25.0.6-ucs2
 ===================
 
