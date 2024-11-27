@@ -116,7 +116,7 @@ Version 24.0.3-ucs1
 Released: 6. May 2024
 
 * The app updates to :program:`Keycloak` version 24.0.3
-  (https://www.keycloak.org/docs/24.0.0/release_notes/).
+  (https://www.keycloak.org/docs/24.0.5/release_notes/#keycloak-24-0-0).
 
 * From this version on :program:`Keycloak` automatically redirects from the
   welcome page to the login page of the *Keycloak Admin Console*.
