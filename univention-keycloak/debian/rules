@@ -34,4 +34,4 @@
 # <https://www.gnu.org/licenses/>.
 
 %:
-	dh $@ --with univention-join
+	dh $@ --with univention-join,ucr
