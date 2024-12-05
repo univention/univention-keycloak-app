@@ -26,7 +26,7 @@ import json
 from string import Template
 from urllib.parse import urlparse
 
-from univention.config_registry import ConfigRegistry
+from univention.config_registry import ConfigRegistry, handler_set
 from univention.udm import UDM
 from univention.udm.binary_props import Base64Bzip2BinaryProperty
 from univention.udm.exceptions import NoObject
@@ -58,6 +58,11 @@ for setting in app.get_settings():
         kc_db_driver = setting.get_value(app)
     if setting.name == "kc/db/ping/datatype":
         kc_db_ping_datatype = setting.get_value(app)
+    if setting.name == "keycloak/server/sso/fqdn":
+        kc_sso_fqdn = setting.get_value(app)
+    if setting.name == "keycloak/server/sso/path":
+        kc_sso_path = setting.get_value(app) if setting.get_value(app) else '/'
+
 
 # (2) get settings from domain config, fallback app settings
 try:
@@ -109,6 +114,39 @@ print(kc_db_kind)
 print(kc_db_username)
 print(kc_db_driver)
 print(kc_db_ping_datatype)
+
+
+# create a policy from keycloak/server/sso/fqdn and keycloak/server/sso/path
+# to ucs/server/sso/uri
+# only update the policy if the policy matches the old value
+if ucr.is_true('ucs/server/sso/uri/autopolicy', False):
+    exit(0)
+
+setting_name = 'ucs/server/sso/uri'
+old_value = ucr.get(setting_name)
+new_value = f'https://{kc_sso_fqdn}{kc_sso_path}'
+policy_name = "sso_uri_domainwide_setting"
+mod = UDM.admin().version(2).get('policies/registry')
+position = f'cn=config-registry,cn=policies,{ldap_base}'
+try:
+    # URL not found in UCR, try in LDAP first
+    policy_obj = mod.get(f'cn={policy_name},{position}')
+    if policy_obj.props.registry and policy_obj.props.registry.get(setting_name) == old_value:
+        # update ucr policy
+        policy_obj.props.registry = {setting_name: new_value}
+        policy_obj.save()
+except NoObject:
+    # URL not found in UCR or LDAP - use current host configuration or defaults
+    policy_obj = mod.new()
+    policy_obj.position = position
+    policy_obj.props.name = policy_name
+    policy_obj.props.registry = {setting_name: new_value}
+    policy_obj.save()
+    base_obj = UDM.admin().version(2).get('container/dc').get(f'{ldap_base}')
+    base_obj.policies += [policy_obj.dn]
+    base_obj.save()
+handler_set([f'{setting_name}={new_value}'])
+
 %EOF
 )" || die
 opts=( $(echo -e "$data" | awk -F'\n'  '{print $1, $2}') );
