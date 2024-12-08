@@ -36,6 +36,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from argparse import SUPPRESS, Action, ArgumentDefaultsHelpFormatter, ArgumentParser, Namespace
 from base64 import b64decode
@@ -45,7 +46,7 @@ from os.path import exists
 from ssl import DER_cert_to_PEM_cert
 from subprocess import PIPE, Popen
 from typing import TYPE_CHECKING
-from urllib.parse import quote, urljoin
+from urllib.parse import quote, urlparse
 
 import requests
 from defusedxml import ElementTree
@@ -1528,12 +1529,10 @@ def parse_args(args: list[str] | None = None) -> Namespace:
     domainname = ucr.get("domainname")
     host_fqdn = "%s.%s" % (ucr.get("hostname"), ucr.get("domainname"))
     umc_saml_sp_server = ucr.get("umc/saml/sp-server", host_fqdn)
-    keycloak_fqdn = ucr.get("keycloak/server/sso/fqdn", f"ucs-sso-ng.{domainname}")
-    keycloak_url = f"https://{keycloak_fqdn}"
-    keycloak_sso_path = ucr.get("keycloak/server/sso/path")
+    keycloak_url = ucr.get("ucs/server/sso/uri", f"https://ucs-sso-ng.{domainname}/")
+    keycloak_fqdn = urlparse(keycloak_url).netloc
     kerberos_realm = ucr.get("kerberos/realm")
 
-    keycloak_url = urljoin(keycloak_url, keycloak_sso_path)
     if not keycloak_url.endswith("/"):
         keycloak_url = f"{keycloak_url}/"
 
@@ -1893,7 +1892,7 @@ def parse_args(args: list[str] | None = None) -> Namespace:
     parser_get_user_attribute_ldap_mapper.set_defaults(func=get_user_attribute_ldap_mapper)
 
     # get keycloak base url
-    parser_get_base_url = subparsers.add_parser("get-keycloak-base-url", help="get the base url of keycloak according to the current configuration (keycloak/server/sso/fqdn, keycloak/server/sso/path)")
+    parser_get_base_url = subparsers.add_parser("get-keycloak-base-url", help="get the base url of keycloak according to the current configuration (ucs/server/sso/uri)")
     parser_get_base_url.add_argument("--json", help="json output", default=False, action="store_true")
     parser_get_base_url.set_defaults(func=get_base_url)
 
@@ -2246,6 +2245,10 @@ def delete_legacy_authentication_flow(opt: Namespace) -> None:
 def get_base_url(opt: Namespace) -> None:
     """check that the keycloak url works and print url"""
     # check that the url works
+    if IS_UCS:
+        subprocess.check_output('/usr/lib/univention-directory-policy/univention-policy-update-config-registry')
+        ucr.load()
+        opt.keycloak_url = ucr.get('ucs/server/sso/uri', f'https://ucs-sso-ng.{ucr.get("domainname")}')
     try:
         resp = requests.get(opt.keycloak_url)
         assert resp.status_code == 200, f"invalid http status code {resp.status_code}"
@@ -2253,7 +2256,8 @@ def get_base_url(opt: Namespace) -> None:
         print(exc)
         msg = f"ERROR: Could not connect to keycloak server on {opt.keycloak_url}:\n\n\t{exc}\n\n"
         msg += "Please check the UCR settings for keycloak/server/sso/fqdn and keycloak/server/sso/path,\n"
-        msg += "and make sure that keycloak and apache are running on the keycloak server!"
+        msg += "on the Keycloak App server and check that it matches the UCR setting for ucs/server/sso/uri on this host.\n"
+        msg += "Make sure that keycloak and apache are running on the keycloak server!"
         print(msg, file=sys.stderr)
         return 1
     # remove trailing slash, is this a good idea?

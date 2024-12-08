@@ -41,7 +41,7 @@ VERSION="1"
 joinscript_init
 
 domainname="$(ucr get domainname)"
-ucr set keycloak/server/sso/fqdn?"ucs-sso-ng.${domainname,,}"
+ucr set ucs/server/sso/uri?"https://ucs-sso-ng.${domainname,,}"
 
 eval "$(ucr shell)"
 
@@ -97,7 +97,8 @@ fi
 
 if [ "$server_role" = "domaincontroller_master" ]; then
 	if [ -z "${keycloak_server_sso_certificate_generation}" ] || is_ucr_true keycloak/server/sso/certificate/generation; then
-		univention-certificate new -name "$keycloak_server_sso_fqdn" -days "${ssl_default_days:-1825}" || die
+		fqdn="$(echo "$ucs_server_sso_uri" | sed -E 's|^[a-zA-Z]+://([^/]+).*|\1|')"
+		univention-certificate new -name "$fqdn" -days "${ssl_default_days:-1825}" || die
 		ucr set keycloak/server/sso/certificate/generation='false'
 	fi
 fi

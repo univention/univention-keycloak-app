@@ -1,3 +1,9 @@
+univention-keycloak (3.0.20) unstable; urgency=medium
+
+  * Issue univention/components/keycloak-app#206: Change settings from keycloak/server/sso/fqdn to ucs/server/sso/uri
+
+ -- Julia Bremer <bremer@univention.de>  Sun, 08 Dec 2024 17:15:59 +0100
+
 univention-keycloak (3.0.19) unstable; urgency=medium
 
   * Bug #56474: Enable keycloak to add a conditional authenticator
