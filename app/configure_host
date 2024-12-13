@@ -20,6 +20,8 @@ chmod 640 "/etc/postgresql-keycloak.secret"
 chgrp "DC Backup Hosts" "/etc/postgresql-keycloak.secret"
 chgrp "DC Backup Hosts" "/etc/keycloak.secret"
 
+# update ucr policies
+/usr/lib/univention-directory-policy/univention-policy-update-config-registry
 
 data="$(python3 <<-%EOF
 import json
