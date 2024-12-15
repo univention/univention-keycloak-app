@@ -121,7 +121,7 @@ print(kc_db_ping_datatype)
 # create a policy from keycloak/server/sso/fqdn and keycloak/server/sso/path
 # to ucs/server/sso/uri
 # only update the policy if the policy matches the old value
-if ucr.is_true('ucs/server/sso/uri/autopolicy', False):
+if not ucr.is_true('ucs/server/sso/uri/autopolicy', False):
     exit(0)
 
 setting_name = 'ucs/server/sso/uri'
