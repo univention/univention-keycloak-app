@@ -2246,7 +2246,7 @@ def get_base_url(opt: Namespace) -> None:
     """check that the keycloak url works and print url"""
     # check that the url works
     if IS_UCS:
-        subprocess.check_output('/usr/lib/univention-directory-policy/univention-policy-update-config-registry')
+        subprocess.call('/usr/lib/univention-directory-policy/univention-policy-update-config-registry')
         ucr.load()
         opt.keycloak_url = ucr.get('ucs/server/sso/uri', f'https://ucs-sso-ng.{ucr.get("domainname")}')
     try:
