@@ -11,14 +11,14 @@ if [ -n "$action" ] && [ "$action" = "remove" ]; then
 	exit 0
 fi
 
+# we need to commit the apache conf because that may have changed during an update
+ucr commit /etc/apache2/sites-available/univention-keycloak.conf
+
 service apache2 reload
 
 chmod 640 "/etc/postgresql-keycloak.secret"
 chgrp "DC Backup Hosts" "/etc/postgresql-keycloak.secret"
 chgrp "DC Backup Hosts" "/etc/keycloak.secret"
-
-# update ucr policies
-/usr/lib/univention-directory-policy/univention-policy-update-config-registry
 
 data="$(python3 <<-%EOF
 import json
@@ -156,8 +156,8 @@ kc_db_username="${opts[3]}"
 kc_db_driver="${opts[4]}"
 kc_db_ping_datatype="${opts[5]}"
 
-# we need to commit the apache conf because that may have changed during an update
-ucr commit /etc/apache2/sites-available/univention-keycloak.conf
+# update ucr policies
+/usr/lib/univention-directory-policy/univention-policy-update-config-registry
 
 univention-app configure keycloak --set "kc/db/url=$kc_db_url" "kc/db/username=$kc_db_username" "kc/db/password=$kc_db_password" "kc/db/kind=$kc_db_kind" "kc/db/driver=$kc_db_driver" "kc/db/ping/datatype=$kc_db_ping_datatype" --run-script=no >/dev/null #dont log infos
 univention-app reinitialize keycloak
