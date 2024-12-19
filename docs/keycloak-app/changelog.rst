@@ -16,6 +16,15 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+Version 25.0.6-ucs4
+===================
+
+Released: 19. December 2024
+
+* From now on the Keycloak app will create a UCR policy for the
+  :envvar:`ucs/server/sso/uri` used from UCS 5.2 on to define the default
+  |IDP| for services.
+
 Version 25.0.6-ucs3
 ===================
 
