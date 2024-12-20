@@ -38,6 +38,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import warnings
 from argparse import SUPPRESS, Action, ArgumentDefaultsHelpFormatter, ArgumentParser, Namespace
 from base64 import b64decode
 from collections import namedtuple
@@ -56,6 +57,8 @@ from keycloak.urls_patterns import URL_ADMIN_COMPONENTS, URL_ADMIN_REALM
 from ldap.dn import explode_rdn
 from ldap.filter import filter_format
 
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 if TYPE_CHECKING:
     from univention.udm.modules.settings_data import SettingsDataObject
@@ -1529,7 +1532,7 @@ def parse_args(args: list[str] | None = None) -> Namespace:
     domainname = ucr.get("domainname")
     host_fqdn = "%s.%s" % (ucr.get("hostname"), ucr.get("domainname"))
     umc_saml_sp_server = ucr.get("umc/saml/sp-server", host_fqdn)
-    keycloak_url = ucr.get("ucs/server/sso/uri", f"https://ucs-sso-ng.{domainname}/")
+    keycloak_url = ucr.get("ucs/server/sso/uri", f"https://ucs-sso-ng.{domainname.lower()}/")
     keycloak_fqdn = urlparse(keycloak_url).netloc
     kerberos_realm = ucr.get("kerberos/realm")
 
@@ -2248,7 +2251,7 @@ def get_base_url(opt: Namespace) -> None:
     if IS_UCS:
         subprocess.call('/usr/lib/univention-directory-policy/univention-policy-update-config-registry')
         ucr.load()
-        opt.keycloak_url = ucr.get('ucs/server/sso/uri', f'https://ucs-sso-ng.{ucr.get("domainname")}')
+        opt.keycloak_url = ucr.get('ucs/server/sso/uri', f'https://ucs-sso-ng.{ucr.get("domainname").lower()}')
     try:
         resp = requests.get(opt.keycloak_url)
         assert resp.status_code == 200, f"invalid http status code {resp.status_code}"

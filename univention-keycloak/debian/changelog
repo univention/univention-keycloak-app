@@ -1,4 +1,4 @@
-univention-keycloak (3.0.22) unstable; urgency=medium
+univention-keycloak (3.0.23) unstable; urgency=medium
 
   * Issue univention/components/keycloak-app#206: ignore policy update errors
 
