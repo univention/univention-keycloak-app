@@ -1,22 +1,22 @@
 # SPDX-FileCopyrightText: 2023 Univention GmbH
 # SPDX-License-Identifier: AGPL-3.0-only
 
-ARG UCS_BASE_IMAGE_TAG=0.13.1-post-main-build-2024-09-09
+ARG UCS_BASE_IMAGE_TAG=0.14.0-build-2024-12-12
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
 
-FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} as base
+FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS base
 
 WORKDIR /app
 
 RUN apt-get update \
   && apt-get --assume-yes --no-install-recommends install \
-    ca-certificates=20230311 \
-    python3-ldap=3.4.3-2+b2 \
-    python3-keycloak=3.3.0+dfsg-2 \
-    python3-requests=2.28.1+dfsg-1 \
-    python3-defusedxml=0.7.1-2 \
-    ansible-core=2.14.16-0+deb12u1 \
-    univention-keycloak-client=3.0.19 \
+    ca-certificates \
+    python3-ldap \
+    python3-keycloak \
+    python3-requests \
+    python3-defusedxml \
+    ansible-core \
+    univention-keycloak-client \
   && apt-get autoremove --assume-yes \
   && rm -rf /var/lib/apt/lists/*
 
