@@ -123,9 +123,8 @@ Copy this block to the release issue and do all of them:
 
 After the release we need to create a new "test" version in the appcenter for
 our tests.
-1. [ ] create another app version in the test appcenter
 1. [ ] update `Version` in `app/ini`
-1. [ ] run `update-appcenter-test.sh`
+1. [ ] run `update-appcenter-test.sh -n` to create a new version in the test appcenter
 
 # Documentation
 

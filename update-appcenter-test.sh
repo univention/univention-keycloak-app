@@ -59,16 +59,24 @@ usage () {
 	echo "  -h, --help      show this help message and exit"
 	echo "  -l, --local    copy files to local cache (latest keycloak version)"
 	echo "  -d, --dryn-run  dry-run, just print don't copy"
+	echo "  -n, --new-version  upload new version"
 }
 
+create_new_version () {
+  echo "Creating new version"
+  echo "selfservice new-version $UCS_VERSION/$APP_ID $APP_VERSION"
+	if ! "$dry_run"; then
+		selfservice new-version $UCS_VERSION/$APP_ID $APP_VERSION
+  fi
+}
 
 [ "$IGN_GIT" != "true" ] && test -n "$(git status -s)" && die "Changes in repo, do not upload app! (to override: IGN_GIT=true)"
 
 # read arguments
 opts=$(getopt \
-	--longoptions "help,local,dry-run" \
+	--longoptions "help,local,dry-run,new-versio" \
 	--name "$(basename "$0")" \
-	--options "hld" \
+	--options "hldn" \
 	-- "$@"
 ) || die "see -h|--help"
 eval set -- "$opts"
@@ -89,6 +97,10 @@ do
 			dry_run=true
 			shift
 			;;
+	  -n|--new-version)
+	    create_new_version
+	    shift
+	    ;;
 		--)
 			shift
 			break
