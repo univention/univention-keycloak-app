@@ -19,9 +19,9 @@ Please also consider the `upstream release notes
 Version 25.0.6-ucs4
 ===================
 
-Released: 19. December 2024
+Released: 20. December 2024
 
-* From now on the Keycloak app will create a UCR policy for the
+* Starting with this version the Keycloak app will create a UCR policy for the
   :envvar:`ucs/server/sso/uri` used from UCS 5.2 on to define the default
   |IDP| for services.
 
