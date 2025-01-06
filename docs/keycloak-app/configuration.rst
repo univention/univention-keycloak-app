@@ -764,15 +764,20 @@ more information, consult :cite:t:`keycloak-docs`.
         - ``-server -Xms1024m -Xmx1024m``
         - Installation and app configuration
 
-
 .. envvar:: keycloak/server/sso/fqdn
 
-   Defines the FQDN to the identity provider in your environment's UCS domain.
+   Defines the FQDN of the identity provider for this Keycloak instance.
    Defaults to :samp:`ucs-sso-ng.{$domainname}`.
-   If this setting deviates from the default, you need to set this setting via UCR
-   on all UCS servers in the domain, so that these servers can connect to Keycloak.
+
    Please note that uppercase letters in this setting can lead to problems
    regarding the Keycloak admin console.
+
+   .. note::
+
+      This note only applies to domains with UCS servers with version 5.0 or lower.
+
+      If this setting deviates from the default, you need to set this setting via UCR
+      on all UCS servers in the domain, so that these servers can connect to Keycloak.
 
    .. list-table::
       :header-rows: 1
@@ -1318,6 +1323,29 @@ more information, consult :cite:t:`keycloak-docs`.
       - ``None``
       - Installation and app configuration
 
+Starting with UCS 5.2 there is the additional setting :envvar:`ucs/server/sso/uri`,
+not a :program:`Keycloak` app setting but a normal UCR variable, meant to be
+used by |SAML| or |OIDC| clients for the configuration of the |IDP| endpoint.
+
+.. envvar:: ucs/server/sso/uri
+
+   Defines the URI for the IDP.
+
+   .. list-table::
+     :header-rows: 1
+     :widths: 2 5 5
+
+     * - Required
+       - Default value
+       - Set
+
+     * - Yes
+       - https://ucs-sso-ng.ucs.test/
+       - For all hosts in the UCS domain by the UCR policy
+         ``sso_uri_domainwide_setting``, which is created by the :program:`Keycloak`
+         app during the installation or updated after changing the app setting
+         :envvar:`keycloak/server/sso/fqdn` or
+         :envvar:`keycloak/server/sso/path`.
 
 .. _css-settings:
 
@@ -1533,10 +1561,19 @@ If you install the :program:`Active Directory-compatible Domain Controller` app
 the Primary Directory Node. It ensures that the Kerberos authentication also works
 with the :program:`Active Directory-compatible Domain Controller`:
 
-.. code-block:: console
+.. tab:: until UCS 5.0
 
-  $ eval "$(ucr shell keycloak/server/sso/fqdn)"
-  $ samba-tool spn add "HTTP/$keycloak_server_sso_fqdn" "krbkeycloak"
+   .. code-block:: console
+
+      $ eval "$(ucr shell keycloak/server/sso/fqdn)"
+      $ samba-tool spn add "HTTP/$keycloak_server_sso_fqdn" "krbkeycloak"
+
+.. tab:: starting with UCS 5.2
+
+   .. code-block:: console
+
+      $ fqdn="$(ucr get ucs/server/sso/uri | sed -e 's,https://,,' -e 's,/.*,,')"
+      $ samba-tool spn add "HTTP/$fqdn" "krbkeycloak"
 
 Per default, :program:`Keycloak` tries to use :program:`Kerberos`. If no
 :program:`Kerberos` ticket is available, *Keycloak* falls back to username and

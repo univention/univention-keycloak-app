@@ -173,7 +173,7 @@ automatically.
 
    .. code-block::
 
-      $ wget "https://$(ucr get keycloak/server/sso/fqdn)/realms/ucs/.well-known/openid-configuration"
+      $ wget "$(univention-keycloak get-keycloak-base-url)/realms/ucs/.well-known/openid-configuration"
 
 .. tab:: SAML
 
@@ -181,4 +181,4 @@ automatically.
 
    .. code-block::
 
-      $ wget "https://$(ucr get keycloak/server/sso/fqdn)/realms/ucs/protocol/saml/descriptor"
+      $ wget "$(univention-keycloak get-keycloak-base-url)/realms/ucs/protocol/saml/descriptor"
