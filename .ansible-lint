@@ -1,0 +1,7 @@
+---
+exclude_paths:
+  - ".cache/"
+  - "helm/keycloak-bootstrap/.kyverno/manifest.yaml"
+  - "helm/keycloak-bootstrap/.kyverno/kyverno-test.yaml"
+
+...
