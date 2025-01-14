@@ -1,3 +1,9 @@
+univention-keycloak (3.0.24) unstable; urgency=medium
+
+  * Issue univention/components/keycloak-app#206: always add / in get_base_url
+
+ -- Felix Botner <botner@univention.de>  Tue, 14 Jan 2025 19:08:46 +0100
+
 univention-keycloak (3.0.23) unstable; urgency=medium
 
   * Issue univention/components/keycloak-app#206: ignore policy update errors

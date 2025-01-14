@@ -2253,7 +2253,9 @@ def get_base_url(opt: Namespace) -> None:
         ucr.load()
         opt.keycloak_url = ucr.get('ucs/server/sso/uri', f'https://ucs-sso-ng.{ucr.get("domainname").lower()}')
     try:
-        resp = requests.get(opt.keycloak_url)
+        # we always proxy with a trailing /, so make sure we add this here even
+        # if  ucs/server/sso/uri has no trailing /
+        resp = requests.get(f'{opt.keycloak_url}/')
         assert resp.status_code == 200, f"invalid http status code {resp.status_code}"
     except (requests.exceptions.ConnectionError, AssertionError) as exc:
         print(exc)
