@@ -13,10 +13,6 @@ metadata:
     {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
     {{- end }}
   annotations:
-    "helm.sh/hook": "post-install,post-upgrade"
-    {{- if .Values.cleanup.deletePodsOnSuccess }}
-    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
-    {{- end }}
     {{- if .Values.additionalAnnotations }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
     {{- end }}
@@ -62,6 +58,29 @@ spec:
       {{- if .Values.topologySpreadConstraints }}
       topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" .) | nindent 8 }}
       {{- end }}
+      initContainers:
+      - name: "wait-for-keycloak-container"
+        {{- if .Values.containerSecurityContext.enabled }}
+        securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 10 }}
+        {{- end }}
+        image: "{{ coalesce .Values.waitForDependencyImage.registry .Values.global.imageRegistry }}/{{ .Values.waitForDependencyImage.repository }}{{ if .Values.waitForDependencyImage.sha256 }}@sha256:{{ .Values.waitForDependencyImage.sha256 }}{{ else }}:{{ .Values.waitForDependencyImage.tag }}{{ end }}"
+        imagePullPolicy: {{ coalesce .Values.waitForDependencyImage.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+        envFrom:
+          - configMapRef:
+              name: {{ printf "%s-init" (include "common.names.fullname" .) }}
+        {{- with .Values.extraEnvVars }}
+          {{- . | toYaml | nindent 10 }}
+        {{- end }}
+        command: ["/usr/bin/python3", "/scripts/wait-for-keycloak.py"]
+        {{- if .Values.resources }}
+        resources: {{- include "common.tplvalues.render" (dict "value" .Values.resources "context" .) | nindent 10 }}
+        {{- end }}
+        volumeMounts:
+          - name: "wait-for-keycloak"
+            mountPath: "/scripts"
+          {{- if .Values.extraVolumes }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" .) | nindent 10 }}
+          {{- end }}
       containers:
         - name: "univention-keycloak-bootstrap"
           {{- if .Values.containerSecurityContext.enabled }}
@@ -111,6 +130,9 @@ spec:
             {{ toYaml . | nindent 12 | trim }}
           {{- end }}
       volumes:
+        - name: "wait-for-keycloak"
+          configMap:
+            name: {{ printf "%s-init" (include "common.names.fullname" .) }}
         - name:  "keycloak-credentials-volume"
           secret:
             secretName: {{ tpl .Values.keycloak.auth.existingSecret.name . }}

@@ -134,6 +134,11 @@ image:
   # -- Define image tag.
   tag: "latest"
 
+waitForDependencyImage:
+  registry: "artifacts.software-univention.de"
+  repository: "nubus/images/wait-for-dependency"
+  tag: "0.26.0"
+
 # -- Node labels for pod assignment
 # Ref: https://kubernetes.io/docs/user-guide/node-selection/
 nodeSelector: {}

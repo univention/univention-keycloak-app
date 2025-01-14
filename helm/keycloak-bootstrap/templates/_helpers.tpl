@@ -112,10 +112,8 @@ http
 {{- define "keycloak-bootstrap.keycloak.auth.masterRealm" -}}
 {{- if .Values.keycloak.auth.masterRealm -}}
 {{- .Values.keycloak.auth.masterRealm -}}
-{{- else if .Values.global.nubusDeployment -}}
-master
 {{- else -}}
-{{- required ".Values.keycloak.auth.masterRealm must be defined." .Values.keycloak.auth.masterRealm -}}
+master
 {{- end -}}
 {{- end -}}
 
@@ -126,4 +124,10 @@ master
 {{- printf "%s.%s" .Values.global.subDomains.portal .Values.global.domain }}
 {{- else -}}
 {{- end -}}
+{{- end -}}
+
+{{- define "keycloak-bootstrap.keycloak.connection.master.url" -}}
+{{- $baseurl := include "keycloak-bootstrap.keycloak.connection.baseUrl" . -}}
+{{- $realm := include "keycloak-bootstrap.keycloak.auth.masterRealm" . -}}
+{{- printf "%s/realms/%s" $baseurl $realm }}
 {{- end -}}
