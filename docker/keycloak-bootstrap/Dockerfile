@@ -8,8 +8,7 @@ FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS base
 
 WORKDIR /app
 
-RUN apt-get update \
-  && apt-get --assume-yes --no-install-recommends install \
+RUN apt-get --assume-yes --no-install-recommends install \
     ca-certificates \
     python3-ldap \
     python3-keycloak \
