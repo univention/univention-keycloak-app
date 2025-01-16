@@ -87,10 +87,10 @@ data:
     import os
 
     keycloak_url = os.environ.get('KEYCLOAK_URL')
-    max_retries = 60
+    max_retries = 300
     retries = 0
 
-    while True:
+    for retry in range(max_retries):
         try:
             response = requests.get(keycloak_url)
             if response.status_code == 200:
@@ -98,9 +98,10 @@ data:
                 sys.exit(0)
             elif response.status_code == 404:
                 print('Realm not ready')
-                pass
+            else:
+                print('Unexpected response code: ', response.status_code)
         except requests.exceptions.ConnectionError:
             print('Could not reach keycloak, retrying...')
-            pass
         time.sleep(1)
+    sys.exit(1)
 ...

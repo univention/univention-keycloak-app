@@ -59,12 +59,12 @@ spec:
       topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" .) | nindent 8 }}
       {{- end }}
       initContainers:
-      - name: "wait-for-keycloak-container"
+      - name: "wait-for-keycloak"
         {{- if .Values.containerSecurityContext.enabled }}
         securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 10 }}
         {{- end }}
-        image: "{{ coalesce .Values.waitForDependencyImage.registry .Values.global.imageRegistry }}/{{ .Values.waitForDependencyImage.repository }}{{ if .Values.waitForDependencyImage.sha256 }}@sha256:{{ .Values.waitForDependencyImage.sha256 }}{{ else }}:{{ .Values.waitForDependencyImage.tag }}{{ end }}"
-        imagePullPolicy: {{ coalesce .Values.waitForDependencyImage.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+        image: "{{ coalesce .Values.waitForDependency.image.registry .Values.global.imageRegistry }}/{{ .Values.waitForDependency.image.repository }}{{ if .Values.waitForDependency.image.sha256 }}@sha256:{{ .Values.waitForDependency.image.sha256 }}{{ else }}:{{ .Values.waitForDependency.image.tag }}{{ end }}"
+        imagePullPolicy: {{ coalesce .Values.waitForDependency.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
         envFrom:
           - configMapRef:
               name: {{ printf "%s-init" (include "common.names.fullname" .) }}

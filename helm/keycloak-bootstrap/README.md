@@ -95,9 +95,10 @@ helm install my-release ${CI_PROJECT_NAME}/keycloak-bootstrap
 | terminationGracePeriodSeconds | string | `""` | In seconds, time the given to the pod needs to terminate gracefully. Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods |
 | tolerations | list | `[]` | Tolerations for pod assignment Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ |
 | topologySpreadConstraints | list | `[]` | Topology spread constraints rely on node labels to identify the topology domain(s) that each Node is in Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/  topologySpreadConstraints:   - maxSkew: 1     topologyKey: failure-domain.beta.kubernetes.io/zone     whenUnsatisfiable: DoNotSchedule |
-| waitForDependencyImage.registry | string | `"artifacts.software-univention.de"` |  |
-| waitForDependencyImage.repository | string | `"nubus/images/wait-for-dependency"` |  |
-| waitForDependencyImage.tag | string | `"0.26.0"` |  |
+| waitForDependency.image.imagePullPolicy | string | `"IfNotPresent"` |  |
+| waitForDependency.image.registry | string | `"artifacts.software-univention.de"` |  |
+| waitForDependency.image.repository | string | `"nubus/images/wait-for-dependency"` |  |
+| waitForDependency.image.tag | string | `"0.26.0@sha256:a31fde86bf21c597a31356fe492ab7e7a03a89282ca215eb7100763d6eb96b6b"` |  |
 
 ## Uninstalling the Chart
 
