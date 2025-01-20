@@ -7,6 +7,13 @@
 Migration of services using OIDC for authentication
 ===================================================
 
+.. note::
+
+   If you don't have :program:`OpenID Connect Provider` installed in
+   your domain, there is no need for the migration described in this chapter.
+   In fact the following |UDM| commands will fail as the module ``oidc/rpservice``
+   is only available if :program:`OpenID Connect Provider` is installed.
+
 This section gives a general idea about the migration of services that use
 :program:`OpenID Connect Provider` as :term:`OIDC Provider` for the
 authentication to :program:`Keycloak` as :term:`OIDC Provider`.
