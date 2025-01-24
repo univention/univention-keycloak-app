@@ -36,7 +36,9 @@ import org.openapitools.client.ApiException;
 import org.openapitools.client.model.UsersUser;
 import org.openapitools.client.model.UsersUserList;
 import org.openapitools.client.model.UsersUserListEmbedded;
+import org.openapitools.client.model.UsersUserProperties;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,8 @@ import java.nio.ByteBuffer;
 import java.util.UUID;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
+import java.util.Collections;
+import java.util.Set;
 
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
@@ -133,12 +137,12 @@ public class UniventionAuthenticator implements Authenticator {
             context.failure(AuthenticationFlowError.INTERNAL_ERROR);
         }
         Map<String, Object> userData = Map.of(
-            "firstname", firstname,
-            "lastname", lastname,
-            "username", username,
-            "password", password, // random password ???
-            "e-mail", new String[]{email},
-            "description", "Shadow copy of user",
+            "Firstname", firstname,
+            "Lastname", lastname,
+            "Username", username,
+            "Password", password, // random password ???
+            "email", email,
+            "Description", "Shadow copy of user",
 
             remIdGUID_key, decoded_remoteGUID,
             remSourceID_key, remSourceID_value
@@ -257,7 +261,28 @@ public class UniventionAuthenticator implements Authenticator {
             return null;
         }
 
-        userTemplate.getProperties().putAll(userData);
+        UsersUserProperties userProp = new UsersUserProperties((String) userData.get("password"));
+
+        // Iterate over the map and use the setters
+        userData.forEach((property, value) -> {
+            try {
+                // Build the setter name: "set" + capitalized property
+                String setterName = "set" + property;
+
+                // Get the setter method
+                Method method = userProp.getClass().getMethod(setterName, value.getClass());
+
+                // Call the setter with the value
+                method.invoke(userProp, value);
+            } catch (Exception e) {
+                System.err.println("Can't use the setter method for " + property + ": " + e.getMessage());
+            }
+        });
+        userProp.addEMailItem((String) userData.get("email"));
+        userProp.putAdditionalProperty( "univentionObjectIdentifier", userData.get("univentionObjectIdentifier"));
+        userProp.putAdditionalProperty( "univentionSourceIAM", userData.get("univentionSourceIAM"));
+        userTemplate.setProperties(userProp);
+
         UsersUser result = null;
         try {
             result = api.udmUsersUserObjectCreate(userTemplate);

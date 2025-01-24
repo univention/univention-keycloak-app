@@ -14,305 +14,269 @@
 package org.openapitools.client.model;
 
 import java.util.Objects;
-import java.util.Arrays;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.openapitools.client.model.UsersUserLinks;
 import org.openapitools.client.model.UsersUserOptions;
 import org.openapitools.client.model.UsersUserPolicies;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import org.openapitools.client.model.UsersUserProperties;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import java.io.IOException;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.openapitools.client.JSON;
 
 /**
  * UsersUser
  */
-@JsonPropertyOrder({
-  UsersUser.JSON_PROPERTY_DN,
-  UsersUser.JSON_PROPERTY_UUID,
-  UsersUser.JSON_PROPERTY_OBJECT_TYPE,
-  UsersUser.JSON_PROPERTY_LINKS,
-  UsersUser.JSON_PROPERTY_EMBEDDED,
-  UsersUser.JSON_PROPERTY_POSITION,
-  UsersUser.JSON_PROPERTY_PROPERTIES,
-  UsersUser.JSON_PROPERTY_URI,
-  UsersUser.JSON_PROPERTY_OPTIONS,
-  UsersUser.JSON_PROPERTY_POLICIES
-})
-@JsonTypeName("users-user")
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-10-25T17:17:28.719252+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-01-25T19:07:57.795532733+01:00[Europe/Madrid]", comments = "Generator version: 7.9.0")
 public class UsersUser {
-  public static final String JSON_PROPERTY_DN = "dn";
+  public static final String SERIALIZED_NAME_EMBEDDED = "_embedded";
+  @SerializedName(SERIALIZED_NAME_EMBEDDED)
+  private Map<String, Object> embedded = new HashMap<>();
+
+  public static final String SERIALIZED_NAME_LINKS = "_links";
+  @SerializedName(SERIALIZED_NAME_LINKS)
+  private UsersUserLinks links;
+
+  public static final String SERIALIZED_NAME_DN = "dn";
+  @SerializedName(SERIALIZED_NAME_DN)
   private String dn;
 
-  public static final String JSON_PROPERTY_UUID = "uuid";
-  private UUID uuid;
-
-  public static final String JSON_PROPERTY_OBJECT_TYPE = "objectType";
+  public static final String SERIALIZED_NAME_OBJECT_TYPE = "objectType";
+  @SerializedName(SERIALIZED_NAME_OBJECT_TYPE)
   private String objectType;
 
-  public static final String JSON_PROPERTY_LINKS = "_links";
-  private Map<String, Object> links = null;
-
-  public static final String JSON_PROPERTY_EMBEDDED = "_embedded";
-  private Map<String, Object> embedded = null;
-
-  public static final String JSON_PROPERTY_POSITION = "position";
-  private String position;
-
-  public static final String JSON_PROPERTY_PROPERTIES = "properties";
-  private Map<String, Object> properties = null;
-
-  public static final String JSON_PROPERTY_URI = "uri";
-  private URI uri;
-
-  public static final String JSON_PROPERTY_OPTIONS = "options";
+  public static final String SERIALIZED_NAME_OPTIONS = "options";
+  @SerializedName(SERIALIZED_NAME_OPTIONS)
   private UsersUserOptions options;
 
-  public static final String JSON_PROPERTY_POLICIES = "policies";
+  public static final String SERIALIZED_NAME_POLICIES = "policies";
+  @SerializedName(SERIALIZED_NAME_POLICIES)
   private UsersUserPolicies policies;
 
+  public static final String SERIALIZED_NAME_POSITION = "position";
+  @SerializedName(SERIALIZED_NAME_POSITION)
+  private String position;
 
-   /**
-   * LDAP DN (Distinguished Name)
-   * @return dn
-  **/
-  @jakarta.annotation.Nullable
-  @ApiModelProperty(example = "dc=example,dc=net", value = "LDAP DN (Distinguished Name)")
-  @JsonProperty(JSON_PROPERTY_DN)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public static final String SERIALIZED_NAME_PROPERTIES = "properties";
+  @SerializedName(SERIALIZED_NAME_PROPERTIES)
+  private UsersUserProperties properties;
 
-  public String getDn() {
-    return dn;
+  public static final String SERIALIZED_NAME_URI = "uri";
+  @SerializedName(SERIALIZED_NAME_URI)
+  private URI uri;
+
+  public static final String SERIALIZED_NAME_UUID = "uuid";
+  @SerializedName(SERIALIZED_NAME_UUID)
+  private UUID uuid;
+
+  public UsersUser() {
   }
 
-
-
-
-  public UsersUser uuid(UUID uuid) {
-
-    this.uuid = uuid;
-    return this;
+  public UsersUser(
+     Map<String, Object> embedded,
+     String dn,
+     String objectType
+  ) {
+    this();
+    this.embedded = embedded;
+    this.dn = dn;
+    this.objectType = objectType;
   }
 
-   /**
-   * LDAP Entry-UUID
-   * @return uuid
-  **/
-  @jakarta.annotation.Nullable
-  @ApiModelProperty(value = "LDAP Entry-UUID")
-  @JsonProperty(JSON_PROPERTY_UUID)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-
-  public UUID getUuid() {
-    return uuid;
-  }
-
-
-  @JsonProperty(JSON_PROPERTY_UUID)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setUuid(UUID uuid) {
-    this.uuid = uuid;
-  }
-
-
-   /**
-   * UDM Object-Type
-   * @return objectType
-  **/
-  @jakarta.annotation.Nullable
-  @ApiModelProperty(example = "users/user", value = "UDM Object-Type")
-  @JsonProperty(JSON_PROPERTY_OBJECT_TYPE)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-
-  public String getObjectType() {
-    return objectType;
-  }
-
-
-
-
-   /**
-   * Hypertext Application Language (HAL) links
-   * @return links
-  **/
-  @jakarta.annotation.Nullable
-  @ApiModelProperty(value = "Hypertext Application Language (HAL) links")
-  @JsonProperty(JSON_PROPERTY_LINKS)
-  @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.USE_DEFAULTS)
-
-  public Map<String, Object> getLinks() {
-    return links;
-  }
-
-
-
-
-   /**
+  /**
    * Hypertext Application Language (HAL) embedded resources
    * @return embedded
-  **/
-  @jakarta.annotation.Nullable
-  @ApiModelProperty(value = "Hypertext Application Language (HAL) embedded resources")
-  @JsonProperty(JSON_PROPERTY_EMBEDDED)
-  @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.USE_DEFAULTS)
-
+   */
+  @javax.annotation.Nullable
   public Map<String, Object> getEmbedded() {
     return embedded;
   }
 
 
 
-
-  public UsersUser position(String position) {
-
-    this.position = position;
+  public UsersUser links(UsersUserLinks links) {
+    this.links = links;
     return this;
   }
 
-   /**
-   * DN of LDAP node below which the object is located. Changing this causes a move of the object. When chaning no other changes are applied.
-   * @return position
-  **/
-  @jakarta.annotation.Nullable
-  @ApiModelProperty(example = "cn=position,dc=example,dc=net", value = "DN of LDAP node below which the object is located. Changing this causes a move of the object. When chaning no other changes are applied.")
-  @JsonProperty(JSON_PROPERTY_POSITION)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  /**
+   * Get links
+   * @return links
+   */
+  @javax.annotation.Nullable
+  public UsersUserLinks getLinks() {
+    return links;
+  }
 
-  public String getPosition() {
-    return position;
+  public void setLinks(UsersUserLinks links) {
+    this.links = links;
   }
 
 
-  @JsonProperty(JSON_PROPERTY_POSITION)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPosition(String position) {
-    this.position = position;
+  /**
+   * LDAP DN (Distinguished Name)
+   * @return dn
+   */
+  @javax.annotation.Nullable
+  public String getDn() {
+    return dn;
   }
 
 
-  public UsersUser properties(Map<String, Object> properties) {
 
-    this.properties = properties;
-    return this;
+  /**
+   * UDM Object-Type
+   * @return objectType
+   */
+  @javax.annotation.Nullable
+  public String getObjectType() {
+    return objectType;
   }
 
-  public UsersUser putPropertiesItem(String key, Object propertiesItem) {
-    if (this.properties == null) {
-      this.properties = new HashMap<String, Object>();
-    }
-    this.properties.put(key, propertiesItem);
-    return this;
-  }
-
-   /**
-   * Get properties
-   * @return properties
-  **/
-  @jakarta.annotation.Nullable
-  @ApiModelProperty(value = "")
-  @JsonProperty(JSON_PROPERTY_PROPERTIES)
-  @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.USE_DEFAULTS)
-
-  public Map<String, Object> getProperties() {
-    return properties;
-  }
-
-
-  @JsonProperty(JSON_PROPERTY_PROPERTIES)
-  @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.USE_DEFAULTS)
-  public void setProperties(Map<String, Object> properties) {
-    this.properties = properties;
-  }
-
-
-  public UsersUser uri(URI uri) {
-
-    this.uri = uri;
-    return this;
-  }
-
-   /**
-   * Get uri
-   * @return uri
-  **/
-  @jakarta.annotation.Nullable
-  @ApiModelProperty(example = "http://10.200.69.10/univention/udm/users/user/uid=foo,dc=example,dc=net", value = "")
-  @JsonProperty(JSON_PROPERTY_URI)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-
-  public URI getUri() {
-    return uri;
-  }
-
-
-  @JsonProperty(JSON_PROPERTY_URI)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setUri(URI uri) {
-    this.uri = uri;
-  }
 
 
   public UsersUser options(UsersUserOptions options) {
-
     this.options = options;
     return this;
   }
 
-   /**
+  /**
    * Get options
    * @return options
-  **/
-  @jakarta.annotation.Nullable
-  @ApiModelProperty(value = "")
-  @JsonProperty(JSON_PROPERTY_OPTIONS)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-
+   */
+  @javax.annotation.Nullable
   public UsersUserOptions getOptions() {
     return options;
   }
 
-
-  @JsonProperty(JSON_PROPERTY_OPTIONS)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setOptions(UsersUserOptions options) {
     this.options = options;
   }
 
 
   public UsersUser policies(UsersUserPolicies policies) {
-
     this.policies = policies;
     return this;
   }
 
-   /**
+  /**
    * Get policies
    * @return policies
-  **/
-  @jakarta.annotation.Nullable
-  @ApiModelProperty(value = "")
-  @JsonProperty(JSON_PROPERTY_POLICIES)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-
+   */
+  @javax.annotation.Nullable
   public UsersUserPolicies getPolicies() {
     return policies;
   }
 
-
-  @JsonProperty(JSON_PROPERTY_POLICIES)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setPolicies(UsersUserPolicies policies) {
     this.policies = policies;
   }
+
+
+  public UsersUser position(String position) {
+    this.position = position;
+    return this;
+  }
+
+  /**
+   * DN of LDAP node below which the object is located. Changing this causes a move of the object. When chaning no other changes are applied.
+   * @return position
+   */
+  @javax.annotation.Nullable
+  public String getPosition() {
+    return position;
+  }
+
+  public void setPosition(String position) {
+    this.position = position;
+  }
+
+
+  public UsersUser properties(UsersUserProperties properties) {
+    this.properties = properties;
+    return this;
+  }
+
+  /**
+   * Get properties
+   * @return properties
+   */
+  @javax.annotation.Nullable
+  public UsersUserProperties getProperties() {
+    return properties;
+  }
+
+  public void setProperties(UsersUserProperties properties) {
+    this.properties = properties;
+  }
+
+
+  public UsersUser uri(URI uri) {
+    this.uri = uri;
+    return this;
+  }
+
+  /**
+   * Get uri
+   * @return uri
+   */
+  @javax.annotation.Nullable
+  public URI getUri() {
+    return uri;
+  }
+
+  public void setUri(URI uri) {
+    this.uri = uri;
+  }
+
+
+  public UsersUser uuid(UUID uuid) {
+    this.uuid = uuid;
+    return this;
+  }
+
+  /**
+   * LDAP Entry-UUID
+   * @return uuid
+   */
+  @javax.annotation.Nullable
+  public UUID getUuid() {
+    return uuid;
+  }
+
+  public void setUuid(UUID uuid) {
+    this.uuid = uuid;
+  }
+
 
 
   @Override
@@ -324,37 +288,37 @@ public class UsersUser {
       return false;
     }
     UsersUser usersUser = (UsersUser) o;
-    return Objects.equals(this.dn, usersUser.dn) &&
-        Objects.equals(this.uuid, usersUser.uuid) &&
-        Objects.equals(this.objectType, usersUser.objectType) &&
+    return Objects.equals(this.embedded, usersUser.embedded) &&
         Objects.equals(this.links, usersUser.links) &&
-        Objects.equals(this.embedded, usersUser.embedded) &&
+        Objects.equals(this.dn, usersUser.dn) &&
+        Objects.equals(this.objectType, usersUser.objectType) &&
+        Objects.equals(this.options, usersUser.options) &&
+        Objects.equals(this.policies, usersUser.policies) &&
         Objects.equals(this.position, usersUser.position) &&
         Objects.equals(this.properties, usersUser.properties) &&
         Objects.equals(this.uri, usersUser.uri) &&
-        Objects.equals(this.options, usersUser.options) &&
-        Objects.equals(this.policies, usersUser.policies);
+        Objects.equals(this.uuid, usersUser.uuid);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(dn, uuid, objectType, links, embedded, position, properties, uri, options, policies);
+    return Objects.hash(embedded, links, dn, objectType, options, policies, position, properties, uri, uuid);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UsersUser {\n");
-    sb.append("    dn: ").append(toIndentedString(dn)).append("\n");
-    sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
-    sb.append("    objectType: ").append(toIndentedString(objectType)).append("\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("    embedded: ").append(toIndentedString(embedded)).append("\n");
+    sb.append("    links: ").append(toIndentedString(links)).append("\n");
+    sb.append("    dn: ").append(toIndentedString(dn)).append("\n");
+    sb.append("    objectType: ").append(toIndentedString(objectType)).append("\n");
+    sb.append("    options: ").append(toIndentedString(options)).append("\n");
+    sb.append("    policies: ").append(toIndentedString(policies)).append("\n");
     sb.append("    position: ").append(toIndentedString(position)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    uri: ").append(toIndentedString(uri)).append("\n");
-    sb.append("    options: ").append(toIndentedString(options)).append("\n");
-    sb.append("    policies: ").append(toIndentedString(policies)).append("\n");
+    sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -370,5 +334,121 @@ public class UsersUser {
     return o.toString().replace("\n", "\n    ");
   }
 
+
+  public static HashSet<String> openapiFields;
+  public static HashSet<String> openapiRequiredFields;
+
+  static {
+    // a set of all properties/fields (JSON key names)
+    openapiFields = new HashSet<String>();
+    openapiFields.add("_embedded");
+    openapiFields.add("_links");
+    openapiFields.add("dn");
+    openapiFields.add("objectType");
+    openapiFields.add("options");
+    openapiFields.add("policies");
+    openapiFields.add("position");
+    openapiFields.add("properties");
+    openapiFields.add("uri");
+    openapiFields.add("uuid");
+
+    // a set of required properties/fields (JSON key names)
+    openapiRequiredFields = new HashSet<String>();
+  }
+
+  /**
+   * Validates the JSON Element and throws an exception if issues found
+   *
+   * @param jsonElement JSON Element
+   * @throws IOException if the JSON Element is invalid with respect to UsersUser
+   */
+  public static void validateJsonElement(JsonElement jsonElement) throws IOException {
+      if (jsonElement == null) {
+        if (!UsersUser.openapiRequiredFields.isEmpty()) { // has required fields but JSON element is null
+          throw new IllegalArgumentException(String.format("The required field(s) %s in UsersUser is not found in the empty JSON string", UsersUser.openapiRequiredFields.toString()));
+        }
+      }
+
+      Set<Map.Entry<String, JsonElement>> entries = jsonElement.getAsJsonObject().entrySet();
+      // check to see if the JSON string contains additional fields
+      for (Map.Entry<String, JsonElement> entry : entries) {
+        if (!UsersUser.openapiFields.contains(entry.getKey())) {
+          throw new IllegalArgumentException(String.format("The field `%s` in the JSON string is not defined in the `UsersUser` properties. JSON: %s", entry.getKey(), jsonElement.toString()));
+        }
+      }
+        JsonObject jsonObj = jsonElement.getAsJsonObject();
+      if ((jsonObj.get("dn") != null && !jsonObj.get("dn").isJsonNull()) && !jsonObj.get("dn").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `dn` to be a primitive type in the JSON string but got `%s`", jsonObj.get("dn").toString()));
+      }
+      if ((jsonObj.get("objectType") != null && !jsonObj.get("objectType").isJsonNull()) && !jsonObj.get("objectType").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `objectType` to be a primitive type in the JSON string but got `%s`", jsonObj.get("objectType").toString()));
+      }
+      // validate the optional field `options`
+      if (jsonObj.get("options") != null && !jsonObj.get("options").isJsonNull()) {
+        UsersUserOptions.validateJsonElement(jsonObj.get("options"));
+      }
+      // validate the optional field `policies`
+      if (jsonObj.get("policies") != null && !jsonObj.get("policies").isJsonNull()) {
+        UsersUserPolicies.validateJsonElement(jsonObj.get("policies"));
+      }
+      if ((jsonObj.get("position") != null && !jsonObj.get("position").isJsonNull()) && !jsonObj.get("position").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `position` to be a primitive type in the JSON string but got `%s`", jsonObj.get("position").toString()));
+      }
+      if ((jsonObj.get("uri") != null && !jsonObj.get("uri").isJsonNull()) && !jsonObj.get("uri").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `uri` to be a primitive type in the JSON string but got `%s`", jsonObj.get("uri").toString()));
+      }
+      if ((jsonObj.get("uuid") != null && !jsonObj.get("uuid").isJsonNull()) && !jsonObj.get("uuid").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format("Expected the field `uuid` to be a primitive type in the JSON string but got `%s`", jsonObj.get("uuid").toString()));
+      }
+  }
+
+  public static class CustomTypeAdapterFactory implements TypeAdapterFactory {
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+       if (!UsersUser.class.isAssignableFrom(type.getRawType())) {
+         return null; // this class only serializes 'UsersUser' and its subtypes
+       }
+       final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
+       final TypeAdapter<UsersUser> thisAdapter
+                        = gson.getDelegateAdapter(this, TypeToken.get(UsersUser.class));
+
+       return (TypeAdapter<T>) new TypeAdapter<UsersUser>() {
+           @Override
+           public void write(JsonWriter out, UsersUser value) throws IOException {
+             JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
+             elementAdapter.write(out, obj);
+           }
+
+           @Override
+           public UsersUser read(JsonReader in) throws IOException {
+             JsonElement jsonElement = elementAdapter.read(in);
+             validateJsonElement(jsonElement);
+             return thisAdapter.fromJsonTree(jsonElement);
+           }
+
+       }.nullSafe();
+    }
+  }
+
+  /**
+   * Create an instance of UsersUser given an JSON string
+   *
+   * @param jsonString JSON string
+   * @return An instance of UsersUser
+   * @throws IOException if the JSON string is invalid with respect to UsersUser
+   */
+  public static UsersUser fromJson(String jsonString) throws IOException {
+    return JSON.getGson().fromJson(jsonString, UsersUser.class);
+  }
+
+  /**
+   * Convert an instance of UsersUser to an JSON string
+   *
+   * @return JSON string
+   */
+  public String toJson() {
+    return JSON.getGson().toJson(this);
+  }
 }
 

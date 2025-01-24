@@ -14,35 +14,53 @@
 package org.openapitools.client.model;
 
 import java.util.Objects;
-import java.util.Arrays;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.openapitools.client.model.UsersUser;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import java.io.IOException;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.openapitools.client.JSON;
 
 /**
  * UsersUserListEmbedded
  */
-@JsonPropertyOrder({
-  UsersUserListEmbedded.JSON_PROPERTY_UDM_COLON_OBJECT
-})
-@JsonTypeName("users_user_list__embedded")
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-10-25T17:17:28.719252+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-01-25T19:07:57.795532733+01:00[Europe/Madrid]", comments = "Generator version: 7.9.0")
 public class UsersUserListEmbedded {
-  public static final String JSON_PROPERTY_UDM_COLON_OBJECT = "udm:object";
-  private List<UsersUser> udmColonObject = null;
+  public static final String SERIALIZED_NAME_UDM_COLON_OBJECT = "udm:object";
+  @SerializedName(SERIALIZED_NAME_UDM_COLON_OBJECT)
+  private List<UsersUser> udmColonObject = new ArrayList<>();
 
+  public UsersUserListEmbedded() {
+  }
 
   public UsersUserListEmbedded udmColonObject(List<UsersUser> udmColonObject) {
-
     this.udmColonObject = udmColonObject;
     return this;
   }
@@ -55,25 +73,19 @@ public class UsersUserListEmbedded {
     return this;
   }
 
-   /**
+  /**
    * Get udmColonObject
    * @return udmColonObject
-  **/
-  @jakarta.annotation.Nullable
-  @ApiModelProperty(value = "")
-  @JsonProperty(JSON_PROPERTY_UDM_COLON_OBJECT)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-
+   */
+  @javax.annotation.Nullable
   public List<UsersUser> getUdmColonObject() {
     return udmColonObject;
   }
 
-
-  @JsonProperty(JSON_PROPERTY_UDM_COLON_OBJECT)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setUdmColonObject(List<UsersUser> udmColonObject) {
     this.udmColonObject = udmColonObject;
   }
+
 
 
   @Override
@@ -113,5 +125,103 @@ public class UsersUserListEmbedded {
     return o.toString().replace("\n", "\n    ");
   }
 
+
+  public static HashSet<String> openapiFields;
+  public static HashSet<String> openapiRequiredFields;
+
+  static {
+    // a set of all properties/fields (JSON key names)
+    openapiFields = new HashSet<String>();
+    openapiFields.add("udm:object");
+
+    // a set of required properties/fields (JSON key names)
+    openapiRequiredFields = new HashSet<String>();
+  }
+
+  /**
+   * Validates the JSON Element and throws an exception if issues found
+   *
+   * @param jsonElement JSON Element
+   * @throws IOException if the JSON Element is invalid with respect to UsersUserListEmbedded
+   */
+  public static void validateJsonElement(JsonElement jsonElement) throws IOException {
+      if (jsonElement == null) {
+        if (!UsersUserListEmbedded.openapiRequiredFields.isEmpty()) { // has required fields but JSON element is null
+          throw new IllegalArgumentException(String.format("The required field(s) %s in UsersUserListEmbedded is not found in the empty JSON string", UsersUserListEmbedded.openapiRequiredFields.toString()));
+        }
+      }
+
+      Set<Map.Entry<String, JsonElement>> entries = jsonElement.getAsJsonObject().entrySet();
+      // check to see if the JSON string contains additional fields
+      for (Map.Entry<String, JsonElement> entry : entries) {
+        if (!UsersUserListEmbedded.openapiFields.contains(entry.getKey())) {
+          throw new IllegalArgumentException(String.format("The field `%s` in the JSON string is not defined in the `UsersUserListEmbedded` properties. JSON: %s", entry.getKey(), jsonElement.toString()));
+        }
+      }
+        JsonObject jsonObj = jsonElement.getAsJsonObject();
+      if (jsonObj.get("udm:object") != null && !jsonObj.get("udm:object").isJsonNull()) {
+        JsonArray jsonArrayudmColonObject = jsonObj.getAsJsonArray("udm:object");
+        if (jsonArrayudmColonObject != null) {
+          // ensure the json data is an array
+          if (!jsonObj.get("udm:object").isJsonArray()) {
+            throw new IllegalArgumentException(String.format("Expected the field `udm:object` to be an array in the JSON string but got `%s`", jsonObj.get("udm:object").toString()));
+          }
+
+          // validate the optional field `udm:object` (array)
+          for (int i = 0; i < jsonArrayudmColonObject.size(); i++) {
+            UsersUser.validateJsonElement(jsonArrayudmColonObject.get(i));
+          };
+        }
+      }
+  }
+
+  public static class CustomTypeAdapterFactory implements TypeAdapterFactory {
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+       if (!UsersUserListEmbedded.class.isAssignableFrom(type.getRawType())) {
+         return null; // this class only serializes 'UsersUserListEmbedded' and its subtypes
+       }
+       final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
+       final TypeAdapter<UsersUserListEmbedded> thisAdapter
+                        = gson.getDelegateAdapter(this, TypeToken.get(UsersUserListEmbedded.class));
+
+       return (TypeAdapter<T>) new TypeAdapter<UsersUserListEmbedded>() {
+           @Override
+           public void write(JsonWriter out, UsersUserListEmbedded value) throws IOException {
+             JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
+             elementAdapter.write(out, obj);
+           }
+
+           @Override
+           public UsersUserListEmbedded read(JsonReader in) throws IOException {
+             JsonElement jsonElement = elementAdapter.read(in);
+             validateJsonElement(jsonElement);
+             return thisAdapter.fromJsonTree(jsonElement);
+           }
+
+       }.nullSafe();
+    }
+  }
+
+  /**
+   * Create an instance of UsersUserListEmbedded given an JSON string
+   *
+   * @param jsonString JSON string
+   * @return An instance of UsersUserListEmbedded
+   * @throws IOException if the JSON string is invalid with respect to UsersUserListEmbedded
+   */
+  public static UsersUserListEmbedded fromJson(String jsonString) throws IOException {
+    return JSON.getGson().fromJson(jsonString, UsersUserListEmbedded.class);
+  }
+
+  /**
+   * Convert an instance of UsersUserListEmbedded to an JSON string
+   *
+   * @return JSON string
+   */
+  public String toJson() {
+    return JSON.getGson().toJson(this);
+  }
 }
 

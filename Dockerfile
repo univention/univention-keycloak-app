@@ -45,8 +45,8 @@ COPY --from=maven /extensions/lib/univention-condition-ipaddress-*.jar /opt/keyc
 COPY --from=maven /extensions/lib/univention-user-attribute-nameid-mapper-base64-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-condition-ipaddress-*.jar /opt/keycloak/providers
 COPY --from=maven /root/.m2/repository/com/github/seancfoley/ipaddress/5.5.1/ipaddress-5.5.1.jar /opt/keycloak/providers
-# COPY --from=maven /extensions/univention-directory-manager/target/univention-directory-manager.jar /opt/keycloak/providers/
-# COPY --from=maven /extensions/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
+COPY --from=maven /extensions/univention-directory-manager/target/univention-directory-manager.jar /opt/keycloak/providers/
+COPY --from=maven /extensions/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
 RUN cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.jdbc.ojdbc11-*.jar \
  && cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.nls.orai18n-*.jar \
  && cp empty.jar opt/keycloak/lib/lib/deployment/io.quarkus.quarkus-jdbc-oracle-deployment-*.Final.jar \
