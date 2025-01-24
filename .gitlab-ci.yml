@@ -1,39 +1,44 @@
-variables:
-  SECURITY_MONITORING:
-    value: "no"
-    options:
-      - "yes"
-      - "no"
-    description: "Set to yes if you want to run the security monitoring jobs"
-  # version
-  PACKAGE_REGISTRY: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/keycloak-tar"
-  # Documentation build uses this variable to set the release version of the document
-  KEYCLOAK_VERSION: "26.1.4"
-  # this is where we get keycloak from
-  KEYCLOAK_SOURCE: "https://github.com/keycloak/keycloak/releases/download/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
-  # this is where we keycloak store and use from during the image build
-  KEYCLOAK_DIST: "${PACKAGE_REGISTRY}/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
-  # Documentation build uses this variable to determine the artifact output directory.
-  DOC_TARGET_VERSION: "${KEYCLOAK_VERSION}"
-  KANIKO_ARGS: --build-arg commit="$CI_COMMIT_SHA" --build-arg date="$CI_JOB_STARTED_AT" --cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache --build-arg KEYCLOAK_VERSION=$KEYCLOAK_VERSION --build-arg KEYCLOAK_DIST=$KEYCLOAK_DIST
-  LATEST_RELEASED_KEYCLOAK_VERSION: "25.0.6-ucs4"
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2023-2024 Univention GmbH
 
-workflow:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_OPEN_MERGE_REQUESTS
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true"
-    - if: $CI_PIPELINE_SOURCE == "web"
-    - if: $CI_PIPELINE_SOURCE == "webide"
-    - if: $SECURITY_MONITORING == "yes"
+---
 
 include:
-  - project: univention/dist/docker-services
+  - project: "univention/customers/dataport/upx/common-ci"
+    ref: "v1.36.1"
     file:
-      - kaniko.yml
-      - pre-commit.yml
-  - local: /.gitlab-ci/gitlab-ci.yml
-    rules:
-      - if: $SECURITY_MONITORING != "yes"
-  - local: /.gitlab-ci/gitlab-ci-sec.yml
-    rules:
-      - if: $SECURITY_MONITORING == "yes"
+      - "defaults/stages.yaml"
+      - "defaults/nubus-workflow.yaml"
+      - "jobs/semantic-release-env.yaml"
+      - "jobs/container-build-external.yaml"
+
+  - project: "univention/dist/docker-services"
+    ref: "master"
+    file:
+      - "dind.yml"
+
+.build-matrix: &build-matrix
+  - IMAGE_NAME: "keycloak-app"
+    DOCKERFILE_PATH: "./Dockerfile"
+    KANIKO_BUILD_CONTEXT: "./"
+    KANIKO_ARGS: "--build-arg KEYCLOAK_VERSION=25.0.6 --build-arg KEYCLOAK_DIST=https://git.knut.univention.de/api/v4/projects/600/packages/generic/keycloak-tar/25.0.6/keycloak-25.0.6.tar.gz"
+
+.publish-matrix: &publish-matrix
+  - IMAGE_NAME:
+      - "keycloak-app"
+
+container-build:
+  parallel:
+    matrix: *build-matrix
+
+container-malware-scan:
+  parallel:
+    matrix: *publish-matrix
+
+container-sign-external:
+  parallel:
+    matrix: *build-matrix
+
+push-image-external:
+  parallel:
+    matrix: *publish-matrix
