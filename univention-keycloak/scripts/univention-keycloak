@@ -1532,7 +1532,7 @@ def parse_args(args: list[str] | None = None) -> Namespace:
     domainname = ucr.get("domainname")
     host_fqdn = "%s.%s" % (ucr.get("hostname"), ucr.get("domainname"))
     umc_saml_sp_server = ucr.get("umc/saml/sp-server", host_fqdn)
-    keycloak_url = ucr.get("ucs/server/sso/uri", f"https://ucs-sso-ng.{domainname.lower()}/")
+    keycloak_url = ucr.get("ucs/server/sso/uri", f"https://ucs-sso-ng.{domainname}/".lower())
     keycloak_fqdn = urlparse(keycloak_url).netloc
     kerberos_realm = ucr.get("kerberos/realm")
 
@@ -2251,7 +2251,7 @@ def get_base_url(opt: Namespace) -> None:
     if IS_UCS:
         subprocess.call('/usr/lib/univention-directory-policy/univention-policy-update-config-registry')
         ucr.load()
-        opt.keycloak_url = ucr.get('ucs/server/sso/uri', f'https://ucs-sso-ng.{ucr.get("domainname").lower()}')
+        opt.keycloak_url = ucr.get('ucs/server/sso/uri', f'https://ucs-sso-ng.{ucr.get("domainname")}'.lower())
     try:
         # we always proxy with a trailing /, so make sure we add this here even
         # if  ucs/server/sso/uri has no trailing /
