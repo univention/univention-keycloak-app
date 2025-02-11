@@ -1,0 +1,56 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
+services:
+  test:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    # TODO: Build the test image
+    # image: gitregistry.knut.univention.de/univention/customers/dataport/upx/directory-importer/testrunner:${IMAGE_TAG:-latest}
+    cap_drop:
+      - ALL
+    environment:
+      UDM_API_URL: "http://udm-rest-api:9979/udm"
+      UDM_USERNAME: "cn=admin"
+      UDM_PASSWORD: "univention"
+
+  udm-rest-api:
+    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-udm-rest/udm-rest-api:latest
+    container_name: "udm-rest-api"
+    platform: "linux/amd64"
+    ports:
+      - 9979:9979
+    volumes:
+      - ./base.conf:/etc/univention/base.conf:ro
+    environment:
+      DOMAINNAME: univention-organization.intranet
+      HOSTNAME: localhost:9979
+      LDAP_HOST: ldap-server
+      LDAP_PORT: 389
+      LDAP_BASE_DN: dc=univention-organization,dc=intranet
+      LDAP_HOST_DN: cn=admin,dc=univention-organization,dc=intranet
+      TLS_MODE: "off"
+      MACHINE_SECRET: univention
+      LDAP_CN_ADMIN_PW: univention
+
+  ldap-server:
+    platform: linux/amd64
+    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-ldap/ldap-server:0.31.0
+    container_name: "ldap-server"
+    environment:
+      LDAP_CN_ADMIN_PW: univention
+    ports:
+      - 389:389
+      - 636:636
+    ulimits:
+      nofile:
+        soft: "65536"
+        hard: "65536"
+    volumes:
+      - ldap-shared-data:/var/lib/univention-ldap/:rw
+      - ldap-shared-run:/var/run/slapd/:rw
+      - ./base-defaults.conf:/etc/univention/base-defaults.conf:ro
+
+volumes:
+  ldap-shared-data:
+  ldap-shared-run:
