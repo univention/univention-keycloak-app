@@ -1,5 +1,5 @@
 /*
-  Copyright 2021-2024 Univention GmbH
+  Copyright 2021-2025 Univention GmbH
 
   https://www.univention.de/
 
@@ -32,6 +32,7 @@ package de.univention.authenticator;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.Authenticator;
@@ -60,16 +61,22 @@ public class UniventionAuthenticatorFactory implements AuthenticatorFactory {
         "udm_user";
     static final String UDM_PASSWORD_CONFIG_PROPERTY_NAME =
         "udm_password";
-
+    static final String KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER_NAME =
+        "keycloak_federation_source_identifier";
+    static final String KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME =
+        "keycloak_federation_remote_identifier";
     static final String configPropertyNames[] = {
         UDM_ENDPOINT_CONFIG_PROPERTY_NAME, UDM_USER_CONFIG_PROPERTY_NAME,
-        UDM_PASSWORD_CONFIG_PROPERTY_NAME
+        UDM_PASSWORD_CONFIG_PROPERTY_NAME, KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER_NAME,
+        KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME
     };
 
     // TODO: Currently this config is not validated,
     // so when the user enters the URL it might not even be available
     // and the username/password might be incorrect
     // These kinds of issues ideally should be checked on the spot.
+    // NOTE: The order is important, do not change unless you modify the
+    // accesses in the UniventionAuthenticator class
     private static final List<ProviderConfigProperty> configProperties =
         ProviderConfigurationBuilder.create()
             .property()
@@ -77,8 +84,7 @@ public class UniventionAuthenticatorFactory implements AuthenticatorFactory {
                 .type(ProviderConfigProperty.STRING_TYPE)
                 .label("UDM REST API endpoint")
                 .helpText("FQDN or IP Address of UDM REST API endpoint")
-                // TODO: Pick a better default!!!
-                .defaultValue("http://10.200.69.10/univention/udm")
+                .defaultValue("http://nubus-udm-rest-api/univention/udm")
                 .add()
             .property()
                 .name(UDM_USER_CONFIG_PROPERTY_NAME)
@@ -94,6 +100,20 @@ public class UniventionAuthenticatorFactory implements AuthenticatorFactory {
                 .helpText("Password of the UDM REST API user")
                 .defaultValue("univention")
                 .secret(true)
+                .add()
+            .property()
+                .name(KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER_NAME)
+                .type(ProviderConfigProperty.STRING_TYPE)
+                .label("Keycloak Federation Source Identifier")
+                .helpText("Name of the UDM property that stores the remote source of an IAM objects")
+                .defaultValue(Optional.ofNullable(System.getenv("KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER")).orElse("univentionSourceIAM"))
+                .add()
+            .property()
+                .name(KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME)
+                .type(ProviderConfigProperty.STRING_TYPE)
+                .label("Keycloak Federation Remote Identifier")
+                .helpText("Name of the UDM property that stores the unique identifier of the remote IAM objects")
+                .defaultValue(Optional.ofNullable(System.getenv("KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER")).orElse("univentionObjectIdentifier"))
                 .add()
             .build();
 

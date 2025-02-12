@@ -1,5 +1,5 @@
 /*
-  Copyright 2021-2024 Univention GmbH
+  Copyright 2021-2025 Univention GmbH
 
   https://www.univention.de/
 
@@ -86,8 +86,8 @@ public class UniventionAuthenticator implements Authenticator {
         String username = user.getUsername();
         String email = user.getEmail();
 
-        String remIdGUID_key = System.getenv("KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER");
-        String remSourceID_key = System.getenv("KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER");
+        String remSourceID_key = config.get(3);
+        String remIdGUID_key = config.get(4);
 
         logger.infof("User:" + firstname);
         logger.infof("lastname:" + lastname);
