@@ -36,8 +36,9 @@ Custom database
 ===============
 
 :program:`Keycloak` supports a wide range of different databases as backend.
-For detailed information, consult the :program:`Keycloak` manual
-:cite:t:`keycloak-db`.
+For detailed information,
+see `Supported databases <https://www.keycloak.org/server/db>`_
+in :cite:t:`keycloak-db`.
 
 .. note::
 
