@@ -22,11 +22,28 @@ The :program:`Keycloak` app installation procedure
 automatically installs and configures the :program:`PostgreSQL` database
 during the initial installation of the app in the UCS domain.
 :program:`Keycloak` uses this database for all additional installations of the app in the UCS domain.
-The default database doesn't provide replication or any kind of failover.
+The default :program:`PostgreSQL` database on UCS
+doesn't configure high availability, load balancing, and replication.
 
 However, it's not mandatory to use the default :program:`PostgreSQL` database instance.
 Administrators may decide to use another one, for example,
 if there is a need to use an already existing or clustered database.
+
+.. tip::
+   If you need database replication and failover,
+   you must use a database cluster setup.
+   Then, you configure the database connection
+   in the :program:`Keycloak` app,
+   as described in :ref:`app-database-change-before`,
+   to use the database cluster instead of the local single database instance.
+
+   Examples:
+      For :program:`PostgreSQL` you need to set up your own database cluster
+      and cover the topics high availability, load balancing, and replication.
+      Describing this setup is beyond the scope of this document.
+
+      For :program:`MariaDB` you need to set up a *MariaDB Galera Cluster*.
+      Describing this setup is beyond the scope of this document.
 
 .. _app-database-custom:
 
