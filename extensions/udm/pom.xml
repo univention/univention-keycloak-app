@@ -10,11 +10,11 @@
     <!--     <version>${revision}</version> -->
     <!-- </parent> -->
 
-    <groupId>de.univention.udm</groupId>
+    <groupId>de.univention</groupId>
     <artifactId>udm</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
-    <name>udm</name>
+    <name>Univention Directory Manager</name>
     <url>http://www.univention.de</url>
 
     <properties>
@@ -72,8 +72,28 @@
     </dependencies>
 
     <build>
-        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be
-            moved to parent pom) -->
+        <finalName>udm</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.2.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <pluginManagement>
             <plugins>
                 <!-- clean lifecycle, see
                 https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
@@ -90,10 +110,6 @@
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.13.0</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>

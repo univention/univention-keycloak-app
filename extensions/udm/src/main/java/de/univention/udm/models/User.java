@@ -2,12 +2,14 @@ package de.univention.udm.models;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     private String dn;
+    private UUID uuid;
     private Map<String, Object> properties;
 
     public String getDn() {
@@ -16,6 +18,14 @@ public class User {
 
     public void setDn(String dn) {
         this.dn = dn;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public Map<String, Object> getProperties() {
@@ -35,6 +45,7 @@ public class User {
 
     /**
      * Deep copy a map of properties to avoid modifying the original map
+     * 
      * @param original The original map
      * @return A deep copy of the original map
      */

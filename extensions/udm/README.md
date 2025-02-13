@@ -33,14 +33,16 @@ can learn more about it [here](https://maven.apache.org/guides/introduction/intr
 
 ## Testing
 
-To run the tests, you can use the `docker-compose.yml` with following commands:
+To run the tests, you can use the `docker-compose.yml` in the `tests` parent
+repository with following commands:
 
 ```bash
 docker-compose up -d udm-rest-api ldap-server
-docker compose run --remove-orphans --build test mvn test
+docker compose run --remove-orphans --build test mvn verify
 ```
 
-This will run both the unit and integration tests.
+This will run both the unit and integration tests. You can use `mvn test` to 
+only run the unit tests - or `mvn integration-test` to run the integration tests.
 
 > Note that the unit tests do not need the `udm-rest-api` and `ldap-server` services to be running,
 > but the integration tests do.

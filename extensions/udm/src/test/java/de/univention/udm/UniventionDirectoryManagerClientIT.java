@@ -16,7 +16,7 @@ import de.univention.udm.models.UserSearchParams;
 import de.univention.udm.models.UserSearchResult;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UniventionDirectoryManagerClientIntegrationTest {
+class UniventionDirectoryManagerClientIT {
     private UniventionDirectoryManagerClient client;
     private String baseUrl;
     private String username;

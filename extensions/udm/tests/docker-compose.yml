@@ -2,11 +2,13 @@
 # SPDX-FileCopyrightText: 2025 Univention GmbH
 services:
   test:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    # TODO: Build the test image
-    # image: gitregistry.knut.univention.de/univention/customers/dataport/upx/directory-importer/testrunner:${IMAGE_TAG:-latest}
+    image: maven:3.9-eclipse-temurin-17
+    command: "mvn verify"
+    working_dir: /app
+    volumes:
+      - ../:/app/
+      - maven-cache:/root/.m2
+      - maven-target:/app/target
     cap_drop:
       - ALL
     environment:
@@ -35,7 +37,7 @@ services:
 
   ldap-server:
     platform: linux/amd64
-    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-ldap/ldap-server:0.31.0
+    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-ldap/ldap-server:latest
     container_name: "ldap-server"
     environment:
       LDAP_CN_ADMIN_PW: univention
@@ -54,3 +56,5 @@ services:
 volumes:
   ldap-shared-data:
   ldap-shared-run:
+  maven-cache:
+  maven-target:
