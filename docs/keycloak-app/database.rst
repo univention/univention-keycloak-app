@@ -8,27 +8,25 @@
 Database configuration
 **********************
 
-:program:`Keycloak` uses an external database to store configurations and
-settings. By default, the :program:`Keycloak` app installs and configures a
-:program:`PostgreSQL` database.
-
-In case you want to use your own database backend, you can change the database
-settings for :program:`Keycloak` prior or after the app installation.
+:program:`Keycloak` uses an external database to store configurations and settings.
+By default, the :program:`Keycloak` app installs and configures a :program:`PostgreSQL` database.
+In case you want to use your own database backend,
+you can change the database settings for :program:`Keycloak` prior or after the app installation.
 
 .. _app-database-default:
 
 Default database
 ================
 
-The :program:`Keycloak` app installation procedure automatically installs and
-configures the :program:`PostgreSQL` database during the initial installation of
-the app in the UCS domain. :program:`Keycloak` uses this database for all
-additional installations of the app in the UCS domain. The default database
-doesn't provide replication or any kind of failover.
+The :program:`Keycloak` app installation procedure
+automatically installs and configures the :program:`PostgreSQL` database
+during the initial installation of the app in the UCS domain.
+:program:`Keycloak` uses this database for all additional installations of the app in the UCS domain.
+The default database doesn't provide replication or any kind of failover.
 
-However, it's not mandatory to use the default :program:`PostgreSQL` database
-instance. Administrators may decide to use another one, for example, if there is
-a need to use an already existing or clustered database.
+However, it's not mandatory to use the default :program:`PostgreSQL` database instance.
+Administrators may decide to use another one, for example,
+if there is a need to use an already existing or clustered database.
 
 .. _app-database-custom:
 
@@ -42,14 +40,15 @@ in :cite:t:`keycloak-db`.
 
 .. note::
 
-   On the contrary to the official :program:`Keycloak` container image, the
-   custom image that the :program:`Keycloak` App provides, does not contain
-   the drivers that support an Oracle Database.
-   Using an Oracle Database as a backend for :program:`Keycloak` is currently
-   not supported.
+   On the contrary to the official :program:`Keycloak` container image,
+   the custom image that the :program:`Keycloak` App provides,
+   doesn't contain the drivers that support an Oracle Database.
+   Using an Oracle Database as a backend for :program:`Keycloak`
+   isn't supported.
 
-The :program:`Keycloak` app provides app settings for the configuration of the
-database backend. For the available settings, see the :ref:`app-settings`
+The :program:`Keycloak` app provides app settings
+for the configuration of the database backend.
+For the available settings, see the :ref:`app-settings`
 section.
 
 .. important::
