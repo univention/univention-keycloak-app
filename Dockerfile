@@ -2,8 +2,8 @@
 FROM maven:3.8.2-openjdk-17 as maven
 WORKDIR /extensions
 COPY extensions ./
-RUN mvn clean package --file univention-directory-manager
-RUN mvn install --file univention-directory-manager
+RUN mvn clean package --file udm
+RUN mvn install -DskipITs --file udm
 RUN mvn clean package --file univention-authenticator
 RUN mvn clean package --file pom.xml
 
@@ -45,7 +45,7 @@ COPY --from=maven /extensions/lib/univention-condition-ipaddress-*.jar /opt/keyc
 COPY --from=maven /extensions/lib/univention-user-attribute-nameid-mapper-base64-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-condition-ipaddress-*.jar /opt/keycloak/providers
 COPY --from=maven /root/.m2/repository/com/github/seancfoley/ipaddress/5.5.1/ipaddress-5.5.1.jar /opt/keycloak/providers
-COPY --from=maven /extensions/univention-directory-manager/target/univention-directory-manager.jar /opt/keycloak/providers/
+COPY --from=maven /extensions/udm/target/udm.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
 RUN cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.jdbc.ojdbc11-*.jar \
  && cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.nls.orai18n-*.jar \

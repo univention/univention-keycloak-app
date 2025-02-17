@@ -30,13 +30,10 @@
 
 package de.univention.authenticator;
 
-import org.openapitools.client.ApiClient;
-import org.openapitools.client.api.UsersUserApi;
-import org.openapitools.client.ApiException;
-import org.openapitools.client.model.UsersUser;
-import org.openapitools.client.model.UsersUserList;
-import org.openapitools.client.model.UsersUserListEmbedded;
-import org.openapitools.client.model.UsersUserProperties;
+import de.univention.udm.UniventionDirectoryManagerClient;
+import de.univention.udm.models.User;
+import de.univention.udm.models.UserSearchParams;
+import de.univention.udm.models.UserSearchResult;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -49,6 +46,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Random;
 import java.util.Collections;
 import java.util.Set;
+import java.util.HashMap;
 
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
@@ -78,7 +76,7 @@ public class UniventionAuthenticator implements Authenticator {
     public void authenticate(AuthenticationFlowContext context) {
         logger.infof("Univention Authenticator, authenticate has been called.");
         List<String> config = getValidConfig(context);
-        UsersUserApi api = getUsersUserApiReference(config);
+        UniventionDirectoryManagerClient udmClient = getUdmClient(config);
 
         UserModel user = context.getUser();
         String firstname = user.getFirstName();
@@ -100,11 +98,7 @@ public class UniventionAuthenticator implements Authenticator {
         // but UDM curently needs a non null password, so we generate one
         // TODO: Get rid of this as soon as it is possible to create a user
         // via UDM without a password
-        int numberOfRandomBytes = 256;
-        byte[] token = new byte[numberOfRandomBytes];
-        java.security.SecureRandom secureRandom = new java.security.SecureRandom();
-        secureRandom.nextBytes(token);
-        String password = java.util.Base64.getEncoder().encodeToString(token); // Base64 encoding
+        String password = generateRandomPassword();
 
         // TODO: Find out if this is even the right way of handling the Ad-hoc federation data
         // Univention Ad-Hoc Federation specific attributes:
@@ -127,7 +121,6 @@ public class UniventionAuthenticator implements Authenticator {
         logger.infof("User attempted login. First name: %s, Last name: %s, Username: %s, E-Mail: %s",
                      firstname, lastname, username, email);
 
-        // TODO: When the UDM allows it, avoid passing the password here
         String decoded_remoteGUID;
         try{
             decoded_remoteGUID = LDAPUtil.decodeObjectGUID(Base64.getDecoder().decode(remIdGUID_value.getBytes("UTF-8")));
@@ -135,39 +128,52 @@ public class UniventionAuthenticator implements Authenticator {
             decoded_remoteGUID = remIdGUID_value;
             //propagate the error
             context.failure(AuthenticationFlowError.INTERNAL_ERROR);
+            return;
         }
-        Map<String, Object> userData = Map.of(
-            "Firstname", firstname,
-            "Lastname", lastname,
-            "Username", username,
-            "Password", password, // random password ???
-            "email", email,
-            "Description", "Shadow copy of user",
 
-            remIdGUID_key, decoded_remoteGUID,
-            remSourceID_key, remSourceID_value
-            );
+        // TODO: When the UDM allows it, avoid passing the password here
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("username", username);
+        properties.put("firstname", firstname);
+        properties.put("lastname", lastname);
+        properties.put("password", password);
+        properties.put("e-mail", new String[]{email});
+        properties.put("description", "Shadow copy of user");
+        properties.put(remIdGUID_key, decoded_remoteGUID);
+        properties.put(remSourceID_key, remSourceID_value);
+
+        User udmUser = new User();
+        udmUser.setProperties(properties);
+
 
         // TODO: Review and re-test this whole error handling here,
         // probably there are more meaningfull errors that we could propagate here,
         // and ENSURE THAT THIS STOPS the flow!!!
         // So far the observation is that s, simply returning after failure here doesn't stop the flow
         // which has grave consequences, so fix that!
-        UsersUser userInUcs = createUserViaUDM(api, userData);
-
-        if (null == userInUcs) {
+        try {
+            // Check if user exists first
+            if (existsRemoteUser(udmClient, username)) {
+                logger.infof("User already exists in UDM: %s", username);
+                context.success();
+                return;
+            }
+            User createdUser = udmClient.createUser(udmUser);
+            if (createdUser == null) {
                 context.failure(AuthenticationFlowError.IDENTITY_PROVIDER_NOT_FOUND);
                 return;
+            }
+
+            // Update Keycloak user with UDM attributes
+            user.setSingleAttribute("LDAP_ID", createdUser.getUuid().toString());
+            user.setSingleAttribute("LDAP_ENTRY_DN", createdUser.getDn());
+            user.setSingleAttribute("uid", username);
+            user.setFederationLink(univentionTargetFederationLink);
+            context.success();
+        } catch (Exception e) {
+            logger.errorf("Failed to create/update user: %s", e);
+            context.failure(AuthenticationFlowError.INTERNAL_ERROR);
         }
-
-        String uuid = userInUcs.getUuid().toString();
-        String dn = userInUcs.getDn();
-        user.setSingleAttribute("LDAP_ID", uuid);
-        user.setSingleAttribute("LDAP_ENTRY_DN", dn);
-        user.setSingleAttribute("uid", username);
-        user.setFederationLink(univentionTargetFederationLink);
-
-        context.success();
     }
 
     @Override
@@ -236,97 +242,32 @@ public class UniventionAuthenticator implements Authenticator {
         return udmConfig;
     }
 
-    private UsersUserApi getUsersUserApiReference(List<String> endpointUsernamePassword) {
-        UsersUserApi api = new UsersUserApi();
-        ApiClient client = api.getApiClient();
-
-        // TODO: There could be a number of better and fool proof ways of unpacking the endpoint data
-        client.setBasePath(endpointUsernamePassword.get(0));
-        client.setUsername(endpointUsernamePassword.get(1));
-        client.setPassword(endpointUsernamePassword.get(2));
-        return api;
+    private UniventionDirectoryManagerClient getUdmClient(List<String> config) {
+        return new UniventionDirectoryManagerClient(
+            config.get(0),  // baseUrl
+            config.get(1),  // username
+            config.get(2)   // password
+        );
     }
 
-    // TODO: The original Phoenix plans called for not just a "create" but
-    // also a "query" and further methods but at this stage it's a bit unclear why
-    // and so far those were not needed.
-    // Review those plans and see if further methods need to be implemented
-    private UsersUser createUserViaUDM(UsersUserApi api, Map<String, Object> userData) {
-        UsersUser userTemplate = null;
+    private boolean existsRemoteUser(UniventionDirectoryManagerClient client, String username) {
         try {
-            userTemplate = api.udmUsersUserObjectTemplate(null, null, null, null);
-        } catch(ApiException e) {
-            logger.errorf("Failed to get UDM template: %s", e);
-            // TODO: Better error propagation
-            return null;
-        }
+            UserSearchParams params = UserSearchParams.builder()
+                .query(Map.of("username", username))
+                .scope("sub")
+                .build();
 
-        UsersUserProperties userProp = new UsersUserProperties((String) userData.get("password"));
-
-        // Iterate over the map and use the setters
-        userData.forEach((property, value) -> {
-            try {
-                // Build the setter name: "set" + capitalized property
-                String setterName = "set" + property;
-
-                // Get the setter method
-                Method method = userProp.getClass().getMethod(setterName, value.getClass());
-
-                // Call the setter with the value
-                method.invoke(userProp, value);
-            } catch (Exception e) {
-                System.err.println("Can't use the setter method for " + property + ": " + e.getMessage());
-            }
-        });
-        userProp.addEMailItem((String) userData.get("email"));
-        userProp.putAdditionalProperty( "univentionObjectIdentifier", userData.get("univentionObjectIdentifier"));
-        userProp.putAdditionalProperty( "univentionSourceIAM", userData.get("univentionSourceIAM"));
-        userTemplate.setProperties(userProp);
-
-        UsersUser result = null;
-        try {
-            result = api.udmUsersUserObjectCreate(userTemplate);
-            logger.infof("User create result: %s", result);
-        } catch(ApiException e) {
-            logger.errorf("Failed to create user via UDM: %s", e);
-            // TODO: Better error propagation
-            return null;
-        }
-        return result;
-    }
-
-    private boolean existsRemoteUser(UsersUserApi api, Map<String, Object> userData){
-        Map<String, String> query = Map.of(
-//            "firstname", userData.get("firstname"),
-//            "lastname", userData.get("lastname"),
-            "username", userData.get("username").toString()
-            // TODO: SEARCH HASH PASSWORD
-//            "password", userData.get("password")
-            //"e-mail", new String[]{email},
-
-
-        //    "univentionRemoteIdentifier", univentionRemoteIdentifier,
-        //    "univentionCustomer", univentionCustomer,
-        //    "univentionTenant", univentionTenant
-            );
-
-        try {
-            UsersUserList listUser = api.udmUsersUserObjectSearch(null, null, "sub", query, true, "", "en_EN", "", "");
-            UsersUserListEmbedded luser = listUser.getEmbedded();
-            List<UsersUser> listUserl = luser.getUdmColonObject();
-            if (listUserl != null && listUserl.size() > 0){
-                logger.infof("Univention Authenticator existsRemoteUser, listUser is greater than 0.");
-                logger.infof("Univention Authenticator existsRemoteUser, %s", listUserl.get(0));
-                return true;
-            } else {
-                logger.infof("Univention Authenticator, listUser is 0 or null.");
-                return false;
-            }
-        } catch(ApiException e) {
-            logger.errorf("Failed to get users via UDM: %s", e);
-            // TODO: Better error propagation
+            UserSearchResult result = client.searchUsers(params);
+            return !result.getUsers().isEmpty();
+        } catch (Exception e) {
+            logger.errorf("Failed to search for user: %s", e);
             return false;
         }
+    }
 
+    private String generateRandomPassword() {
+        byte[] token = new byte[256];
+        new java.security.SecureRandom().nextBytes(token);
+        return Base64.getEncoder().encodeToString(token);
     }
 }

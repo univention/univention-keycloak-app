@@ -57,8 +57,8 @@
         </dependency>
         <dependency>
             <groupId>de.univention</groupId>
-            <artifactId>univention-directory-manager</artifactId>
-            <version>2.0.0</version>
+            <artifactId>udm</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
@@ -145,7 +145,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>org.keycloak/univention-authenticator:*</include>
-                                    <include>de.univention:univention-directory-manager</include>
+                                    <include>de.univention:udm</include>
                                     <include>org.openapitools:jackson-databind-nullable</include>
                                 </includes>
                                 <excludes>
