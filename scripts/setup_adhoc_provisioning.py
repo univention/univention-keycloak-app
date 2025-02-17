@@ -227,6 +227,8 @@ def setup_univention_auth_flow(
             "udm_endpoint": udm_url,
             "udm_user": udm_username,
             "udm_password": udm_password,
+            "keycloak_federation_source_identifier": "univentionSourceIAM",
+            "keycloak_federation_remote_identifier": "univentionObjectIdentifier",
         },
     }
     try:
