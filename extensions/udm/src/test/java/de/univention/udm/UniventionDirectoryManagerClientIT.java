@@ -145,6 +145,27 @@ class UniventionDirectoryManagerClientIT {
     }
 
     @Test
+    void testCreateSameUserTwice() throws IOException, InterruptedException {
+        String testUsername = "testuser-" + UUID.randomUUID().toString().substring(0, 8);
+        User newUser = new User();
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("username", testUsername);
+        properties.put("firstname", "Test");
+        properties.put("lastname", "User");
+        properties.put("password", "TestPassword123!");
+        newUser.setProperties(properties);
+
+        User createdUser = client.createUser(newUser);
+        assertNotNull(createdUser.getDn(), "Created user should have a DN");
+        createdUserDNs.add(createdUser.getDn()); // Add to cleanup list
+                                                 //
+        User sameUser = new User();
+        sameUser.setProperties(properties);
+        assertThrows(IOException.class, () -> client.createUser(sameUser),
+                "Should throw exception when trying to create the same user twice");
+    }
+
+    @Test
     void testSearchNonExistentUser() throws IOException, InterruptedException {
         String nonExistentUsername = faker.internet().username();
         UserSearchParams searchParams = UserSearchParams.builder()
