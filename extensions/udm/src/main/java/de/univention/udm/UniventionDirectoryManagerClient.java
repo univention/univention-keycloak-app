@@ -40,6 +40,7 @@ import java.util.Base64;
 
 import org.apache.http.client.utils.URIBuilder;
 
+import org.jboss.logging.Logger;
 import de.univention.udm.models.User;
 import de.univention.udm.models.UserSearchParams;
 import de.univention.udm.models.UserSearchResult;
@@ -50,11 +51,15 @@ public class UniventionDirectoryManagerClient {
     private final String credentials;
     private final ObjectMapper objectMapper;
 
+    private static final Logger logger =
+            Logger.getLogger(de.univention.udm.UniventionDirectoryManagerClient.class);
+
     public UniventionDirectoryManagerClient(String baseUrl, String username, String password) {
         this.baseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
         this.credentials = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
         this.client = HttpClient.newHttpClient();
         this.objectMapper = new ObjectMapper();
+        logger.infof("UDM REST API Client initialized with baseUrl: %s, username: %s", baseUrl, username);
     }
 
     /**
@@ -110,9 +115,11 @@ public class UniventionDirectoryManagerClient {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != 200) {
+                logger.errorf("Failed search UDM user request. RequestUri: %s, status: %d, response: %s", request.uri(), response.statusCode(), response.body());
                 throw new IOException("Failed to search users: " + response.statusCode() + " " + response.body());
             }
 
+            logger.debugf("User search results: %s", response.body());
             return objectMapper.readValue(response.body(), UserSearchResult.class);
         } catch (URISyntaxException e) {
             throw new IOException("Failed to build URI for user search: " + e.getMessage());
@@ -171,9 +178,11 @@ public class UniventionDirectoryManagerClient {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() != 201) {
+            logger.errorf("Failed create UDM user request. RequestUri: %s, status: %d, response: %s", request.uri(), response.statusCode(), response.body());
             throw new IOException("Failed to create user: " + response.statusCode() + " " + response.body());
         }
 
+        logger.debugf("Created UDM user with properties: %s", userJson);
         return objectMapper.readValue(response.body(), User.class);
     }
 
@@ -209,6 +218,7 @@ public class UniventionDirectoryManagerClient {
 
             switch (response.statusCode()) {
                 case 204:
+                    logger.debugf("Deleted UDM user with dn: %s", dn);
                     return;
                 case 404:
                     throw new IOException("User not found: " + dn);

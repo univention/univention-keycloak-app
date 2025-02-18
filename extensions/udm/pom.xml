@@ -3,12 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!-- TODO: See how to handle the parent project while running tests -->
-    <!-- <parent> -->
-    <!--     <artifactId>keycloak-parent</artifactId> -->
-    <!--     <groupId>org.keycloak</groupId> -->
-    <!--     <version>${revision}</version> -->
-    <!-- </parent> -->
+    <parent>
+        <artifactId>keycloak-parent</artifactId>
+        <groupId>org.keycloak</groupId>
+        <version>25.0.6</version>
+    </parent>
 
     <groupId>de.univention</groupId>
     <artifactId>udm</artifactId>
@@ -68,6 +67,11 @@
             <artifactId>datafaker</artifactId>
             <version>2.4.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

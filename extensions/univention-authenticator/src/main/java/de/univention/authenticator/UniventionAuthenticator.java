@@ -35,17 +35,12 @@ import de.univention.udm.models.User;
 import de.univention.udm.models.UserSearchParams;
 import de.univention.udm.models.UserSearchResult;
 
-import java.lang.reflect.Method;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Base64;
-import java.nio.ByteBuffer;
-import java.util.UUID;
 import java.io.UnsupportedEncodingException;
-import java.util.Random;
-import java.util.Collections;
-import java.util.Set;
 import java.util.HashMap;
 
 import org.jboss.logging.Logger;
@@ -69,16 +64,17 @@ public class UniventionAuthenticator implements Authenticator {
 
     @Override
     public void action(AuthenticationFlowContext context) {
-        logger.infof("Univention Authenticator, action has been called.");
+        logger.debugf("Univention Authenticator, action has been called.");
     }
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
-        logger.infof("Univention Authenticator, authenticate has been called.");
+        logger.debugf("Univention Authenticator, authenticate has been called.");
         List<String> config = getValidConfig(context);
         UniventionDirectoryManagerClient udmClient = getUdmClient(config);
 
         UserModel user = context.getUser();
+        logger.debugf("Keycloak user object: %s", user);
         String firstname = user.getFirstName();
         String lastname = user.getLastName();
         String username = user.getUsername();
@@ -87,12 +83,19 @@ public class UniventionAuthenticator implements Authenticator {
         String remSourceID_key = config.get(3);
         String remIdGUID_key = config.get(4);
 
-        logger.infof("User:" + firstname);
-        logger.infof("lastname:" + lastname);
-        logger.infof("username:" + username);
-        logger.infof("user: " + user.getAttributes());
-        logger.infof("remSourceIden_key: " + remSourceID_key);
-        logger.infof("remObjIden_key: " + remIdGUID_key);
+        logger.infof(
+            """
+            Federated user attempted to log in: username: %s, firstname: %s, lastname: %s, \
+            email: %s, remSourceIden_key: %s, remObjIden_key: %s, userAttributes: %s
+            """,
+            username,
+            firstname,
+            lastname,
+            email,
+            remSourceID_key,
+            remIdGUID_key,
+            user.getAttributes()
+        );
         // The IDP doesn't provide a password attribute,
         // and the KC UserModel doesn't have such field either,
         // but UDM curently needs a non null password, so we generate one
@@ -112,19 +115,21 @@ public class UniventionAuthenticator implements Authenticator {
         // if it's absolutely certain, that there is no way to simply configure keycloak to set the desired field.
         String univentionTargetFederationLink =  user.getFirstAttribute("univentionTargetFederationLink");
 
-        logger.infof(remIdGUID_key + ":" + remIdGUID_value);
-        logger.infof(remSourceID_key + ":" + remSourceID_value);
-        //logger.infof("univentionTenant:" + univentionTenant);
-        logger.infof("targetFederationLink:" + univentionTargetFederationLink);
-        // TODO: Perhaps do some real life performance testing
-        // and change this to debug remove if not needed.
-        logger.infof("User attempted login. First name: %s, Last name: %s, Username: %s, E-Mail: %s",
-                     firstname, lastname, username, email);
+        logger.infof(
+            "Additional user attributes for username: %s, remIdGUID_key %s, remIdGUID_value %s, remSourceID_key %s, remSourceID_value %s, univentionTargetFederationLink: %s",
+            username,
+            remIdGUID_key,
+            remIdGUID_value,
+            remSourceID_key,
+            remSourceID_value,
+            univentionTargetFederationLink
+        );
 
         String decoded_remoteGUID;
         try{
             decoded_remoteGUID = LDAPUtil.decodeObjectGUID(Base64.getDecoder().decode(remIdGUID_value.getBytes("UTF-8")));
         } catch (UnsupportedEncodingException e){
+            logger.warnf("Failed to decode remote GUID of username: %s, guid: %s", username, remIdGUID_value);
             decoded_remoteGUID = remIdGUID_value;
             //propagate the error
             context.failure(AuthenticationFlowError.INTERNAL_ERROR);
@@ -154,13 +159,14 @@ public class UniventionAuthenticator implements Authenticator {
         try {
             // Check if user exists first
             if (existsRemoteUser(udmClient, username)) {
-                logger.infof("User already exists in UDM: %s", username);
+                logger.infof("User with username: %s already exists in UDM and does not need to be created", username);
                 context.success();
                 return;
             }
             User createdUser = udmClient.createUser(udmUser);
             if (createdUser == null) {
-                context.failure(AuthenticationFlowError.IDENTITY_PROVIDER_NOT_FOUND);
+                logger.errorf("Failed to create user with username: %s", username);
+                context.failure(AuthenticationFlowError.INTERNAL_ERROR);
                 return;
             }
 
@@ -169,16 +175,17 @@ public class UniventionAuthenticator implements Authenticator {
             user.setSingleAttribute("LDAP_ENTRY_DN", createdUser.getDn());
             user.setSingleAttribute("uid", username);
             user.setFederationLink(univentionTargetFederationLink);
+            logger.infof("Federated user ad-hoc provisioning for user with username: %s was succesful", username);
             context.success();
-        } catch (Exception e) {
-            logger.errorf("Failed to create/update user: %s", e);
+        } catch (InterruptedException | IOException e) {
+            logger.errorf("Failed to create user with username: %s, error: %s", username, e);
             context.failure(AuthenticationFlowError.INTERNAL_ERROR);
         }
     }
 
     @Override
     public void close() {
-        logger.infof("Univention Authenticator, close has been called.");
+        logger.debugf("Univention Authenticator, close has been called.");
     }
 
     @Override
@@ -216,10 +223,10 @@ public class UniventionAuthenticator implements Authenticator {
         AuthenticatorConfigModel configModel = context.getAuthenticatorConfig();
 
         if (null == configModel || null == configModel.getConfig()) {
-            logger.infof("Univention Authenticator, ConfigModell is null ");
+            logger.errorf("Univention Authenticator ConfigModel is null");
 
             context.failure(
-                    AuthenticationFlowError.IDENTITY_PROVIDER_NOT_FOUND
+                    AuthenticationFlowError.CREDENTIAL_SETUP_REQUIRED
                     /* TODO: Return a more useful jakarta.ws.rs.core.Response response */);
         }
         Map<String, String> config = configModel.getConfig();
@@ -231,12 +238,14 @@ public class UniventionAuthenticator implements Authenticator {
         for (String i: UniventionAuthenticatorFactory.configPropertyNames) {
             String value = config.get(i);
             if (null == value) {
+                logger.errorf("Fereration ad-hoc provisioning udmConfig value: %s is null", i);
                 /* TODO: Return a more useful jakarta.ws.rs.core.Response response or something better*/
-                context.failure(AuthenticationFlowError.IDENTITY_PROVIDER_NOT_FOUND);
+                context.failure(AuthenticationFlowError.CREDENTIAL_SETUP_REQUIRED);
                 /* maybe throw an exception? */
             }
             udmConfig.add(value);
         }
+        logger.debugf("Federation ad-hoc provisioning udmConfig: %s", udmConfig);
         // Check if the URI is valid or available?
 
         return udmConfig;
@@ -250,19 +259,14 @@ public class UniventionAuthenticator implements Authenticator {
         );
     }
 
-    private boolean existsRemoteUser(UniventionDirectoryManagerClient client, String username) {
-        try {
-            UserSearchParams params = UserSearchParams.builder()
-                .query(Map.of("username", username))
-                .scope("sub")
-                .build();
+    private boolean existsRemoteUser(UniventionDirectoryManagerClient client, String username) throws IOException, InterruptedException {
+        UserSearchParams params = UserSearchParams.builder()
+            .query(Map.of("username", username))
+            .scope("sub")
+            .build();
 
-            UserSearchResult result = client.searchUsers(params);
-            return !result.getUsers().isEmpty();
-        } catch (Exception e) {
-            logger.errorf("Failed to search for user: %s", e);
-            return false;
-        }
+        UserSearchResult result = client.searchUsers(params);
+        return !result.getUsers().isEmpty();
     }
 
     private String generateRandomPassword() {

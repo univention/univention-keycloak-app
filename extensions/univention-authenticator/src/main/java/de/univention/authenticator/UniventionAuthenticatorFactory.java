@@ -125,8 +125,8 @@ public class UniventionAuthenticatorFactory implements AuthenticatorFactory {
     @Override
     public Authenticator create(KeycloakSession session) {
         // TODO: Review and re-test if this could be debug logging or should be removed
-        logger.infof("Univention Authenticator Factory, create has been called");
-        logger.infof("Univention Authenticator instance is:" + UNIVENTION_AUTHENTICATOR_INSTANCE.toString());
+        logger.debug("Univention Authenticator Factory, create has been called");
+        logger.debugf("Univention Authenticator instance is: %s", UNIVENTION_AUTHENTICATOR_INSTANCE);
         return UNIVENTION_AUTHENTICATOR_INSTANCE;
     }
 
