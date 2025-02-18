@@ -1,3 +1,32 @@
+/*
+  Copyright 2025 Univention GmbH
+
+  https://www.univention.de/
+
+  All rights reserved.
+
+  The source code of this program is made available
+  under the terms of the GNU Affero General Public License version 3
+  (GNU AGPL V3) as published by the Free Software Foundation.
+
+  Binary versions of this program provided by Univention to you as
+  well as other copyrighted, protected or trademarked materials like
+  Logos, graphics, fonts, specific documentations and configurations,
+  cryptographic keys etc. are subject to a license agreement between
+  you and Univention and not subject to the GNU AGPL V3.
+
+  In the case you use this program under the terms of the GNU AGPL V3,
+  the program is provided in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public
+  License with the Debian GNU/Linux or Univention distribution in file
+  /usr/share/common-licenses/AGPL-3; if not, see
+  <https://www.gnu.org/licenses/>.
+*/
+
 package de.univention.udm;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,7 +37,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Base64;
-import java.util.Map;
 
 import org.apache.http.client.utils.URIBuilder;
 
@@ -32,17 +60,23 @@ public class UniventionDirectoryManagerClient {
     /**
      * Searches for users in the Univention Directory Manager.
      * 
-     * @param params UserSearchParams object containing the following optional parameters:
-     *   - filter: LDAP filter which may contain UDM property names instead of LDAP attribute names
-     *             e.g. "(|(uid=example1)(username=example2*))" or "(objectClass=*)"
-     *   - position: DN of LDAP node to use as search base
-     *   - scope: LDAP search scope ("sub", "base", "one"). Defaults to "sub"
-     *   - query: Map of property names to search filter values
-     *   - hidden: Whether to include hidden/system objects. Defaults to true
-     *   - page: The search page number, starting at 1
-     *   - limit: Maximum number of results per page
+     * @param params UserSearchParams object containing the following optional
+     *               parameters:
+     *               - filter: LDAP filter which may contain UDM property names
+     *               instead of LDAP attribute names
+     *               e.g. "(|(uid=example1)(username=example2*))" or
+     *               "(objectClass=*)"
+     *               - position: DN of LDAP node to use as search base
+     *               - scope: LDAP search scope ("sub", "base", "one"). Defaults to
+     *               "sub"
+     *               - query: Map of property names to search filter values
+     *               - hidden: Whether to include hidden/system objects. Defaults to
+     *               true
+     *               - page: The search page number, starting at 1
+     *               - limit: Maximum number of results per page
      * 
-     * @return UserSearchResult containing the search results with HAL-formatted data including:
+     * @return UserSearchResult containing the search results with HAL-formatted
+     *         data including:
      *         - _embedded.udm:object: Array of User objects
      *         - _links: HAL links (which we ignore)
      *         Each User object contains:
@@ -50,13 +84,15 @@ public class UniventionDirectoryManagerClient {
      *         - objectType: Object type (e.g. "users/user")
      *         - id: Object ID
      *         - position: DN of the parent object
-     *         - properties: Map of user properties (username, firstname, lastname, etc.)
+     *         - properties: Map of user properties (username, firstname, lastname,
+     *         etc.)
      *         - options: Object type specific options
      *         - policies: Applied policies
      *         - uri: Full URI to the user object
      *         - uuid: LDAP Entry-UUID
      * 
-     * @throws IOException If there's an error communicating with the server or parsing the response
+     * @throws IOException          If there's an error communicating with the
+     *                              server or parsing the response
      * @throws InterruptedException If the operation is interrupted
      */
     public UserSearchResult searchUsers(UserSearchParams params) throws IOException, InterruptedException {
@@ -82,41 +118,43 @@ public class UniventionDirectoryManagerClient {
             throw new IOException("Failed to build URI for user search: " + e.getMessage());
         }
     }
-    
+
     /**
      * Creates a new user in the Univention Directory Manager.
      * 
      * @param user User object containing the following fields:
-     *   Required properties in user.properties:
-     *   - username: User's login name
-     *   - password: User's password (write-only)
+     *             Required properties in user.properties:
+     *             - username: User's login name
+     *             - password: User's password (write-only)
      *
-     *   Optional properties in user.properties:
-     *   - firstname: User's first name
-     *   - lastname: User's last name
-     *   - displayName: Display name
-     *   - description: Description
-     *   - e-mail: Array of email addresses
-     *   - phone: Array of phone numbers
-     *   - groups: Array of group DNs
-     *   - primaryGroup: Primary group DN
-     *   - shell: Login shell
-     *   - disabled: Account disabled flag
-     *   - locked: Account locked flag
-     *   - passwordexpiry: Password expiration date
-     *   - userexpiry: Account expiration date
+     *             Optional properties in user.properties:
+     *             - firstname: User's first name
+     *             - lastname: User's last name
+     *             - displayName: Display name
+     *             - description: Description
+     *             - e-mail: Array of email addresses
+     *             - phone: Array of phone numbers
+     *             - groups: Array of group DNs
+     *             - primaryGroup: Primary group DN
+     *             - shell: Login shell
+     *             - disabled: Account disabled flag
+     *             - locked: Account locked flag
+     *             - passwordexpiry: Password expiration date
+     *             - userexpiry: Account expiration date
      *
-     *   Other optional fields:
-     *   - position: DN where the user should be created
-     *   - options: Object type specific options (e.g. pki)
-     *   - policies: Applied policies (desktop, password history, UMC)
+     *             Other optional fields:
+     *             - position: DN where the user should be created
+     *             - options: Object type specific options (e.g. pki)
+     *             - policies: Applied policies (desktop, password history, UMC)
      * 
      * @return The created user following properties set by the server:
      *         - dn: The assigned Distinguished Name
      *         - uuid: LDAP Entry-UUID
      * 
-     * @throws IOException If there's an error communicating with the server, 
-     *                     the user creation fails, or there's an error parsing the response
+     * @throws IOException          If there's an error communicating with the
+     *                              server,
+     *                              the user creation fails, or there's an error
+     *                              parsing the response
      * @throws InterruptedException If the operation is interrupted
      */
     public User createUser(User user) throws IOException, InterruptedException {

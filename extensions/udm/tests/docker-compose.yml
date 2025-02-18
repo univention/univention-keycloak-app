@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2025 Univention GmbH
+
 services:
   test:
     image: maven:3.9-eclipse-temurin-17
