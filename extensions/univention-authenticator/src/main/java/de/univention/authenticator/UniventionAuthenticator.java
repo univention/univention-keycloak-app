@@ -74,7 +74,7 @@ public class UniventionAuthenticator implements Authenticator {
         UniventionDirectoryManagerClient udmClient = getUdmClient(config);
 
         UserModel user = context.getUser();
-        logger.debugf("Keycloak user object: %s", user);
+        logger.debugf("Keycloak user object: %s", user.getAttributes());
         String firstname = user.getFirstName();
         String lastname = user.getLastName();
         String username = user.getUsername();
