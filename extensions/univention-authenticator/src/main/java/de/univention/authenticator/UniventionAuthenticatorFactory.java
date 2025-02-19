@@ -65,10 +65,12 @@ public class UniventionAuthenticatorFactory implements AuthenticatorFactory {
         "keycloak_federation_source_identifier";
     static final String KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME =
         "keycloak_federation_remote_identifier";
+    static final String DEFAULT_GROUP_DN_CONFIG_PROPERTY_NAME =
+        "default_group_dn";
     static final String configPropertyNames[] = {
         UDM_ENDPOINT_CONFIG_PROPERTY_NAME, UDM_USER_CONFIG_PROPERTY_NAME,
         UDM_PASSWORD_CONFIG_PROPERTY_NAME, KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER_NAME,
-        KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME
+        KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME, DEFAULT_GROUP_DN_CONFIG_PROPERTY_NAME
     };
 
     // TODO: Currently this config is not validated,
@@ -114,6 +116,12 @@ public class UniventionAuthenticatorFactory implements AuthenticatorFactory {
                 .label("Keycloak Federation Remote Identifier")
                 .helpText("Name of the UDM property that stores the unique identifier of the remote IAM objects")
                 .defaultValue(Optional.ofNullable(System.getenv("KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER")).orElse("univentionObjectIdentifier"))
+                .add()
+            .property()
+                .name(DEFAULT_GROUP_DN_CONFIG_PROPERTY_NAME)
+                .type(ProviderConfigProperty.STRING_TYPE)
+                .label("Default Group DN")
+                .helpText("DN of the default group for ad-hoc created users (leave empty to use UDM default)")
                 .add()
             .build();
 

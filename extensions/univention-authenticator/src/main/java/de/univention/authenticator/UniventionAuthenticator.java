@@ -82,6 +82,7 @@ public class UniventionAuthenticator implements Authenticator {
 
         String remSourceID_key = config.get(3);
         String remIdGUID_key = config.get(4);
+        String defaultGroupDn = config.get(5);
 
         logger.infof(
             """
@@ -94,6 +95,7 @@ public class UniventionAuthenticator implements Authenticator {
             email,
             remSourceID_key,
             remIdGUID_key,
+            defaultGroupDn,
             user.getAttributes()
         );
         // The IDP doesn't provide a password attribute,
@@ -146,6 +148,11 @@ public class UniventionAuthenticator implements Authenticator {
         properties.put("description", "Shadow copy of user");
         properties.put(remIdGUID_key, decoded_remoteGUID);
         properties.put(remSourceID_key, remSourceID_value);
+        
+        // Add default group DN if configured
+        if (defaultGroupDn != null && !defaultGroupDn.isEmpty()) {
+            properties.put("primaryGroup", defaultGroupDn);
+        }
 
         User udmUser = new User();
         udmUser.setProperties(properties);
