@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.ArrayList;
 
 import de.univention.udm.models.User;
@@ -113,7 +112,7 @@ class UniventionDirectoryManagerClientIT {
 
     @Test
     void testCreateAndSearchUserUsingFilter() throws IOException, InterruptedException {
-        String testUsername = "testuser-" + UUID.randomUUID().toString().substring(0, 8);
+        String testUsername = faker.internet().username();
         User newUser = new User();
         Map<String, Object> properties = new HashMap<>();
         properties.put("username", testUsername);
@@ -146,7 +145,7 @@ class UniventionDirectoryManagerClientIT {
 
     @Test
     void testCreateSameUserTwice() throws IOException, InterruptedException {
-        String testUsername = "testuser-" + UUID.randomUUID().toString().substring(0, 8);
+        String testUsername = faker.internet().username();
         User newUser = new User();
         Map<String, Object> properties = new HashMap<>();
         properties.put("username", testUsername);
