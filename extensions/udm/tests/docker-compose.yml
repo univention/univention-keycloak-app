@@ -17,6 +17,19 @@ services:
       UDM_USERNAME: "cn=admin"
       UDM_PASSWORD: "univention"
 
+  test-2:
+    image: maven:3.9-eclipse-temurin-17
+    command: ["bash", "-c", "mvn install -DskipITs --file ../udm && mvn verify"]
+    working_dir: /app/univention-authenticator
+    volumes:
+      - ../:/app/udm/
+      - ../../univention-authenticator/:/app/univention-authenticator/
+      - maven-cache:/root/.m2
+      - maven-target:/app/udm/target
+      - maven-target2:/app/univention-authenticator/target
+    cap_drop:
+      - ALL
+
   udm-rest-api:
     image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-udm-rest/udm-rest-api:latest
     container_name: "udm-rest-api"
@@ -59,3 +72,4 @@ volumes:
   ldap-shared-run:
   maven-cache:
   maven-target:
+  maven-target2:
