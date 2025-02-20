@@ -5,7 +5,7 @@
 Automates the process of configuring Keycloak for ad-hoc federation through
 OIDC with a dummy realm within the same Keycloak instance.
 
-Requires a Nubus deployment with Keycloak and UDM. You may add the following 
+Requires a Nubus deployment with Keycloak and UDM. You may add the following
 environment variable to the Keycloak deployment to enable debug logging:
 
 ```yaml
