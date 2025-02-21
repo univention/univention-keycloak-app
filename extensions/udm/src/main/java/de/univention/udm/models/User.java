@@ -74,7 +74,7 @@ public class User {
 
     /**
      * Deep copy a map of properties to avoid modifying the original map
-     * 
+     *
      * @param original The original map
      * @return A deep copy of the original map
      */

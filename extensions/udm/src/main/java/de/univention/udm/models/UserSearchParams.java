@@ -72,7 +72,7 @@ public class UserSearchParams {
 
     /**
      * Applies all search parameters to the given URIBuilder
-     * 
+     *
      * @param uri The URIBuilder to add parameters to
      * @return The URIBuilder with parameters added
      */

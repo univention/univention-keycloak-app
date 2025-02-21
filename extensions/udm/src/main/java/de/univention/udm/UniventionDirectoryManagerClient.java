@@ -65,7 +65,7 @@ public class UniventionDirectoryManagerClient {
 
     /**
      * Searches for users in the Univention Directory Manager.
-     * 
+     *
      * @param params UserSearchParams object containing the following optional
      *               parameters:
      *               - filter: LDAP filter which may contain UDM property names
@@ -80,7 +80,7 @@ public class UniventionDirectoryManagerClient {
      *               true
      *               - page: The search page number, starting at 1
      *               - limit: Maximum number of results per page
-     * 
+     *
      * @return UserSearchResult containing the search results with HAL-formatted
      *         data including:
      *         - _embedded.udm:object: Array of User objects
@@ -96,7 +96,7 @@ public class UniventionDirectoryManagerClient {
      *         - policies: Applied policies
      *         - uri: Full URI to the user object
      *         - uuid: LDAP Entry-UUID
-     * 
+     *
      * @throws IOException          If there's an error communicating with the
      *                              server or parsing the response
      * @throws InterruptedException If the operation is interrupted
@@ -129,7 +129,7 @@ public class UniventionDirectoryManagerClient {
 
     /**
      * Creates a new user in the Univention Directory Manager.
-     * 
+     *
      * @param user User object containing the following fields:
      *             Required properties in user.properties:
      *             - username: User's login name
@@ -154,11 +154,11 @@ public class UniventionDirectoryManagerClient {
      *             - position: DN where the user should be created
      *             - options: Object type specific options (e.g. pki)
      *             - policies: Applied policies (desktop, password history, UMC)
-     * 
+     *
      * @return The created user following properties set by the server:
      *         - dn: The assigned Distinguished Name
      *         - uuid: LDAP Entry-UUID
-     * 
+     *
      * @throws IOException          If there's an error communicating with the
      *                              server,
      *                              the user creation fails, or there's an error
@@ -189,7 +189,7 @@ public class UniventionDirectoryManagerClient {
 
     /**
      * Deletes a user by their DN.
-     * 
+     *
      * @param dn        The distinguished name of the user to delete
      * @param cleanup   Whether to perform cleanup (e.g., of temporary objects,
      *                  locks)
@@ -233,7 +233,7 @@ public class UniventionDirectoryManagerClient {
 
     /**
      * Deletes a user by their DN.
-     * 
+     *
      * @param dn The distinguished name of the user to delete
      * @throws IOException          If there's an error during the deletion
      * @throws InterruptedException If the operation is interrupted
