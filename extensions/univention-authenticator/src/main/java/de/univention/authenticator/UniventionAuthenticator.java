@@ -31,6 +31,7 @@
 package de.univention.authenticator;
 
 import de.univention.udm.UniventionDirectoryManagerClient;
+import de.univention.udm.UniventionDirectoryManagerClientFactory;
 import de.univention.udm.models.User;
 import de.univention.udm.models.UserSearchParams;
 import de.univention.udm.models.UserSearchResult;
@@ -50,6 +51,7 @@ import org.keycloak.authentication.Authenticator;
 import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
+import org.keycloak.models.UserManager;
 import org.keycloak.models.UserModel;
 import org.keycloak.storage.ldap.idm.store.ldap.LDAPUtil;
 
@@ -59,8 +61,16 @@ import org.keycloak.storage.ldap.idm.store.ldap.LDAPUtil;
 // perhaps the user storage spi would be better for this job
 public class UniventionAuthenticator implements Authenticator {
 
-    private static final Logger logger =
-        Logger.getLogger(UniventionAuthenticator.class);
+    private static final Logger logger = Logger.getLogger(UniventionAuthenticator.class);
+    private  final UniventionDirectoryManagerClientFactory udmClientFactory;
+    // TODO: Make this into a config class instead of a bare list.
+    private final UserManager userManager;
+
+
+    public UniventionAuthenticator(UserManager userManager, UniventionDirectoryManagerClientFactory udmClientFactory) {
+        this.userManager = userManager;
+        this.udmClientFactory = udmClientFactory;
+    }
 
     @Override
     public void action(AuthenticationFlowContext context) {
@@ -70,9 +80,8 @@ public class UniventionAuthenticator implements Authenticator {
     @Override
     public void authenticate(AuthenticationFlowContext context) {
         logger.debugf("Univention Authenticator, authenticate has been called.");
-        List<String> config = getValidConfig(context);
-        UniventionDirectoryManagerClient udmClient = getUdmClient(config);
 
+        List<String> config = getValidConfig(context);
         UserModel user = context.getUser();
         logger.debugf("Keycloak user object: %s", user.getAttributes());
         String firstname = user.getFirstName();
@@ -81,6 +90,8 @@ public class UniventionAuthenticator implements Authenticator {
         String email = user.getEmail();
 
         String remSourceID_key = config.get(3);
+        // TODO: Define default: UniventionObjectIdentifier
+        // UDMSourceIdentifierKey
         String remIdGUID_key = config.get(4);
         String defaultGroupDn = config.get(5);
 
@@ -107,7 +118,11 @@ public class UniventionAuthenticator implements Authenticator {
 
         // TODO: Find out if this is even the right way of handling the Ad-hoc federation data
         // Univention Ad-Hoc Federation specific attributes:
+        // TODO: If this is empty, fail and delete the shadow user in keycloak
         String remIdGUID_value = user.getFirstAttribute("objectGUID");
+
+        // TODO: Do we care If this is null?
+        // TODO: Test what happens if this is null: Misconfigure the mapper and find out what happens.
         String remSourceID_value =  user.getFirstAttribute(remSourceID_key);
 
         // This attribute is only for Keycloak, this won't be propagated via UDM
@@ -130,7 +145,7 @@ public class UniventionAuthenticator implements Authenticator {
         String decoded_remoteGUID;
         try{
             decoded_remoteGUID = LDAPUtil.decodeObjectGUID(Base64.getDecoder().decode(remIdGUID_value.getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException | ArrayIndexOutOfBoundsException e){
             logger.warnf("Failed to decode remote GUID of username: %s, guid: %s", username, remIdGUID_value);
             decoded_remoteGUID = remIdGUID_value;
             //propagate the error
@@ -163,6 +178,11 @@ public class UniventionAuthenticator implements Authenticator {
         // and ENSURE THAT THIS STOPS the flow!!!
         // So far the observation is that s, simply returning after failure here doesn't stop the flow
         // which has grave consequences, so fix that!
+        UniventionDirectoryManagerClient udmClient = udmClientFactory.create(
+            config.get(0),  // baseUrl
+            config.get(1),  // username
+            config.get(2)   // password
+        );
         try {
             // Check if user exists first
             if (existsRemoteUser(udmClient, username)) {
@@ -174,6 +194,8 @@ public class UniventionAuthenticator implements Authenticator {
             if (createdUser == null) {
                 logger.errorf("Failed to create user with username: %s", username);
                 context.failure(AuthenticationFlowError.INTERNAL_ERROR);
+                userManager.removeUser(context.getRealm(), context.getUser());
+                logger.infof("Removed keycloak shadow user because the UDM shadow user could not be created and both shadow databases must stay in sync. Username: %s", username);
                 return;
             }
 
@@ -187,6 +209,8 @@ public class UniventionAuthenticator implements Authenticator {
         } catch (InterruptedException | IOException e) {
             logger.errorf("Failed to create user with username: %s, error: %s", username, e);
             context.failure(AuthenticationFlowError.INTERNAL_ERROR);
+            userManager.removeUser(context.getRealm(), context.getUser());
+            logger.infof("Removed keycloak shadow user because the UDM shadow user could not be identified/created and both shadow databases must stay in sync. Username: %s", username);
         }
     }
 
@@ -216,16 +240,31 @@ public class UniventionAuthenticator implements Authenticator {
     }
 
 
+    private boolean existsRemoteUser(UniventionDirectoryManagerClient client, String username) throws IOException, InterruptedException {
+        UserSearchParams params = UserSearchParams.builder()
+            .query(Map.of("username", username))
+            .scope("sub")
+            .build();
+
+        UserSearchResult result = client.searchUsers(params);
+        return !result.getUsers().isEmpty();
+    }
+
+    private String generateRandomPassword() {
+        byte[] token = new byte[256];
+        new java.security.SecureRandom().nextBytes(token);
+        return Base64.getEncoder().encodeToString(token);
+    }
+
     // TODO: If somehow possible make sure that we validate the config
     // in configuration time and not here in runtime when it's too late,
     // also the user who configured is long gone by this code is executed
     /*
      * Ideally this validation should happen in the factory, but
      * how should we validate the config, if AuthenticatorFactory doesn't have
-     * a method which can work on the config?
-     *
+     * a method which can get on the config?
      */
-    private List<String> getValidConfig(AuthenticationFlowContext context) {
+    public List<String> getValidConfig(AuthenticationFlowContext context) {
 
         AuthenticatorConfigModel configModel = context.getAuthenticatorConfig();
 
@@ -256,29 +295,5 @@ public class UniventionAuthenticator implements Authenticator {
         // Check if the URI is valid or available?
 
         return udmConfig;
-    }
-
-    private UniventionDirectoryManagerClient getUdmClient(List<String> config) {
-        return new UniventionDirectoryManagerClient(
-            config.get(0),  // baseUrl
-            config.get(1),  // username
-            config.get(2)   // password
-        );
-    }
-
-    private boolean existsRemoteUser(UniventionDirectoryManagerClient client, String username) throws IOException, InterruptedException {
-        UserSearchParams params = UserSearchParams.builder()
-            .query(Map.of("username", username))
-            .scope("sub")
-            .build();
-
-        UserSearchResult result = client.searchUsers(params);
-        return !result.getUsers().isEmpty();
-    }
-
-    private String generateRandomPassword() {
-        byte[] token = new byte[256];
-        new java.security.SecureRandom().nextBytes(token);
-        return Base64.getEncoder().encodeToString(token);
     }
 }

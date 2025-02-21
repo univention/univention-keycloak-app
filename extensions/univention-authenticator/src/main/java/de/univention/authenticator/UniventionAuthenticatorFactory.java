@@ -30,16 +30,20 @@
 
 package de.univention.authenticator;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import de.univention.udm.UniventionDirectoryManagerClient;
+import de.univention.udm.UniventionDirectoryManagerClientFactory;
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.AuthenticatorFactory;
 import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
+import org.keycloak.models.UserManager;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.provider.ProviderConfigurationBuilder;
 import org.keycloak.Config;
@@ -50,10 +54,12 @@ public class UniventionAuthenticatorFactory implements AuthenticatorFactory {
     private static final Logger logger =
         Logger.getLogger(UniventionAuthenticatorFactory.class);
 
+    /*
+    // TODO: Why is this suddenly a singleton?
     private static final
         UniventionAuthenticator UNIVENTION_AUTHENTICATOR_INSTANCE
             = new UniventionAuthenticator();
-
+    */
 
     static final String UDM_ENDPOINT_CONFIG_PROPERTY_NAME =
         "udm_endpoint";
@@ -133,7 +139,8 @@ public class UniventionAuthenticatorFactory implements AuthenticatorFactory {
     @Override
     public Authenticator create(KeycloakSession session) {
         logger.debug("Univention Authenticator Factory, create has been called");
-        return UNIVENTION_AUTHENTICATOR_INSTANCE;
+
+        return new UniventionAuthenticator(new UserManager(session), new UniventionDirectoryManagerClientFactory());
     }
 
     @Override
