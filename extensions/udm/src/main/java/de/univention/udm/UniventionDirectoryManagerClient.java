@@ -62,6 +62,7 @@ public class UniventionDirectoryManagerClient {
         logger.infof("UDM REST API Client initialized with baseUrl: %s, username: %s", baseUrl, username);
     }
 
+
     /**
      * Searches for users in the Univention Directory Manager.
      * 

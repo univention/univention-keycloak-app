@@ -94,8 +94,10 @@ class UniventionDirectoryManagerClientIT {
         assertNotNull(createdUser.getDn(), "Created user should have a DN");
         createdUserDNs.add(createdUser.getDn()); // Add to cleanup list
 
+        Map<String, Object> query = new HashMap<>();
+        query.put("uid", testUsername);
         UserSearchParams searchParams = UserSearchParams.builder()
-                .query(Map.of("uid", testUsername))
+                .query(query)
                 .build();
 
         UserSearchResult searchResult = client.searchUsers(searchParams);
@@ -167,8 +169,10 @@ class UniventionDirectoryManagerClientIT {
     @Test
     void testSearchNonExistentUser() throws IOException, InterruptedException {
         String nonExistentUsername = faker.internet().username();
+        Map<String, Object> query = new HashMap<>();
+        query.put("username", nonExistentUsername);
         UserSearchParams searchParams = UserSearchParams.builder()
-                .query(Map.of("username", nonExistentUsername))
+                .query(query)
                 .build();
 
         UserSearchResult result = client.searchUsers(searchParams);
