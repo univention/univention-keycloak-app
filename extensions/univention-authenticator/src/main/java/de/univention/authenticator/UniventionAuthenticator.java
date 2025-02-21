@@ -145,7 +145,7 @@ public class UniventionAuthenticator implements Authenticator {
         String decoded_remoteGUID;
         try{
             decoded_remoteGUID = LDAPUtil.decodeObjectGUID(Base64.getDecoder().decode(remIdGUID_value.getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException | ArrayIndexOutOfBoundsException e){
+        } catch (UnsupportedEncodingException | ArrayIndexOutOfBoundsException | IllegalArgumentException e){
             logger.warnf("Failed to decode remote GUID of username: %s, guid: %s", username, remIdGUID_value);
             decoded_remoteGUID = remIdGUID_value;
             //propagate the error
@@ -163,7 +163,7 @@ public class UniventionAuthenticator implements Authenticator {
         properties.put("description", "Shadow copy of user");
         properties.put(remIdGUID_key, decoded_remoteGUID);
         properties.put(remSourceID_key, remSourceID_value);
-        
+
         // Add default group DN if configured
         if (defaultGroupDn != null && !defaultGroupDn.isEmpty()) {
             properties.put("primaryGroup", defaultGroupDn);

@@ -63,6 +63,18 @@ public class UniventionAuthenticatorTest {
     }
 
     @Test
+    void testGUIDIsNotBase64Encoded() {
+        when(user.getFirstAttribute("objectGUID")).thenReturn("dummy");
+
+        authenticator.authenticate(context);
+        verify(context, times(1)).failure(AuthenticationFlowError.INTERNAL_ERROR);
+        verify(context, times(0)).success();
+        // TODO: Implement keycloak user deletion in this failure case.
+        // verify(mockUserManager, times(1)).removeUser(any(), any());
+
+    }
+
+    @Test
     void testInvalidObjectGUID() {
         when(user.getFirstAttribute("objectGUID")).thenReturn(base64Encode("invalid"));
 
