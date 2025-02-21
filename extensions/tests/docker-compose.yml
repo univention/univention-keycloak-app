@@ -4,14 +4,13 @@
 services:
   test:
     image: maven:3.9-eclipse-temurin-17
-    command: "mvn verify"
+    # TODO: Make the univention-ldap-mapper tests run in the container
+    command: "mvn verify -pl '!univention-ldap-mapper'"
     working_dir: /app
     volumes:
       - ../:/app/
       - maven-cache:/root/.m2
       - maven-target:/app/target
-    cap_drop:
-      - ALL
     environment:
       UDM_API_URL: "http://udm-rest-api:9979/udm"
       UDM_USERNAME: "cn=admin"

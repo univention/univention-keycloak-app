@@ -52,7 +52,7 @@ test-udm-unit-and-integration::
       when: "never"
     - when: "on_success"
   before_script:
-    - cd extensions/udm/tests
+    - cd extensions/tests
     # Allow that the Docker API version is negotiated between client and server
     - unset DOCKER_API_VERSION
     - export IMAGE_TAG=${RELEASE_VERSION}
