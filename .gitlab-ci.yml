@@ -44,6 +44,7 @@ push-image-external:
     matrix: *publish-matrix
 
 test-udm-unit-and-integration::
+  needs: []
   stage: test
   extends: .dind
   image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:24.0.7"
