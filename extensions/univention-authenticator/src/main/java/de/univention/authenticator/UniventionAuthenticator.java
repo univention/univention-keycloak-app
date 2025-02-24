@@ -256,6 +256,8 @@ public class UniventionAuthenticator implements Authenticator {
         return Base64.getEncoder().encodeToString(token);
     }
 
+    // TODO: has to be public for the moment to mock it from the tests.
+    // While refactoring the config, we should find a better alternative. (DependencyInjection)
     // TODO: If somehow possible make sure that we validate the config
     // in configuration time and not here in runtime when it's too late,
     // also the user who configured is long gone by this code is executed

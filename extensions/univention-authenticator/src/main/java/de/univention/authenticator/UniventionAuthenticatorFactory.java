@@ -54,13 +54,6 @@ public class UniventionAuthenticatorFactory implements AuthenticatorFactory {
     private static final Logger logger =
         Logger.getLogger(UniventionAuthenticatorFactory.class);
 
-    /*
-    // TODO: Why is this suddenly a singleton?
-    private static final
-        UniventionAuthenticator UNIVENTION_AUTHENTICATOR_INSTANCE
-            = new UniventionAuthenticator();
-    */
-
     static final String UDM_ENDPOINT_CONFIG_PROPERTY_NAME =
         "udm_endpoint";
     static final String UDM_USER_CONFIG_PROPERTY_NAME =
