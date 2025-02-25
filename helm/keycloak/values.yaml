@@ -171,10 +171,10 @@ fullnameOverride: ""
 # Container image section.
 image:
   # -- Container registry address. This setting has higher precedence than global.registry.
-  registry: ""
+  registry: "artifacts.software-univention.de"
 
   # -- Container repository string.
-  repository: "keycloak-keycloak"
+  repository: "nubus/keycloak"
 
   # -- Define an ImagePullPolicy.
   #
@@ -191,7 +191,7 @@ image:
   imagePullPolicy: "IfNotPresent"
 
   # -- Define image tag.
-  tag: "25.0.1-ucs1@sha256:61cb3e703672f6d8806af41bec8056ca84e295bbeb546fdb5349322d1174a43d"
+  tag: "25.0.6-ucs5@sha256:8e9df64f9b6c5ce6e5f0ae732f0aadc928e13e7166236bd16bf647b92dad22bb"
 
 # -- Credentials to fetch images from private registry
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/

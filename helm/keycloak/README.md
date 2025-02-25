@@ -345,7 +345,7 @@ false
 			<td>image.registry</td>
 			<td>string</td>
 			<td><pre lang="json">
-""
+"artifacts.software-univention.de"
 </pre>
 </td>
 			<td>Container registry address. This setting has higher precedence than global.registry.</td>
@@ -354,7 +354,7 @@ false
 			<td>image.repository</td>
 			<td>string</td>
 			<td><pre lang="json">
-"keycloak-keycloak"
+"nubus/keycloak"
 </pre>
 </td>
 			<td>Container repository string.</td>
@@ -363,7 +363,7 @@ false
 			<td>image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"25.0.1-ucs1@sha256:61cb3e703672f6d8806af41bec8056ca84e295bbeb546fdb5349322d1174a43d"
+"25.0.6-ucs5@sha256:8e9df64f9b6c5ce6e5f0ae732f0aadc928e13e7166236bd16bf647b92dad22bb"
 </pre>
 </td>
 			<td>Define image tag.</td>
