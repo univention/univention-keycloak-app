@@ -89,11 +89,9 @@ public class UniventionAuthenticator implements Authenticator {
         String username = user.getUsername();
         String email = user.getEmail();
 
-        String remSourceID_key = config.get(3);
-        // TODO: Define default: UniventionObjectIdentifier
-        // UDMSourceIdentifierKey
-        String remIdGUID_key = config.get(4);
-        String defaultGroupDn = config.get(5);
+        String sourceIdentityProviderID_KeycloakAndUDMKey = config.get(3);
+        String sourceUserPrimaryID_UDMKey = config.get(4);
+        String UDMUserPiramryGroupDn = config.get(5);
 
         logger.infof(
             """
@@ -104,9 +102,11 @@ public class UniventionAuthenticator implements Authenticator {
             firstname,
             lastname,
             email,
-            remSourceID_key,
-            remIdGUID_key,
             defaultGroupDn,
+            sourceIdentityProviderID_KeycloakAndUDMKey,
+            sourceUserPrimaryID_UDMKey,
+            UDMUserPiramryGroupDn,
+
             user.getAttributes()
         );
         // The IDP doesn't provide a password attribute,
@@ -123,7 +123,7 @@ public class UniventionAuthenticator implements Authenticator {
 
         // TODO: Do we care If this is null?
         // TODO: Test what happens if this is null: Misconfigure the mapper and find out what happens.
-        String remSourceID_value =  user.getFirstAttribute(remSourceID_key);
+        String remSourceID_value =  user.getFirstAttribute(sourceIdentityProviderID_KeycloakAndUDMKey);
 
         // This attribute is only for Keycloak, this won't be propagated via UDM
         // TODO: Currently it doesn't seem to be possible to set a mapper for this in KC
@@ -133,11 +133,11 @@ public class UniventionAuthenticator implements Authenticator {
         String univentionTargetFederationLink =  user.getFirstAttribute("univentionTargetFederationLink");
 
         logger.infof(
-            "Additional user attributes for username: %s, remIdGUID_key %s, remIdGUID_value %s, remSourceID_key %s, remSourceID_value %s, univentionTargetFederationLink: %s",
+            "Additional user attributes for username: %s, sourceUserPrimaryID_UDMKey %s, remIdGUID_value %s, sourceIdentityProviderID_KeycloakAndUDMKey %s, remSourceID_value %s, univentionTargetFederationLink: %s",
             username,
-            remIdGUID_key,
+            sourceUserPrimaryID_UDMKey,
             remIdGUID_value,
-            remSourceID_key,
+                sourceIdentityProviderID_KeycloakAndUDMKey,
             remSourceID_value,
             univentionTargetFederationLink
         );
@@ -161,12 +161,12 @@ public class UniventionAuthenticator implements Authenticator {
         properties.put("password", password);
         properties.put("e-mail", new String[]{email});
         properties.put("description", "Shadow copy of user");
-        properties.put(remIdGUID_key, decoded_remoteGUID);
-        properties.put(remSourceID_key, remSourceID_value);
+        properties.put(sourceUserPrimaryID_UDMKey, decoded_remoteGUID);
+        properties.put(sourceIdentityProviderID_KeycloakAndUDMKey, remSourceID_value);
 
         // Add default group DN if configured
-        if (defaultGroupDn != null && !defaultGroupDn.isEmpty()) {
-            properties.put("primaryGroup", defaultGroupDn);
+        if (UDMUserPiramryGroupDn != null && !UDMUserPiramryGroupDn.isEmpty()) {
+            properties.put("primaryGroup", UDMUserPiramryGroupDn);
         }
 
         User udmUser = new User();
