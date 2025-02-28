@@ -31,7 +31,7 @@ remSourceID_key -> SourceIdentityProviderID_KeycloakAndUDMKey
     /**
      * UDM user attribute name at which the users Source directory primary ID is saved.
      */
-    public String sourceUserPrimaryID_UDMKey //formally remIdGUID_key
+    public String sourceUserPrimaryID_UDMKey; //formally remIdGUID_key
 
     /**
      * LDAP dn of the primary group that the UDM user should be assigned to.
