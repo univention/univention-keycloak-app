@@ -27,7 +27,7 @@ public class IdentityMappingConfigTest {
 
     private Map<String, String> configValues;
 
-    // New constants for additional config properties
+    // Additional config property names
     private static final String UDM_ENDPOINT_CONFIG_PROPERTY_NAME = "udm_endpoint";
     private static final String UDM_USER_CONFIG_PROPERTY_NAME = "udm_user";
     private static final String UDM_PASSWORD_CONFIG_PROPERTY_NAME = "udm_password";
@@ -46,7 +46,7 @@ public class IdentityMappingConfigTest {
         configValues.put("udmUsername", "admin");
         configValues.put("udmPassword", "secret");
 
-        // New config properties added
+        // Additional properties
         configValues.put(UDM_ENDPOINT_CONFIG_PROPERTY_NAME, "https://udm.example.com/api");
         configValues.put(UDM_USER_CONFIG_PROPERTY_NAME, "udm_admin");
         configValues.put(UDM_PASSWORD_CONFIG_PROPERTY_NAME, "supersecret");
@@ -63,44 +63,74 @@ public class IdentityMappingConfigTest {
 
     @Test
     void testValidConfigCreation() {
-        // Create instance of IdentityMappingConfig
         IdentityMappingConfig identityMappingConfig = new IdentityMappingConfig(mockContext);
 
-        // Verify correct values are retrieved
         assertEquals("idp-12345", identityMappingConfig.getSourceIdentityProviderID_KeycloakAndUDMKey());
         assertEquals("udm-67890", identityMappingConfig.getSourceUserPrimaryID_UDMKey());
         assertEquals("cn=users,dc=example,dc=com", identityMappingConfig.getUdmUserPrimaryGroupDn());
         assertEquals("https://udm.example.com", identityMappingConfig.getUdmBaseUrl());
         assertEquals("admin", identityMappingConfig.getUdmUsername());
         assertEquals("secret", identityMappingConfig.getUdmPassword());
-
-        // Verify additional properties
-        assertEquals("https://udm.example.com/api", configValues.get(UDM_ENDPOINT_CONFIG_PROPERTY_NAME));
-        assertEquals("udm_admin", configValues.get(UDM_USER_CONFIG_PROPERTY_NAME));
-        assertEquals("supersecret", configValues.get(UDM_PASSWORD_CONFIG_PROPERTY_NAME));
-        assertEquals("keycloak-source-id", configValues.get(KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER_NAME));
-        assertEquals("keycloak-remote-id", configValues.get(KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME));
-        assertEquals("cn=default,dc=example,dc=com", configValues.get(DEFAULT_GROUP_DN_CONFIG_PROPERTY_NAME));
     }
 
     @Test
-    void testConfigFailsWithMissingValues() {
-        // Remove a required key to simulate misconfiguration
-        configValues.remove("udm_password");
-
-        // Since mockConfigModel.getConfig() returns the map reference, no need to re-mock
+    void testFailAuthenticationIfSourceUserPrimaryID_UDMKeyIsNull() {
+        configValues.put("sourceUserPrimaryID_UDMKey", null);
         when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
 
-        // Verify that an exception is thrown due to missing values
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new IdentityMappingConfig(mockContext));
+        assertEquals("Authentication failed due to missing SourceUserPrimaryID_UDMKey", exception.getMessage());
+
+        verify(mockContext).failure(AuthenticationFlowError.INVALID_USER);
+    }
+
+    @Test
+    void testFailAuthenticationIfSourceUserPrimaryID_UDMKeyIsEmpty() {
+        configValues.put("sourceUserPrimaryID_UDMKey", "");
+        when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new IdentityMappingConfig(mockContext));
+        assertEquals("Authentication failed due to missing SourceUserPrimaryID_UDMKey", exception.getMessage());
+
+        verify(mockContext).failure(AuthenticationFlowError.INVALID_USER);
+    }
+
+    @Test
+    void testFailAuthenticationIfSourceIdentityProviderID_KeycloakAndUDMKeyIsNull() {
+        configValues.put("sourceIdentityProviderID_KeycloakAndUDMKey", null);
+        when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new IdentityMappingConfig(mockContext));
+        assertEquals("Authentication failed due to missing SourceIdentityProviderID_KeycloakAndUDMKey", exception.getMessage());
+
+        verify(mockContext).failure(AuthenticationFlowError.INVALID_USER);
+    }
+
+    @Test
+    void testFailAuthenticationIfSourceIdentityProviderID_KeycloakAndUDMKeyIsEmpty() {
+        configValues.put("sourceIdentityProviderID_KeycloakAndUDMKey", "");
+        when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new IdentityMappingConfig(mockContext));
+        assertEquals("Authentication failed due to missing SourceIdentityProviderID_KeycloakAndUDMKey", exception.getMessage());
+
+        verify(mockContext).failure(AuthenticationFlowError.INVALID_USER);
+    }
+
+    @Test
+    void testFailAuthenticationIfRequiredConfigValuesAreMissing() {
+        configValues.remove("udm_password");
+
+        when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
+
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new IdentityMappingConfig(mockContext));
         assertTrue(exception.getMessage().contains("Missing required configuration keys"));
 
-        // Ensure context.failure() is triggered
         verify(mockContext).failure(AuthenticationFlowError.CREDENTIAL_SETUP_REQUIRED);
     }
 
     @Test
-    void testConfigFailsWithNullConfigModel() {
+    void testFailAuthenticationIfConfigModelIsNull() {
         when(mockContext.getAuthenticatorConfig()).thenReturn(null);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new IdentityMappingConfig(mockContext));
@@ -110,7 +140,7 @@ public class IdentityMappingConfigTest {
     }
 
     @Test
-    void testConfigFailsWithNullConfigMap() {
+    void testFailAuthenticationIfConfigMapIsNull() {
         when(mockConfigModel.getConfig()).thenReturn(null);
         when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
 

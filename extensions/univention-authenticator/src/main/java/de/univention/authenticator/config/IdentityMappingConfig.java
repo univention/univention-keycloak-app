@@ -2,8 +2,8 @@ package de.univention.authenticator.config;
 
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
-import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.authentication.AuthenticationFlowError;
+import org.keycloak.models.AuthenticatorConfigModel;
 import de.univention.authenticator.UniventionAuthenticatorFactory;
 
 import java.util.*;
@@ -43,13 +43,13 @@ public class IdentityMappingConfig {
         }
 
         Map<String, String> config = configModel.getConfig();
-        this.fullConfig = Map.copyOf(config);
+        this.fullConfig = Collections.unmodifiableMap(new HashMap<>(config));
 
         // Ensure all required properties exist
         List<String> missingKeys = new ArrayList<>();
 
         for (String key : REQUIRED_KEYS) {
-            if (!config.containsKey(key) || config.get(key) == null) {
+            if (!config.containsKey(key) || config.get(key) == null || config.get(key).isEmpty()) {
                 logger.errorf("Missing required config value: %s", key);
                 missingKeys.add(key);
             }
@@ -67,6 +67,20 @@ public class IdentityMappingConfig {
         this.udmBaseUrl = config.get("udmBaseUrl");
         this.udmUsername = config.get("udmUsername");
         this.udmPassword = config.get("udmPassword");
+
+        // ✅ Fail authentication if SourceUserPrimaryID_UDMKey (remIdGUID_value) is null or empty
+        if (isNullOrEmpty(this.sourceUserPrimaryID_UDMKey)) {
+            logger.error("SourceUserPrimaryID_UDMKey (remIdGUID_value) is null or empty → Authentication failed");
+            context.failure(AuthenticationFlowError.INVALID_USER);
+            throw new IllegalStateException("Authentication failed due to missing SourceUserPrimaryID_UDMKey");
+        }
+
+        // ✅ Fail authentication if SourceIdentityProviderID_KeycloakAndUDMKey is null or empty
+        if (isNullOrEmpty(this.sourceIdentityProviderID_KeycloakAndUDMKey)) {
+            logger.error("SourceIdentityProviderID_KeycloakAndUDMKey is null or empty → Authentication failed");
+            context.failure(AuthenticationFlowError.INVALID_USER);
+            throw new IllegalStateException("Authentication failed due to missing SourceIdentityProviderID_KeycloakAndUDMKey");
+        }
     }
 
     /**
@@ -105,5 +119,12 @@ public class IdentityMappingConfig {
      */
     public Map<String, String> getFullConfig() {
         return fullConfig;
+    }
+
+    /**
+     * Helper method to check for null or empty values
+     */
+    private boolean isNullOrEmpty(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }
