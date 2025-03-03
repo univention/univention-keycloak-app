@@ -1,7 +1,7 @@
 package de.univention.authenticator;
 
-import de.univention.authenticator.config.IdentityMappingConfig;
-import de.univention.authenticator.config.IdentityMappingConfigFactory;
+import de.univention.authenticator.config.UniventionAuthenticatorConfig;
+import de.univention.authenticator.config.UniventionAuthenticatorConfigFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class IdentityMappingConfigFactoryTest {
+public class UniventionAuthenticatorConfigFactoryTest {
 
     @Mock
     private AuthenticationFlowContext mockContext;
@@ -65,7 +65,7 @@ public class IdentityMappingConfigFactoryTest {
 
     @Test
     void testCreateConfigReturnsValidInstance() {
-        IdentityMappingConfig config = IdentityMappingConfigFactory.createConfig(mockContext);
+        UniventionAuthenticatorConfig config = UniventionAuthenticatorConfigFactory.createConfig(mockContext);
         assertNotNull(config, "Expected IdentityMappingConfig instance but got null");
 
         // Verify that the returned config contains expected values
@@ -76,7 +76,7 @@ public class IdentityMappingConfigFactoryTest {
     @Test
     void testCreateConfigFailsWithNullContext() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            IdentityMappingConfigFactory.createConfig(null);
+            UniventionAuthenticatorConfigFactory.createConfig(null);
         });
 
         assertEquals("AuthenticationFlowContext cannot be null", exception.getMessage());
@@ -87,7 +87,7 @@ public class IdentityMappingConfigFactoryTest {
         when(mockContext.getAuthenticatorConfig()).thenReturn(null);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            IdentityMappingConfigFactory.createConfig(mockContext);
+            UniventionAuthenticatorConfigFactory.createConfig(mockContext);
         });
 
         assertEquals("Configuration is missing, authentication cannot proceed", exception.getMessage());
@@ -101,7 +101,7 @@ public class IdentityMappingConfigFactoryTest {
         when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            IdentityMappingConfigFactory.createConfig(mockContext);
+            UniventionAuthenticatorConfigFactory.createConfig(mockContext);
         });
 
         assertEquals("Configuration is missing, authentication cannot proceed", exception.getMessage());

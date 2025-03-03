@@ -38,13 +38,13 @@ import de.univention.authenticator.UniventionAuthenticatorFactory;
 
 import java.util.*;
 
-public class IdentityMappingConfig {
-    private static final Logger logger = Logger.getLogger(IdentityMappingConfig.class);
+public class UniventionAuthenticatorConfig {
+    private static final Logger logger = Logger.getLogger(UniventionAuthenticatorConfig.class);
 
     /**
      * List of expected config keys (should be defined somewhere in UniventionAuthenticatorFactory)
      */
-    private static final List<String> REQUIRED_KEYS = List.of(UniventionAuthenticatorFactory.configPropertyNames);
+    private static final List<String> REQUIRED_KEYS = List.of(UniventionAuthenticatorFactory.requiredConfigPropertyNames);
 
     private final String sourceIdentityProviderID_KeycloakAndUDMKey;
     private static final String SOURCE_USER_PRIMARY_ID_KEYCLOAK_KEY = "objectGUID";
@@ -58,7 +58,7 @@ public class IdentityMappingConfig {
     /**
      * Constructor integrates the validation & config retrieval logic
      */
-    public IdentityMappingConfig(AuthenticationFlowContext context) {
+    public UniventionAuthenticatorConfig(AuthenticationFlowContext context) {
         if (context == null) {
             throw new IllegalArgumentException("AuthenticationFlowContext cannot be null");
         }
@@ -149,6 +149,7 @@ public class IdentityMappingConfig {
      */
     public Map<String, String> getFullConfig() {
         return fullConfig;
+        //TODO adapt to not log pw
     }
 
     /**

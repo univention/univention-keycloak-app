@@ -29,8 +29,8 @@
 
 package de.univention.authenticator;
 
-import de.univention.authenticator.config.IdentityMappingConfig;
-import de.univention.authenticator.config.IdentityMappingConfigFactory;
+import de.univention.authenticator.config.UniventionAuthenticatorConfig;
+import de.univention.authenticator.config.UniventionAuthenticatorConfigFactory;
 import de.univention.udm.UniventionDirectoryManagerClient;
 import de.univention.udm.UniventionDirectoryManagerClientFactory;
 import de.univention.udm.models.User;
@@ -74,9 +74,9 @@ public class UniventionAuthenticator implements Authenticator {
         logger.debugf("Univention Authenticator, authenticate has been called.");
 
         // ✅ Create IdentityMappingConfig instance using the factory
-        IdentityMappingConfig config;
+        UniventionAuthenticatorConfig config;
         try {
-            config = IdentityMappingConfigFactory.createConfig(context);
+            config = UniventionAuthenticatorConfigFactory.createConfig(context);
         } catch (IllegalStateException | IllegalArgumentException e) {
             logger.error("Failed to load configuration", e);
             context.failure(AuthenticationFlowError.CREDENTIAL_SETUP_REQUIRED);
@@ -95,18 +95,18 @@ public class UniventionAuthenticator implements Authenticator {
         // Get identity provider attributes
         String sourceIdentityProviderID_KeycloakAndUDMKey = config.getSourceIdentityProviderID_KeycloakAndUDMKey();
         String sourceUserPrimaryID_UDMKey = config.getSourceUserPrimaryID_UDMKey();
-        String UDMUserPrimaryGroupDn = config.getUdmUserPrimaryGroupDn();
 
+        // TODO adapt to use built in string method of config
         logger.infof(
                 "Federated user attempted to log in: username: %s, firstname: %s, lastname: %s, email: %s, remSourceIden_key: %s, remObjIden_key: %s, userAttributes: %s",
-                username, firstname, lastname, email, sourceIdentityProviderID_KeycloakAndUDMKey, sourceUserPrimaryID_UDMKey, UDMUserPrimaryGroupDn, user.getAttributes()
+                username, firstname, lastname, email, sourceIdentityProviderID_KeycloakAndUDMKey, sourceUserPrimaryID_UDMKey, config.getUdmUserPrimaryGroupDn(), user.getAttributes()
         );
 
         String password = generateRandomPassword();
 
         // ✅ Validate objectGUID
-        String remIdGUID_value = user.getFirstAttribute("objectGUID");
-        if (remIdGUID_value == null || remIdGUID_value.trim().isEmpty()) {
+        String SourceUserPrimaryID_Value = user.getFirstAttribute("objectGUID");
+        if (SourceUserPrimaryID_Value == null || SourceUserPrimaryID_Value.trim().isEmpty()) {
             logger.error("ObjectGUID is null or empty, authentication failed");
             context.failure(AuthenticationFlowError.INVALID_USER);
             return;
@@ -122,15 +122,15 @@ public class UniventionAuthenticator implements Authenticator {
 
         String univentionTargetFederationLink = user.getFirstAttribute("univentionTargetFederationLink");
 
-        logger.infof("Additional user attributes for username: %s, sourceUserPrimaryID_UDMKey %s, remIdGUID_value %s, sourceIdentityProviderID_KeycloakAndUDMKey %s, remSourceID_value %s, univentionTargetFederationLink: %s",
-                username, sourceUserPrimaryID_UDMKey, remIdGUID_value, sourceIdentityProviderID_KeycloakAndUDMKey, remSourceID_value, univentionTargetFederationLink
+        logger.infof("Additional user attributes for username: %s, sourceUserPrimaryID_UDMKey %s, SourceUserPrimaryID_Value %s, sourceIdentityProviderID_KeycloakAndUDMKey %s, remSourceID_value %s, univentionTargetFederationLink: %s",
+                username, sourceUserPrimaryID_UDMKey, SourceUserPrimaryID_Value, sourceIdentityProviderID_KeycloakAndUDMKey, remSourceID_value, univentionTargetFederationLink
         );
 
         String decoded_remoteGUID;
         try {
-            decoded_remoteGUID = LDAPUtil.decodeObjectGUID(Base64.getDecoder().decode(remIdGUID_value.getBytes("UTF-8")));
+            decoded_remoteGUID = LDAPUtil.decodeObjectGUID(Base64.getDecoder().decode(SourceUserPrimaryID_Value.getBytes("UTF-8")));
         } catch (UnsupportedEncodingException | ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
-            logger.warnf("Failed to decode remote GUID of username: %s, guid: %s", username, remIdGUID_value);
+            logger.warnf("Failed to decode remote GUID of username: %s, guid: %s", username, SourceUserPrimaryID_Value);
             context.failure(AuthenticationFlowError.INTERNAL_ERROR);
             return;
         }
@@ -146,8 +146,8 @@ public class UniventionAuthenticator implements Authenticator {
         properties.put(sourceUserPrimaryID_UDMKey, decoded_remoteGUID);
         properties.put(sourceIdentityProviderID_KeycloakAndUDMKey, remSourceID_value);
 
-        if (UDMUserPrimaryGroupDn != null && !UDMUserPrimaryGroupDn.isEmpty()) {
-            properties.put("primaryGroup", UDMUserPrimaryGroupDn);
+        if (config.getUdmUserPrimaryGroupDn() != null && !config.getUdmUserPrimaryGroupDn().isEmpty()) {
+            properties.put("primaryGroup", config.getUdmUserPrimaryGroupDn());
         }
 
         User udmUser = new User();

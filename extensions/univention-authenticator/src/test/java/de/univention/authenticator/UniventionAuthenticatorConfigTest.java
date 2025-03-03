@@ -1,6 +1,6 @@
 package de.univention.authenticator;
 
-import de.univention.authenticator.config.IdentityMappingConfig;
+import de.univention.authenticator.config.UniventionAuthenticatorConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class IdentityMappingConfigTest {
+public class UniventionAuthenticatorConfigTest {
 
     @Mock
     private AuthenticationFlowContext mockContext;
@@ -63,14 +63,14 @@ public class IdentityMappingConfigTest {
 
     @Test
     void testValidConfigCreation() {
-        IdentityMappingConfig identityMappingConfig = new IdentityMappingConfig(mockContext);
+        UniventionAuthenticatorConfig univentionAuthenticatorConfig = new UniventionAuthenticatorConfig(mockContext);
 
-        assertEquals("idp-12345", identityMappingConfig.getSourceIdentityProviderID_KeycloakAndUDMKey());
-        assertEquals("udm-67890", identityMappingConfig.getSourceUserPrimaryID_UDMKey());
-        assertEquals("cn=users,dc=example,dc=com", identityMappingConfig.getUdmUserPrimaryGroupDn());
-        assertEquals("https://udm.example.com", identityMappingConfig.getUdmBaseUrl());
-        assertEquals("admin", identityMappingConfig.getUdmUsername());
-        assertEquals("secret", identityMappingConfig.getUdmPassword());
+        assertEquals("idp-12345", univentionAuthenticatorConfig.getSourceIdentityProviderID_KeycloakAndUDMKey());
+        assertEquals("udm-67890", univentionAuthenticatorConfig.getSourceUserPrimaryID_UDMKey());
+        assertEquals("cn=users,dc=example,dc=com", univentionAuthenticatorConfig.getUdmUserPrimaryGroupDn());
+        assertEquals("https://udm.example.com", univentionAuthenticatorConfig.getUdmBaseUrl());
+        assertEquals("admin", univentionAuthenticatorConfig.getUdmUsername());
+        assertEquals("secret", univentionAuthenticatorConfig.getUdmPassword());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class IdentityMappingConfigTest {
         configValues.put("sourceUserPrimaryID_UDMKey", null);
         when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new IdentityMappingConfig(mockContext));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
         assertEquals("Authentication failed due to missing SourceUserPrimaryID_UDMKey", exception.getMessage());
 
         verify(mockContext).failure(AuthenticationFlowError.INVALID_USER);
@@ -89,7 +89,7 @@ public class IdentityMappingConfigTest {
         configValues.put("sourceUserPrimaryID_UDMKey", "");
         when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new IdentityMappingConfig(mockContext));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
         assertEquals("Authentication failed due to missing SourceUserPrimaryID_UDMKey", exception.getMessage());
 
         verify(mockContext).failure(AuthenticationFlowError.INVALID_USER);
@@ -100,7 +100,7 @@ public class IdentityMappingConfigTest {
         configValues.put("sourceIdentityProviderID_KeycloakAndUDMKey", null);
         when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new IdentityMappingConfig(mockContext));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
         assertEquals("Authentication failed due to missing SourceIdentityProviderID_KeycloakAndUDMKey", exception.getMessage());
 
         verify(mockContext).failure(AuthenticationFlowError.INVALID_USER);
@@ -111,7 +111,7 @@ public class IdentityMappingConfigTest {
         configValues.put("sourceIdentityProviderID_KeycloakAndUDMKey", "");
         when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new IdentityMappingConfig(mockContext));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
         assertEquals("Authentication failed due to missing SourceIdentityProviderID_KeycloakAndUDMKey", exception.getMessage());
 
         verify(mockContext).failure(AuthenticationFlowError.INVALID_USER);
@@ -123,7 +123,7 @@ public class IdentityMappingConfigTest {
 
         when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new IdentityMappingConfig(mockContext));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
         assertTrue(exception.getMessage().contains("Missing required configuration keys"));
 
         verify(mockContext).failure(AuthenticationFlowError.CREDENTIAL_SETUP_REQUIRED);
@@ -133,7 +133,7 @@ public class IdentityMappingConfigTest {
     void testFailAuthenticationIfConfigModelIsNull() {
         when(mockContext.getAuthenticatorConfig()).thenReturn(null);
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new IdentityMappingConfig(mockContext));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
         assertEquals("Configuration is missing, authentication cannot proceed", exception.getMessage());
 
         verify(mockContext).failure(AuthenticationFlowError.CREDENTIAL_SETUP_REQUIRED);
@@ -144,7 +144,7 @@ public class IdentityMappingConfigTest {
         when(mockConfigModel.getConfig()).thenReturn(null);
         when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new IdentityMappingConfig(mockContext));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
         assertEquals("Configuration is missing, authentication cannot proceed", exception.getMessage());
 
         verify(mockContext).failure(AuthenticationFlowError.CREDENTIAL_SETUP_REQUIRED);

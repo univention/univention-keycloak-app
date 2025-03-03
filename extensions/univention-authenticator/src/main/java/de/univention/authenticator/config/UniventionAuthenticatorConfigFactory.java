@@ -34,7 +34,7 @@ import de.univention.authenticator.UniventionAuthenticator;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.jboss.logging.Logger;
 
-public class IdentityMappingConfigFactory {
+public class UniventionAuthenticatorConfigFactory {
     /**
      * Creates a Config instance from an AuthenticatorConfigModel.
      *
@@ -43,7 +43,7 @@ public class IdentityMappingConfigFactory {
      */
     private static final Logger logger = Logger.getLogger(UniventionAuthenticator.class);
 
-    public static IdentityMappingConfig createConfig(AuthenticationFlowContext context)  {
-        return new IdentityMappingConfig(context);
+    public static UniventionAuthenticatorConfig createConfig(AuthenticationFlowContext context)  {
+        return new UniventionAuthenticatorConfig(context);
     }
 }

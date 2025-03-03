@@ -72,6 +72,12 @@ public class UniventionAuthenticatorFactory implements AuthenticatorFactory {
         KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME, DEFAULT_GROUP_DN_CONFIG_PROPERTY_NAME
     };
 
+    public static final String[] requiredConfigPropertyNames = {
+            UDM_ENDPOINT_CONFIG_PROPERTY_NAME, UDM_USER_CONFIG_PROPERTY_NAME,
+            UDM_PASSWORD_CONFIG_PROPERTY_NAME, KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER_NAME,
+            KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME
+    };
+
     // TODO: Currently this config is not validated,
     // so when the user enters the URL it might not even be available
     // and the username/password might be incorrect

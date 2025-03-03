@@ -1,7 +1,7 @@
 package de.univention.authenticator;
 
-import de.univention.authenticator.config.IdentityMappingConfig;
-import de.univention.authenticator.config.IdentityMappingConfigFactory;
+import de.univention.authenticator.config.UniventionAuthenticatorConfig;
+import de.univention.authenticator.config.UniventionAuthenticatorConfigFactory;
 import de.univention.udm.UniventionDirectoryManagerClient;
 import de.univention.udm.UniventionDirectoryManagerClientFactory;
 import de.univention.udm.models.User;
@@ -19,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -40,9 +39,9 @@ public class UniventionAuthenticatorTest {
     @Mock
     private UserManager mockUserManager;
     @Mock
-    private IdentityMappingConfig mockConfig;
+    private UniventionAuthenticatorConfig mockConfig;
 
-    private MockedStatic<IdentityMappingConfigFactory> mockedFactory;
+    private MockedStatic<UniventionAuthenticatorConfigFactory> mockedFactory;
 
     @BeforeEach
     void setUp() {
@@ -63,8 +62,8 @@ public class UniventionAuthenticatorTest {
         lenient().when(mockConfig.getUdmPassword()).thenReturn("secret");
 
         // ✅ Ensure factory method is mocked **persistently** for all tests
-        mockedFactory = mockStatic(IdentityMappingConfigFactory.class);
-        mockedFactory.when(() -> IdentityMappingConfigFactory.createConfig(any(AuthenticationFlowContext.class)))
+        mockedFactory = mockStatic(UniventionAuthenticatorConfigFactory.class);
+        mockedFactory.when(() -> UniventionAuthenticatorConfigFactory.createConfig(any(AuthenticationFlowContext.class)))
                 .thenReturn(mockConfig);
 
         authenticator = new UniventionAuthenticator(mockUserManager, mockUdmClientFactory);
