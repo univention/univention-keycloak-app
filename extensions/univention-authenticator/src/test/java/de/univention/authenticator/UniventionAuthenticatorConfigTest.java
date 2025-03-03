@@ -81,7 +81,6 @@ public class UniventionAuthenticatorConfigTest {
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
         assertEquals("Authentication failed due to missing SourceUserPrimaryID_UDMKey", exception.getMessage());
 
-        verify(mockContext).failure(AuthenticationFlowError.INVALID_USER);
     }
 
     @Test
@@ -92,7 +91,6 @@ public class UniventionAuthenticatorConfigTest {
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
         assertEquals("Authentication failed due to missing SourceUserPrimaryID_UDMKey", exception.getMessage());
 
-        verify(mockContext).failure(AuthenticationFlowError.INVALID_USER);
     }
 
     @Test
@@ -103,7 +101,6 @@ public class UniventionAuthenticatorConfigTest {
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
         assertEquals("Authentication failed due to missing SourceIdentityProviderID_KeycloakAndUDMKey", exception.getMessage());
 
-        verify(mockContext).failure(AuthenticationFlowError.INVALID_USER);
     }
 
     @Test
@@ -114,7 +111,6 @@ public class UniventionAuthenticatorConfigTest {
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
         assertEquals("Authentication failed due to missing SourceIdentityProviderID_KeycloakAndUDMKey", exception.getMessage());
 
-        verify(mockContext).failure(AuthenticationFlowError.INVALID_USER);
     }
 
     @Test

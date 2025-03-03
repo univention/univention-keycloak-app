@@ -109,7 +109,6 @@ public class UniventionAuthenticator implements Authenticator {
         if (SourceUserPrimaryID_Value == null || SourceUserPrimaryID_Value.trim().isEmpty()) {
             logger.error("ObjectGUID is null or empty, authentication failed");
             context.failure(AuthenticationFlowError.INVALID_USER);
-            userManager.removeUser(context.getRealm(), context.getUser());
             return;
         }
 
