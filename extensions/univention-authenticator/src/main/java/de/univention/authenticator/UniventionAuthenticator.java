@@ -109,6 +109,7 @@ public class UniventionAuthenticator implements Authenticator {
         if (SourceUserPrimaryID_Value == null || SourceUserPrimaryID_Value.trim().isEmpty()) {
             logger.error("ObjectGUID is null or empty, authentication failed");
             context.failure(AuthenticationFlowError.INVALID_USER);
+            userManager.removeUser(context.getRealm(), context.getUser());
             return;
         }
 
@@ -117,6 +118,7 @@ public class UniventionAuthenticator implements Authenticator {
         if (remSourceID_value == null || remSourceID_value.trim().isEmpty()) {
             logger.error("SourceIdentityProviderID_KeycloakAndUDMKey is null or empty, authentication failed");
             context.failure(AuthenticationFlowError.INVALID_USER);
+            userManager.removeUser(context.getRealm(), context.getUser());
             return;
         }
 
@@ -132,6 +134,7 @@ public class UniventionAuthenticator implements Authenticator {
         } catch (UnsupportedEncodingException | ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
             logger.warnf("Failed to decode remote GUID of username: %s, guid: %s", username, SourceUserPrimaryID_Value);
             context.failure(AuthenticationFlowError.INTERNAL_ERROR);
+            userManager.removeUser(context.getRealm(), context.getUser());
             return;
         }
 

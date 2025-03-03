@@ -101,14 +101,12 @@ public class UniventionAuthenticatorConfig {
         // ✅ Fail authentication if SourceUserPrimaryID_UDMKey (remIdGUID_value) is null or empty
         if (isNullOrEmpty(this.sourceUserPrimaryID_UDMKey)) {
             logger.error("SourceUserPrimaryID_UDMKey (remIdGUID_value) is null or empty → Authentication failed");
-            context.failure(AuthenticationFlowError.INVALID_USER);
             throw new IllegalStateException("Authentication failed due to missing SourceUserPrimaryID_UDMKey");
         }
 
         // ✅ Fail authentication if SourceIdentityProviderID_KeycloakAndUDMKey is null or empty
         if (isNullOrEmpty(this.sourceIdentityProviderID_KeycloakAndUDMKey)) {
             logger.error("SourceIdentityProviderID_KeycloakAndUDMKey is null or empty → Authentication failed");
-            context.failure(AuthenticationFlowError.INVALID_USER);
             throw new IllegalStateException("Authentication failed due to missing SourceIdentityProviderID_KeycloakAndUDMKey");
         }
     }
