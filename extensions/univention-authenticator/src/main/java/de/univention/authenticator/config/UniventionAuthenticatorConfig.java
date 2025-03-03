@@ -98,11 +98,11 @@ public class UniventionAuthenticatorConfig {
         this.udmUsername = config.get("udmUsername");
         this.udmPassword = config.get("udmPassword");
 
-        // ✅ Fail authentication if SourceUserPrimaryID_UDMKey (remIdGUID_value) is null or empty
-        if (isNullOrEmpty(this.sourceUserPrimaryID_UDMKey)) {
-            logger.error("SourceUserPrimaryID_UDMKey (remIdGUID_value) is null or empty → Authentication failed");
-            throw new IllegalStateException("Authentication failed due to missing SourceUserPrimaryID_UDMKey");
-        }
+//        // ✅ Fail authentication if SourceUserPrimaryID_UDMKey (remIdGUID_value) is null or empty
+//        if (isNullOrEmpty(this.sourceUserPrimaryID_UDMKey)) {
+//            logger.error("SourceUserPrimaryID_UDMKey (remIdGUID_value) is null or empty → Authentication failed");
+//            throw new IllegalStateException("Authentication failed due to missing SourceUserPrimaryID_UDMKey");
+//        }
 
         // ✅ Fail authentication if SourceIdentityProviderID_KeycloakAndUDMKey is null or empty
         if (isNullOrEmpty(this.sourceIdentityProviderID_KeycloakAndUDMKey)) {
