@@ -80,6 +80,7 @@ public class UniventionAuthenticator implements Authenticator {
         } catch (IllegalStateException | IllegalArgumentException e) {
             logger.error("Failed to load configuration", e);
             context.failure(AuthenticationFlowError.CREDENTIAL_SETUP_REQUIRED);
+            userManager.removeUser(context.getRealm(), context.getUser());
             return;
         }
 
