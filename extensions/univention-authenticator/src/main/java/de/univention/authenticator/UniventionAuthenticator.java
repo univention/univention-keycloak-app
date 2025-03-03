@@ -30,6 +30,7 @@
 
 package de.univention.authenticator;
 
+import de.univention.authenticator.config.IdentityMappingConfig;
 import de.univention.udm.UniventionDirectoryManagerClient;
 import de.univention.udm.UniventionDirectoryManagerClientFactory;
 import de.univention.udm.models.User;
@@ -102,7 +103,6 @@ public class UniventionAuthenticator implements Authenticator {
             firstname,
             lastname,
             email,
-            defaultGroupDn,
             sourceIdentityProviderID_KeycloakAndUDMKey,
             sourceUserPrimaryID_UDMKey,
             UDMUserPiramryGroupDn,
@@ -297,5 +297,10 @@ public class UniventionAuthenticator implements Authenticator {
         // Check if the URI is valid or available?
 
         return udmConfig;
+    }
+
+
+    public IdentityMappingConfig getValidConfigNew(AuthenticationFlowContext context) {
+        return null;
     }
 }

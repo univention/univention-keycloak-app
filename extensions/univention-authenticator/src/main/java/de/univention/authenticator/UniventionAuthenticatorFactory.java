@@ -66,7 +66,7 @@ public class UniventionAuthenticatorFactory implements AuthenticatorFactory {
         "keycloak_federation_remote_identifier";
     static final String DEFAULT_GROUP_DN_CONFIG_PROPERTY_NAME =
         "default_group_dn";
-    static final String configPropertyNames[] = {
+    public static final String[] configPropertyNames = {
         UDM_ENDPOINT_CONFIG_PROPERTY_NAME, UDM_USER_CONFIG_PROPERTY_NAME,
         UDM_PASSWORD_CONFIG_PROPERTY_NAME, KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER_NAME,
         KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME, DEFAULT_GROUP_DN_CONFIG_PROPERTY_NAME
