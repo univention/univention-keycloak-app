@@ -2,7 +2,6 @@ package de.univention.authenticator.config;
 
 import de.univention.authenticator.UniventionAuthenticator;
 import org.keycloak.authentication.AuthenticationFlowContext;
-import org.keycloak.models.AuthenticatorConfigModel;
 import org.jboss.logging.Logger;
 
 public class IdentityMappingConfigFactory {
