@@ -69,8 +69,8 @@ public class UniventionAuthenticatorConfigFactoryTest {
         assertNotNull(config, "Expected IdentityMappingConfig instance but got null");
 
         // Verify that the returned config contains expected values
-        assertEquals("idp-12345", config.getSourceIdentityProviderID_KeycloakAndUDMKey());
-        assertEquals("udm-67890", config.getSourceUserPrimaryID_UDMKey());
+        assertEquals("keycloak-source-id", config.getSourceIdentityProviderID_KeycloakAndUDMKey());
+        assertEquals("keycloak-remote-id", config.getSourceUserPrimaryID_UDMKey());
     }
 
     @Test

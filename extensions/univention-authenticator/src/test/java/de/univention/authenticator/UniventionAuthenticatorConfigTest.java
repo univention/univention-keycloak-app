@@ -39,19 +39,11 @@ public class UniventionAuthenticatorConfigTest {
     void setUp() {
         // Mock configuration values
         configValues = new HashMap<>();
-        configValues.put("sourceIdentityProviderID_KeycloakAndUDMKey", "idp-12345");
-        configValues.put("sourceUserPrimaryID_UDMKey", "udm-67890");
-        configValues.put("udmUserPrimaryGroupDn", "cn=users,dc=example,dc=com");
-        configValues.put("udmBaseUrl", "https://udm.example.com");
-        configValues.put("udmUsername", "admin");
-        configValues.put("udmPassword", "secret");
-
-        // Additional properties
         configValues.put(UDM_ENDPOINT_CONFIG_PROPERTY_NAME, "https://udm.example.com/api");
         configValues.put(UDM_USER_CONFIG_PROPERTY_NAME, "udm_admin");
         configValues.put(UDM_PASSWORD_CONFIG_PROPERTY_NAME, "supersecret");
-        configValues.put(KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER_NAME, "keycloak-source-id");
-        configValues.put(KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME, "keycloak-remote-id");
+        configValues.put(KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER_NAME, "13337");
+        configValues.put(KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME, "13338");
         configValues.put(DEFAULT_GROUP_DN_CONFIG_PROPERTY_NAME, "cn=default,dc=example,dc=com");
 
         // Mock behavior for config model
@@ -65,37 +57,37 @@ public class UniventionAuthenticatorConfigTest {
     void testValidConfigCreation() {
         UniventionAuthenticatorConfig univentionAuthenticatorConfig = new UniventionAuthenticatorConfig(mockContext);
 
-        assertEquals("idp-12345", univentionAuthenticatorConfig.getSourceIdentityProviderID_KeycloakAndUDMKey());
-        assertEquals("udm-67890", univentionAuthenticatorConfig.getSourceUserPrimaryID_UDMKey());
-        assertEquals("cn=users,dc=example,dc=com", univentionAuthenticatorConfig.getUdmUserPrimaryGroupDn());
-        assertEquals("https://udm.example.com", univentionAuthenticatorConfig.getUdmBaseUrl());
-        assertEquals("admin", univentionAuthenticatorConfig.getUdmUsername());
-        assertEquals("secret", univentionAuthenticatorConfig.getUdmPassword());
+        assertEquals("13337", univentionAuthenticatorConfig.getSourceIdentityProviderID_KeycloakAndUDMKey());
+        assertEquals("13338", univentionAuthenticatorConfig.getSourceUserPrimaryID_UDMKey());
+        assertEquals("cn=default,dc=example,dc=com", univentionAuthenticatorConfig.getUdmUserPrimaryGroupDn());
+        assertEquals("https://udm.example.com/api", univentionAuthenticatorConfig.getUdmBaseUrl());
+        assertEquals("udm_admin", univentionAuthenticatorConfig.getUdmUsername());
+        assertEquals("supersecret", univentionAuthenticatorConfig.getUdmPassword());
     }
-//
-//    @Test
-//    void testFailAuthenticationIfSourceUserPrimaryID_UDMKeyIsNull() {
-//        configValues.put("sourceUserPrimaryID_UDMKey", null);
-//        when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
-//
-//        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
-//        assertEquals("Authentication failed due to missing SourceUserPrimaryID_UDMKey", exception.getMessage());
-//
-//    }
 
-//    @Test
-//    void testFailAuthenticationIfSourceUserPrimaryID_UDMKeyIsEmpty() {
-//        configValues.put("sourceUserPrimaryID_UDMKey", "");
-//        when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
-//
-//        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
-//        assertEquals("Authentication failed due to missing SourceUserPrimaryID_UDMKey", exception.getMessage());
-//
-//    }
+    @Test
+    void testFailAuthenticationIfSourceUserPrimaryID_UDMKeyIsNull() {
+        configValues.put(UniventionAuthenticatorFactory.configPropertyNames[4], null);
+        when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
+        assertEquals("Authentication failed due to missing SourceUserPrimaryID_UDMKey", exception.getMessage());
+
+    }
+
+    @Test
+    void testFailAuthenticationIfSourceUserPrimaryID_UDMKeyIsEmpty() {
+        configValues.put(UniventionAuthenticatorFactory.configPropertyNames[4], "");
+        when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
+        assertEquals("Authentication failed due to missing SourceUserPrimaryID_UDMKey", exception.getMessage());
+
+    }
 
     @Test
     void testFailAuthenticationIfSourceIdentityProviderID_KeycloakAndUDMKeyIsNull() {
-        configValues.put("sourceIdentityProviderID_KeycloakAndUDMKey", null);
+        configValues.put(KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER_NAME, null);
         when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));
@@ -105,7 +97,7 @@ public class UniventionAuthenticatorConfigTest {
 
     @Test
     void testFailAuthenticationIfSourceIdentityProviderID_KeycloakAndUDMKeyIsEmpty() {
-        configValues.put("sourceIdentityProviderID_KeycloakAndUDMKey", "");
+        configValues.put(UniventionAuthenticatorFactory.configPropertyNames[3], "");
         when(mockContext.getAuthenticatorConfig()).thenReturn(mockConfigModel);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> new UniventionAuthenticatorConfig(mockContext));

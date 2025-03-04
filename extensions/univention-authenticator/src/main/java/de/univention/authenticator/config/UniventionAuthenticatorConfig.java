@@ -51,6 +51,7 @@ public class UniventionAuthenticatorConfig {
     private final String sourceUserPrimaryID_UDMKey;
     private final String udmUserPrimaryGroupDn;
     private final String udmBaseUrl;
+    private final String udmEndpoint;
     private final String udmUsername;
     private final String udmPassword;
     private final Map<String, String> fullConfig; // Store all values for future extensions
@@ -77,6 +78,27 @@ public class UniventionAuthenticatorConfig {
 
         // Ensure all required properties exist
         List<String> missingKeys = new ArrayList<>();
+        logger.errorf("Config Model: %s", config.toString());
+        // Initialize fields with safe retrieval
+        this.sourceIdentityProviderID_KeycloakAndUDMKey = config.get(UniventionAuthenticatorFactory.configPropertyNames[3]);
+        this.sourceUserPrimaryID_UDMKey = config.get(UniventionAuthenticatorFactory.configPropertyNames[4]);
+        this.udmUserPrimaryGroupDn = config.get(UniventionAuthenticatorFactory.configPropertyNames[5]);
+        this.udmBaseUrl = config.get(UniventionAuthenticatorFactory.configPropertyNames[0]);
+        this.udmEndpoint = config.get(UniventionAuthenticatorFactory.configPropertyNames[0]);
+        this.udmUsername = config.get(UniventionAuthenticatorFactory.configPropertyNames[1]);
+        this.udmPassword = config.get(UniventionAuthenticatorFactory.configPropertyNames[2]);
+
+        // ✅ Fail authentication if SourceUserPrimaryID_UDMKey (remIdGUID_value) is null or empty
+        if (isNullOrEmpty(this.sourceUserPrimaryID_UDMKey)) {
+            logger.error("SourceUserPrimaryID_UDMKey (remIdGUID_value) is null or empty → Authentication failed");
+            throw new IllegalStateException("Authentication failed due to missing SourceUserPrimaryID_UDMKey");
+        }
+
+        // ✅ Fail authentication if SourceIdentityProviderID_KeycloakAndUDMKey is null or empty
+        if (isNullOrEmpty(this.sourceIdentityProviderID_KeycloakAndUDMKey)) {
+            logger.error("SourceIdentityProviderID_KeycloakAndUDMKey is null or empty → Authentication failed");
+            throw new IllegalStateException("Authentication failed due to missing SourceIdentityProviderID_KeycloakAndUDMKey");
+        }
 
         for (String key : REQUIRED_KEYS) {
             if (!config.containsKey(key) || config.get(key) == null || config.get(key).isEmpty()) {
@@ -89,26 +111,7 @@ public class UniventionAuthenticatorConfig {
             context.failure(AuthenticationFlowError.CREDENTIAL_SETUP_REQUIRED);
             throw new IllegalStateException("Missing required configuration keys: " + String.join(", ", missingKeys));
         }
-
-        // Initialize fields with safe retrieval
-        this.sourceIdentityProviderID_KeycloakAndUDMKey = config.get("sourceIdentityProviderID_KeycloakAndUDMKey");
-        this.sourceUserPrimaryID_UDMKey = config.get("sourceUserPrimaryID_UDMKey");
-        this.udmUserPrimaryGroupDn = config.get("udmUserPrimaryGroupDn");
-        this.udmBaseUrl = config.get("udmBaseUrl");
-        this.udmUsername = config.get("udmUsername");
-        this.udmPassword = config.get("udmPassword");
-
-//        // ✅ Fail authentication if SourceUserPrimaryID_UDMKey (remIdGUID_value) is null or empty
-//        if (isNullOrEmpty(this.sourceUserPrimaryID_UDMKey)) {
-//            logger.error("SourceUserPrimaryID_UDMKey (remIdGUID_value) is null or empty → Authentication failed");
-//            throw new IllegalStateException("Authentication failed due to missing SourceUserPrimaryID_UDMKey");
-//        }
-
-        // ✅ Fail authentication if SourceIdentityProviderID_KeycloakAndUDMKey is null or empty
-        if (isNullOrEmpty(this.sourceIdentityProviderID_KeycloakAndUDMKey)) {
-            logger.error("SourceIdentityProviderID_KeycloakAndUDMKey is null or empty → Authentication failed");
-            throw new IllegalStateException("Authentication failed due to missing SourceIdentityProviderID_KeycloakAndUDMKey");
-        }
+        logger.errorf("Config Value: %s", config.toString());
     }
 
     /**
@@ -140,6 +143,10 @@ public class UniventionAuthenticatorConfig {
 
     public String getUdmPassword() {
         return udmPassword;
+    }
+
+    public String getUdmEndpoint() {
+        return udmEndpoint;
     }
 
     /**
