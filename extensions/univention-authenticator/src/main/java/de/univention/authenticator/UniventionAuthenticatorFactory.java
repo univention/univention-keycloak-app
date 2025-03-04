@@ -56,8 +56,6 @@ public class UniventionAuthenticatorFactory implements AuthenticatorFactory {
 
     static final String UDM_ENDPOINT_CONFIG_PROPERTY_NAME =
         "udm_endpoint";
-    static final String EDM_BASEURL_CONFIG_PROPERTY_NAME =
-            "udmBaseUrl";
     static final String UDM_USER_CONFIG_PROPERTY_NAME =
         "udm_user";
     static final String UDM_PASSWORD_CONFIG_PROPERTY_NAME =
@@ -71,7 +69,7 @@ public class UniventionAuthenticatorFactory implements AuthenticatorFactory {
     public static final String[] configPropertyNames = {
         UDM_ENDPOINT_CONFIG_PROPERTY_NAME, UDM_USER_CONFIG_PROPERTY_NAME,
         UDM_PASSWORD_CONFIG_PROPERTY_NAME, KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER_NAME,
-        KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME, DEFAULT_GROUP_DN_CONFIG_PROPERTY_NAME, EDM_BASEURL_CONFIG_PROPERTY_NAME
+        KEYCLOAK_FEDERATION_REMOTE_IDENTIFIER_NAME, DEFAULT_GROUP_DN_CONFIG_PROPERTY_NAME
     };
 
     public static final String[] requiredConfigPropertyNames = {

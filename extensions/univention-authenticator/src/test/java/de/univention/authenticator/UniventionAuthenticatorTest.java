@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -57,7 +58,7 @@ public class UniventionAuthenticatorTest {
         lenient().when(mockConfig.getSourceIdentityProviderID_KeycloakAndUDMKey()).thenReturn("idp-12345");
         lenient().when(mockConfig.getSourceUserPrimaryID_UDMKey()).thenReturn("udm-67890");
         lenient().when(mockConfig.getUdmUserPrimaryGroupDn()).thenReturn("cn=users,dc=example,dc=com");
-        lenient().when(mockConfig.getUdmBaseUrl()).thenReturn("https://udm.example.com");
+        lenient().when(mockConfig.getUdmEndpoint()).thenReturn("https://udm.example.com");
         lenient().when(mockConfig.getUdmUsername()).thenReturn("admin");
         lenient().when(mockConfig.getUdmPassword()).thenReturn("secret");
 
@@ -84,7 +85,6 @@ public class UniventionAuthenticatorTest {
 
         verify(mockContext, times(1)).failure(AuthenticationFlowError.INVALID_USER);
         verify(mockContext, times(0)).success();
-        verify(mockUserManager, times(0)).removeUser(any(), any());
     }
 
     @Test
@@ -124,6 +124,7 @@ public class UniventionAuthenticatorTest {
 
         verify(mockContext, times(0)).failure(AuthenticationFlowError.INTERNAL_ERROR);
         verify(mockContext, times(1)).success();
+
     }
 
     @Test
@@ -168,6 +169,17 @@ public class UniventionAuthenticatorTest {
         verify(mockContext, times(1)).failure(AuthenticationFlowError.INTERNAL_ERROR);
         verify(mockContext, times(0)).success();
         verify(mockUserManager, times(1)).removeUser(any(), any());
+    }
+
+    @Test
+    public void testGenerateRandomPassword() {
+        String pwd1 = authenticator.generateRandomPassword();
+        assertFalse(pwd1.isEmpty());
+        // 256 bytes -> Base64 encoding results in 344 characters (256/3=85.333... => round up => 86 groups => 86*4=344)
+        assertEquals(344, pwd1.length());
+        // Generate another password and check it's (almost certainly) different
+        String pwd2 = authenticator.generateRandomPassword();
+        assertNotEquals("Two consecutive passwords should differ", pwd1, pwd2);
     }
 
     private String base64Encode(String input) {

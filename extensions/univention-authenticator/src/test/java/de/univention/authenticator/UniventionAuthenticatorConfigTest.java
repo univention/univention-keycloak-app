@@ -39,7 +39,7 @@ public class UniventionAuthenticatorConfigTest {
     void setUp() {
         // Mock configuration values
         configValues = new HashMap<>();
-        configValues.put(UDM_ENDPOINT_CONFIG_PROPERTY_NAME, "https://udm.example.com/api");
+        configValues.put(UDM_ENDPOINT_CONFIG_PROPERTY_NAME, "https://udm.example.com");
         configValues.put(UDM_USER_CONFIG_PROPERTY_NAME, "udm_admin");
         configValues.put(UDM_PASSWORD_CONFIG_PROPERTY_NAME, "supersecret");
         configValues.put(KEYCLOAK_FEDERATION_SOURCE_IDENTIFIER_NAME, "13337");
@@ -60,7 +60,7 @@ public class UniventionAuthenticatorConfigTest {
         assertEquals("13337", univentionAuthenticatorConfig.getSourceIdentityProviderID_KeycloakAndUDMKey());
         assertEquals("13338", univentionAuthenticatorConfig.getSourceUserPrimaryID_UDMKey());
         assertEquals("cn=default,dc=example,dc=com", univentionAuthenticatorConfig.getUdmUserPrimaryGroupDn());
-        assertEquals("https://udm.example.com/api", univentionAuthenticatorConfig.getUdmBaseUrl());
+        assertEquals("https://udm.example.com", univentionAuthenticatorConfig.getUdmEndpoint());
         assertEquals("udm_admin", univentionAuthenticatorConfig.getUdmUsername());
         assertEquals("supersecret", univentionAuthenticatorConfig.getUdmPassword());
     }

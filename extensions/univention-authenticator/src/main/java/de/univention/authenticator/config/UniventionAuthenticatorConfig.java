@@ -50,7 +50,6 @@ public class UniventionAuthenticatorConfig {
     private static final String SOURCE_USER_PRIMARY_ID_KEYCLOAK_KEY = "objectGUID";
     private final String sourceUserPrimaryID_UDMKey;
     private final String udmUserPrimaryGroupDn;
-    private final String udmBaseUrl;
     private final String udmEndpoint;
     private final String udmUsername;
     private final String udmPassword;
@@ -74,16 +73,16 @@ public class UniventionAuthenticatorConfig {
         }
 
         Map<String, String> config = configModel.getConfig();
-        this.fullConfig = Collections.unmodifiableMap(new HashMap<>(config));
+        Map<String, String> tempConfig = new HashMap<>(config);
+        tempConfig.remove(UniventionAuthenticatorFactory.configPropertyNames[2]);
+        this.fullConfig = Collections.unmodifiableMap(tempConfig);
 
         // Ensure all required properties exist
         List<String> missingKeys = new ArrayList<>();
-        logger.errorf("Config Model: %s", config.toString());
         // Initialize fields with safe retrieval
         this.sourceIdentityProviderID_KeycloakAndUDMKey = config.get(UniventionAuthenticatorFactory.configPropertyNames[3]);
         this.sourceUserPrimaryID_UDMKey = config.get(UniventionAuthenticatorFactory.configPropertyNames[4]);
         this.udmUserPrimaryGroupDn = config.get(UniventionAuthenticatorFactory.configPropertyNames[5]);
-        this.udmBaseUrl = config.get(UniventionAuthenticatorFactory.configPropertyNames[0]);
         this.udmEndpoint = config.get(UniventionAuthenticatorFactory.configPropertyNames[0]);
         this.udmUsername = config.get(UniventionAuthenticatorFactory.configPropertyNames[1]);
         this.udmPassword = config.get(UniventionAuthenticatorFactory.configPropertyNames[2]);
@@ -111,7 +110,6 @@ public class UniventionAuthenticatorConfig {
             context.failure(AuthenticationFlowError.CREDENTIAL_SETUP_REQUIRED);
             throw new IllegalStateException("Missing required configuration keys: " + String.join(", ", missingKeys));
         }
-        logger.errorf("Config Value: %s", config.toString());
     }
 
     /**
@@ -133,9 +131,6 @@ public class UniventionAuthenticatorConfig {
         return udmUserPrimaryGroupDn;
     }
 
-    public String getUdmBaseUrl() {
-        return udmBaseUrl;
-    }
 
     public String getUdmUsername() {
         return udmUsername;
@@ -149,12 +144,15 @@ public class UniventionAuthenticatorConfig {
         return udmEndpoint;
     }
 
+    public String toString(){
+        return fullConfig.toString();
+    }
+
     /**
      * Retrieve the full config map (read-only)
      */
     public Map<String, String> getFullConfig() {
-        return fullConfig;
-        //TODO adapt to not log pw
+        return fullConfig; // it does not include the PW!
     }
 
     /**
