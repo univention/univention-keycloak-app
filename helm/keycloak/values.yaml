@@ -174,7 +174,7 @@ image:
   registry: "artifacts.software-univention.de"
 
   # -- Container repository string.
-  repository: "nubus/keycloak"
+  repository: "nubus/images/keycloak"
 
   # -- Define an ImagePullPolicy.
   #
@@ -191,7 +191,7 @@ image:
   imagePullPolicy: "IfNotPresent"
 
   # -- Define image tag.
-  tag: "25.0.6-ucs6@sha256:1db8af70741bca9badeb3d5b0b145244dde1a2579fe4f966e488ce730cb07d65"
+  tag: "25.0.6-ucs6@sha256:a5afdbd819737f1142419de6b769888e0891c684d186a53d8db765e938349779"
 
 # -- Credentials to fetch images from private registry
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
