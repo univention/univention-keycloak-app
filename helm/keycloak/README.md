@@ -354,7 +354,7 @@ false
 			<td>image.repository</td>
 			<td>string</td>
 			<td><pre lang="json">
-"nubus/keycloak"
+"nubus/images/keycloak"
 </pre>
 </td>
 			<td>Container repository string.</td>
