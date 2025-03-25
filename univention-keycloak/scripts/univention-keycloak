@@ -1187,7 +1187,7 @@ def create_oidc_client(opt):
 
     client_payload_oidc = {
         "clientId": opt.client_id,
-        "name": opt.name if opt.name else opt.client_id,
+        "name": opt.name or opt.client_id,
         "description": opt.description,
         "rootUrl": opt.app_url,
         "adminUrl": opt.admin_url,
@@ -1452,7 +1452,7 @@ def download_cert_oidc(opt):
 
 
 def download_cert_saml(opt):
-    realm = opt.realm_id if opt.realm_id else opt.realm
+    realm = opt.realm_id or opt.realm
     if opt.saml_url:
         saml_descriptor_url = opt.saml_url
     else:
@@ -2005,7 +2005,7 @@ def ldap_federation_get(opt: Namespace) -> None:
 def ldap_federation_set(opt: Namespace) -> None:
     session = UniventionKeycloakAdmin(opt)
     provider_id = session.get_user_storage_provider_id(name=opt.name)
-    name = opt.name if opt.name else DEFAULT_USER_STORAGE_PROVIDER_NAME
+    name = opt.name or DEFAULT_USER_STORAGE_PROVIDER_NAME
     payload = {
         "name": name,
         "providerType": "org.keycloak.storage.UserStorageProvider",
