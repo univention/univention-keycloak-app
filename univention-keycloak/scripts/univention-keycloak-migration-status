@@ -131,9 +131,7 @@ def check_uri_setting():
     ucs_server_sso_uri = ucr.get('ucs/server/sso/uri')
     if not keycloak_installed_in_domain():
         return True
-    if ucs_server_sso_uri:
-        return True
-    return False
+    return bool(ucs_server_sso_uri)
 
 
 def delete_sso_objects(opt, sso_obj):
