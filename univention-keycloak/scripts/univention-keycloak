@@ -2966,7 +2966,7 @@ def create_conditional_2fa_flow(kc_admin, realm, conditional_role, flow_name):
     except KeycloakGetError as exc:
         if exc.response_code != 202:
             raise
-    # FIXME end
+    # FIXME: end
 
     # config role condition
     config = {
