@@ -3,80 +3,80 @@
     <#if section = "header">
         ${msg("loginAccountTitle")}
     <#elseif section = "form">
-    <div id="kc-form">
-      <#if messagesPerField.existsError('username','password')>
-        <div class="${properties.kcFormGroupClass!}">
-            <div class="alert-error ${properties.kcAlertClass!} pf-m-danger">
+        <div id="kc-form">
+          <#if messagesPerField.existsError('username','password')>
+            <div class="${properties.kcFormGroupClass!}">
+                <div class="alert-error ${properties.kcAlertClass!} pf-m-danger">
 
-                <div class="pf-c-alert__icon">
-                    <span class="${properties.kcFeedbackErrorIcon!}"></span>
+                    <div class="pf-c-alert__icon">
+                        <span class="${properties.kcFeedbackErrorIcon!}"></span>
+                    </div>
+                    <span class="${properties.kcAlertTitleClass!}">
+                        <#if errorDetail?has_content>
+                            ${kcSanitize(msg(errorDetail))?no_esc}
+                        <#else>
+                            ${kcSanitize(messagesPerField.getFirstError('username','password'))?no_esc}
+                        </#if>
+                    </span>
                 </div>
-                <span class="${properties.kcAlertTitleClass!}">
-                    <#if errorDetail?has_content>
-                        ${kcSanitize(msg(errorDetail))?no_esc}
-                    <#else>
-                        ${kcSanitize(messagesPerField.getFirstError('username','password'))?no_esc}
-                    </#if>
-                </span>
             </div>
-        </div>
-      </#if>
-      <div id="kc-form-wrapper">
-        <#if realm.password>
-            <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}" method="post">
-                <#if !usernameHidden??>
+          </#if>
+          <div id="kc-form-wrapper">
+            <#if realm.password>
+                <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}" method="post">
+                    <#if !usernameHidden??>
+                        <div class="${properties.kcFormGroupClass!}">
+
+                            <input id="username" placeholder="" class="${properties.kcInputClass!}" name="username" value="${(login.username!'')}"  type="text" autofocus autocomplete="off"
+                            />
+                            <label for="username" class="${properties.kcLabelClass!}"><#if !realm.loginWithEmailAllowed>${msg("username")}<#elseif !realm.registrationEmailAsUsername>${msg("usernameOrEmail")}<#else>${msg("email")}</#if></label>
+
+                        </div>
+                    </#if>
+
                     <div class="${properties.kcFormGroupClass!}">
 
-                        <input id="username" placeholder="" class="${properties.kcInputClass!}" name="username" value="${(login.username!'')}"  type="text" autofocus autocomplete="off"
-                        />
-                        <label for="username" class="${properties.kcLabelClass!}"><#if !realm.loginWithEmailAllowed>${msg("username")}<#elseif !realm.registrationEmailAsUsername>${msg("usernameOrEmail")}<#else>${msg("email")}</#if></label>
+                        <input id="password" placeholder="" class="${properties.kcInputClass!}" name="password" type="password" autocomplete="off"/>
+                        <label for="password" class="${properties.kcLabelClass!}">${msg("password")}</label>
 
                     </div>
-                </#if>
 
-                <div class="${properties.kcFormGroupClass!}">
-
-                    <input id="password" placeholder="" class="${properties.kcInputClass!}" name="password" type="password" autocomplete="off"/>
-                    <label for="password" class="${properties.kcLabelClass!}">${msg("password")}</label>
-
-                </div>
-
-                <div class="${properties.kcFormGroupClass!} ${properties.kcFormSettingClass!}">
-                    <div id="kc-form-options">
-                        <#if realm.rememberMe && !usernameHidden??>
-                            <div class="checkbox">
-                                <label>
-                                    <#if login.rememberMe??>
-                                        <input id="rememberMe" name="rememberMe" type="checkbox" checked> ${msg("rememberMe")}
-                                    <#else>
-                                        <input id="rememberMe" name="rememberMe" type="checkbox"> ${msg("rememberMe")}
-                                    </#if>
-                                </label>
-                            </div>
-                        </#if>
-                        </div>
-                        <div class="${properties.kcFormOptionsWrapperClass!}">
-                            <#if realm.resetPasswordAllowed>
-                                <span><a href="${url.loginResetCredentialsUrl}">${msg("doForgotPassword")}</a></span>
+                    <div class="${properties.kcFormGroupClass!} ${properties.kcFormSettingClass!}">
+                        <div id="kc-form-options">
+                            <#if realm.rememberMe && !usernameHidden??>
+                                <div class="checkbox">
+                                    <label>
+                                        <#if login.rememberMe??>
+                                            <input id="rememberMe" name="rememberMe" type="checkbox" checked> ${msg("rememberMe")}
+                                        <#else>
+                                            <input id="rememberMe" name="rememberMe" type="checkbox"> ${msg("rememberMe")}
+                                        </#if>
+                                    </label>
+                                </div>
                             </#if>
-                        </div>
+                            </div>
+                            <div class="${properties.kcFormOptionsWrapperClass!}">
+                                <#if realm.resetPasswordAllowed>
+                                    <span><a href="${url.loginResetCredentialsUrl}">${msg("doForgotPassword")}</a></span>
+                                </#if>
+                            </div>
 
-                  </div>
+                      </div>
 
-                  <div id="kc-form-buttons" class="${properties.kcFormGroupClass!}">
-                      <input type="hidden" id="id-hidden-input" name="credentialId" <#if auth.selectedCredential?has_content>value="${auth.selectedCredential}"</#if>/>
-                      <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}" name="login" id="kc-login" type="submit" value="${msg("doLogIn")}"/>
-                  </div>
-            </form>
-        </#if>
+                      <div id="kc-form-buttons" class="${properties.kcFormGroupClass!}">
+                          <input type="hidden" id="id-hidden-input" name="credentialId" <#if auth.selectedCredential?has_content>value="${auth.selectedCredential}"</#if>/>
+                          <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}" name="login" id="kc-login" type="submit" value="${msg("doLogIn")}"/>
+                      </div>
+                </form>
+            </#if>
+            </div>
         </div>
-
-    </div>
     <#elseif section = "info" >
         <#if realm.password && realm.registrationAllowed && !registrationDisabled??>
             <div id="kc-registration-container">
                 <div id="kc-registration">
-                    <span>${msg("noAccount")} <a href="${url.registrationUrl}">${msg("doRegister")}</a></span>
+                    <span>${msg("noAccount")} <a
+                                                 href="${url.registrationUrl}">${msg("doRegister")}</a></span>
                 </div>
             </div>
         </#if>
