@@ -84,7 +84,7 @@ if [ "$1" = "configure" ] && [ -n "$2" ]; then
 		fi
 	fi
 	# startTLS and connectionPooling are incompatible #58182
-	if dpkg --compare-versions "$2" lt-nl "1.0.14-2"; then
+	if dpkg --compare-versions "$2" lt-nl "3.0.27-2"; then
 		if [ -e /var/univention-join/joined ] ; then
 			if univention-app info | grep 'Installed:' | grep -q -w keycloak; then
 				if [ -e "/etc/keycloak.secret" ]; then
