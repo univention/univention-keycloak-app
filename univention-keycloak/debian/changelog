@@ -1,3 +1,9 @@
+univention-keycloak (3.0.27-3) unstable; urgency=medium
+
+  * Bug #58183: fix alias ip-subnets config in conditional kerberos authentication flow
+
+ -- Felix Botner <botner@univention.de>  Wed, 09 Apr 2025 13:47:06 +0200
+
 univention-keycloak (3.0.27-2) unstable; urgency=medium
 
   * Bug #58183: deactivate connectionPooling while startTls is active
