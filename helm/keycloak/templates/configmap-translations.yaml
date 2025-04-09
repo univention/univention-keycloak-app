@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
+
+---
+apiVersion: "v1"
+kind: ConfigMap
+metadata:
+  name: "{{ include "common.names.fullname" . }}-translations"
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+    {{- $uiLabels := dict "app.kubernetes.io/name" (include "common.names.fullname" .) }}
+    {{- $mergedLabels := merge $uiLabels $commonLabels}}
+    {{- toYaml $mergedLabels | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.additionalAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+  {{- end }}
+data:
+  messages_de.properties: |
+    tryAgain={{ .Values.keycloak.login.messages.de.tryAgain }}
+    updatePasswordTitle={{ .Values.keycloak.login.messages.de.updatePasswordTitle }}
+    loginTitleHtml={{ tpl .Values.keycloak.login.messages.de.loginTitleHtml . }}
+    loginTitle={{ .Values.keycloak.login.messages.de.loginTitle }}
+    accountDisabled={{ .Values.keycloak.login.messages.de.accountDisabled }}
+    accountExpired={{ .Values.keycloak.login.messages.de.accountExpired }}
+    accountLocked={{ .Values.keycloak.login.messages.de.accountLocked }}
+  messages_en.properties: |
+    tryAgain={{ .Values.keycloak.login.messages.en.tryAgain }}
+    updatePasswordTitle={{ .Values.keycloak.login.messages.en.updatePasswordTitle }}
+    loginTitleHtml={{ tpl .Values.keycloak.login.messages.en.loginTitleHtml . }}
+    loginTitle={{ .Values.keycloak.login.messages.en.loginTitle }}
+    accountDisabled={{ .Values.keycloak.login.messages.en.accountDisabled }}
+    accountExpired={{ .Values.keycloak.login.messages.en.accountExpired }}
+    accountLocked={{ .Values.keycloak.login.messages.en.accountLocked }}

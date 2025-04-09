@@ -65,6 +65,26 @@ keycloak:
       keyMapping:
         adminPassword: null
 
+  # Error messages
+  login:
+    messages:
+      de:
+        tryAgain: "Erneut versuchen"
+        updatePasswordTitle: "Das Passwort ist abgelaufen und muss erneuert werden."
+        loginTitleHtml: 'Anmelden bei {{ .Values.global.domain | default "Nubus"}}'
+        loginTitle: "Univention Corporate Server Single-Sign On"
+        accountDisabled: "Das Benutzerkonto ist deaktiviert."
+        accountExpired: "Das Benutzerkonto ist abgelaufen."
+        accountLocked: "Das Benutzerkonto ist gesperrt."
+      en:
+        tryAgain: "Try again"
+        updatePasswordTitle: "The password has expired and must be renewed."
+        loginTitleHtml: 'Login at {{ .Values.global.domain | default "Nubus" }}'
+        loginTitle: "Univention Corporate Server Single-Sign On"
+        accountDisabled: "The account is disabled."
+        accountExpired: "The account has expired."
+        accountLocked: "The account is locked."
+
   # Keycloak feature settings.
   # Possible values are: account-api, account2, account3, admin-api, admin-fine-grained-authz, admin2, authorization,
   #                      ciba, client-policies, client-secret-rotation, declarative-user-profile, docker,

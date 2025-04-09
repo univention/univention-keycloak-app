@@ -556,6 +556,28 @@ true
       "admin-fine-grained-authz",
       "token-exchange"
     ]
+  },
+  "login": {
+    "messages": {
+      "de": {
+        "accountDisabled": "Das Benutzerkonto ist deaktiviert.",
+        "accountExpired": "Das Benutzerkonto ist abgelaufen.",
+        "accountLocked": "Das Benutzerkonto ist gesperrt.",
+        "loginTitle": "Univention Corporate Server Single-Sign On",
+        "loginTitleHtml": "Anmelden bei {{ .Values.global.domain | default \"Nubus\"}}",
+        "tryAgain": "Erneut versuchen",
+        "updatePasswordTitle": "Das Passwort ist abgelaufen und muss erneuert werden."
+      },
+      "en": {
+        "accountDisabled": "The account is disabled.",
+        "accountExpired": "The account has expired.",
+        "accountLocked": "The account is locked.",
+        "loginTitle": "Univention Corporate Server Single-Sign On",
+        "loginTitleHtml": "Login at {{ .Values.global.domain | default \"Nubus\" }}",
+        "tryAgain": "Try again",
+        "updatePasswordTitle": "The password has expired and must be renewed."
+      }
+    }
   }
 }
 </pre>
