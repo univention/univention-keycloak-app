@@ -41,6 +41,10 @@
     margin: 0 0.5rem;
 }
 
+#kc-error-message a {
+    color: var(--color-accent);
+}
+
 #umcLoginLinks a:hover, #umcLoginLinks a:focus {
     text-decoration-thickness: 3px;
 }
