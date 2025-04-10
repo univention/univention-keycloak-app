@@ -47,17 +47,15 @@
                         <div class="${properties.kcInputGroup!}" dir="ltr">
                             <input placeholder="" id="password" class="${properties.kcInputClass!}" name="password" type="password" autocomplete="current-password"
                             />
-                            <!--
+                            <label for="password" class="${properties.kcLabelClass!}">${msg("password")}</label>
                             <button class="${properties.kcFormPasswordVisibilityButtonClass!}" type="button" aria-label="${msg("showPassword")}"
                                     aria-controls="password" data-password-toggle tabindex="4"
                                     data-icon-show="${properties.kcFormPasswordVisibilityIconShow!}" data-icon-hide="${properties.kcFormPasswordVisibilityIconHide!}"
                                     data-label-show="${msg('showPassword')}" data-label-hide="${msg('hidePassword')}">
                                 <i class="${properties.kcFormPasswordVisibilityIconShow!}" aria-hidden="true"></i>
                             </button>
-                            -->
                         </div>
 
-                        <label for="password" class="${properties.kcLabelClass!}">${msg("password")}</label>
                         <#if usernameHidden?? && messagesPerField.existsError('username','password')>
                         <!--
                             <span id="input-error" class="${properties.kcInputErrorMessageClass!}" aria-live="polite">

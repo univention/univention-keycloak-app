@@ -53,6 +53,7 @@ input + .pf-c-form__label {
     transition: transform 0.3s, color 0.3s;
     pointer-events: none;
     font-size: var(--font-size-3);
+    z-index: 100;
 }
 
 input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__label {
@@ -233,7 +234,9 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
     transition: border 250ms;
     height: unset !important;
 }
-
+.pf-c-form__label {
+    color: var(--font-color-contrast-high);
+}
 .pf-c-form-control:focus {
     padding-bottom: 0.8rem;
     border-bottom-width: 0;
