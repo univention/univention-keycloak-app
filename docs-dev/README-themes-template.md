@@ -37,3 +37,16 @@ Add
 }
 ```
 to `/var/www/univention/login/css/custom.css`.
+
+## Making changes on the fly
+
+1. Disable theme caching: `ucr set keycloak/disable/theme/caching=true`
+2. Apply UCR change: `univention-app reinitialize keycloak`
+3. Get the directory base of the container: `base=$(docker inspect keycloak --format '{{ .GraphDriver.Data.MergedDir }}')`
+4. Copy changed files to e.g. "$base/opt/keycloak/themes/UCS/login/login.ftl"
+```
+IP=10.207.186.178
+base=$(ssh "root@$IP" 'docker inspect keycloak --format "{{ .GraphDriver.Data.MergedDir }}"')
+scp ./files/themes/UCS/login/resources/css/*.css "$IP":"$base"/opt/keycloak/themes/UCS/login/resources/css/
+scp files/themes/UCS/login/login.ftl "$IP":"$base"/opt/keycloak/themes/UCS/login/
+```
