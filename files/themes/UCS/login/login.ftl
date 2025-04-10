@@ -27,7 +27,7 @@
                     <#if !usernameHidden??>
                         <div class="${properties.kcFormGroupClass!}">
 
-                            <input placeholder="" id="username" class="${properties.kcInputClass!}" name="username" value="${(login.username!'')}"  type="text" autofocus autocomplete="off"
+                            <input tabindex="2" placeholder="" id="username" class="${properties.kcInputClass!}" name="username" value="${(login.username!'')}"  type="text" autofocus autocomplete="off"
                             />
                             <label for="username" class="${properties.kcLabelClass!}"><#if !realm.loginWithEmailAllowed>${msg("username")}<#elseif !realm.registrationEmailAsUsername>${msg("usernameOrEmail")}<#else>${msg("email")}</#if></label>
 
@@ -45,7 +45,7 @@
                     <div class="${properties.kcFormGroupClass!}">
 
                         <div class="${properties.kcInputGroup!}" dir="ltr">
-                            <input placeholder="" id="password" class="${properties.kcInputClass!}" name="password" type="password" autocomplete="current-password"
+                            <input tabindex="3" placeholder="" id="password" class="${properties.kcInputClass!}" name="password" type="password" autocomplete="current-password"
                             />
                             <label for="password" class="${properties.kcLabelClass!}">${msg("password")}</label>
                             <button class="${properties.kcFormPasswordVisibilityButtonClass!}" type="button" aria-label="${msg("showPassword")}"
@@ -72,9 +72,9 @@
                                 <div class="checkbox">
                                     <label>
                                         <#if login.rememberMe??>
-                                            <input id="rememberMe" name="rememberMe" type="checkbox" checked> ${msg("rememberMe")}
+                                            <input tabindex="5" id="rememberMe" name="rememberMe" type="checkbox" checked> ${msg("rememberMe")}
                                         <#else>
-                                            <input id="rememberMe" name="rememberMe" type="checkbox"> ${msg("rememberMe")}
+                                            <input tabindex="5" id="rememberMe" name="rememberMe" type="checkbox"> ${msg("rememberMe")}
                                         </#if>
                                     </label>
                                 </div>
@@ -82,7 +82,7 @@
                             </div>
                             <div class="${properties.kcFormOptionsWrapperClass!}">
                                 <#if realm.resetPasswordAllowed>
-                                    <span><a href="${url.loginResetCredentialsUrl}">${msg("doForgotPassword")}</a></span>
+                                    <span><a tabindex="6" href="${url.loginResetCredentialsUrl}">${msg("doForgotPassword")}</a></span>
                                 </#if>
                             </div>
 
@@ -90,7 +90,7 @@
 
                       <div id="kc-form-buttons" class="${properties.kcFormGroupClass!}">
                           <input type="hidden" id="id-hidden-input" name="credentialId" <#if auth.selectedCredential?has_content>value="${auth.selectedCredential}"</#if>/>
-                          <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}" name="login" id="kc-login" type="submit" value="${msg("doLogIn")}"/>
+                          <input tabindex="7" class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}" name="login" id="kc-login" type="submit" value="${msg("doLogIn")}"/>
                       </div>
                 </form>
             </#if>
@@ -101,7 +101,7 @@
         <#if realm.password && realm.registrationAllowed && !registrationDisabled??>
             <div id="kc-registration-container">
                 <div id="kc-registration">
-                    <span>${msg("noAccount")} <a
+                    <span>${msg("noAccount")} <a tabindex="8"
                                                  href="${url.registrationUrl}">${msg("doRegister")}</a></span>
                 </div>
             </div>
