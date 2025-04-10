@@ -27,17 +27,44 @@
                     <#if !usernameHidden??>
                         <div class="${properties.kcFormGroupClass!}">
 
-                            <input id="username" placeholder="" class="${properties.kcInputClass!}" name="username" value="${(login.username!'')}"  type="text" autofocus autocomplete="off"
+                            <input placeholder="" id="username" class="${properties.kcInputClass!}" name="username" value="${(login.username!'')}"  type="text" autofocus autocomplete="off"
                             />
                             <label for="username" class="${properties.kcLabelClass!}"><#if !realm.loginWithEmailAllowed>${msg("username")}<#elseif !realm.registrationEmailAsUsername>${msg("usernameOrEmail")}<#else>${msg("email")}</#if></label>
+
+                            <#if messagesPerField.existsError('username','password')>
+                            <!--
+                                <span id="input-error" class="${properties.kcInputErrorMessageClass!}" aria-live="polite">
+                                        ${kcSanitize(messagesPerField.getFirstError('username','password'))?no_esc}
+                                </span>
+                            -->
+                            </#if>
 
                         </div>
                     </#if>
 
                     <div class="${properties.kcFormGroupClass!}">
 
-                        <input id="password" placeholder="" class="${properties.kcInputClass!}" name="password" type="password" autocomplete="off"/>
+                        <div class="${properties.kcInputGroup!}" dir="ltr">
+                            <input placeholder="" id="password" class="${properties.kcInputClass!}" name="password" type="password" autocomplete="current-password"
+                            />
+                            <!--
+                            <button class="${properties.kcFormPasswordVisibilityButtonClass!}" type="button" aria-label="${msg("showPassword")}"
+                                    aria-controls="password" data-password-toggle tabindex="4"
+                                    data-icon-show="${properties.kcFormPasswordVisibilityIconShow!}" data-icon-hide="${properties.kcFormPasswordVisibilityIconHide!}"
+                                    data-label-show="${msg('showPassword')}" data-label-hide="${msg('hidePassword')}">
+                                <i class="${properties.kcFormPasswordVisibilityIconShow!}" aria-hidden="true"></i>
+                            </button>
+                            -->
+                        </div>
+
                         <label for="password" class="${properties.kcLabelClass!}">${msg("password")}</label>
+                        <#if usernameHidden?? && messagesPerField.existsError('username','password')>
+                        <!--
+                            <span id="input-error" class="${properties.kcInputErrorMessageClass!}" aria-live="polite">
+                                    ${kcSanitize(messagesPerField.getFirstError('username','password'))?no_esc}
+                            </span>
+                        -->
+                        </#if>
 
                     </div>
 
