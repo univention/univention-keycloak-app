@@ -85,7 +85,7 @@ h1#kc-page-title {
 }
 
 button#kc-current-locale-link::after {
-    content: "\2c5";
+    content: "\25bc";
     margin-left: var(--pf-global--spacer--xs)
 }
 
