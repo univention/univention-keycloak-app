@@ -1,4 +1,4 @@
-univention-keycloak (3.1.0) unstable; urgency=medium
+univention-keycloak (3.0.28) unstable; urgency=medium
 
   * Bug #58183: make use of guaranteed json output from univention-keycloak script
 
