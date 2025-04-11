@@ -80,7 +80,7 @@ h1#kc-page-title {
     border: none;
     padding: 0;
     cursor: pointer;
-    color: var(--pf-global--Color--200);
+    color: var(--font-color-contrast-middle);
     text-align: right;
     font-size: var(--pf-global--FontSize--sm);
 }
