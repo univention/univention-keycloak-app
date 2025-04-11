@@ -177,7 +177,7 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
 
 #kc-locale-dropdown a:focus{
     color: var(--font-color-contrast-high);
-    background-color: var(--pf-global--primary-color--dark-100);
+    background-color: var(--button-primary-bgc);
     outline: none;
 }
 
