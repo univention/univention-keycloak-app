@@ -2,6 +2,7 @@
 
 set -e
 eval "$(ucr shell)"
+. /usr/share/univention-lib/ucr.sh
 
 while [ $# -gt 0 ]; do
 	case "$1" in
@@ -25,6 +26,81 @@ while [ $# -gt 0 ]; do
 			;;
 	esac
 done
+
+
+if ! is_ucr_false keycloak/check-postgres-version; then
+
+	# check for postgres >= 12 since Keycloak 26
+	if [ -n "$old_version" ]; then
+
+		if dpkg --compare-versions "$old_version" lt 26.1.4-ucs1; then
+
+			# upgrade path: a database configuration should already exist
+			postgres="$(python3 -c '
+import sys
+import json
+
+from univention.udm import UDM
+
+udm = UDM.machine().version(2)
+
+keycloak_data_objs = list(udm.get("settings/data").search("cn=keycloak"))
+if keycloak_data_objs:
+    keycloak_data_obj = keycloak_data_objs[0]
+else:
+    sys.exit(0)
+
+data = json.loads(keycloak_data_obj.props.data.raw)
+
+# just check postgres
+if not data.get("driver", "") == "org.postgresql.Driver":
+    sys.exit(0)
+
+username = data["username"]
+password = data["password"]
+uri_parts = data["uri"].split("postgresql://")
+
+if uri_parts:
+    uri = uri_parts[1]
+else:
+    sys.exit(0)
+
+import psycopg2
+db_connection_string = "postgresql://%s:%s@%s" % (username, password, uri)
+conn = psycopg2.connect(db_connection_string)
+
+
+print(str(conn.server_version)[:-4])
+')"
+			if [ -n "$postgres" ] && [ "$postgres" -lt 12 ]; then
+				echo "It seems you are using Postgres $postgres as the database management system for Keycloak." >> "$errorfile"
+				echo "Starting with Keycloak 26, at least Postgres 12 is required." >> "$errorfile"
+				echo "Please update Postgres. You may want to follow this article: <a href=""https://help.univention.com/t/updating-from-postgresql-11-to-postgresql-15/22162 target="_blank">https://help.univention.com/t/updating-from-postgresql-11-to-postgresql-15/22162</a>" >> "$errorfile"
+				echo 'You can skip this test with by setting ucr variable "keycloak/check-postgres-version" to "false".' >>"$errorfile"
+				echo "But be aware that Keycloak 26 will not work with PostgreSQL 11." >> "$errorfile"
+				exit 1
+			fi
+		fi
+	# else: no keycloak data or no postgresql:// in database uri. second case is cleary ok, first case should not happen, but handling it is out of scope of this check
+	else
+		# new installation. getting database information is more a heuristic as we do not have access to App Settings
+		# we _assume_ that the Keycloak installation would be configured against a local Postgres...
+		set +e
+		dpkg-query -W -f '${Status}' postgresql-11 | grep -q ^install
+		p11="$?"
+		dpkg-query -W -f '${Status}' postgresql-15 | grep -q ^install
+		p15="$?"
+		set -e
+		if [ "$p11" = "0" ] && [ "$p15" = "1" ]; then
+			echo "We cannot reliably determine the database management system you will be using. But it may be that you would be using Postgres 11." >> "$errorfile"
+			echo "Starting with Keycloak 26, at least Postgres 12 is required." >> "$errorfile"
+			echo "Please update Postgres. You may want to follow this article: <a href=""https://help.univention.com/t/updating-from-postgresql-11-to-postgresql-15/22162 target="_blank">https://help.univention.com/t/updating-from-postgresql-11-to-postgresql-15/22162</a>" >> "$errorfile"
+			echo 'You can skip this test with by setting ucr variable "keycloak/check-postgres-version" to "false".' >>"$errorfile"
+			echo "But be aware that Keycloak 26 will not work with PostgreSQL 11." >> "$errorfile"
+			exit 1
+		fi
+	fi
+fi
 
 
 # create password

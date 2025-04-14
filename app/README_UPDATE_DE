@@ -5,23 +5,24 @@
 	Wenn die App auf mehreren Systemen in der Domäne installiert ist, müssen Sie sicherstellen, dass alle Installationen auf die gleiche Version der Keycloak App aktualisiert werden, um einen ordnungsgemäßen Betrieb sicherzustellen.
 </p>
 <p>
-	Eine Übersicht zu den Änderungen und Fehlerbehebungen finden Sie im <a href="http://docs.software-univention.de/keycloak-app/latest/changelog.html"> Keycloak App Changelog</a>.
-	<br>
-	<b>
-	<br>
-	<br>
-	Version: 23.0.7-ucs1</b>
-	<br>
-	<br>
+	Eine Übersicht zu den Änderungen und Fehlerbehebungen finden Sie im <a href="http://docs.software-univention.de/keycloak-app/latest/changelog.html" target="_blank">Keycloak App Changelog</a>. Nachfolgend finden Sie wichtige Informationen zu bestimmten Versionen.
+</p>
+<p>
+	<b>Version: 26.1.4-ucs1</b>
 </p>
 <ul>
 	<li>
-		Das Feature Ad-hoc Föderation wurde aus der App aufgrund von Inkompatibilitäten mit der neuen Keycloak version entfernt. Falls diese Funktion produktiv verwendet wurde, updaten Sie nicht und kontaktieren Sie den Univention support (support@univention.de)
+		Wenn Sie PostgreSQL als Datenbankmanagementsystem für Keycloak einsetzen, benötigen Sie PostgreSQL in Version 12 oder höher.
 	</li>
 </ul>
 <p>
-	<br>
+	<b>Version: 23.0.7-ucs1</b>
 </p>
+<ul>
+	<li>
+		Das Feature Ad-hoc Föderation wurde aus der App aufgrund von Inkompatibilitäten mit der neuen Keycloak-Version entfernt. Falls diese Funktion produktiv verwendet wurde, updaten Sie nicht und kontaktieren Sie den Univention support (support@univention.de)
+	</li>
+</ul>
 <p>
 	<b>Version: 21.0.1-ucs3</b>
 </p>
@@ -30,8 +31,6 @@
 		Die UCR Variable <b>ucs/server/sso/virtualhost</b> wurde durch <b>keycloak/apache/config</b> ersetzt. Falls Sie diese Variable verwendet haben um die UCS Apache Konfiguration für Keycloak zu deaktivieren, setzen Sie bitte <b>keycloak/apache/config=true</b> vor dem Update.
 	</li>
 </ul>
-<p>
-</p>
 <p>
 	<b>Version: 21.0.1-ucs1</b>
 </p>
