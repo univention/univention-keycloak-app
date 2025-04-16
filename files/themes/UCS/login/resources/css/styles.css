@@ -81,7 +81,7 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
 }
 
 .pf-c-dropdown__menu-item:hover {
-    --pf-c-dropdown__menu-item--BackgroundColor: var(--pf-global--primary-color--dark-100);
+    --pf-c-dropdown__menu-item--BackgroundColor: var(--pf-global--primary-color--100);
 }
 
 .login-pf body {
@@ -109,7 +109,7 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
     border-radius: var(--border-radius-container, 0.5rem);
     border-top: none;
     width: 400px;
-    padding-top: calc(4 * var(--layout-spacing-unit)) !important;
+    padding-top: calc(6 * var(--layout-spacing-unit)) !important;
     padding-bottom: calc(2 * var(--layout-spacing-unit)) !important;
     padding-left: calc(2 * var(--layout-spacing-unit)) !important;
     padding-right: calc(2 * var(--layout-spacing-unit)) !important;
@@ -155,6 +155,10 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
 
 #kc-locale {
     top: 3rem;
+}
+
+#kc-locale .pf-c-dropdown__menu-item {
+    padding: var(--layout-spacing-unit-small) var(--layout-spacing-unit);
 }
 
 @media (max-width: 767px) {
@@ -215,6 +219,7 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
     align-items: center;
     justify-content: center;
     font-size: var(--font-size-3);
+    transition: background-color var(--portal-transition-duration);
 }
 
 .pf-c-button.pf-m-primary:focus {

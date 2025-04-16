@@ -33,12 +33,12 @@ textarea.pf-c-form-control {
     --pf-c-input-group--BackgroundColor: transparent;
 }
 .login-pf-page .pf-c-button.pf-m-control {
-    height: 50px;
-    margin: 0 0 0 -4px;
+    margin: 0 0 16px -4px;
     background-color: var(--bgc-inputfield-on-container);
     --pf-c-button--after--BorderColor: transparent;
     --pf-c-button--after--BorderWidth: 0;
     --pf-c-button--BorderRadius: var(--border-radius-interactable);
+    border-radius: 0 var(--border-radius-interactable) var(--border-radius-interactable) 0;
 }
 
 p.instruction {
