@@ -275,101 +275,100 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
 /* cookie banner */
 
 .dialog {
-	padding: calc(var(--layout-spacing-unit)*2) calc(var(--layout-spacing-unit)*4);
-	background: var(--bgc-content-container);
-	border-radius: var(--border-radius-container);
-	max-width: calc(var(--layout-spacing-unit)*50);
-	box-shadow: var(--box-shadow);
+    padding: calc(var(--layout-spacing-unit)*2) calc(var(--layout-spacing-unit)*4);
+    background: var(--bgc-content-container);
+    border-radius: var(--border-radius-container);
+    max-width: calc(var(--layout-spacing-unit)*50);
+    box-shadow: var(--box-shadow);
 }
 
 @media only screen and (max-width:748px) {
-	.dialog {
-		max-width: calc(100% - var(--layout-spacing-unit)*8);
-		padding: calc(var(--layout-spacing-unit)*2) calc(var(--layout-spacing-unit)*2);
-		max-height: 90vh;
-		overflow: auto;
-		overflow-x: hidden
-	}
+    .dialog {
+        max-width: calc(100% - var(--layout-spacing-unit)*8);
+        padding: calc(var(--layout-spacing-unit)*2) calc(var(--layout-spacing-unit)*2);
+        max-height: 90vh;
+        overflow: auto;
+        overflow-x: hidden
+    }
 }
 
-
 .dialog footer:not(.image-upload__footer):not(.multi-select__footer) {
-	margin-top: calc(var(--layout-spacing-unit)*2);
-	padding-top: calc(var(--layout-spacing-unit)*2);
-	border-top: thin solid var(--bgc-tab-separator);
-	display: flex;
-	justify-content: space-between;
-	flex-wrap: wrap
+    margin-top: calc(var(--layout-spacing-unit)*2);
+    padding-top: calc(var(--layout-spacing-unit)*2);
+    border-top: thin solid var(--bgc-tab-separator);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap
 }
 
 .dialog footer:not(.image-upload__footer):not(.multi-select__footer) button:last-of-type {
-	margin-left: auto
+    margin-left: auto
 }
 
 .dialog__header {
-	display: flex;
-	align-items: center
+    display: flex;
+    align-items: center
 }
 
 @media only screen and (max-width:748px) {
-	.dialog__header {
-		position: sticky;
-		top: 0;
-		z-index: 9
-	}
+    .dialog__header {
+        position: sticky;
+        top: 0;
+        z-index: 9
+    }
 
-	.dialog__header,
-	.dialog__header:before {
-		background-color: var(--bgc-content-container)
-	}
+    .dialog__header,
+    .dialog__header:before {
+        background-color: var(--bgc-content-container)
+    }
 
-	.dialog__header:before {
-		content: "";
-		width: 100%;
-		height: calc(var(--layout-spacing-unit)*2);
-		top: calc(var(--layout-spacing-unit)*-2);
-		position: absolute
-	}
+    .dialog__header:before {
+        content: "";
+        width: 100%;
+        height: calc(var(--layout-spacing-unit)*2);
+        top: calc(var(--layout-spacing-unit)*-2);
+        position: absolute
+    }
 }
 
 .modal-wrapper {
-	height: 100%;
-	z-index: -999;
-	opacity: 0
+    height: 100%;
+    z-index: -999;
+    opacity: 0
 }
 
 .modal-wrapper,
 .modal-wrapper--isVisible {
-	position: fixed;
-	width: 100%;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	transition: opacity .5s ease
+    position: fixed;
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transition: opacity .5s ease
 }
 
 .modal-wrapper--isVisible {
-	height: 100vh;
-	z-index: 200;
-	background-color: var(--bgc-underlay);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	opacity: 1
+    height: 100vh;
+    z-index: 200;
+    background-color: var(--bgc-underlay);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1
 }
 
 .modal-wrapper--isVisible>* {
-	position: relative;
-	z-index: 1
+    position: relative;
+    z-index: 1
 }
 
 .modal-wrapper--isVisibleFullscreen {
-	z-index: 40000
+    z-index: 40000
 }
 
 .cookie-banner {
-	overflow-y: auto !important;
+    overflow-y: auto !important;
 }
 
 .cookie-title {
@@ -406,20 +405,20 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
 }
 
 .cookie-banner a {
-	color: inherit;
-	transition: color var(--portal-transition-duration), text-decoration-thickness var(--portal-transition-duration);
-	text-decoration: underline;
-	text-decoration-thickness: 1px
+    color: inherit;
+    transition: color var(--portal-transition-duration), text-decoration-thickness var(--portal-transition-duration);
+    text-decoration: underline;
+    text-decoration-thickness: 1px
 }
 
 .cookie-banner a:hover {
-	text-decoration: underline;
-	text-decoration-thickness: 1px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
 }
 
 .cookie-banner-modal {
-	display: flex;
-	flex-direction: column
+    display: flex;
+    flex-direction: column
 }
 
 .cookie-banner a:focus {
