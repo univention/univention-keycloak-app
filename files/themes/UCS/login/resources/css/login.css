@@ -61,6 +61,11 @@ h1#kc-page-title {
     padding: 0;
 }
 
+#kc-locale-wrapper {
+    position: relative;
+    top: -110px;
+}
+
 #kc-locale-dropdown{
     display: inline-block;
 }
