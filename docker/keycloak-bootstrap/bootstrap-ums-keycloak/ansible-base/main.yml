@@ -62,6 +62,39 @@
           --force
       # yamllint enable rule:line-length
 
+    - name: "Create OIDC Relying Party"
+      # yamllint disable rule:line-length
+      ansible.builtin.shell: |
+        univention-keycloak \
+          --keycloak-url {{ global_keycloak_url }} \
+          --realm {{ global_keycloak_realm }} \
+          --binduser {{ global_keycloak_username }} \
+          --bindpwdfile /credentials/keycloak.secret \
+        oidc/rp create \
+          --app-url "https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/" \
+          --host-fqdn "{{ global_subdomain_portal }}.{{ global_domain }}" \
+          --client-secret "{{ global_umc_oidc_password }}" \
+          --name="UMC on {{ global_subdomain_portal }}.{{ global_domain }}" \
+          --description="Univention Management Console on {{ global_subdomain_portal }}.{{ global_domain }}" \
+          --direct-access-grants \
+          --access-token-lifespan="300" \
+          --access-token-audience="ldaps://{{ global_domain }}/" \
+          --id-token-audience="https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/" \
+          --redirect-uri="https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/*" \
+          --redirect-uri="http://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/*" \
+          --post-logout-redirect-uris="http://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/*" \
+          --post-logout-redirect-uris="https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/*" \
+          --no-frontchannel-logout \
+          --frontchannel-logout-url="https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/frontchannel-logout" \
+          --backchannel-logout-url="https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/backchannel-logout" \
+          --always-display-in-console \
+          --logo-url="https://{{ global_subdomain_portal }}.{{ global_domain }}/favicon.ico" \
+          --pkce-code-challenge-method="S256" \
+          --default-scopes="openid" \
+          --web-origins="+" \
+          "https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/"
+      # yamllint enable rule:line-length
+
     - name: "Set global access token"
       ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"
     - name: "Looping to create additional (non default) LDAP mappers"

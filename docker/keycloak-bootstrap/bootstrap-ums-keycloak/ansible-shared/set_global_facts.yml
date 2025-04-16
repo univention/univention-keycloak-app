@@ -11,6 +11,7 @@
 - name: "Global: Set sensitive variables"
   ansible.builtin.set_fact:
     global_keycloak_password: "{{ lookup('ansible.builtin.env', 'KEYCLOAK_PASSWORD') }}"
+    global_umc_oidc_password: "{{ lookup('ansible.builtin.env', 'UMC_OIDC_PASSWORD') }}"
     global_ldap_bind_pw: "{{ lookup('ansible.builtin.env', 'LDAP_BIND_PW') }}"
   no_log: "{{ global_hide_sensitive_output | bool }}"
 
