@@ -9,12 +9,11 @@
     --pf-global--danger-color--100: var(--bgc-error);
 
     /* cookie popup */
-    --layout-spacing-unit: 0.6rem;
+    --layout-spacing-unit: 0.5rem;
     --layout-spacing-unit-small: calc(var(--layout-spacing-unit)/2);
     --layout-height-header: 3rem;
     --layout-height-header-separator: var(--layout-spacing-unit-small);
-    --portal-transition-duration: 250ms;
-
+    --portal-transition-duration: 150ms;
 }
 
 #kc-header-wrapper {
