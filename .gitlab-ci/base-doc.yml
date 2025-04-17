@@ -19,7 +19,7 @@ variables:
   UNIVENTION_BASECONF: /dev/null
 
 include:
-  - project: 'univention/documentation/sphinx-docker'
+  - project: 'univention/docs/sphinx-docker'
     file: 'pipeline/sphinx.yml'
 
 stages:
