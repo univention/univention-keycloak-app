@@ -51,7 +51,7 @@ See [app/](app/) for app center integration files and
 https://docs.software-univention.de/app-center/5.0/en/configurations.html#installation-scripts
 
 
-## Special use case: Ad-Hoc-Federation using the "univention-authenticator" Keycloak SPI
+## Special use case: Ad-Hoc-Provisioning using the "univention-authenticator" Keycloak SPI
 * The "univention-authenticator" Keycloak SPI is an extension written in Java.
 * It is shipped as part of the UCS Keycloak App, but not configured by default.
 * If configured properly (TODO: details pending) it allows creating a "shadow user account" in UDM after

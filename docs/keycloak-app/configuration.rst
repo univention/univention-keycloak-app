@@ -402,316 +402,304 @@ Deactivate two-factor authentication for domain administrators
 #. Remove ``2FA role`` from *Assigned roles*.
 
 
-..
-    .. _ad-hoc-federation:
+.. _ad-hoc-provisioning:
 
-    Keycloak ad hoc federation
-    ==========================
+Keycloak ad hoc provisioning
+============================
 
-    .. warning::
+.. warning::
 
-       The ad hoc federation is a built-in :program:`Keycloak` feature that
-       is not integrated into the UCS identity management or user lifecycle.
-       More sophisticated integration needs to be added individually.
+   The ad hoc provisioning is a built-in :program:`Keycloak` feature that
+   is not integrated into the UCS identity management or user lifecycle.
+   More sophisticated integration needs to be added individually.
 
-    .. versionadded:: 19.0.1-ucs2
+.. versionadded:: 26.1.4-ucs2
 
-    :program:`Keycloak` |SPI| extension for ad hoc federation added.
-    Keycloak offers identity brokering to delegate authentication to one or more
-    identity providers for OpenID Connect or SAML 2.0.
+:program:`Keycloak` |SPI| extension for ad hoc provisioning added.
+Keycloak offers identity brokering to delegate authentication to one or more
+identity providers for OpenID Connect or SAML 2.0.
 
-    .. seealso::
+.. seealso::
 
-       For more information about identity brokering and first login flow, see
-       :cite:t:`keycloak-first-login`.
+   For more information about identity brokering and first login flow, see
+   :cite:t:`keycloak-first-login`.
 
-    The app :program:`Keycloak` provides *ad hoc federation* to enable identity
-    brokering and add user accounts to |UCS| as so-called *shadow accounts*. It
-    supports the :ref:`design decision about not having user accounts in Keycloak
-    <app-design-decisions>`.
+The app :program:`Keycloak` provides *ad hoc provisioning* to enable identity
+brokering and add user accounts to |UCS| as so-called *shadow accounts*. It
+supports the :ref:`design decision about not having user accounts in Keycloak
+<app-design-decisions>`.
 
-    The app :program:`Keycloak` installs the :program:`univention-authenticator`
-    |SPI| plugin. The plugin creates the local shadow copy of the user account in
-    the OpenLDAP directory services through the REST API of |UDM|. *Ad hoc
-    federation* is useful when administrators want to keep track of all users in
-    |UCS|.
+The app :program:`Keycloak` installs the :program:`univention-authenticator`
+|SPI| plugin. The plugin creates the local shadow copy of the user account in
+the OpenLDAP directory services through the REST API of |UDM|. *Ad hoc
+provisioning* is useful when administrators want to keep track of all users in
+|UCS|.
 
-    .. seealso::
+.. seealso::
 
-       For more information on |SPI|, see :cite:t:`keycloak-spi`.
+   For more information on |SPI|, see :cite:t:`keycloak-spi`.
 
-    .. _ad-hoc-federation-import-external-ca:
+.. _ad-hoc-provisioning-import-external-ca:
 
-    Import external CA certificates
-    -------------------------------
+Import external CA certificates
+-------------------------------
 
-    Federation involves other, for example external, server systems and requires
-    trust. Certificates are a way to implement trust. To tell your Keycloak
-    system to trust another system for the ad-hoc federation, you need to
-    import the CA certificate for that system. Keycloak needs the CA certificate
-    to verify the encrypted connection with the other system.
+Federation involves other, for example external, server systems and requires
+trust. Certificates are a way to implement trust. To tell your Keycloak
+system to trust another system for the ad-hoc provisioning, you need to
+import the CA certificate for that system. Keycloak needs the CA certificate
+to verify the encrypted connection with the other system. For more
+information, see :ref:`additional-ca-certificates`
 
-    Use the following steps to add the CA certificate of the other system:
+.. _ad-hoc-provisioning-custom-auth-flow:
 
-    .. code-block:: console
+Create custom authentication flow
+---------------------------------
 
-       $ docker cp /path/to/externalCA.pem keycloak:/externalCA.pem
-       $ univention-app shell keycloak \
-       keytool -cacerts -import -alias ucsCA -file /externalCA.pem -storepass "changeit" -noprompt
+First, you as administrator need to create a custom authentication flow to use
+*univention-authenticator* |SPI|:
 
-    Repeat this procedure when any CA certificate expires. In case of any CA related
-    TLS error, restart the container:
+#. :ref:`keycloak-admin-console`.
 
-    .. code-block:: console
+#. Navigate to :menuselection:`UCS realm --> Authentication`.
 
-      $ docker restart keycloak
+#. Select ``First Broker Login`` in the list and click :guilabel:`Copy`.
 
-    .. _ad-hoc-federation-custom-auth-flow:
+#. Give a name to the authentication flow and click :guilabel:`OK`.
 
-    Create custom authentication flow
-    ---------------------------------
+#. In the *Review Profile (review profile config)* click :guilabel:`Actions` and
+   select ``Config``.
 
-    First, you as administrator need to create a custom authentication flow to use
-    *univention-authenticator* |SPI|:
+#. Select ``Off`` in the list, click :guilabel:`Save` and navigate back to
+   the authentication flow.
 
-    #. :ref:`keycloak-admin-console`.
+#. Click :guilabel:`Add execution` to get to the *Create Authenticator Execution* page.
 
-    #. Navigate to :menuselection:`UCS realm --> Authentication`.
+#. Select ``Univention Authenticator`` in the list and click :guilabel:`Save`.
 
-    #. Select ``First Broker Login`` in the list and click :guilabel:`Copy`.
+#. On the *Flows* tab in the *Authentication* section, change the *Univention
+   Authenticator* in the displayed table to ``Required``.
 
-    #. Give a name to the authentication flow and click :guilabel:`OK`.
+#. To finish the configuration, click :guilabel:`Actions` in the *Univention
+   Authenticator* and select ``Config``.
 
-    #. In the *Review Profile (review profile config)* click :guilabel:`Actions` and
-       select ``Config``.
+#. Fill in the following configuration options for the *Univention
+   Authenticator*:
 
-    #. Select ``Off`` in the list, click :guilabel:`Save` and navigate back to
-       the authentication flow.
+   :Alias: Name of the configuration.
 
-    #. Click :guilabel:`Add execution` to get to the *Create Authenticator Execution* page.
+   :UDM REST API endpoint: The API endpoint of UDM where UCS stores the shadow copy of the user.
 
-    #. Select ``Univention Authenticator`` in the list and click :guilabel:`Save`.
+   :Username: Username of a user account that can write to UDM.
 
-    #. On the *Flows* tab in the *Authentication* section, change the *Univention
-       Authenticator* in the displayed table to ``Required``.
+   :Password: Password of the user account that can write to UDM.
 
-    #. To finish the configuration, click :guilabel:`Actions` in the *Univention
-       Authenticator* and select ``Config``.
+#. Click :guilabel:`Save`.
 
-    #. Fill in the following configuration options for the *Univention
-       Authenticator*:
+.. _ad-hoc-provisioning-create-idp:
 
-       :Alias: Name of the configuration.
+Create an identity provider for Microsoft Active Directory
+----------------------------------------------------------
 
-       :UDM REST API endpoint: The API endpoint of UDM where UCS stores the shadow copy of the user.
+After you created the :ref:`custom authentication flow
+<ad-hoc-provisioning-custom-auth-flow>`, Keycloak can use ad hoc provisioning on any
+configured federated login. In this section, you learn how to set up a federated
+login using a `Microsoft Active Directory Federation Services <ms-adfs_>`_.
 
-       :Username: Username of a user account that can write to UDM.
+To create an identity provider for Active Directory that uses the ad hoc
+federation follow the next steps:
 
-       :Password: Password of the user account that can write to UDM.
+#. :ref:`keycloak-admin-console`.
 
-    #. Click :guilabel:`Save`.
+#. Navigate to :menuselection:`UCS realm --> Identity Providers`.
 
-    .. _ad-hoc-federation-create-idp:
+#. Click :guilabel:`Add provider...` and select ``SAML v2.0``.
 
-    Create an identity provider for Microsoft Active Directory
-    ----------------------------------------------------------
+#. Fill in the fields *Alias* and *Display Name*. You **can't** change the field
+   *Alias* later.
 
-    After you created the :ref:`custom authentication flow
-    <ad-hoc-federation-custom-auth-flow>`, Keycloak can use ad hoc federation on any
-    configured federated login. In this section, you learn how to set up a federated
-    login using a `Microsoft Active Directory Federation Services <ms-adfs_>`_.
+#. Fill in the field *Service Provider Entity ID* with the *EntityID* from the
+   *Relying Party* on the Active Directory Federation Services.
 
-    To create an identity provider for Active Directory that uses the ad hoc
-    federation follow the next steps:
+#. Fill in the field *SAML entity descriptor* with the URL of the SAML metadata from the
+   *Relying Party* on the Active Directory Federation Services.
 
-    #. :ref:`keycloak-admin-console`.
+#. Select your authentication flow with the *Univention Authenticator* on the
+   *First Login Flow*.
 
-    #. Navigate to :menuselection:`UCS realm --> Identity Providers`.
+#. Set the *Single Sign-On Service URL* to the single sign-on URL from the
+   *Relying Party*.
 
-    #. Click :guilabel:`Add provider...` and select ``SAML v2.0``.
+#. In *Principal Type* select ``Unspecified`` in the fields *NameID Policy
+   Format*, *Attribute [Name]*.
 
-    #. Fill in the fields *Alias* and *Display Name*. You **can't** change the field
-       *Alias* later.
+   In *Principal Attribute* select ``sAMAccountName``.
 
-    #. Select your authentication flow with the *Univention Authenticator* on the
-       *First Login Flow*.
+#. Enable the following properties:
 
-    #. Fill in the field *Service Provider Entity ID* with the *EntityID* from the
-       *Relying Party* on the Active Directory Federation Services.
+   * ``Allow Create``
 
-    #. Set the *Single Sign-On Service URL* to the single sign-on URL from the
-       *Relying Party*.
+   * ``HTTP-POST Binding Response``
 
-    #. In *Principal Type* select ``Unspecified`` in the fields *NameID Policy
-       Format*, *Attribute [Name]*.
+   * ``HTTP-POST Binding for AuthnRequest``
 
-       In *Principal Attribute* select ``sAMAccountName``.
+   * ``Want AuthnRequests Signed``
 
-    #. Enable the following properties:
+#. For the field *Signature Algorithm* select ``RSA_SHA256``
 
-       * ``Allow Create``
+   For the field *SAML Signature Key Name* select ``CERT_SUBJECT``.
 
-       * ``HTTP-POST Binding Response``
+#. Enable *Validate Signature* and add the certificate to *Validating x509
+   Certificates*.
 
-       * ``HTTP-POST Binding for AuthnRequest``
+#. Click :guilabel:`Save`
 
-       * ``Want AuthnRequests Signed``
+.. _ad-hoc-provisioning-mappers:
 
-    #. For the field *Signature Algorithm* select ``RSA_SHA256``
+Mappers for the identity provider
+---------------------------------
 
-       For the field *SAML Signature Key Name* select ``CERT_SUBJECT``.
+The identity provider needs the following mapper configuration to work properly
+with Univention Corporate Server:
 
-    #. Enable *Validate Signature* and add the certificate to *Validating x509
-       Certificates*.
+#. To create a mapper in the identity provider configuration navigate to
+   :menuselection:`UCS realm --> Identity Provider --> Your Identity Provider
+   --> Mappers`.
 
-    #. Click :guilabel:`Save`
+#. Click :guilabel:`Create`
 
-    .. _ad-hoc-federation-mappers:
+#. Configure the mapper for the email address with the following properties:
 
-    Mappers for the identity provider
-    ---------------------------------
+   :Name: Name of the mapper
+   :Sync Mode Override: ``import``
+   :Type of mapper: ``Attribute Importer``
+   :Attribute Name: ``http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress``
+   :User Attribute Name: ``email``
 
-    The identity provider needs the following mapper configuration to work properly
-    with Univention Corporate Server:
 
-    #. To create a mapper in the identity provider configuration navigate to
-       :menuselection:`UCS realm --> Identity Provider --> Your Identity Provider
-       --> Mappers`.
+#. Configure the mapper for the first name with the following properties:
 
-    #. Click :guilabel:`Create`
+   :Name: Name of the mapper
+   :Sync Mode Override: ``import``
+   :Type of mapper: ``Attribute Importer``
+   :Attribute Name: ``http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname``
+   :User Attribute Name: ``firstName``
 
-    #. Configure the mapper for the email address with the following properties:
+#. Configure the mapper for the last name with the following properties:
 
-       :Name: Name of the mapper
-       :Sync Mode Override: ``import``
-       :Type of mapper: ``Attribute Importer``
-       :Attribute Name: ``http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress``
-       :User Attribute Name: ``email``
+   :Name: Name of the mapper
+   :Sync Mode Override: ``import``
+   :Type of mapper: ``Attribute Importer``
+   :Attribute Name: ``http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname``
+   :User Attribute Name: ``lastName``
 
+#. Configure the mapper for ``univentionObjectIdentifier`` with the following properties:
 
-    #. Configure the mapper for the first name with the following properties:
+   :Name: Name of the mapper
+   :Sync Mode Override: ``import``
+   :Type of mapper: ``Attribute Importer``
+   :User attribute: ``objectGuid``
+   :User attribute Name: ``univentionObjectIdentifier``
 
-       :Name: Name of the mapper
-       :Sync Mode Override: ``import``
-       :Type of mapper: ``Attribute Importer``
-       :Attribute Name: ``http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname``
-       :User Attribute Name: ``firstName``
+#. Configure the mapper for ``univentionSourceIAM`` with the following properties:
 
-    #. Configure the mapper for the last name with the following properties:
+   :Name: Name of the mapper
+   :Sync Mode Override: ``import``
+   :Type of mapper: ``Hardcoded attribute``
+   :User attribute: ``univentionSourceIAM``
+   :User attribute value: Identifier of the identity provider.
 
-       :Name: Name of the mapper
-       :Sync Mode Override: ``import``
-       :Type of mapper: ``Attribute Importer``
-       :Attribute Name: ``http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname``
-       :User Attribute Name: ``lastName``
+#. Configure the mapper for ``external-${ALIAS}-${ATTRIBUTE.sAMAccountName}``
+   with the following properties:
 
-    #. Configure the mapper for ``univentionObjectIdentifier`` with the following properties:
+   :Name: Name of the mapper
+   :Sync Mode Override: ``import``
+   :Type of mapper: ``Username Template Importer``
+   :User attribute: ``external-${ALIAS}-${ATTRIBUTE.sAMAccountName}``
+   :Target: ``LOCAL``
 
-       :Name: Name of the mapper
-       :Sync Mode Override: ``import``
-       :Type of mapper: ``Attribute Importer``
-       :User attribute: ``objectGuid``
-       :User attribute Name: ``univentionObjectIdentifier``
+.. _ad-hoc-provisioning-adfs-configuration:
 
-    #. Configure the mapper for ``univentionSourceIAM`` with the following properties:
+Configure Active Directory Federation services for ad hoc provisioning
+----------------------------------------------------------------------
 
-       :Name: Name of the mapper
-       :Sync Mode Override: ``import``
-       :Type of mapper: ``Hardcoded attribute``
-       :User attribute: ``univentionSourceIAM``
-       :User attribute value: Identifier of the identity provider.
+To configure the Active Directory Federation Services to properly work with ad
+hoc federation you need to configure it with the following steps:
 
-    #. Configure the mapper for ``external-${ALIAS}-${ATTRIBUTE.sAMAccountName}``
-       with the following properties:
+#. Sign in as *Administrator* in Active Directory Federation Services.
 
-       :Name: Name of the mapper
-       :Sync Mode Override: ``import``
-       :Type of mapper: ``Username Template Importer``
-       :User attribute: ``external-${ALIAS}-${ATTRIBUTE.sAMAccountName}``
-       :Target: ``LOCAL``
+#. Open *Relying Party Trust* and click :guilabel:`Add Relying Party Trust`.
 
-    .. _ad-hoc-federation-adfs-configuration:
+#. Select ``Claim aware`` and click :guilabel:`Start`.
 
-    Configure Active Directory Federation services for ad hoc federation
-    --------------------------------------------------------------------
+#. On the *Select Data Source* page, select ``Import data about the relying
+   party published online or on a local network``.
 
-    To configure the Active Directory Federation Services to properly work with ad
-    hoc federation you need to configure it with the following steps:
+#. In the field *Federation metadata address* insert the metadata URL:
+   :samp:`https://ucs-sso-ng.$(ucr get domainname)/auth/realms/ucs/broker/{SAML
+   IDP name}/endpoint/descriptor`.
 
-    #. Sign in as *Administrator* in Active Directory Federation Services.
+#. Specify a *Display Name*. Click :guilabel:`Next`.
 
-    #. Open *Relying Party Trust* and click :guilabel:`Add Relying Party Trust`.
+#. Select your wanted *Access Control Policy*. Click :guilabel:`Next`.
 
-    #. Select ``Claim aware`` and click :guilabel:`Start`.
+#. Review your final configuration and click :guilabel:`Next`.
 
-    #. On the *Select Data Source* page, select ``Import data about the relying
-       party published online or on a local network``.
+#. Click :guilabel:`Close`.
 
-    #. In the field *Federation metadata address* insert the metadata URL:
-       :samp:`https://ucs-sso-ng.$(ucr get domainname)/auth/realms/ucs/broker/{SAML
-       IDP name}/endpoint/descriptor`.
+#. Add the claims to the ticket.
 
-    #. Specify a *Display Name*. Click :guilabel:`Next`.
+   ``objectGUID``
+      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
 
-    #. Select your wanted *Access Control Policy*. Click :guilabel:`Next`.
+      #. Add a claim for ``objectGUID`` to the ticket:
 
-    #. Review your final configuration and click :guilabel:`Next`.
+         :Claim Rule name: Name of the Claim
+         :Attribute Store: ``Active Directory``
+         :LDAP attribute: ``objectGUID``
+         :Outgoing Claim Type: ``objectGUID``
 
-    #. Click :guilabel:`Close`.
+   ``sAMAccountName``
+      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
 
-    #. Add the claims to the ticket.
+      #. Add a claim for ``sAMAccountName`` to the ticket:
 
-       ``objectGUID``
-          #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
+         :Claim Rule name: Name of the Claim
+         :Attribute Store: ``Active Directory``
+         :LDAP attribute: ``SAM-Account-Name``
+         :Outgoing Claim Type: ``sAMAccountName``
 
-          #. Add a claim for ``objectGUID`` to the ticket:
+   Email address
+      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
 
-             :Claim Rule name: Name of the Claim
-             :Attribute Store: ``Active Directory``
-             :LDAP attribute: ``objectGUID``
-             :Outgoing Claim Type: ``objectGUID``
+      #. Add a claim for the email address to the ticket:
 
-       ``sAMAccountName``
-          #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
+         :Claim Rule name: Name of the Claim
+         :Attribute Store: ``Active Directory``
+         :LDAP attribute: ``E-mail Addresses``
+         :Outgoing Claim Type: ``E-mail Address``
 
-          #. Add a claim for ``sAMAccountName`` to the ticket:
+   Given name
+      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
 
-             :Claim Rule name: Name of the Claim
-             :Attribute Store: ``Active Directory``
-             :LDAP attribute: ``SAM-Account-Name``
-             :Outgoing Claim Type: ``sAMAccountName``
+      #. Add a claim for the given name to the ticket:
 
-       Email address
-          #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
+         :Claim Rule name: Name of the Claim
+         :Attribute Store: ``Active Directory``
+         :LDAP attribute: ``Given-Name``
+         :Outgoing Claim Type: ``Given Name``
 
-          #. Add a claim for the email address to the ticket:
+   Surname
+      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
 
-             :Claim Rule name: Name of the Claim
-             :Attribute Store: ``Active Directory``
-             :LDAP attribute: ``E-mail Addresses``
-             :Outgoing Claim Type: ``E-mail Address``
+      #. Add a claim for the surname to the ticket:
 
-       Given name
-          #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
+         :Claim Rule name: Name of the Claim
+         :Attribute Store: ``Active Directory``
+         :LDAP attribute: ``Surname``
+         :Outgoing Claim Type: ``Surname``
 
-          #. Add a claim for the given name to the ticket:
-
-             :Claim Rule name: Name of the Claim
-             :Attribute Store: ``Active Directory``
-             :LDAP attribute: ``Given-Name``
-             :Outgoing Claim Type: ``Given Name``
-
-       Surname
-          #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
-
-          #. Add a claim for the surname to the ticket:
-
-             :Claim Rule name: Name of the Claim
-             :Attribute Store: ``Active Directory``
-             :LDAP attribute: ``Surname``
-             :Outgoing Claim Type: ``Surname``
-
-    #. Apply and save the rules.
+#. Apply and save the rules.
 
 .. _app-settings:
 
@@ -852,44 +840,6 @@ more information, consult :cite:t:`keycloak-docs`.
       * - Yes
         - ``true``
         - Installation and app configuration
-
-.. envvar:: keycloak/federation/remote/identifier
-
-   This property stores the name of the UDM property that stores
-   the unique identifier of the remote IAM objects. It is only
-   used for ad hoc federation.
-
-   .. list-table::
-      :header-rows: 1
-      :widths: 2 5 5
-
-      * - Required
-        - Default value
-        - Set
-
-      * - No
-        - ``univentionObjectIdentifier``
-        - Installation and app configuration
-
-
-.. envvar:: keycloak/federation/source/identifier
-
-   This property stores the name of the UDM property that stores
-   the remote source of an IAM objects. It is only used
-   for ad hoc federation.
-
-   .. list-table::
-      :header-rows: 1
-      :widths: 2 5 5
-
-      * - Required
-        - Default value
-        - Set
-
-      * - No
-        - ``univentionSourceIAM``
-        - Installation and app configuration
-
 
 .. envvar:: keycloak/database/connection
 
