@@ -222,21 +222,3 @@ Show = Install, Settings
 Scope = inside
 Description = Datatype for ping_data value in the database (Mariadb compatibility)
 Group = Database settings
-
-[keycloak/federation/remote/identifier]
-Type = String
-Required = True
-Show = Install, Settings
-InitialValue = univentionObjectIdentifier
-Scope = outside, inside
-Description = UDM property uniquely identifying IAM objects
-Group = Ad-hoc federation
-
-[keycloak/federation/source/identifier]
-Type = String
-Required = True
-Show = Install, Settings
-InitialValue = univentionSourceIAM
-Scope = outside, inside
-Description = UDM property referencing the source IAM
-Group = Ad-hoc federation

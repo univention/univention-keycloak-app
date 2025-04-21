@@ -43,14 +43,14 @@ include:
       - if: $SECURITY_MONITORING == "yes"
 
 .build-matrix: &build-matrix
-  - IMAGE_NAME: "keycloak-app"
+  - IMAGE_NAME: "keycloak"
     DOCKERFILE_PATH: "./Dockerfile"
     KANIKO_BUILD_CONTEXT: "./"
     KANIKO_ARGS: "--cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache --build-arg KEYCLOAK_VERSION=$KEYCLOAK_VERSION --build-arg KEYCLOAK_DIST=$KEYCLOAK_DIST"
 
 .publish-matrix: &publish-matrix
   - IMAGE_NAME:
-      - "keycloak-app"
+      - "keycloak"
 
 container-build:
   parallel:
