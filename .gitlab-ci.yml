@@ -2,6 +2,24 @@
 # SPDX-FileCopyrightText: 2023-2024 Univention GmbH
 
 ---
+variables:
+  SECURITY_MONITORING:
+    value: "no"
+    options:
+      - "yes"
+      - "no"
+    description: "Set to yes if you want to run the security monitoring jobs"
+  # version
+  PACKAGE_REGISTRY: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/keycloak-tar"
+  # Documentation build uses this variable to set the release version of the document
+  KEYCLOAK_VERSION: "26.1.4"
+  # this is where we get keycloak from
+  KEYCLOAK_SOURCE: "https://github.com/keycloak/keycloak/releases/download/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
+  # this is where we keycloak store and use from during the image build
+  KEYCLOAK_DIST: "${PACKAGE_REGISTRY}/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
+  # Documentation build uses this variable to determine the artifact output directory.
+  DOC_TARGET_VERSION: "${KEYCLOAK_VERSION}"
+  LATEST_RELEASED_KEYCLOAK_VERSION: "25.0.6-ucs4"
 
 include:
   - project: "univention/customers/dataport/upx/common-ci"
@@ -17,11 +35,18 @@ include:
     file:
       - "dind.yml"
 
+  - local: /.gitlab-ci/gitlab-ci.yml
+    rules:
+      - if: $SECURITY_MONITORING != "yes"
+  - local: /.gitlab-ci/gitlab-ci-sec.yml
+    rules:
+      - if: $SECURITY_MONITORING == "yes"
+
 .build-matrix: &build-matrix
   - IMAGE_NAME: "keycloak-app"
     DOCKERFILE_PATH: "./Dockerfile"
     KANIKO_BUILD_CONTEXT: "./"
-    KANIKO_ARGS: "--build-arg KEYCLOAK_VERSION=25.0.6 --build-arg KEYCLOAK_DIST=https://git.knut.univention.de/api/v4/projects/600/packages/generic/keycloak-tar/25.0.6/keycloak-25.0.6.tar.gz"
+    KANIKO_ARGS: "--cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache --build-arg KEYCLOAK_VERSION=$KEYCLOAK_VERSION --build-arg KEYCLOAK_DIST=$KEYCLOAK_DIST"
 
 .publish-matrix: &publish-matrix
   - IMAGE_NAME:

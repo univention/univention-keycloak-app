@@ -7,20 +7,14 @@ include:
   - project: univention/dist/docker-services
     file:
       - renovatebot/renovate.gitlab-ci.yml
-  - project: univention/dist/docker-services
+  - project: "univention/customers/dataport/upx/common-ci"
+    ref: "v1.36.1"
     file:
-      - kaniko.yml
-
-stages:
-  - security-pipeline-build
-  - security-pipeline-prepare
-  - security-pipeline-test
-  - test # for renovate
-  - deploy # for renovate
+      - "defaults/stages.yaml"
 
 # TODO just a test, replace with a propper job
 container_scanning:
-  stage: security-pipeline-test
+  stage: test
   image:
     name: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/aquasec/trivy:latest"
     entrypoint: [""]
@@ -65,7 +59,7 @@ container_scanning:
   allow_failure: true
 
 check_released_container:
-  stage: security-pipeline-prepare
+  stage: prepare
   image:
     name: docker.software-univention.de/keycloak-keycloak:${LATEST_RELEASED_KEYCLOAK_VERSION}
     entrypoint: [""]
@@ -76,7 +70,7 @@ check_released_container:
     - dpkg-query --showformat='${Package};${Version}\n' --show | sort > package-list-released.txt
 
 check_staged_container:
-  stage: security-pipeline-test
+  stage: test
   dependencies:
     - check_released_container
   image:
@@ -93,7 +87,7 @@ check_staged_container:
 
 check_keycloak_version:
   image: python:latest
-  stage: security-pipeline-test
+  stage: test
   before_script:
     - pip install app-security-monitoring --index-url https://git.knut.univention.de/api/v4/projects/715/packages/pypi/simple
   script:
@@ -108,7 +102,3 @@ check_keycloak_version:
     paths:
       - report.html
     expire_in: 1 month
-
-image_build:
-  stage: security-pipeline-build
-  extends: .kaniko

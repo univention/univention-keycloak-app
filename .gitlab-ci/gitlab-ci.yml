@@ -1,20 +1,15 @@
-stages:
-  - test
-  - prepare
-  - build
-  - merge
-  - production
-  - check
-  - renovate
 
 include:
   - project: univention/dist/docker-services
     file:
-      - kaniko.yml
       - pre-commit.yml
+  - project: "univention/customers/dataport/upx/common-ci"
+    ref: "v1.36.1"
+    file:
+      - "defaults/stages.yaml"
 
 pre-commit:
-  stage: test
+  stage: lint
   extends: .pre-commit
 
 # download keycloak archive and store in gitlab
@@ -63,17 +58,3 @@ doc-pipeline:
     strategy: depend
     forward:
       pipeline_variables: true
-
-image_build:
-  stage: build
-  extends: .kaniko
-  rules:
-    - changes:
-      - .gitlab-ci.yml
-      - .gitlab-ci/**
-      - ad-hoc/**/*
-      - extensions/**/*
-      - dependencies/**/*
-      - Dockerfile
-      - files/**/*
-      - univention-ldap-mapper/**/*
