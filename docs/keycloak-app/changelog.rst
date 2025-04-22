@@ -19,7 +19,8 @@ Please also consider the `upstream release notes
 Version 26.1.4-ucs1
 ===================
 
-* The Keycloak App has been updated to version 26.1.4
+* The app updates to :program:`Keycloak` version 26.1.4
+  (https://www.keycloak.org/docs/26.1.4/release_notes/#keycloak-26-1-0).
 
 * This version of Keycloak requires higher versions for the database backends:
 
