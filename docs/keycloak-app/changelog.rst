@@ -19,6 +19,8 @@ Please also consider the `upstream release notes
 Version 26.1.4-ucs1
 ===================
 
+Released: 22. April 2025
+
 * The app updates to :program:`Keycloak` version 26.1.4
   (https://www.keycloak.org/docs/26.1.4/release_notes/#keycloak-26-1-0).
 
