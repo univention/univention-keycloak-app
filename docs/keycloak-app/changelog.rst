@@ -16,6 +16,21 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+Version 26.1.4-ucs1
+===================
+
+* The Keycloak App has been updated to version 26.1.4
+
+* This version of Keycloak requires higher versions for the database backends:
+
+  * At least version 12 for PostgreSQL.
+
+  * At least version 10.0.4 for MariaDB.
+
+* In the configuration for the LDAP federation Keycloak no longer allows
+  ``connectionPooling=true`` together with ``startTLS=true``. The default in
+  UCS is now ``connectionPooling=false`` and ``startTLS=true``.
+
 Version 25.0.6-ucs4
 ===================
 
