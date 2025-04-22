@@ -30,6 +30,8 @@ data:
   KC_CACHE_STACK: "kubernetes"
   KC_METRICS_ENABLED: "true"
   KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+  KC_HTTP_ENABLED: "true"
+  KC_PROXY_HEADERS: "xforwarded"
 
   KC_DB_URL_HOST: {{ include "keycloak.postgresql.connection.host" . | quote }}
   KC_DB_URL_PORT: {{ include "keycloak.postgresql.connection.port" . | quote }}

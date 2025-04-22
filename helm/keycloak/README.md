@@ -363,7 +363,7 @@ false
 			<td>image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"25.0.6-ucs6@sha256:a5afdbd819737f1142419de6b769888e0891c684d186a53d8db765e938349779"
+"0.0.1@sha256:86ad28bf36620df833bcff7bb93081ee176ab6528de4f39b810730c8d03cf659"
 </pre>
 </td>
 			<td>Define image tag.</td>
