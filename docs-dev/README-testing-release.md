@@ -102,7 +102,7 @@ Copy this block to the release issue and do all of them:
  [docs/keycloak-app/changelog.rst](docs/keycloak-app/changelog.rst) and follow the recommendation at https://keepachangelog.com/en/1.0.0/.
 1. [ ] run `update-appcenter-test.sh`
 1. [ ] update the docker image names in [Jenkins](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/Apps/job/keycloak/job/App%20Autotest%20MultiEnv/)
-    * NOTE: This job checks whether the target image already exists (e.g., `docker.software-univention.de/keycloak-keycloak:26.1.4-ucs1` and fails in this case. So you cannot run this command twice. Unless you use the checkmark in the job "Overwrite")
+    * NOTE: This job checks whether the target image already exists (e.g., `docker.software-univention.de/keycloak-keycloak:26.1.4-ucs1`) and fails in this case. So you cannot run this command twice. Unless you use the checkmark in the job "Overwrite".
 1. [ ] run the [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/UCS-5.0-9/job/Keycloak%20Product%20Tests/)
 1. [ ] If documentation for a new feature or for a change is part of the regular
  text in the documentation, highlight it with the [versionadded](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-versionadded),
