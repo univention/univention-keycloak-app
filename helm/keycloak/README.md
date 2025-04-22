@@ -363,7 +363,7 @@ false
 			<td>image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"0.0.1-pre-nubus-develop"
+"25.0.6-ucs6@sha256:a5afdbd819737f1142419de6b769888e0891c684d186a53d8db765e938349779"
 </pre>
 </td>
 			<td>Define image tag.</td>
