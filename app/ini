@@ -33,7 +33,7 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	</p>
 	</div>
 PortsExclusive = 8180
-SupportedUcsVersions = 5.0-10 errata1248, 5.1-0, 5.2-0 errata67
+SupportedUcsVersions = 5.0-10 errata1248, 5.1-0, 5.2-1 errata67, 5.2-0
 ServerRole = domaincontroller_master, domaincontroller_backup
 Database = postgresql
 DatabaseUser = keycloak
