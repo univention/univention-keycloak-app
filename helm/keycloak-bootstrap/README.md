@@ -97,8 +97,8 @@ helm install my-release ${CI_PROJECT_NAME}/keycloak-bootstrap
 | topologySpreadConstraints | list | `[]` | Topology spread constraints rely on node labels to identify the topology domain(s) that each Node is in Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/  topologySpreadConstraints:   - maxSkew: 1     topologyKey: failure-domain.beta.kubernetes.io/zone     whenUnsatisfiable: DoNotSchedule |
 | waitForDependency.image.imagePullPolicy | string | `"IfNotPresent"` |  |
 | waitForDependency.image.registry | string | `"artifacts.software-univention.de"` |  |
-| waitForDependency.image.repository | string | `"nubus/images/wait-for-dependency"` |  |
-| waitForDependency.image.tag | string | `"0.28.0@sha256:816ad27b76046be360398274ba3c1f1bcec8f58c2ea5a200b2fb675aab1a5ab8"` |  |
+| waitForDependency.image.repository | string | `"nubus-dev/images/wait-for-dependency"` |  |
+| waitForDependency.image.tag | string | `"0.30.0-pre-jtorres-521-upgrade"` |  |
 
 ## Uninstalling the Chart
 
