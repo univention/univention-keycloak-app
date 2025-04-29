@@ -841,6 +841,44 @@ more information, consult :cite:t:`keycloak-docs`.
         - ``true``
         - Installation and app configuration
 
+.. envvar:: keycloak/federation/remote/identifier
+
+   This property stores the name of the UDM property that stores
+   the unique identifier of the remote IAM objects. It is only
+   used for ad hoc federation.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``univentionObjectIdentifier``
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/federation/source/identifier
+
+   This property stores the name of the UDM property that stores
+   the remote source of an IAM objects. It is only used
+   for ad hoc federation.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``univentionSourceIAM``
+        - Installation and app configuration
+
+
 .. envvar:: keycloak/database/connection
 
    This is a setting for the :program:`PostgreSQL` database, the default
