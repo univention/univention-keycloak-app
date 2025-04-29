@@ -409,33 +409,31 @@ Keycloak ad hoc provisioning
 
 .. warning::
 
-   The ad hoc provisioning is a built-in :program:`Keycloak` feature that
-   is not integrated into the UCS identity management or user lifecycle.
-   More sophisticated integration needs to be added individually.
+   The ad hoc provisioning is a built-in :program:`Keycloak` feature
+   that isn't integrated into the UCS identity management or user lifecycle.
+   You need to individually add more sophisticated integration.
 
 .. versionadded:: 26.1.4-ucs2
 
-:program:`Keycloak` |SPI| extension for ad hoc provisioning added.
-Keycloak offers identity brokering to delegate authentication to one or more
-identity providers for OpenID Connect or SAML 2.0.
+   The ad hoc provisioning is a built-in :program:`Keycloak` feature
+   that isn't integrated into the UCS identity management or user lifecycle.
+   You need to individually add more sophisticated integration.
+
+The :program:`Keycloak` app provides *ad hoc provisioning*
+to enable identity brokering and add user accounts to |UCS|
+as so-called *shadow accounts*.
+It supports the
+:ref:`design decision about not having user accounts in Keycloak <app-design-decisions>`.
+
+The :program:`Keycloak` app installs the :program:`univention-authenticator` |SPI| plugin.
+The plugin creates the local shadow copy of the user account in the OpenLDAP directory services through the REST API of |UDM|.
+*Ad hoc provisioning* is is for administrators
+who want to keep track of all users in |UCS|.
 
 .. seealso::
 
    For more information about identity brokering and first login flow, see
    :cite:t:`keycloak-first-login`.
-
-The app :program:`Keycloak` provides *ad hoc provisioning* to enable identity
-brokering and add user accounts to |UCS| as so-called *shadow accounts*. It
-supports the :ref:`design decision about not having user accounts in Keycloak
-<app-design-decisions>`.
-
-The app :program:`Keycloak` installs the :program:`univention-authenticator`
-|SPI| plugin. The plugin creates the local shadow copy of the user account in
-the OpenLDAP directory services through the REST API of |UDM|. *Ad hoc
-provisioning* is useful when administrators want to keep track of all users in
-|UCS|.
-
-.. seealso::
 
    For more information on |SPI|, see :cite:t:`keycloak-spi`.
 
@@ -444,12 +442,14 @@ provisioning* is useful when administrators want to keep track of all users in
 Import external CA certificates
 -------------------------------
 
-Federation involves other, for example external, server systems and requires
-trust. Certificates are a way to implement trust. To tell your Keycloak
-system to trust another system for the ad-hoc provisioning, you need to
-import the CA certificate for that system. Keycloak needs the CA certificate
-to verify the encrypted connection with the other system. For more
-information, see :ref:`additional-ca-certificates`
+Federation involves other, for example external, server systems and requires trust.
+Certificates are a way to implement trust.
+To tell your Keycloak system to trust another system for the ad hoc provisioning,
+you need to import the CA certificate for that system.
+Keycloak needs the CA certificate
+to verify the encrypted connection with the other system.
+For more information and the steps for adding the CA certificate,
+see :ref:`additional-ca-certificates`.
 
 .. _ad-hoc-provisioning-custom-auth-flow:
 
@@ -473,7 +473,7 @@ First, you as administrator need to create a custom authentication flow to use
 #. Select ``Off`` in the list, click :guilabel:`Save` and navigate back to
    the authentication flow.
 
-#. Click :guilabel:`Add execution` to get to the *Create Authenticator Execution* page.
+#. In the authentication flow, click :guilabel:`Add execution` to open the *Create Authenticator Execution* page.
 
 #. Select ``Univention Authenticator`` in the list and click :guilabel:`Save`.
 
@@ -490,9 +490,9 @@ First, you as administrator need to create a custom authentication flow to use
 
    :UDM REST API endpoint: The API endpoint of UDM where UCS stores the shadow copy of the user.
 
-   :Username: Username of a user account that can write to UDM.
+   :Username: Username of a user account with write permissions to UDM.
 
-   :Password: Password of the user account that can write to UDM.
+   :Password: Password of that user account with write permissions to UDM.
 
 #. Click :guilabel:`Save`.
 
@@ -545,14 +545,14 @@ federation follow the next steps:
 
    * ``Want AuthnRequests Signed``
 
-#. For the field *Signature Algorithm* select ``RSA_SHA256``
+#. For the field *Signature Algorithm* select ``RSA_SHA256``.
 
    For the field *SAML Signature Key Name* select ``CERT_SUBJECT``.
 
 #. Enable *Validate Signature* and add the certificate to *Validating x509
    Certificates*.
 
-#. Click :guilabel:`Save`
+#. Click :guilabel:`Save`.
 
 .. _ad-hoc-provisioning-mappers:
 
@@ -607,7 +607,7 @@ with Univention Corporate Server:
    :Sync Mode Override: ``import``
    :Type of mapper: ``Hardcoded attribute``
    :User attribute: ``univentionSourceIAM``
-   :User attribute value: Identifier of the identity provider.
+   :User attribute value: Value from the *Alias* field of the identity provider, as configured in Keycloak.
 
 #. Configure the mapper for ``external-${ALIAS}-${ATTRIBUTE.sAMAccountName}``
    with the following properties:
@@ -626,7 +626,7 @@ Configure Active Directory Federation services for ad hoc provisioning
 To configure the Active Directory Federation Services to properly work with ad
 hoc federation you need to configure it with the following steps:
 
-#. Sign in as *Administrator* in Active Directory Federation Services.
+#. Sign in as ``Administrator`` in *Active Directory Federation Services*.
 
 #. Open *Relying Party Trust* and click :guilabel:`Add Relying Party Trust`.
 
@@ -654,7 +654,7 @@ hoc federation you need to configure it with the following steps:
 
       #. Add a claim for ``objectGUID`` to the ticket:
 
-         :Claim Rule name: Name of the Claim
+         :Claim Rule name: Name of the claim
          :Attribute Store: ``Active Directory``
          :LDAP attribute: ``objectGUID``
          :Outgoing Claim Type: ``objectGUID``
@@ -664,7 +664,7 @@ hoc federation you need to configure it with the following steps:
 
       #. Add a claim for ``sAMAccountName`` to the ticket:
 
-         :Claim Rule name: Name of the Claim
+         :Claim Rule name: Name of the claim
          :Attribute Store: ``Active Directory``
          :LDAP attribute: ``SAM-Account-Name``
          :Outgoing Claim Type: ``sAMAccountName``
@@ -674,7 +674,7 @@ hoc federation you need to configure it with the following steps:
 
       #. Add a claim for the email address to the ticket:
 
-         :Claim Rule name: Name of the Claim
+         :Claim Rule name: Name of the claim
          :Attribute Store: ``Active Directory``
          :LDAP attribute: ``E-mail Addresses``
          :Outgoing Claim Type: ``E-mail Address``
@@ -684,7 +684,7 @@ hoc federation you need to configure it with the following steps:
 
       #. Add a claim for the given name to the ticket:
 
-         :Claim Rule name: Name of the Claim
+         :Claim Rule name: Name of the claim
          :Attribute Store: ``Active Directory``
          :LDAP attribute: ``Given-Name``
          :Outgoing Claim Type: ``Given Name``
