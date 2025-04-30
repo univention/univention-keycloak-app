@@ -14,6 +14,7 @@ Univention Keycloak app documentation
    installation
    update
    configuration
+   ad-hoc-provisioning
    database
    architecture
    limitations
