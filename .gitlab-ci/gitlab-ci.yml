@@ -44,7 +44,7 @@ generate-config:
       - generated-config-doc.yml
 
 doc-pipeline:
-  stage: build
+  stage: trigger
   rules:
     - changes:
       - "docs/keycloak-app/**/*"
