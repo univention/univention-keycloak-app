@@ -5,14 +5,19 @@
 
 .. _ad-hoc-provisioning:
 
-Keycloak ad hoc provisioning
-============================
+**************************
+Use external user accounts
+**************************
+
+Ad hoc provisioning is a capability for Keycloak in the context of Nubus
+in the deployments for the UCS appliance and Nubus for Kubernetes,
+that allows Keycloak to use user accounts from external IAM systems.
 
 .. warning::
 
    The ad hoc provisioning is a built-in :program:`Keycloak` feature
    that isn't integrated into the UCS identity management or user lifecycle.
-   You need to individually add more sophisticated integration.
+   You need to individually add a more sophisticated integration.
 
 .. versionadded:: 26.1.4-ucs2
 
@@ -27,8 +32,9 @@ It supports the
 :ref:`design decision about not having user accounts in Keycloak <app-design-decisions>`.
 
 The :program:`Keycloak` app installs the :program:`univention-authenticator` |SPI| plugin.
-The plugin creates the local shadow copy of the user account in the OpenLDAP directory services through the REST API of |UDM|.
-*Ad hoc provisioning* is is for administrators
+The plugin creates the local shadow copy of the user account in the OpenLDAP directory services
+through the REST API of |UDM|.
+*Ad hoc provisioning* is for administrators and operators
 who want to keep track of all users in |UCS|.
 
 .. seealso::
@@ -41,7 +47,7 @@ who want to keep track of all users in |UCS|.
 .. _ad-hoc-provisioning-import-external-ca:
 
 Import external CA certificates
--------------------------------
+===============================
 
 Federation involves other, for example external, server systems and requires trust.
 Certificates are a way to implement trust.
@@ -55,10 +61,10 @@ see :ref:`additional-ca-certificates`.
 .. _ad-hoc-provisioning-custom-auth-flow:
 
 Create custom authentication flow
----------------------------------
+=================================
 
 First, you as administrator need to create a custom authentication flow to use
-*univention-authenticator* |SPI|:
+the :program:`univention-authenticator` |SPI|:
 
 #. :ref:`keycloak-admin-console`.
 
@@ -100,7 +106,7 @@ First, you as administrator need to create a custom authentication flow to use
 .. _ad-hoc-provisioning-create-idp:
 
 Create an identity provider for Microsoft Active Directory
-----------------------------------------------------------
+==========================================================
 
 After you created the :ref:`custom authentication flow
 <ad-hoc-provisioning-custom-auth-flow>`, Keycloak can use ad hoc provisioning on any
@@ -158,7 +164,7 @@ federation follow the next steps:
 .. _ad-hoc-provisioning-mappers:
 
 Mappers for the identity provider
----------------------------------
+=================================
 
 The identity provider needs the following mapper configuration to work properly
 with Univention Corporate Server:
@@ -222,7 +228,7 @@ with Univention Corporate Server:
 .. _ad-hoc-provisioning-adfs-configuration:
 
 Configure Active Directory Federation services for ad hoc provisioning
-----------------------------------------------------------------------
+======================================================================
 
 To configure the Active Directory Federation Services to properly work with ad
 hoc federation you need to configure it with the following steps:
@@ -236,7 +242,7 @@ hoc federation you need to configure it with the following steps:
 #. On the *Select Data Source* page, select ``Import data about the relying
    party published online or on a local network``.
 
-#. In the field *Federation metadata address* insert the metadata URL:
+#. In the *Federation metadata address* field insert the metadata URL:
    :samp:`https://ucs-sso-ng.$(ucr get domainname)/auth/realms/ucs/broker/{SAML
    IDP name}/endpoint/descriptor`.
 
@@ -301,4 +307,3 @@ hoc federation you need to configure it with the following steps:
          :Outgoing Claim Type: ``Surname``
 
 #. Apply and save the rules.
-
