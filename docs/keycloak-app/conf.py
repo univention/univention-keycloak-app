@@ -144,7 +144,7 @@ rst_epilog = """
 """
 
 intersphinx_mapping = {
-    "uv-manual": ("https://docs.software-univention.de/manual/5.0/en", None),
+    "uv-manual": ("https://docs.software-univention.de/manual/5.2/en", None),
     "uv-nubus-kubernetes-operation": ("https://docs.software-univention.de/nubus-kubernetes-operation/1.x/en/", None),
 }
 
