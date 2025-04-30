@@ -2,28 +2,43 @@
 ..
 .. SPDX-License-Identifier: AGPL-3.0-only
 
-
 .. _ad-hoc-provisioning:
 
 **************************
 Use external user accounts
 **************************
 
-Ad hoc provisioning is a capability for Keycloak in the context of Nubus
-in the deployments for the UCS appliance and Nubus for Kubernetes,
-that allows Keycloak to use user accounts from external IAM systems.
+.. versionadded:: 26.1.4-ucs2
+
+   Ad hoc provisioning is a capability for Keycloak in the context of Nubus
+   in the deployments for the UCS appliance and Nubus for Kubernetes,
+   that allows Keycloak to use user accounts from external IAM systems.
+
+For ad hoc provisioning, Keycloak relies on federation.
+In the context of Keycloak,
+federation is the ability to integrate
+and authenticate users from external identity providers and IAM systems
+as if they're native user accounts within Keycloak.
+It allows Keycloak to leverage existing identity systems,
+such as Microsoft Azure Active Directory,
+or any other OpenID Connect or SAML compliant identity provider.
+Federation offers the following benefits:
+
+Single sign-on
+   Users can sign in using their credentials from an external IAM system,
+   and reducing the need to manage multiple credentials.
+
+Decentralized identity management
+   Functional administrators don't have to handle user authentication directly
+   by offloading it to trusted external IAM systems.
+   In the context of Nubus in the UCS appliance and the Kubernetes deployments,
+   it allows to plugin Nubus into existing environments with existing identity providers.
 
 .. warning::
 
    The ad hoc provisioning is a built-in :program:`Keycloak` feature
-   that isn't integrated into the UCS identity management or user lifecycle.
+   that isn't integrated into the Nubus identity management or user lifecycle.
    You need to individually add a more sophisticated integration.
-
-.. versionadded:: 26.1.4-ucs2
-
-   The ad hoc provisioning is a built-in :program:`Keycloak` feature
-   that isn't integrated into the UCS identity management or user lifecycle.
-   You need to individually add more sophisticated integration.
 
 The :program:`Keycloak` app provides *ad hoc provisioning*
 to enable identity brokering and add user accounts to |UCS|
@@ -36,6 +51,26 @@ The plugin creates the local shadow copy of the user account in the OpenLDAP dir
 through the REST API of |UDM|.
 *Ad hoc provisioning* is for administrators and operators
 who want to keep track of all users in |UCS|.
+
+This page describes how to configure Keycloak
+to use user accounts from external IAM systems.
+The instructions below apply to one external IAM system
+and focus on Microsoft Active Directory as example.
+However, the instructions apply in principle to similar IAM systems
+that Keycloak supports for federation setups.
+The setup consists of the following steps in the given order:
+
+#. :ref:`ad-hoc-provisioning-import-external-ca`
+
+#. :ref:`ad-hoc-provisioning-custom-auth-flow`
+
+#. :ref:`ad-hoc-provisioning-custom-auth-flow`
+
+#. :ref:`ad-hoc-provisioning-create-idp`
+
+#. :ref:`ad-hoc-provisioning-mappers`
+
+#. :ref:`ad-hoc-provisioning-adfs-configuration`
 
 .. seealso::
 
@@ -55,18 +90,53 @@ To tell your Keycloak system to trust another system for the ad hoc provisioning
 you need to import the CA certificate for that system.
 Keycloak needs the CA certificate
 to verify the encrypted connection with the other system.
+
 For more information and the steps for adding the CA certificate,
 see :ref:`additional-ca-certificates`.
+
+.. _ad-hoc-provisioning-admin-console-sign-in:
+
+Sign in to *Keycloak Admin Console*
+===================================
+
+You perform the steps described in this section and the followings sections
+in the *Keycloak Admin Console*.
+The URL depends on the deployment of your Nubus installation.
+
+.. tab:: Nubus for UCS appliance
+
+   Nubus for UCS appliance is an environment with Nubus on Univention Corporate Server (UCS).
+   For ad hoc provisioning with Keycloak,
+   you use the :program:`Keycloak` app from the App Center.
+
+   Administrators in the UCS appliance installation follow the steps described in :ref:`keycloak-admin-console`.
+
+.. tab:: Nubus for Kubernetes
+
+   Nubus for Kubernetes is an environment Nubus installed in a Kubernetes cluster.
+   It includes :program:`Keycloak` as identity provider.
+
+   Operators in the Nubus for Kubernetes installation follow the steps described in
+   :external+uv-nubus-kubernetes-operation:ref:`conf-ad-hoc-provisioning`.
 
 .. _ad-hoc-provisioning-custom-auth-flow:
 
 Create custom authentication flow
 =================================
 
-First, you as administrator need to create a custom authentication flow to use
-the :program:`univention-authenticator` |SPI|:
+Authentication flows are workflows
+that a user performs when interacting with certain aspects of the environment.
+A custom authentication flow is a sequence of steps
+that define how Keycloak authenticates users.
+Unlike predefined authentication flows,
+custom flows include specific authenticators, requirements, and conditions.
 
-#. :ref:`keycloak-admin-console`.
+:program:`univention-authenticator` is such a specific authenticator.
+And to use it during the sign-in procedure,
+you need to create a custom authentication flow,
+as described in the following steps:
+
+#. :ref:`ad-hoc-provisioning-admin-console-sign-in`.
 
 #. Navigate to :menuselection:`UCS realm --> Authentication`.
 
@@ -103,20 +173,26 @@ the :program:`univention-authenticator` |SPI|:
 
 #. Click :guilabel:`Save`.
 
+.. seealso::
+
+   Authentication flows
+      in :cite:t:`keycloak-auth-flow`
+      for more information about authentication flows.
+
 .. _ad-hoc-provisioning-create-idp:
 
 Create an identity provider for Microsoft Active Directory
 ==========================================================
 
-After you created the :ref:`custom authentication flow
-<ad-hoc-provisioning-custom-auth-flow>`, Keycloak can use ad hoc provisioning on any
-configured federated login. In this section, you learn how to set up a federated
-login using a `Microsoft Active Directory Federation Services <ms-adfs_>`_.
+After you created the :ref:`custom authentication flow <ad-hoc-provisioning-custom-auth-flow>`,
+Keycloak can use ad hoc provisioning on any configured federated login.
+In this section, you learn how to set up a federated login
+using a `Microsoft Active Directory Federation Services <ms-adfs_>`_.
 
-To create an identity provider for Active Directory that uses the ad hoc
-federation follow the next steps:
+To create an identity provider for Active Directory
+that uses the ad hoc provisioning follow the next steps:
 
-#. :ref:`keycloak-admin-console`.
+#. :ref:`ad-hoc-provisioning-admin-console-sign-in`.
 
 #. Navigate to :menuselection:`UCS realm --> Identity Providers`.
 
@@ -127,15 +203,38 @@ federation follow the next steps:
 
 #. Fill in the field *Service Provider Entity ID* with the *EntityID* from the
    *Relying Party* on the Active Directory Federation Services.
+   The *Service Provider Entity ID* can have any value.
+   You use it to describe the SAML service provider.
+   It usually looks similar to the entity descriptor.
 
 #. Fill in the field *SAML entity descriptor* with the URL of the SAML metadata from the
    *Relying Party* on the Active Directory Federation Services.
 
+   In Microsoft Active Directory Federation Service,
+   you find it at :menuselection:`AD FS --> Service --> Endpoints --> Metadata`.
+
+   Example:
+      ``https://ad.example.com/FederationMetadata/2007-06/FederationMetadata.xml``
+
 #. Select your authentication flow with the *Univention Authenticator* on the
    *First Login Flow*.
 
-#. Set the *Single Sign-On Service URL* to the single sign-on URL from the
-   *Relying Party*.
+#. Set the *Single Sign-On Service URL*
+   to the single sign-on URL from the *Relying Party*.
+   Keycloak should automatically detect it from the metadata.
+   In case the automatic detection didn't work,
+   the service URL looks like
+   :numref:`ad-hoc-provisioning-create-idp-sso-service-listing`
+   in the SAML metadata.
+
+   .. code-block:: xml
+      :caption: Example for SAML metadata with the Single sign-on service URL
+      :name: ad-hoc-provisioning-create-idp-sso-service-listing
+
+      <SingleSignOnService
+          Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+          Location="https://ad.example.com/adfs/ls/"/>
+
 
 #. In *Principal Type* select ``Unspecified`` in the fields *NameID Policy
    Format*, *Attribute [Name]*.
@@ -167,7 +266,9 @@ Mappers for the identity provider
 =================================
 
 The identity provider needs the following mapper configuration to work properly
-with Univention Corporate Server:
+with Nubus in the UCS appliance and the Kubernetes deployments:
+
+#. :ref:`ad-hoc-provisioning-admin-console-sign-in`.
 
 #. To create a mapper in the identity provider configuration navigate to
    :menuselection:`UCS realm --> Identity Provider --> Your Identity Provider
@@ -227,8 +328,12 @@ with Univention Corporate Server:
 
 .. _ad-hoc-provisioning-adfs-configuration:
 
-Configure Active Directory Federation services for ad hoc provisioning
+Configure Active Directory Federation Services for ad hoc provisioning
 ======================================================================
+
+Keycloak needs a federation with the external IAM system.
+*Active Directory Federation Service* adds the needed federation capability
+to Active Directory using SAML and OpenID Connect.
 
 To configure the Active Directory Federation Services to properly work with ad
 hoc federation you need to configure it with the following steps:
@@ -306,4 +411,4 @@ hoc federation you need to configure it with the following steps:
          :LDAP attribute: ``Surname``
          :Outgoing Claim Type: ``Surname``
 
-#. Apply and save the rules.
+#. Click :guilabel:`OK` to apply and save the rules.
