@@ -64,13 +64,11 @@ The setup consists of the following steps in the given order:
 
 #. :ref:`ad-hoc-provisioning-custom-auth-flow`
 
-#. :ref:`ad-hoc-provisioning-custom-auth-flow`
+#. :ref:`ad-hoc-provisioning-adfs-configuration`
 
 #. :ref:`ad-hoc-provisioning-create-idp`
 
 #. :ref:`ad-hoc-provisioning-mappers`
-
-#. :ref:`ad-hoc-provisioning-adfs-configuration`
 
 .. seealso::
 
@@ -178,6 +176,93 @@ as described in the following steps:
    Authentication flows
       in :cite:t:`keycloak-auth-flow`
       for more information about authentication flows.
+
+.. _ad-hoc-provisioning-adfs-configuration:
+
+Configure Active Directory Federation Services for ad hoc provisioning
+======================================================================
+
+Keycloak needs a federation with the external IAM system.
+*Active Directory Federation Service* adds the needed federation capability
+to Active Directory using SAML and OpenID Connect.
+
+To configure the Active Directory Federation Services to properly work with ad
+hoc federation you need to configure it with the following steps:
+
+#. Sign in as ``Administrator`` in *Active Directory Federation Services*.
+
+#. Open *Relying Party Trust* and click :guilabel:`Add Relying Party Trust`.
+
+#. Select ``Claim aware`` and click :guilabel:`Start`.
+
+#. On the *Select Data Source* page, select ``Import data about the relying
+   party published online or on a local network``.
+
+#. In the *Federation metadata address* field insert the metadata URL:
+   :samp:`https://ucs-sso-ng.$(ucr get domainname)/auth/realms/ucs/broker/{SAML
+   IDP name}/endpoint/descriptor`.
+
+#. Specify a *Display Name*. Click :guilabel:`Next`.
+
+#. Select your wanted *Access Control Policy*. Click :guilabel:`Next`.
+
+#. Review your final configuration and click :guilabel:`Next`.
+
+#. Click :guilabel:`Close`.
+
+#. Add the claims to the ticket.
+
+   ``objectGUID``
+      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
+
+      #. Add a claim for ``objectGUID`` to the ticket:
+
+         :Claim Rule name: Name of the claim
+         :Attribute Store: ``Active Directory``
+         :LDAP attribute: ``objectGUID``
+         :Outgoing Claim Type: ``objectGUID``
+
+   ``sAMAccountName``
+      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
+
+      #. Add a claim for ``sAMAccountName`` to the ticket:
+
+         :Claim Rule name: Name of the claim
+         :Attribute Store: ``Active Directory``
+         :LDAP attribute: ``SAM-Account-Name``
+         :Outgoing Claim Type: ``sAMAccountName``
+
+   Email address
+      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
+
+      #. Add a claim for the email address to the ticket:
+
+         :Claim Rule name: Name of the claim
+         :Attribute Store: ``Active Directory``
+         :LDAP attribute: ``E-mail Addresses``
+         :Outgoing Claim Type: ``E-mail Address``
+
+   Given name
+      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
+
+      #. Add a claim for the given name to the ticket:
+
+         :Claim Rule name: Name of the claim
+         :Attribute Store: ``Active Directory``
+         :LDAP attribute: ``Given-Name``
+         :Outgoing Claim Type: ``Given Name``
+
+   Surname
+      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
+
+      #. Add a claim for the surname to the ticket:
+
+         :Claim Rule name: Name of the Claim
+         :Attribute Store: ``Active Directory``
+         :LDAP attribute: ``Surname``
+         :Outgoing Claim Type: ``Surname``
+
+#. Click :guilabel:`OK` to apply and save the rules.
 
 .. _ad-hoc-provisioning-create-idp:
 
@@ -325,90 +410,3 @@ with Nubus in the UCS appliance and the Kubernetes deployments:
    :Type of mapper: ``Username Template Importer``
    :User attribute: ``external-${ALIAS}-${ATTRIBUTE.sAMAccountName}``
    :Target: ``LOCAL``
-
-.. _ad-hoc-provisioning-adfs-configuration:
-
-Configure Active Directory Federation Services for ad hoc provisioning
-======================================================================
-
-Keycloak needs a federation with the external IAM system.
-*Active Directory Federation Service* adds the needed federation capability
-to Active Directory using SAML and OpenID Connect.
-
-To configure the Active Directory Federation Services to properly work with ad
-hoc federation you need to configure it with the following steps:
-
-#. Sign in as ``Administrator`` in *Active Directory Federation Services*.
-
-#. Open *Relying Party Trust* and click :guilabel:`Add Relying Party Trust`.
-
-#. Select ``Claim aware`` and click :guilabel:`Start`.
-
-#. On the *Select Data Source* page, select ``Import data about the relying
-   party published online or on a local network``.
-
-#. In the *Federation metadata address* field insert the metadata URL:
-   :samp:`https://ucs-sso-ng.$(ucr get domainname)/auth/realms/ucs/broker/{SAML
-   IDP name}/endpoint/descriptor`.
-
-#. Specify a *Display Name*. Click :guilabel:`Next`.
-
-#. Select your wanted *Access Control Policy*. Click :guilabel:`Next`.
-
-#. Review your final configuration and click :guilabel:`Next`.
-
-#. Click :guilabel:`Close`.
-
-#. Add the claims to the ticket.
-
-   ``objectGUID``
-      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
-
-      #. Add a claim for ``objectGUID`` to the ticket:
-
-         :Claim Rule name: Name of the claim
-         :Attribute Store: ``Active Directory``
-         :LDAP attribute: ``objectGUID``
-         :Outgoing Claim Type: ``objectGUID``
-
-   ``sAMAccountName``
-      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
-
-      #. Add a claim for ``sAMAccountName`` to the ticket:
-
-         :Claim Rule name: Name of the claim
-         :Attribute Store: ``Active Directory``
-         :LDAP attribute: ``SAM-Account-Name``
-         :Outgoing Claim Type: ``sAMAccountName``
-
-   Email address
-      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
-
-      #. Add a claim for the email address to the ticket:
-
-         :Claim Rule name: Name of the claim
-         :Attribute Store: ``Active Directory``
-         :LDAP attribute: ``E-mail Addresses``
-         :Outgoing Claim Type: ``E-mail Address``
-
-   Given name
-      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
-
-      #. Add a claim for the given name to the ticket:
-
-         :Claim Rule name: Name of the claim
-         :Attribute Store: ``Active Directory``
-         :LDAP attribute: ``Given-Name``
-         :Outgoing Claim Type: ``Given Name``
-
-   Surname
-      #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
-
-      #. Add a claim for the surname to the ticket:
-
-         :Claim Rule name: Name of the Claim
-         :Attribute Store: ``Active Directory``
-         :LDAP attribute: ``Surname``
-         :Outgoing Claim Type: ``Surname``
-
-#. Click :guilabel:`OK` to apply and save the rules.
