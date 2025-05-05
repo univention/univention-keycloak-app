@@ -4,9 +4,9 @@
 
 .. _ad-hoc-provisioning:
 
-**************************
-Use external user accounts
-**************************
+************************************
+Federation with external IAM systems
+************************************
 
 .. versionadded:: 26.1.4-ucs2
 
@@ -21,36 +21,28 @@ and authenticate users from external identity providers and IAM systems
 as if they're native user accounts within Keycloak.
 It allows Keycloak to leverage existing identity systems,
 such as Microsoft Azure Active Directory,
-or any other OpenID Connect or SAML compliant identity provider.
+or any other OpenID Connect or SAML compliant identity providers.
 Federation offers the following benefits:
 
 Single sign-on
    Users can sign in using their credentials from an external IAM system,
-   and reducing the need to manage multiple credentials.
+   reducing the need to manage multiple credentials.
 
 Decentralized identity management
    Functional administrators don't have to handle user authentication directly
    by offloading it to trusted external IAM systems.
    In the context of Nubus in the UCS appliance and the Kubernetes deployments,
-   it allows to plugin Nubus into existing environments with existing identity providers.
+   it allows integrating Nubus into existing environments with existing identity providers.
 
-.. warning::
-
-   The ad hoc provisioning is a built-in :program:`Keycloak` feature
-   that isn't integrated into the Nubus identity management or user lifecycle.
-   You need to individually add a more sophisticated integration.
-
-The :program:`Keycloak` app provides *ad hoc provisioning*
-to enable identity brokering and add user accounts to |UCS|
-as so-called *shadow accounts*.
-It supports the
-:ref:`design decision about not having user accounts in Keycloak <app-design-decisions>`.
-
-The :program:`Keycloak` app installs the :program:`univention-authenticator` |SPI| plugin.
-The plugin creates the local shadow copy of the user account in the OpenLDAP directory services
-through the REST API of |UDM|.
+The :program:`Keycloak` app installs the :program:`univention-authenticator` *Service Provider Interface* (SPI) plugin.
+The plugin automatically creates a corresponding user account for the user
+in the OpenLDAP directory through the REST API of |UDM|.
+Since this user account didn't exist in Nubus before,
+it's considered *ad hoc* provisioned.
 *Ad hoc provisioning* is for administrators and operators
 who want to keep track of all users in |UCS|.
+It supports the
+:ref:`design decision about not having user accounts in Keycloak <app-design-decisions>`.
 
 This page describes how to configure Keycloak
 to use user accounts from external IAM systems.
@@ -122,12 +114,10 @@ The URL depends on the deployment of your Nubus installation.
 Create custom authentication flow
 =================================
 
-Authentication flows are workflows
-that a user performs when interacting with certain aspects of the environment.
-A custom authentication flow is a sequence of steps
-that define how Keycloak authenticates users.
+Authentication flows are workflows with sequences of steps
+that Keycloak follows to decide whether to go grant a user's sign-in request.
 Unlike predefined authentication flows,
-custom flows include specific authenticators, requirements, and conditions.
+custom authentication flows include specific authenticators, requirements, and conditions.
 
 :program:`univention-authenticator` is such a specific authenticator.
 And to use it during the sign-in procedure,
@@ -163,7 +153,7 @@ as described in the following steps:
 
    :Alias: Name of the configuration.
 
-   :UDM REST API endpoint: The API endpoint of UDM where UCS stores the shadow copy of the user.
+   :UDM REST API endpoint: The API endpoint of UDM where UCS stores the local copy of the user.
 
    :Username: Username of a user account with write permissions to UDM.
 
