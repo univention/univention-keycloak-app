@@ -16,6 +16,14 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+Version 26.1.4-ucs2
+===================
+
+Released: 08. May 2025
+
+* This release of the :program:`Keycloak` app includes again the |SPI| extension for so
+  called ad-hoc provisioning.
+
 Version 26.1.4-ucs1
 ===================
 
