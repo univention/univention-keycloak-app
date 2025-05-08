@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.1.0](https://git.knut.univention.de/univention/components/keycloak-app/compare/v0.0.1...v0.1.0) (2025-05-08)
+
+
+### Features
+
+* **docs:** Add Nubus Operation Manual reference to Keycloak App Manual ([06b701f](https://git.knut.univention.de/univention/components/keycloak-app/commit/06b701fc83ba11f234320c232f221597962123a2)), closes [univention/dev/docs/nubus-docs#91](https://git.knut.univention.de/univention/dev/docs/nubus-docs/issues/91)
+* **docs:** Adjust content to Nubus narrative ([9f722ad](https://git.knut.univention.de/univention/components/keycloak-app/commit/9f722ad9aed4d413973372ab8ce378615f711478)), closes [univention/dev/docs/nubus-docs#91](https://git.knut.univention.de/univention/dev/docs/nubus-docs/issues/91)
+* **docs:** Adjust heading levels to structure position ([89b60d0](https://git.knut.univention.de/univention/components/keycloak-app/commit/89b60d00fa834992175b5673d94a217164a2609c)), closes [univention/dev/docs/nubus-docs#91](https://git.knut.univention.de/univention/dev/docs/nubus-docs/issues/91)
+* **docs:** Move ad hoc provisioning into own section ([c074c76](https://git.knut.univention.de/univention/components/keycloak-app/commit/c074c76ff0992cd67a606c5a30b19c65f9cc117f)), closes [univention/dev/docs/nubus-docs#91](https://git.knut.univention.de/univention/dev/docs/nubus-docs/issues/91)
+* **docs:** Relocate AD FS configuration after custom authentication flow ([d1e4c26](https://git.knut.univention.de/univention/components/keycloak-app/commit/d1e4c26ea139cd11415ffc78e0a58c6b8284a5d0)), closes [univention/dev/docs/nubus-docs#91](https://git.knut.univention.de/univention/dev/docs/nubus-docs/issues/91)
+* **docs:** Review feedback ([7ab711b](https://git.knut.univention.de/univention/components/keycloak-app/commit/7ab711b4b2059502fae5243c69069382239d4905)), closes [univention/dev/docs/nubus-docs#91](https://git.knut.univention.de/univention/dev/docs/nubus-docs/issues/91)
+
+
+### Bug Fixes
+
+* **docs:** Update UCS Manual reference to UCS 5.2 ([a61a627](https://git.knut.univention.de/univention/components/keycloak-app/commit/a61a627f7562318add4990019f42267639d49dbb)), closes [univention/dev/docs/nubus-docs#91](https://git.knut.univention.de/univention/dev/docs/nubus-docs/issues/91)
+
 ## 0.0.1 (2025-04-30)
 
 
