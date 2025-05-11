@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.0](https://git.knut.univention.de/univention/components/keycloak-app/compare/v0.1.0...v0.2.0) (2025-05-11)
+
+
+### Features
+
+* move and upgrade ucs-base-image to 0.17.3-build-2025-05-11 ([385a78c](https://git.knut.univention.de/univention/components/keycloak-app/commit/385a78c418489bb16211a1f66d858193548cf9c7))
+
+
+### Bug Fixes
+
+* move docker-services ([a13421d](https://git.knut.univention.de/univention/components/keycloak-app/commit/a13421d94454c22736c84c2dbe8fdea757e9136f))
+* update common-ci to main ([feb15fb](https://git.knut.univention.de/univention/components/keycloak-app/commit/feb15fbc923e4a432c91a4e3ddfda718b43972ec))
+
 ## [0.1.0](https://git.knut.univention.de/univention/components/keycloak-app/compare/v0.0.1...v0.1.0) (2025-05-08)
 
 
