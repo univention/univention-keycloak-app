@@ -8,7 +8,7 @@ include:
     file:
       - renovatebot/renovate.gitlab-ci.yml
   - project: "univention/customers/dataport/upx/common-ci"
-    ref: "v1.38.0"
+    ref: "main"
     file:
       - "defaults/stages.yaml"
 
