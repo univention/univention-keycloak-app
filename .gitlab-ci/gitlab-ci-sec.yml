@@ -4,7 +4,7 @@ variables:
   RENOVATE_TOKEN: "glpat-MHYoU453KH4qioGay7HR"
 
 include:
-  - project: univention/dist/docker-services
+  - project: univention/infrastructure/docker-services
     file:
       - renovatebot/renovate.gitlab-ci.yml
   - project: "univention/customers/dataport/upx/common-ci"
