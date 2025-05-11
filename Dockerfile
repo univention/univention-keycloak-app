@@ -51,7 +51,7 @@ RUN cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.jdbc.ojdbc11-*.ja
 
 # the keycloak image
 # see https://github.com/keycloak/keycloak/tree/main/quarkus/container
-FROM gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
+FROM gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-521
 RUN apt-get update \
  && apt-get install -y --no-install-recommends --no-install-suggests openjdk-17-jre-headless \
  && apt-get -y dist-upgrade \
