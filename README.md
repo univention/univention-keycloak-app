@@ -6,7 +6,7 @@ This repository contains the components of the Keycloak App for the UCS Appcente
 
 The app uses [Keycloak](https://www.keycloak.org/docs/17.0/) to provide a SAML and OpenID Connect provider.
 
-The docker image used in the app is [keycloak](https://quay.io/repository/keycloak/keycloak?tab=tags), provided by RedHat.
+The docker image used in the app is [build based on the UCS 5.2 base image](https://git.knut.univention.de/univention/components/keycloak-app/-/blob/main/Dockerfile?ref_type=heads).
 
 # Realm Configuration
 
