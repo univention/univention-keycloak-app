@@ -16,6 +16,14 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
 
+Version 26.2.5-ucs1
+===================
+
+Released: TODO
+
+* The app updates to :program:`Keycloak` version 26.2.5
+  (https://www.keycloak.org/docs/26.2.0/release_notes/#keycloak-26-2-0).
+
 Version 26.1.4-ucs2
 ===================
 
