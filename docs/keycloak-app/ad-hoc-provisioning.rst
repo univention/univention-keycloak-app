@@ -189,7 +189,7 @@ hoc federation you need to configure it with the following steps:
    party published online or on a local network``.
 
 #. In the *Federation metadata address* field insert the metadata URL:
-   :samp:`https://ucs-sso-ng.$(ucr get domainname)/auth/realms/ucs/broker/{SAML
+   :samp:`https://ucs-sso-ng.$(ucr get domainname)/realms/ucs/broker/{SAML
    IDP name}/endpoint/descriptor`.
 
 #. Specify a *Display Name*. Click :guilabel:`Next`.
@@ -229,8 +229,14 @@ hoc federation you need to configure it with the following steps:
 
          :Claim Rule name: Name of the claim
          :Attribute Store: ``Active Directory``
-         :LDAP attribute: ``E-mail Addresses``
-         :Outgoing Claim Type: ``E-mail Address``
+         :LDAP attribute: ``E-Mail Addresses``
+         :Outgoing Claim Type: ``E-Mail Address``
+
+      .. important::
+
+         To run the ad hoc provisioning,
+         the user accounts in the Active Directory
+         need to have a valid value for the email address attribute.
 
    Given name
       #. Click :guilabel:`Add rule` and select ``Send LDAP Attributes as Claims``.
@@ -349,54 +355,54 @@ with Nubus in the UCS appliance and the Kubernetes deployments:
    :menuselection:`UCS realm --> Identity Provider --> Your Identity Provider
    --> Mappers`.
 
-#. Click :guilabel:`Create`
+#. Click :guilabel:`Add mapper`
 
 #. Configure the mapper for the email address with the following properties:
 
    :Name: Name of the mapper
-   :Sync Mode Override: ``import``
-   :Type of mapper: ``Attribute Importer``
-   :Attribute Name: ``http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress``
+   :Sync mode override: ``Import``
+   :Mapper type: ``Attribute Importer``
+   :Attribute Name: ``E-Mail Address``
    :User Attribute Name: ``email``
 
 
 #. Configure the mapper for the first name with the following properties:
 
    :Name: Name of the mapper
-   :Sync Mode Override: ``import``
-   :Type of mapper: ``Attribute Importer``
-   :Attribute Name: ``http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname``
+   :Sync mode override: ``Import``
+   :Mapper type: ``Attribute Importer``
+   :Attribute Name: ``Given Name``
    :User Attribute Name: ``firstName``
 
 #. Configure the mapper for the last name with the following properties:
 
    :Name: Name of the mapper
-   :Sync Mode Override: ``import``
-   :Type of mapper: ``Attribute Importer``
-   :Attribute Name: ``http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname``
+   :Sync mode override: ``Import``
+   :Mapper type: ``Attribute Importer``
+   :Attribute Name: ``Surname``
    :User Attribute Name: ``lastName``
 
-#. Configure the mapper for ``univentionObjectIdentifier`` with the following properties:
+#. Configure the mapper for ``objectGUID`` with the following properties:
 
    :Name: Name of the mapper
-   :Sync Mode Override: ``import``
-   :Type of mapper: ``Attribute Importer``
-   :User attribute: ``objectGuid``
-   :User attribute Name: ``univentionObjectIdentifier``
+   :Sync mode override: ``Import``
+   :Mapper type: ``Attribute Importer``
+   :Attribute Name: ``objectGUID``
+   :User Attribute Name: ``objectGUID``
 
 #. Configure the mapper for ``univentionSourceIAM`` with the following properties:
 
    :Name: Name of the mapper
-   :Sync Mode Override: ``import``
-   :Type of mapper: ``Hardcoded attribute``
-   :User attribute: ``univentionSourceIAM``
-   :User attribute value: Value from the *Alias* field of the identity provider, as configured in Keycloak.
+   :Sync mode override: ``Import``
+   :Mapper type: ``Hardcoded Attribute``
+   :User Attribute: ``univentionSourceIAM``
+   :User Attribute Value: Value from the *Alias* field of the identity provider, as configured in Keycloak.
 
 #. Configure the mapper for ``external-${ALIAS}-${ATTRIBUTE.sAMAccountName}``
    with the following properties:
 
    :Name: Name of the mapper
-   :Sync Mode Override: ``import``
-   :Type of mapper: ``Username Template Importer``
-   :User attribute: ``external-${ALIAS}-${ATTRIBUTE.sAMAccountName}``
+   :Sync mode override: ``import``
+   :Mapper type: ``Username Template Importer``
+   :Template: ``external-${ALIAS}-${ATTRIBUTE.sAMAccountName}``
    :Target: ``LOCAL``
