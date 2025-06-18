@@ -19,7 +19,7 @@ services:
       - ALL
 
   udm-rest-api:
-    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-udm-rest/udm-rest-api:latest
+    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/udm-rest-api/udm-rest-api:latest
     container_name: "udm-rest-api"
     platform: "linux/amd64"
     ports:
@@ -39,7 +39,7 @@ services:
 
   ldap-server:
     platform: linux/amd64
-    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-ldap/ldap-server:latest
+    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/ldap/ldap-server:latest
     container_name: "ldap-server"
     environment:
       LDAP_CN_ADMIN_PW: univention
