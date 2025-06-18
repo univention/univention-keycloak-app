@@ -22,8 +22,8 @@ variables:
   LATEST_RELEASED_KEYCLOAK_VERSION: "26.1.4-ucs1"
 
 include:
-  - project: "univention/customers/dataport/upx/common-ci"
-    ref: "main"
+  - project: "univention/dev/nubus-for-k8s/common-ci"
+    ref: "v1.42.1"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"

@@ -3,8 +3,8 @@ include:
   - project: univention/infrastructure/docker-services
     file:
       - pre-commit.yml
-  - project: "univention/customers/dataport/upx/common-ci"
-    ref: "main"
+  - project: "univention/dev/nubus-for-k8s/common-ci"
+    ref: "v1.42.1"
     file:
       - "defaults/stages.yaml"
 
