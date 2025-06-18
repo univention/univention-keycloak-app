@@ -75,10 +75,6 @@ keycloak
 {{- end -}}
 {{- end -}}
 
-{{- define "keycloak.ingress.ingressClassName" -}}
-{{- required "Either .Values.ingress.ingressClassName or .Values.global.ingressClass must be defined. " (coalesce .Values.ingress.ingressClassName .Values.global.ingressClass) -}}
-{{- end -}}
-
 {{- define "keycloak.ingress.host" -}}
 {{- if .Values.ingress.host -}}
 {{- .Values.ingress.host -}}
