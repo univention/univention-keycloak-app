@@ -19,10 +19,11 @@ Please also consider the `upstream release notes
 Version 26.2.5-ucs1
 ===================
 
-Released: TODO
+Released: 19. June 2025
 
 * The app updates to :program:`Keycloak` version 26.2.5
   (https://www.keycloak.org/docs/26.2.0/release_notes/#keycloak-26-2-0).
+  (https://www.keycloak.org/docs/26.2.5/release_notes/#keycloak-26-2-5).
 
 Version 26.1.4-ucs2
 ===================
