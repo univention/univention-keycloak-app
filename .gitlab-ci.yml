@@ -19,7 +19,7 @@ variables:
   KEYCLOAK_DIST: "${PACKAGE_REGISTRY}/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
   # Documentation build uses this variable to determine the artifact output directory.
   DOC_TARGET_VERSION: "${KEYCLOAK_VERSION}"
-  LATEST_RELEASED_KEYCLOAK_VERSION: "26.1.4-ucs1"
+  LATEST_RELEASED_KEYCLOAK_VERSION: "26.2.5-ucs1"
 
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
