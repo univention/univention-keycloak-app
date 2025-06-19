@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.0...v0.2.1) (2025-06-19)
+
+
+### Bug Fixes
+
+* container-ldap and udm-rest-api repositories migration ([4cff503](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/4cff503e7e91a71d17796d3a4d4a60e30a80e3d5)), closes [univention/dev/internal/team-nubus#0](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/0)
+
 ## [0.2.0](https://git.knut.univention.de/univention/components/keycloak-app/compare/v0.1.0...v0.2.0) (2025-05-11)
 
 
