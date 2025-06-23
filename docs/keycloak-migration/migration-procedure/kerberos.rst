@@ -31,7 +31,7 @@ to ensure that Kerberos authentication works properly.
    :name: migration-kerberos-spn-listing
 
    $ eval "$(ucr shell)"
-   $ samba-tool spn add "HTTP/${keycloak_server_sso_fqdn:-ucs-sso-ng.$domainname}"
+   $ samba-tool spn add "HTTP/${keycloak_server_sso_fqdn:-ucs-sso-ng.$domainname}" "krbkeycloak"
 
 
 .. _migration-kerberos-subnets:
