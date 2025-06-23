@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.1...v0.2.2) (2025-06-23)
+
+
+### Bug Fixes
+
+* **docs:** add missing argument for 'samba-tool spn add' ([c2e9970](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/c2e997019c5ee01eb1bbd08852423aa006ed689a))
+
 ## [0.2.1](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.0...v0.2.1) (2025-06-19)
 
 
