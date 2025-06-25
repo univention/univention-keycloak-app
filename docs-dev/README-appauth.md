@@ -2,7 +2,7 @@
 
 ## Prerequisites:
 1. Keycloak has been installed with this docker image:
-   gitregistry.knut.univention.de/univention/components/keycloak-app:branch-jbremer-appauthorization
+   gitregistry.knut.univention.de/univention/dev/projects/keycloak/keycloak-app:branch-jbremer-appauthorization
 2. The UMC has been adjusted to use Keycloak
 3. An App (Nextcloud?) has been adjusted to use Keycloak
 

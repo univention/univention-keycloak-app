@@ -28,8 +28,8 @@ container_scanning:
     TRIVY_CACHE_DIR: ".trivycache/"
     TRIVY_NO_PROGRESS: "false"
     #FULL_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-    #FULL_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:branch-image-tools"
-    FULL_IMAGE_NAME: "gitregistry.knut.univention.de/univention/components/keycloak-app:latest"
+    #FULL_IMAGE_NAME: "gitregistry.knut.univention.de/univention/dev/projects/keycloak/keycloak-app:branch-image-tools"
+    FULL_IMAGE_NAME: "gitregistry.knut.univention.de/univention/dev/projects/keycloak/keycloak-app:latest"
   script:
     - trivy --version
     # cache cleanup is needed when scanning images with the same tags, it does not remove the database
@@ -74,7 +74,7 @@ check_staged_container:
   dependencies:
     - check_released_container
   image:
-    name: gitregistry.knut.univention.de/univention/components/keycloak-app:latest
+    name: gitregistry.knut.univention.de/univention/dev/projects/keycloak/keycloak-app:latest
     entrypoint: [""]
   artifacts:
     when: on_failure
