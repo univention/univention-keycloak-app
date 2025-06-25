@@ -38,7 +38,7 @@
       register: "_ums_init"
       # yamllint disable rule:line-length
       ansible.builtin.shell: |
-        univention-keycloak \
+        /app/univention-keycloak \
           --keycloak-url {{ global_keycloak_url }} \
           --realm {{ global_keycloak_realm }} \
           --binduser {{ global_keycloak_username }} \
@@ -57,9 +57,9 @@
           --no-starttls \
           --no-kerberos \
           --no-saml-assertion-request \
-          --frontchannel-logout-off \
           --enable-user-events \
-          --cors-frame-ancestors="https://{{ global_subdomain_portal }}.{{ global_domain }}"
+          --cors-frame-ancestors="https://{{ global_subdomain_portal }}.{{ global_domain }}" \
+          --force
       # yamllint enable rule:line-length
 
     - name: "Set global access token"

@@ -26,4 +26,7 @@ FROM base
 
 COPY bootstrap-ums-keycloak/ /app
 
+RUN chmod +x entrypoint.sh \
+  && chmod +x univention-keycloak
+
 CMD ["/app/entrypoint.sh"]
