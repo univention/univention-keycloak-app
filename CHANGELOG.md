@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.2...v0.2.3) (2025-06-26)
+
+
+### Bug Fixes
+
+* **pipeline:** fix repository moving ([b43d789](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/b43d78983116953dca43d7e3ff4a35a6ca06ab0e)), closes [univention/dev/ucs#2808](https://git.knut.univention.de/univention/dev/ucs/issues/2808)
+
 ## [0.2.2](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.1...v0.2.2) (2025-06-23)
 
 
