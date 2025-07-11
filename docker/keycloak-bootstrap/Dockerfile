@@ -12,12 +12,12 @@ WORKDIR /app
 # To be done on the next version bump
 RUN apt-get update \
   && apt-get --assume-yes --no-install-recommends install \
-  ca-certificates \
-  python3-ldap \
-  python3-keycloak \
-  python3-requests \
-  python3-defusedxml \
   ansible-core \
+  ca-certificates \
+  python3-defusedxml \
+  python3-keycloak \
+  python3-ldap \
+  python3-requests \
   univention-keycloak-client \
   && apt-get autoremove --assume-yes \
   && rm -rf /var/lib/apt/lists/*
