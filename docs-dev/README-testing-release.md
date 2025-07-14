@@ -36,8 +36,8 @@ jobs for (https://jenkins2022.knut.univention.de/job/UCS-5.0/job/UCS-5.0-3/view/
 ## image_build
 
 Builds the keycloak image and pushes it in our local gitlabe registry.
-The name of the image if `gitregistry.knut.univention.de/univention/dev/projects/keycloak/keycloak-app:$NAME_OF_BRANCH`
-or `gitregistry.knut.univention.de/univention/dev/projects/keycloak/keycloak-app:latest` for the `main` branch.
+The name of the image if `gitregistry.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/keycloak:$NAME_OF_BRANCH`
+or `gitregistry.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/keycloak:latest` for the `main` branch.
 
 The idea is that every MR has its own image and QA can use this
 to setup an environment for testing.
