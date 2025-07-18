@@ -8,7 +8,7 @@ include:
     file:
       - renovatebot/renovate.gitlab-ci.yml
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.42.1"
+    ref: "v1.44.0"
     file:
       - "defaults/stages.yaml"
 

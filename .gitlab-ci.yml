@@ -23,12 +23,13 @@ variables:
 
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.42.1"
+    ref: "v1.44.0"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
       - "jobs/semantic-release-env.yaml"
       - "jobs/container-build-external.yaml"
+      - "templates/sonarqube.yaml"
 
   - project: "univention/infrastructure/docker-services"
     ref: "master"
@@ -68,7 +69,7 @@ push-image-external:
   parallel:
     matrix: *publish-matrix
 
-test-udm-unit-and-integration::
+test-udm-unit-and-integration:
   needs: []
   stage: test
   extends: .dind
@@ -104,3 +105,9 @@ test-udm-unit-and-integration::
     when: "always"
     expose_as: "docker compose server logs"
 
+sonarqube:
+  extends: .sonarqube
+  needs: []
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == '${CI_DEFAULT_BRANCH}'
