@@ -174,7 +174,7 @@ false
 			<td>containerSecurityContext.readOnlyRootFilesystem</td>
 			<td>bool</td>
 			<td><pre lang="json">
-false
+true
 </pre>
 </td>
 			<td>Mounts the container's root filesystem as read-only.</td>

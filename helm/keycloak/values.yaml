@@ -163,7 +163,7 @@ containerSecurityContext:
     type: "RuntimeDefault"
 
   # -- Mounts the container's root filesystem as read-only.
-  readOnlyRootFilesystem: false
+  readOnlyRootFilesystem: true
 
   # -- Run container as user.
   runAsNonRoot: true

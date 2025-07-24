@@ -38,13 +38,12 @@ results:
     kind: "StatefulSet"
     rule: "require-health-and-liveness-check"
     result: "pass"
-  # Keycloak needs to write to the filesystem
-  #- resources:
-  #    - "release-name-keycloak"
-  #  policy: "require-containersecuritycontext"
-  #  kind: "StatefulSet"
-  #  rule: "require-ro-rootfs"
-  #  result: "pass"
+  - resources:
+      - "release-name-keycloak"
+    policy: "require-containersecuritycontext"
+    kind: "StatefulSet"
+    rule: "require-ro-rootfs"
+    result: "pass"
   - resources:
       - "release-name-keycloak"
     policy: "require-containersecuritycontext"
