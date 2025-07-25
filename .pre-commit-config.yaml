@@ -100,4 +100,3 @@ repos:
       - id: "check-issue-reference"
         name: "Check issue reference"
 
-
