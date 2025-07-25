@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.4...v0.2.5) (2025-07-25)
+
+
+### Bug Fixes
+
+* trigger release ([55a56eb](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/55a56eb4749da45252fea182059953fdd25b4be0)), closes [univention/dev/internal/team-nubus#1355](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1355)
+
 ## [0.2.4](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.3...v0.2.4) (2025-07-14)
 
 
