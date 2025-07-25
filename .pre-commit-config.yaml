@@ -86,3 +86,18 @@ repos:
         alias: "autopep8-fix"
         stages: [ manual ]
         args: ["-i"]
+
+  # "Commit messages"
+  - repo: "https://github.com/compilerla/conventional-pre-commit"
+    rev: "v2.4.0"
+    hooks:
+      - id: "conventional-pre-commit"
+        stages: ["commit-msg"]
+
+  - repo: "https://git.knut.univention.de/univention/infrastructure/pre-commit-hooks/check-issue-reference"
+    rev: "v1.0.1"
+    hooks:
+      - id: "check-issue-reference"
+        name: "Check issue reference"
+
+

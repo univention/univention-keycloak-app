@@ -30,6 +30,7 @@ include:
       - "jobs/semantic-release-env.yaml"
       - "jobs/container-build-external.yaml"
       - "templates/sonarqube.yaml"
+      - "jobs/lint-commit-messages.yaml"
 
   - project: "univention/infrastructure/docker-services"
     ref: "master"
