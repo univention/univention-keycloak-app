@@ -38,7 +38,7 @@
       register: "_ums_init"
       # yamllint disable rule:line-length
       ansible.builtin.shell: |
-        /app/univention-keycloak \
+        univention-keycloak \
           --keycloak-url {{ global_keycloak_url }} \
           --realm {{ global_keycloak_realm }} \
           --binduser {{ global_keycloak_username }} \
