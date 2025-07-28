@@ -70,7 +70,7 @@
       loop_control:
         loop_var: "ldapMapper"
 
-    - name: "Set global access token"
+    - name: "Set global access token for login links"
       ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"
     - name: "Looping to create login links"
       ansible.builtin.include_tasks: "include_set_loginlinks.yml"
@@ -78,7 +78,7 @@
       loop_control:
         loop_var: "loginLink"
 
-    - name: "Set global access token"
+    - name: "Set global access token for 2FA"
       ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"
     - name: "Enable Two-Factor-Authentication"
       when: "global_2fa.enabled"

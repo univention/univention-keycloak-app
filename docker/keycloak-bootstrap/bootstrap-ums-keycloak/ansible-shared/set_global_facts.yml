@@ -6,7 +6,7 @@
     global_ldap_mappers: "{{ lookup('file', '/bootstrap/ldap.mappers.yaml') | from_yaml }}"
     global_login_links: "{{ lookup('file', '/bootstrap/loginlinks.yaml') | from_yaml }}"
     global_2fa: "{{ lookup('file', '/bootstrap/2fa.yaml') | from_yaml }}"
-    global_hide_sensitive_output: "{{ lookup('ansible.builtin.env',  'HIDE_SENSITIVE_OUTPUT', default=true) }}"
+    global_hide_sensitive_output: "{{ lookup('ansible.builtin.env', 'HIDE_SENSITIVE_OUTPUT', default=true) }}"
 
 - name: "Global: Set sensitive variables"
   ansible.builtin.set_fact:
