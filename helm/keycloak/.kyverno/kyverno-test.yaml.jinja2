@@ -28,6 +28,12 @@ resources:
 results:
   - resources:
       - "release-name-keycloak"
+    policy: "require-requests-limits"
+    kind: "StatefulSet"
+    rule: "validate-resources"
+    result: "pass"
+  - resources:
+      - "release-name-keycloak"
     policy: "disallow-default-serviceaccount"
     kind: "StatefulSet"
     rule: "disallow-default-serviceAccountName"
