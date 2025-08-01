@@ -71,16 +71,14 @@ spec:
         {{- with .Values.extraEnvVars }}
           {{- . | toYaml | nindent 10 }}
         {{- end }}
-        command: ["/usr/bin/python3", "/scripts/wait-for-keycloak.py"]
+        command: ["wait-for-keycloak.py"]
         {{- if .Values.resources }}
         resources: {{- include "common.tplvalues.render" (dict "value" .Values.resources "context" .) | nindent 10 }}
         {{- end }}
+        {{- if .Values.extraVolumes }}
         volumeMounts:
-          - name: "wait-for-keycloak"
-            mountPath: "/scripts"
-          {{- if .Values.extraVolumes }}
           {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" .) | nindent 10 }}
-          {{- end }}
+        {{- end }}
       containers:
         - name: "univention-keycloak-bootstrap"
           {{- if .Values.containerSecurityContext.enabled }}
