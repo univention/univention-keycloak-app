@@ -14,7 +14,7 @@ this project adheres to `Semantic Versioning
 <https://semver.org/spec/v2.0.0.html>`_.
 
 Please also consider the `upstream release notes
-<https://www.keycloak.org/docs/latest/release_notes/index.html>`_.
+<https://www.keycloak.org/docs/latest/release_notes>`_.
 
 Version 26.3.1-ucs1
 ===================
@@ -22,7 +22,7 @@ Version 26.3.1-ucs1
 Released: 14. Aug 2025
 
 * The app updates to :program:`Keycloak` version 26.3.1
-  (https://www.keycloak.org/docs/26.3.1/release_notes/index.html#keycloak-26-3-1).
+  (https://www.keycloak.org/docs/26.3.1/release_notes).
   (https://www.keycloak.org/2025/07/keycloak-2631-released).
 
 * This version fixes CVE-2025-7365 and CVE-2025-7784.
@@ -33,8 +33,8 @@ Version 26.2.5-ucs1
 Released: 19. June 2025
 
 * The app updates to :program:`Keycloak` version 26.2.5
-  (https://www.keycloak.org/docs/26.2.0/release_notes/#keycloak-26-2-0).
-  (https://www.keycloak.org/docs/26.2.5/release_notes/#keycloak-26-2-5).
+  (https://www.keycloak.org/docs/26.2.0/release_notes).
+  (https://www.keycloak.org/docs/26.2.5/release_notes).
 
 Version 26.1.4-ucs2
 ===================
@@ -50,7 +50,7 @@ Version 26.1.4-ucs1
 Released: 22. April 2025
 
 * The app updates to :program:`Keycloak` version 26.1.4
-  (https://www.keycloak.org/docs/26.1.4/release_notes/#keycloak-26-1-0).
+  (https://www.keycloak.org/docs/26.1.4/release_notes).
 
 * This version of Keycloak requires higher versions for the database backends:
 
