@@ -3,14 +3,14 @@ ID = keycloak
 Code = 3O
 Version = 26.3.1-ucs1
 Name = Keycloak
-DockerScriptRestoreDataAfterSetup =
-DockerScriptStoreData =
-DockerScriptUpdateAvailable =
-DockerScriptRestoreDataBeforeSetup =
-DockerScriptUpdatePackages =
-DockerScriptUpdateAppVersion =
-DockerScriptUpdateRelease =
-DockerScriptSetup =
+DockerScriptRestoreDataAfterSetup = 
+DockerScriptStoreData = 
+DockerScriptUpdateAvailable = 
+DockerScriptRestoreDataBeforeSetup = 
+DockerScriptUpdatePackages = 
+DockerScriptUpdateAppVersion = 
+DockerScriptUpdateRelease = 
+DockerScriptSetup = 
 LogoDetailPage = logo_detail_page.svg
 Description = SAML and OpenID Connect Identity Provider
 AppCategories = Identity Management, Infrastructure
@@ -33,7 +33,7 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	</p>
 	</div>
 PortsExclusive = 8180
-SupportedUcsVersions = 5.0-10 errata1248, 5.1-0, 5.2-1 errata67, 5.2-0
+SupportedUcsVersions = 5.0-10 errata1309, 5.1-0, 5.2-2 errata163
 ServerRole = domaincontroller_master, domaincontroller_backup
 Database = postgresql
 DatabaseUser = keycloak
