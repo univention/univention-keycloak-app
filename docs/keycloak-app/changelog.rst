@@ -19,13 +19,13 @@ Please also consider the `upstream release notes
 Version 26.3.1-ucs1
 ===================
 
-Released: 24. July 2025
+Released: 14. Aug 2025
 
 * The app updates to :program:`Keycloak` version 26.3.1
-  (https://www.keycloak.org/docs/26.3.0/release_notes/index.html#keycloak-26-3-0).
+  (https://www.keycloak.org/docs/26.3.1/release_notes/index.html#keycloak-26-3-1).
+  (https://www.keycloak.org/2025/07/keycloak-2631-released).
 
-* This version fixes CVE-2025-7365.
-
+* This version fixes CVE-2025-7365 and CVE-2025-7784.
 
 Version 26.2.5-ucs1
 ===================
