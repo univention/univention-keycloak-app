@@ -45,11 +45,11 @@ metadata:
   {{- end }}
 data:
   ldap.mappers.yaml: |
-    {{ .Values.bootstrap.ldapMappers | toYaml | nindent 4 }}
+    {{- .Values.bootstrap.ldapMappers | toYaml | nindent 4 }}
   loginlinks.yaml: |
-  {{ if gt (len .Values.bootstrap.loginLinks) 0 }}
+  {{- if gt (len .Values.bootstrap.loginLinks) 0 }}
     {{ .Values.bootstrap.loginLinks | toYaml | nindent 4 }}
-  {{ else }}
+  {{- else }}
     - link_number: 1
       language: "de"
       description: "Passwort vergessen?"
@@ -58,9 +58,9 @@ data:
       language: "en"
       description: "Forgot password?"
       href: "https://{{ .Values.global.subDomains.portal }}.{{ .Values.global.domain }}/univention/portal/#/selfservice/passwordforgotten"
-  {{ end }}
+  {{- end }}
   2fa.yaml: |
-    {{ .Values.bootstrap.twoFactorAuthentication | toYaml | nindent 4 }}
+    {{- .Values.bootstrap.twoFactorAuthentication | toYaml | nindent 4 }}
 ...
 
 ---
