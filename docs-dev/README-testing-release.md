@@ -93,39 +93,35 @@ Then add the following to your `/etc/hosts`:
 
 # Release of App/Documentation
 
-The script update-appcenter-test.sh can be used to build and upload the files
-from the repository for the latest test app center app version
+Use the script [update-appcenter-test.sh](./update-appcenter-test.sh) to upload the App Center files under [/app](./app/) from this repo to the Provider Portal to keep both sides in sync.
 
 Copy this block to the release issue and do all of them:
 
-1. [ ] Add an appropriate changelog entry to
- [docs/keycloak-app/changelog.rst](docs/keycloak-app/changelog.rst) and follow the recommendation at https://keepachangelog.com/en/1.0.0/.
-1. [ ] run `update-appcenter-test.sh`
-1. [ ] update the docker image names in [Jenkins](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/Apps/job/keycloak/job/App%20Autotest%20MultiEnv/)
+1. [ ] Update [docs/keycloak-app/changelog.rst](docs/keycloak-app/changelog.rst). (list CVEs in case any were fixed and add Keycloak links in case of a new Keycloak version - use previous entries as guideline). Follow the recommendation at https://keepachangelog.com/en/1.0.0/)
+1. [ ] Run [update-appcenter-test.sh](./update-appcenter-test.sh). (Uploads App Center files under [/app](./app/) from this repo to Provider Portal)
+1. [ ] Run `docker-update` of [this Jenkins job](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/Apps/job/keycloak/job/App%20Autotest%20MultiEnv/). (Uncheck all other parts of that job before running)
     * NOTE: This job checks whether the target image already exists (e.g., `docker.software-univention.de/keycloak-keycloak:26.1.4-ucs1`) and fails in this case. So you cannot run this command twice. Unless you use the checkmark in the job "Overwrite".
-1. [ ] run the [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/UCS-5.0-9/job/Keycloak%20Product%20Tests/)
-1. [ ] If documentation for a new feature or for a change is part of the regular
- text in the documentation, highlight it with the [versionadded](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-versionadded),
+1. [ ] Run [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/UCS-5.0-9/job/Keycloak%20Product%20Tests/)
+1. [ ] Highlight features in the documentation with [versionadded](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-versionadded),
  [versionchanged](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-versionchanged)
  or [deprecated](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-deprecated)
    directive.
-1. [ ] Do the following steps only in case of a new Keycloak version:
-   * [ ] Check the keycloak version in the documentation links in `docs/bibliography.bib`
-   * [ ] When you release a new Keycloak version and mention it in the changelog, also add a link to the Keycloak changelog for that dedicated version. See the example for 20.0.1.
-   * [ ] Update the `DOC_TARGET_VERSION` variable in [.gitlab-ci.yml](.gitlab-ci.yml) to the new app version. The variable makes sure that the new app version has a dedicated documentation.
-   * [ ] After running the *production* job for the documentation in the pipeline, cancel the auto-merge of your MR and update the symlink `latest` to the newest version in the [keycloak-app directory of the docs.univention.de repository](https://git.knut.univention.de/univention/docs.univention.de/-/tree/master/keycloak-app).
-1. [ ] release the app:
-   * go to omar
-   * `cd /var/univention/buildsystem2/mirror/appcenter`
-   * `./copy_from_appcenter.test.sh 5.0 <Component ID>` Component ID can be seen in the Provider Portal e.g. keycloak_20240815142626
-   * `sudo update_mirror.sh --verbose appcenter`
-1. [ ] check released app (currently manual testing)
-1. [ ] Write mail to app-announcement
 
-After the release we need to create a new "test" version in the appcenter for
-our tests.
-1. [ ] update `Version` in `app/ini`
-1. [ ] run `update-appcenter-test.sh -n` to create a new version in the test appcenter
+1. [ ] Do the following steps only in case of a new Keycloak version:
+   * [ ] Update [docs/bibliography.bib](docs/bibliography.bib). (Version numbers)
+   * [ ] Update [.gitlab-ci.yml](./.gitlab-ci.yml). (Version numbers)
+   * [ ] Generate MR for [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de) via pipeline in Keycloak repo.  
+         How-to: In GitLab (Keycloak repo, main branch), navigate to the pipeline of your commit. Open the `doc-pipeline` stage. Execute `docs-merge-to-one-artifact` job manually. This action will automatically create a merge request in [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de). Next, find your MR [here](https://git.knut.univention.de/univention/dev/docs/docs.univention.de/-/merge_requests) and **cancel the auto-merge**. Manually update the `latest` symlink in the `keycloak-app/` directory to link to the new Keycloak version -> `ln -s 26.3.1 latest`. Add that to your MR, merge, done.
+   * [ ] Update [dev/docs/docs-overview-pages](https://git.knut.univention.de/univention/dev/docs/docs-overview-pages). -> [guideline](https://git.knut.univention.de/univention/dev/docs/docs-overview-pages/-/merge_requests/100/diffs)
+   * [ ] Update [dev/docs/Docsearch](https://git.knut.univention.de/univention/dev/docs/docsearch). -> [guideline](https://git.knut.univention.de/univention/dev/docs/docsearch/-/merge_requests/31/diffs)
+
+1. [ ] Release the app:
+   * **On omar**, navigate to `/var/univention/buildsystem2/mirror/appcenter`
+   * Execute `./copy_from_appcenter.test.sh 5.0 <Component ID>`. The component ID looks like this: `keycloak_20240815142626` and can be found in the Provider Portal or [here](http://appcenter-test.software-univention.de/meta-inf/5.0/keycloak/), in the name of the ini file of your app version.
+   * Execute `sudo update_mirror.sh --verbose appcenter`
+1. [ ] Check released app (currently manual testing)
+1. [ ] Write mail to `app-announcement@univenton.de`. (use previous Keycloak release mails as guideline)
+1. [ ] After the release, update `Version` in `app/ini` and run `update-appcenter-test.sh -n` to create a new version in the test appcenter.
 
 # Documentation
 
