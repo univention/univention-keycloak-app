@@ -110,8 +110,10 @@ Copy this block to the release issue and do all of them:
 1. [ ] Do the following steps only in case of a new Keycloak version:
    * [ ] Update [docs/bibliography.bib](docs/bibliography.bib). (Version numbers)
    * [ ] Update [.gitlab-ci.yml](./.gitlab-ci.yml). (Version numbers)
-   * [ ] Generate MR for [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de) via pipeline in Keycloak repo.  
-         How-to: In GitLab (Keycloak repo, main branch), navigate to the pipeline of your commit. Open the `doc-pipeline` stage. Execute `docs-merge-to-one-artifact` job manually. This action will automatically create a merge request in [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de). Next, find your MR [here](https://git.knut.univention.de/univention/dev/docs/docs.univention.de/-/merge_requests) and **cancel the auto-merge**. Manually update the `latest` symlink in the `keycloak-app/` directory to link to the new Keycloak version -> `ln -s 26.3.1 latest`. Add that to your MR, merge, done.
+   * [ ] Generate MR for [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de) via pipeline in Keycloak repo.
+
+        How-to: In GitLab (Keycloak repo, main branch), navigate to the pipeline of your commit. Open the `doc-pipeline` stage. Execute `docs-merge-to-one-artifact` job manually. This action will automatically create a merge request in [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de). Next, find your MR [here](https://git.knut.univention.de/univention/dev/docs/docs.univention.de/-/merge_requests) and **cancel the auto-merge**. Manually update the `latest` symlink in the `keycloak-app/` directory to link to the new Keycloak version -> `ln -s 26.3.1 latest`. Add that to your MR, merge, done.
+
    * [ ] Update [dev/docs/docs-overview-pages](https://git.knut.univention.de/univention/dev/docs/docs-overview-pages). -> [guideline](https://git.knut.univention.de/univention/dev/docs/docs-overview-pages/-/merge_requests/100/diffs). (also update translations (po files) via commands defined in `navigation/Makefile` there.)
    * [ ] Update [dev/docs/Docsearch](https://git.knut.univention.de/univention/dev/docs/docsearch). -> [guideline](https://git.knut.univention.de/univention/dev/docs/docsearch/-/merge_requests/31/diffs)
 
