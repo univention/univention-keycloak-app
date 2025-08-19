@@ -123,7 +123,6 @@ Copy this block to the release issue and do all of them:
    * Execute `sudo update_mirror.sh --verbose appcenter`
 1. [ ] Check released app (currently manual testing)
 1. [ ] Write mail to `app-announcement@univenton.de`. (use previous Keycloak release mails as guideline)
-1. [ ] After the release, update `Version` in `app/ini` and run `update-appcenter-test.sh -n` to create a new version in the test appcenter.
 
 # Documentation
 
