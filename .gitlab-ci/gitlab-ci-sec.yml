@@ -11,6 +11,12 @@ include:
     ref: "v1.44.0"
     file:
       - "defaults/stages.yaml"
+      - "jobs/semantic-release-env.yaml"
+
+.pre-semantic-release:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: "always"
 
 # TODO just a test, replace with a propper job
 container_scanning:
