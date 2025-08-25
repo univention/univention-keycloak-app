@@ -37,7 +37,7 @@ helm uninstall keycloak
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | ^2.x.x |
+| oci://docker.io/bitnamicharts | common | ^2.x.x |
 
 ## Values
 
