@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.6](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.5...v0.2.6) (2025-08-29)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.44.2 ([2698acd](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/2698acde889175b244779170266f1edb10a52c2e)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/0)
+
 ## [0.2.5](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.4...v0.2.5) (2025-07-25)
 
 
