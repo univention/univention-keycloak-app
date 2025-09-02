@@ -339,25 +339,22 @@ use the following steps:
       $logoff_uri = "$sso_url/realms/$realm/protocol/saml"
       $pass = ConvertTo-SecureString -String "$password" -AsPlainText -Force
       $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $username, $pass
-      $o365cred = Get-Credential $credential
 
-      Install-Module MSOnline
-      Import-Module MSOnline
-      Connect-MsolService -Credential $o365cred
+      Install-Module PowerShellGet -Force
+      Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+      Install-Module Microsoft.Graph -Scope AllUsers -Repository PSGallery -Force
+      Install-Module Microsoft.Graph.Beta -Repository PSGallery -Force
 
-      Set-MsolDomainAuthentication -DomainName "$domain" -Authentication Managed
-      Set-MsolDomainAuthentication `
-          -DomainName "$domain" `
-          -FederationBrandName "UCS" `
-          -Authentication Federated `
-          -ActiveLogOnUri "$logon_uri" `
-          -PassiveLogOnUri "$passive_logon_uri" `
-          -SigningCertificate "$signing_cert" `
-          -IssuerUri "$issuer_uri" `
-          -LogOffUri "$logoff_uri" `
-          -PreferredAuthenticationProtocol SAMLP
-
-      Get-MsolDomain
+      Connect-MgGraph -Scopes "Domain.ReadWrite.All", "Directory.ReadWrite.All" -ClientSecretCredential "$credential";
+      Set-MgDomainAuthentication -DomainId "$domain" -AuthenticationMethod Managed;
+      Set-MgDomainAuthentication -DomainId "$domain" -AuthenticationMethod Federated -FederationBrandName "UCS" `
+         -ActiveSignInUri "$logon_uri" `
+         -PassiveSignInUri "$passive_logon_uri" `
+         -SigningCertificate "$signing_cert" `
+         -IssuerUri "$issuer_uri" `
+         -LogOffUri "$logoff_uri" `
+         -PreferredAuthenticationProtocol "SAMLP"
+      Get-MgDomain
       Pause
 
 #. To change the link in the UCS portal entry *Microsoft 365 Login* for the
