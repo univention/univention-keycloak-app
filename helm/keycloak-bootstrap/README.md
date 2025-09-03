@@ -19,7 +19,7 @@ helm install my-release ${CI_PROJECT_NAME}/keycloak-bootstrap
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://docker.io/bitnamicharts | common | ^2.x.x |
+| oci://artifacts.software-univention.de/nubus/charts | nubus-common | 0.21.0 |
 
 ## Values
 
@@ -80,6 +80,7 @@ helm install my-release ${CI_PROJECT_NAME}/keycloak-bootstrap
 | ldap.connection.tls.enabled | bool | `false` | Enable TLS. |
 | ldap.connection.tls.key | object | `{"secretKeyRef":{"key":"tls.key","name":""}}` | TLS key secret reference. |
 | nodeSelector | object | `{}` | Node labels for pod assignment Ref: https://kubernetes.io/docs/user-guide/node-selection/ |
+| oidc | object | `{"rp":{"umcserver":{"existingSecret":{"keyMapping":{"password":"password"},"name":"{{ printf \"%s-oidc-rp-umc-server-credentials\" .Release.Name }}"},"password":null}}}` | Configuration for Open ID Connect Clients |
 | podAnnotations | object | `{}` | Pod Annotations. Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
 | podLabels | object | `{}` | Pod Labels. Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
 | podSecurityContext.enabled | bool | `false` | Enable security context. |

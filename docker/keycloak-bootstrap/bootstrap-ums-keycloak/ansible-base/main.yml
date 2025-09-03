@@ -63,6 +63,8 @@
       # yamllint enable rule:line-length
 
     - name: "Create OIDC Relying Party"
+      changed_when: "_oidc_rp_init.rc == 0"
+      register: "_oidc_rp_init"
       # yamllint disable rule:line-length
       ansible.builtin.shell: |
         univention-keycloak \

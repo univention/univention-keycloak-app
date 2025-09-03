@@ -17,7 +17,7 @@ version: "0.0.1"
 appVersion: "0.0.1"
 
 dependencies:
-  - name: "common"
-    repository: "oci://docker.io/bitnamicharts"
-    version: "^2.x.x"
+  - name: "nubus-common"
+    version: "0.21.0"
+    repository: "oci://artifacts.software-univention.de/nubus/charts"
 ...
