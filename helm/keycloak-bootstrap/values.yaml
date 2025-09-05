@@ -292,7 +292,7 @@ oidc:
     umcserver:
       password: null
       existingSecret:
-        name: '{{ printf "%s-oidc-rp-umc-server-credentials" .Release.Name }}'
+        name: null
         keyMapping:
-          password: "password"
+          password: null
 ...

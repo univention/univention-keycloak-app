@@ -26,5 +26,4 @@ keycloak:
       keyMapping:
         adminPassword: "admin_password"
     realm: "myrealm"
-
 ...
