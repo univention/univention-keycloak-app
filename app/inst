@@ -169,11 +169,11 @@ if ! is_ucr_false keycloak/auto-migration; then
 	univention-keycloak "$@" --binduser "${keycloak_admin_user:-admin}" upgrade-config || die
 fi
 
-for umc in $(univention-ldapsearch -LLL univentionService="Univention Management Console" displayName | sed -n 's/displayName: //p' | tr ";" "\n")
+for umc in $(univention-ldapsearch -LLL univentionService="Univention Management Console" displayName associatedDomain | ldapsearch-wrapper | grep -E '^(displayName:|associatedDomain:|$)' | cut -d' ' -f2- | tr '\n' . | sed -re 's/\.\./\n/g')
 do
-	univention-keycloak "$@" --binduser "${keycloak_admin_user:-admin}" saml/sp create --metadata-url="https://$umc.$domainname/univention/saml/metadata" --umc-uid-mapper
+	univention-keycloak "$@" --binduser "${keycloak_admin_user:-admin}" saml/sp create --metadata-url="https://$umc/univention/saml/metadata" --umc-uid-mapper
 	if [ "$?" != "0" ]; then
-		echo "Error creating a saml serviceprovider for the umc of $umc.$domainname"
+		echo "Error creating a saml serviceprovider for the umc of $umc"
 	fi
 
 done
