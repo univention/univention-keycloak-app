@@ -37,7 +37,7 @@ helm uninstall keycloak
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://docker.io/bitnamicharts | common | ^2.x.x |
+| oci://artifacts.software-univention.de/nubus/charts | nubus-common | 0.24.2 |
 
 ## Values
 
