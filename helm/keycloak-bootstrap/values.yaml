@@ -290,9 +290,10 @@ config:
 oidc:
   rp:
     umcserver:
-      password: null
-      existingSecret:
-        name: null
-        keyMapping:
-          password: null
+      clientSecret:
+        password: null
+        existingSecret:
+          name: null
+          keyMapping:
+            password: null
 ...

@@ -75,7 +75,7 @@
         oidc/rp create \
           --app-url "https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/" \
           --host-fqdn "{{ global_subdomain_portal }}.{{ global_domain }}" \
-          --client-secret "{{ global_umc_oidc_password }}" \
+          --client-secret "{{ global_umc_oidc_client_secret }}" \
           --name="UMC on {{ global_subdomain_portal }}.{{ global_domain }}" \
           --description="Univention Management Console on {{ global_subdomain_portal }}.{{ global_domain }}" \
           --direct-access-grants \

@@ -106,20 +106,17 @@ spec:
                 secretKeyRef:
                   name: {{ tpl .Values.ldap.auth.existingSecret.name . }}
                   key: {{ include "common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
-            - name: UMC_OIDC_PASSWORD
+            - name: UMC_OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.oidc.rp.umcserver.existingSecret "defaultNameSuffix" "oidc-rp-umc-server" "context" .) | quote }}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.oidc.rp.umcserver.existingSecret "key" "password") | quote }}
+                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.oidc.rp.umcserver.clientSecret.existingSecret "defaultNameSuffix" "oidc-rp-umc-server" "context" .) | quote }}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.oidc.rp.umcserver.clientSecret.existingSecret "key" "password") | quote }}
           {{- with .Values.extraEnvVars }}
             {{- . | toYaml | nindent 12 }}
           {{- end }}
           volumeMounts:
             - mountPath: "/bootstrap"
               name: "bootstrap-volume"
-            - mountPath: "/credentials/oidc-rp-umc-server.secret"
-              name: "oidc-rp-umc-server-credentials-volume"
-              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.oidc.rp.umcserver.existingSecret "key" "password") | quote }}
             - mountPath: "/credentials/ldapread.secret"
               name: "ldap-credentials-volume"
               subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
@@ -139,9 +136,6 @@ spec:
         - name: "wait-for-keycloak"
           configMap:
             name: {{ printf "%s-init" (include "common.names.fullname" .) }}
-        - name:  "oidc-rp-umc-server-credentials-volume"
-          secret:
-            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.oidc.rp.umcserver.existingSecret "defaultNameSuffix" "oidc-rp-umc-server" "context" .) | quote }}
         - name:  "keycloak-credentials-volume"
           secret:
             secretName: {{ tpl .Values.keycloak.auth.existingSecret.name . }}
