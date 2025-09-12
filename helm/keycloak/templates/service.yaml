@@ -10,19 +10,11 @@ metadata:
   name: "{{ include "common.names.fullname" . }}"
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
-    {{- include "common.labels.standard" . | nindent 4 }}
-    {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" . ) | nindent 4 }}
-    {{- end }}
-  {{- if or .Values.service.annotations .Values.commonAnnotations }}
-  annotations:
-    {{- if .Values.service.annotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.service.annotations "context" . ) | nindent 4 }}
-    {{- end }}
-    {{- if .Values.commonAnnotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" . ) | nindent 4 }}
-    {{- end }}
-  {{- end }}
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 4 }}
+  {{- include "nubus-common.annotations.render" ( dict
+    "values" ( list .Values.service.annotations .Values.additionalAnnotations )
+    "context" . )
+    | nindent 2 }}
 spec:
   type: "{{ .Values.service.type }}"
   {{- if .Values.service.clusterIP }}

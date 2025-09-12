@@ -8,19 +8,15 @@ apiVersion: "{{ include "common.capabilities.ingress.apiVersion" . }}"
 kind: Ingress
 metadata:
   name: "{{ include "common.names.fullname" . }}"
-  labels:
-    {{- include "common.labels.standard" . | nindent 4 }}
-    {{- if .Values.additionalLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
-    {{- end }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 4 }}
   annotations:
-    {{- if .Values.additionalAnnotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
-    {{- end }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.ingress.annotations  "context" .) | nindent 4 }}
     {{- if .Values.ingress.certManager.enabled }}
     cert-manager.io/{{ .Values.ingress.certManager.issuerRef.kind | kebabcase }}: "{{ coalesce .Values.global.certManagerIssuer .Values.ingress.certManager.issuerRef.name }}"
     {{- end }}
+    {{- include "nubus-common.annotations.entries" ( dict
+      "values" ( list .Values.ingress.annotations .Values.additionalAnnotations )
+      "context" . )
+      | nindent 4 }}
 spec:
   {{- if or .Values.ingress.ingressClassName .Values.global.ingressClass }}
   ingressClassName: {{ coalesce .Values.ingress.ingressClassName .Values.global.ingressClass | quote }}

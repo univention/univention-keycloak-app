@@ -16,7 +16,7 @@ global:
     keycloak: "id"
 
   # -- Container registry address.
-  imageRegistry: "docker.software-univention.de"
+  imageRegistry: "artifacts.software-univention.de"
 
   # -- Credentials to fetch images from private registry
   # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -25,6 +25,19 @@ global:
   #   - "docker-registry"
   #
   imagePullSecrets: []
+
+  # -- Define an ImagePullPolicy.
+  #
+  # Ref.: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
+  #
+  # "IfNotPresent" => The image is pulled only if it is not already present locally.udm-rest-api.secretRef
+  # "Always" => Every time the kubelet launches a container, the kubelet queries the container image registry to
+  #             resolve the name to an image digest. If the kubelet has a container image with that exact digest cached
+  #             locally, the kubelet uses its cached image; otherwise, the kubelet pulls the image with the resolved
+  #             digest, and uses that image to launch the container.
+  # "Never" => The kubelet does not try fetching the image. If the image is somehow already present locally, the
+  #            kubelet attempts to start the container; otherwise, startup fails.
+  imagePullPolicy: null
 
   postgresql:
     connection:
@@ -191,11 +204,9 @@ fullnameOverride: ""
 # Container image section.
 image:
   # -- Container registry address. This setting has higher precedence than global.registry.
-  registry: "artifacts.software-univention.de"
-
+  registry: null
   # -- Container repository string.
   repository: "nubus/images/keycloak"
-
   # -- Define an ImagePullPolicy.
   #
   # Ref.: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
@@ -208,8 +219,7 @@ image:
   # "Never" => The kubelet does not try fetching the image. If the image is somehow already present locally, the
   #            kubelet attempts to start the container; otherwise, startup fails
   #
-  imagePullPolicy: "IfNotPresent"
-
+  pullPolicy: null
   # -- Define image tag.
   tag: "0.2.5@sha256:499006904d262bdd334b54583c359c7e34b521697d5fda32ea977d856bfa93d2"
 

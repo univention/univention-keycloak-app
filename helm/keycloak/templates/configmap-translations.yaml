@@ -8,16 +8,11 @@ metadata:
   name: "{{ include "common.names.fullname" . }}-translations"
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
-    {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
-    {{- $uiLabels := dict "app.kubernetes.io/name" (include "common.names.fullname" .) }}
-    {{- $mergedLabels := merge $uiLabels $commonLabels}}
-    {{- toYaml $mergedLabels | nindent 4 }}
-    {{- if .Values.additionalLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
-    {{- end }}
-  {{- if .Values.additionalAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
-  {{- end }}
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 4 }}
+  {{- include "nubus-common.annotations.render" ( dict
+    "values" ( list .Values.additionalAnnotations )
+    "context" . )
+    | nindent 2 }}
 data:
   messages_de.properties: |
     tryAgain={{ .Values.keycloak.login.messages.de.tryAgain }}
