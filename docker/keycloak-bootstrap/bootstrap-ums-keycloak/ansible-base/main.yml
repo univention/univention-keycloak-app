@@ -58,8 +58,7 @@
           --no-kerberos \
           --no-saml-assertion-request \
           --enable-user-events \
-          --cors-frame-ancestors="https://{{ global_subdomain_portal }}.{{ global_domain }}" \
-          --force
+          --cors-frame-ancestors="https://{{ global_subdomain_portal }}.{{ global_domain }}"
       # yamllint enable rule:line-length
 
     - name: "Create OIDC Relying Party"
