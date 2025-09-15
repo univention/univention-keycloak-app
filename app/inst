@@ -2,7 +2,7 @@
 #
 # App join script
 #
-# Copyright 2021-2024 Univention GmbH
+# Copyright 2021-2025 Univention GmbH
 #
 # http://www.univention.de/
 #
@@ -31,7 +31,7 @@
 
 ## joinscript api: bindpwdfile
 
-VERSION="7"
+VERSION="8"
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh

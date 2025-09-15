@@ -8,7 +8,8 @@ print('''
 
 access to filter="(&(univentionObjectType=settings/data)(cn=keycloak))" attrs=univentionData
    by group/univentionGroup/uniqueMember="cn=%s,cn=groups,%s" read
-   by set="user/objectClass & [univentionDomainController]" read
+   by set="user/univentionObjectType & [computer/domaincontroller_master]" read
+   by set="user/univentionObjectType & [computer/domaincontroller_backup]" read
    by * none
 ''' % (domain_admins, base))
 @!@

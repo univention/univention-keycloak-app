@@ -16,6 +16,12 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.3.3-ucs2
+===================
+Released: 29. Sep 2025
+* This version updates the ACL that control the access
+  to the database password.
+
 Version 26.3.3-ucs1
 ===================
 
