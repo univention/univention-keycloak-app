@@ -93,6 +93,7 @@
           --pkce-code-challenge-method="S256" \
           --default-scopes="openid" \
           --web-origins="+" \
+          --use-refresh-tokens \
           "https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/"
       # yamllint enable rule:line-length
 
