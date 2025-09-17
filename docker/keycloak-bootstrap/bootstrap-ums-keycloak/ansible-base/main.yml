@@ -75,8 +75,8 @@
           --app-url "https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/" \
           --host-fqdn "{{ global_subdomain_portal }}.{{ global_domain }}" \
           --client-secret "{{ global_umc_oidc_client_secret }}" \
-          --name="UMC on {{ global_subdomain_portal }}.{{ global_domain }}" \
-          --description="Univention Management Console on {{ global_subdomain_portal }}.{{ global_domain }}" \
+          --name="UMC OIDC" \
+          --description="Univention Management Console OIDC Client" \
           --direct-access-grants \
           --access-token-lifespan="300" \
           --access-token-audience="ldaps://{{ global_domain }}/" \
@@ -93,7 +93,6 @@
           --pkce-code-challenge-method="S256" \
           --default-scopes="openid" \
           --web-origins="+" \
-          --use-refresh-tokens \
           "https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/"
       # yamllint enable rule:line-length
 

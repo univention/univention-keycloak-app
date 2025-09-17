@@ -29,7 +29,7 @@ RUN apt-get --assume-yes --no-install-recommends install \
     python3-ldap \
     python3-requests \
     # TODO: Remove the special version pin once the regular base image is used again.
-    univention-keycloak-client=3.3.1A~5.2.3.202509121308 \
+    univention-keycloak-client=3.3.1A~5.2.3.202509180816 \
     && apt-get autoremove --assume-yes
 
 FROM base
