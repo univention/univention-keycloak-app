@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.7](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.6...v0.2.7) (2025-09-18)
+
+
+### Bug Fixes
+
+* **changelog:** wrong CVE was mentioned ([fe3354b](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/fe3354bdb317d1b96f0ca7c6925e3da431131581)), closes [univention/components/keycloak-app#243](https://git.knut.univention.de/univention/components/keycloak-app/issues/243)
+
 ## [0.2.6](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.5...v0.2.6) (2025-08-29)
 
 
