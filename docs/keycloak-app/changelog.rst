@@ -25,7 +25,7 @@ Released: 15. Sep 2025
   (https://www.keycloak.org/docs/26.3.3/release_notes).
   (https://www.keycloak.org/2025/08/keycloak-2633-released).
 
-* This version fixes CVE-2025-7962.
+* This version fixes CVE-2025-8419.
 
 Version 26.3.1-ucs1
 ===================
