@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2024-2025 Univention GmbH
+---
+# Override values for Kyverno testing
+global:
+  imagePullPolicy: "IfNotPresent"
+image:
+  imagePullPolicy: "kyverno"
+waitForDependency:
+  image:
+    registry: "registry.kyverno.test"
+    imagePullPolicy: "kyverno"
+...
