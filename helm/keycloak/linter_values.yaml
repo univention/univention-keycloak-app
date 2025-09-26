@@ -13,12 +13,9 @@ postgresql:
     host: "postgres"
     port: "5432"
   auth:
-    username: "postgres"
+    username: "stub-values-username"
     database: "postgres"
-    existingSecret:
-      name: "custom-postgres-credentials"
-      keyMapping:
-        password: "custom-password"
+    password: "stub-values-password"
 
 keycloak:
   auth:

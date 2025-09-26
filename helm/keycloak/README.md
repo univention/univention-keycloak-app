@@ -785,6 +785,7 @@ true
       },
       "name": null
     },
+    "password": "",
     "username": ""
   },
   "connection": {
@@ -818,6 +819,15 @@ true
 </pre>
 </td>
 			<td>PostgreSQL password secret reference.</td>
+		</tr>
+		<tr>
+			<td>postgresql.auth.password</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>PostgreSQL user password.</td>
 		</tr>
 		<tr>
 			<td>postgresql.auth.username</td>
