@@ -557,6 +557,7 @@ true
       },
       "name": null
     },
+    "password": "",
     "username": ""
   },
   "features": {
@@ -606,6 +607,15 @@ true
 </pre>
 </td>
 			<td>Keycloak password secret reference.</td>
+		</tr>
+		<tr>
+			<td>keycloak.auth.password</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Keycloak password.</td>
 		</tr>
 		<tr>
 			<td>keycloak.auth.username</td>

@@ -71,7 +71,7 @@ keycloak:
     # -- Keycloak user.
     username: ""
     # -- Keycloak password.
-    # password: ""
+    password: ""
     # -- Keycloak password secret reference.
     existingSecret:
       name: null

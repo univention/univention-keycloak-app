@@ -19,10 +19,6 @@ postgresql:
 
 keycloak:
   auth:
-    username: "admin"
-    existingSecret:
-      name: "custom-keycloak-credentials"
-      keyMapping:
-        adminPassword: "admin_password"
-
+    username: "stub-values-username"
+    password: "stub-values-password"
 ...
