@@ -106,8 +106,8 @@ spec:
             - name: UMC_OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.oidc.rp.umcserver.clientSecret.existingSecret "defaultNameSuffix" "oidc-rp-umc-server" "context" .) | quote }}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.oidc.rp.umcserver.clientSecret.existingSecret "key" "password") | quote }}
+                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.oidc.rp.umcserver.clientSecret.existingSecret "defaultNameSuffix" "oidc-rp-umc-server" "context" .) }}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.oidc.rp.umcserver.clientSecret.existingSecret "key" "password") }}
           {{- with .Values.extraEnvVars }}
             {{- . | toYaml | nindent 12 }}
           {{- end }}
