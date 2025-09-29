@@ -8,14 +8,11 @@ kind: "Job"
 metadata:
   name: "{{ include "common.names.fullname" . }}-bootstrap-{{ .Release.Revision }}"
   labels:
-    {{- include "common.labels.standard" . | nindent 4 }}
-    {{- if .Values.additionalLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
-    {{- end }}
-  annotations:
-    {{- if .Values.additionalAnnotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
-    {{- end }}
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 4 }}
+  {{- include "nubus-common.annotations.render" ( dict
+    "values" ( list .Values.additionalAnnotations )
+    "context" . )
+    | nindent 2 }}
 spec:
   template:
     metadata:
@@ -63,8 +60,8 @@ spec:
         {{- if .Values.containerSecurityContext.enabled }}
         securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 10 }}
         {{- end }}
-        image: "{{ coalesce .Values.waitForDependency.image.registry .Values.global.imageRegistry }}/{{ .Values.waitForDependency.image.repository }}{{ if .Values.waitForDependency.image.sha256 }}@sha256:{{ .Values.waitForDependency.image.sha256 }}{{ else }}:{{ .Values.waitForDependency.image.tag }}{{ end }}"
-        imagePullPolicy: {{ coalesce .Values.waitForDependency.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+        image: "{{ .Values.waitForDependency.image.registry | default .Values.global.imageRegistry }}/{{ .Values.waitForDependency.image.repository }}{{ if .Values.waitForDependency.image.sha256 }}@sha256:{{ .Values.waitForDependency.image.sha256 }}{{ else }}:{{ .Values.waitForDependency.image.tag }}{{ end }}"
+        imagePullPolicy: {{ coalesce .Values.waitForDependency.image.pullPolicy .Values.global.imagePullPolicy | quote }}
         envFrom:
           - configMapRef:
               name: {{ printf "%s-init" (include "common.names.fullname" .) }}
@@ -80,12 +77,12 @@ spec:
           {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" .) | nindent 10 }}
         {{- end }}
       containers:
-        - name: "univention-keycloak-bootstrap"
+        - name: "main"
           {{- if .Values.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
-          image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ coalesce .Values.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+          image: "{{ .Values.image.registry | default .Values.global.imageRegistry }}/{{ .Values.image.repository }}{{ if .Values.image.sha256 }}@sha256:{{ .Values.image.sha256 }}{{ else }}:{{ .Values.image.tag }}{{ end }}"
+          imagePullPolicy: {{ coalesce .Values.image.pullPolicy .Values.global.imagePullPolicy | quote }}
           command:
             - "/app/entrypoint.sh"
           envFrom:

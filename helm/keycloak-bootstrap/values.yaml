@@ -34,7 +34,7 @@ global:
   #             digest, and uses that image to launch the container.
   # "Never" => The kubelet does not try fetching the image. If the image is somehow already present locally, the
   #            kubelet attempts to start the container; otherwise, startup fails.
-  imagePullPolicy: "IfNotPresent"
+  imagePullPolicy: null
 
 # -- Affinity for pod assignment
 # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
@@ -129,17 +129,17 @@ image:
   # "Never" => The kubelet does not try fetching the image. If the image is somehow already present locally, the
   #            kubelet attempts to start the container; otherwise, startup fails
   #
-  imagePullPolicy: "IfNotPresent"
+  pullPolicy: null
 
   # -- Define image tag.
   tag: "latest"
 
 waitForDependency:
   image:
-    registry: "artifacts.software-univention.de"
+    registry: null
     repository: "nubus/images/wait-for-dependency"
     tag: "0.35.0@sha256:61dfaea28a2b150459138dfd6a554ce53850cee05ef2a72ab47bbe23f2a92d0d"
-    imagePullPolicy: "IfNotPresent"
+    pullPolicy: null
 
 # -- Node labels for pod assignment
 # Ref: https://kubernetes.io/docs/user-guide/node-selection/

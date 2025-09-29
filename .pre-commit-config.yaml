@@ -114,7 +114,7 @@ repos:
           - "python"
         args:
           - "--fix"
-          - "--show-source"
+          - "--show-files"
           - "--exit-non-zero-on-fix"
           - "--extend-select=COM"
       - id: "ruff"

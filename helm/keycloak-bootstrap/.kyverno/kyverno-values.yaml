@@ -5,9 +5,9 @@
 global:
   imagePullPolicy: "IfNotPresent"
 image:
-  imagePullPolicy: "kyverno"
+  pullPolicy: "kyverno"
 waitForDependency:
   image:
     registry: "registry.kyverno.test"
-    imagePullPolicy: "kyverno"
+    pullPolicy: "kyverno"
 ...
