@@ -9,11 +9,8 @@ ldap:
     host: "ldap.example.com"
     port: 389
   auth:
-    bindDn: "uid=ldap-user,cn=users,dc=organization,dc=example"
-    existingSecret:
-      name: "custom-ldap-credentials"
-      keyMapping:
-        password: "custom-password"
+    bindDn: "stub-values-username"
+    password: "stub-value"
 
 keycloak:
   connection:
