@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.8](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.7...v0.2.8) (2025-09-29)
+
+
+### Bug Fixes
+
+* **changelog:** wrong versionn in app/ini ([397266e](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/397266e25e75dc3b10c48b7798681fa3b12e0d94)), closes [univention/components/keycloak-app#243](https://git.knut.univention.de/univention/components/keycloak-app/issues/243)
+
 ## [0.2.7](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.6...v0.2.7) (2025-09-18)
 
 
