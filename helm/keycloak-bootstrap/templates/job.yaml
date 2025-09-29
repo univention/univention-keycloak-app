@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 apiVersion: "batch/v1"
 kind: "Job"
 metadata:
-  name: "{{ include "common.names.fullname" . }}-bootstrap-{{ .Release.Revision }}"
+  name: {{ printf "%s-job" (include "common.names.fullname" .) }}
   labels:
     {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 4 }}
   {{- include "nubus-common.annotations.render" ( dict
@@ -90,12 +90,12 @@ spec:
                 name: {{ include "common.names.fullname" .  | quote }}
           env:
             - name: KEYCLOAK_USERNAME
-              value: {{ tpl .Values.keycloak.auth.username . }}
+              value: {{ tpl (required "keycloak.auth.username is required" .Values.keycloak.auth.username) . }}
             - name: KEYCLOAK_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ tpl .Values.keycloak.auth.existingSecret.name . }}
-                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword") | quote }}
+                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "keycloak-credentials" "context" .)}}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword")}}
             - name: LDAP_BIND_DN
               value: {{ tpl .Values.ldap.auth.bindDn . }}
             - name: LDAP_BIND_PW
@@ -119,7 +119,7 @@ spec:
               subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
             - mountPath: "/credentials/keycloak.secret"
               name: "keycloak-credentials-volume"
-              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword") | quote }}
             - mountPath: "/tmp"
               name: "temp-dir"
             {{- if .Values.extraVolumeMounts }}
@@ -135,7 +135,11 @@ spec:
             name: {{ printf "%s-init" (include "common.names.fullname" .) }}
         - name:  "keycloak-credentials-volume"
           secret:
+          {{- if (.Values.keycloak.auth.existingSecret).name }}
             secretName: {{ tpl .Values.keycloak.auth.existingSecret.name . }}
+          {{- else }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "defaultNameSuffix" "keycloak-credentials" "context" .) | quote }}
+          {{- end }}
         - name:  "ldap-credentials-volume"
           secret:
             secretName: {{ tpl .Values.ldap.auth.existingSecret.name . }}

@@ -20,10 +20,8 @@ keycloak:
     baseUrl: "https://keycloak.example.com"
     host: "somehost"
   auth:
-    username: "admin"
-    existingSecret:
-      name: "custom-keycloak-credentials"
-      keyMapping:
-        adminPassword: "admin_password"
+    username: "stub-values-username"
+    password: "stub-value"
     realm: "myrealm"
+
 ...

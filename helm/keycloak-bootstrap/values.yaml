@@ -224,9 +224,15 @@ keycloak:
     # -- Keycloak user.
     username: ""
     # -- Keycloak password.
-    # password: ""
+    password: ""
     # -- Keycloak realm.
     realm: ""
+    # -- Keycloak password secret reference.
+    existingSecret:
+      name: null
+      keyMapping:
+        adminPassword: null
+
 
 # -- LDAP settings.
 ldap:
@@ -293,7 +299,7 @@ oidc:
       clientSecret:
         password: null
         existingSecret:
-          name: null
+          name: ""
           keyMapping:
             password: null
 ...

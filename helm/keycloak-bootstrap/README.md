@@ -61,7 +61,8 @@ helm install my-release ${CI_PROJECT_NAME}/keycloak-bootstrap
 | image.repository | string | `"nubus-dev/images/keycloak-bootstrap"` | Container repository string. |
 | image.tag | string | `"latest"` | Define image tag. |
 | imagePullSecrets | list | `[]` | Credentials to fetch images from private registry Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/  imagePullSecrets:   - "docker-registry"  |
-| keycloak | object | `{"auth":{"realm":"","username":""},"connection":{"host":"","port":""}}` | Keycloak settings. |
+| keycloak | object | `{"auth":{"existingSecret":{"keyMapping":{"adminPassword":null},"name":null},"password":"","realm":"","username":""},"connection":{"host":"","port":""}}` | Keycloak settings. |
+| keycloak.auth.password | string | `""` | Keycloak password. |
 | keycloak.auth.realm | string | `""` | Keycloak realm. |
 | keycloak.auth.username | string | `""` | Keycloak user. |
 | keycloak.connection | object | `{"host":"","port":""}` | Connection parameters. |
@@ -80,7 +81,7 @@ helm install my-release ${CI_PROJECT_NAME}/keycloak-bootstrap
 | ldap.connection.tls.enabled | bool | `false` | Enable TLS. |
 | ldap.connection.tls.key | object | `{"secretKeyRef":{"key":"tls.key","name":""}}` | TLS key secret reference. |
 | nodeSelector | object | `{}` | Node labels for pod assignment Ref: https://kubernetes.io/docs/user-guide/node-selection/ |
-| oidc | object | `{"rp":{"umcserver":{"clientSecret":{"existingSecret":{"keyMapping":{"password":null},"name":null},"password":null}}}}` | Configuration for Open ID Connect Clients |
+| oidc | object | `{"rp":{"umcserver":{"clientSecret":{"existingSecret":{"keyMapping":{"password":null},"name":""},"password":null}}}}` | Configuration for Open ID Connect Clients |
 | podAnnotations | object | `{}` | Pod Annotations. Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
 | podLabels | object | `{}` | Pod Labels. Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
 | podSecurityContext.enabled | bool | `false` | Enable security context. |
