@@ -8,7 +8,6 @@ FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS base
 
 WORKDIR /app
 
-# hadolint ignore=DL3008
 RUN apt-get --assume-yes --no-install-recommends install \
     ansible-core \
     ca-certificates \
@@ -16,7 +15,6 @@ RUN apt-get --assume-yes --no-install-recommends install \
     python3-keycloak \
     python3-ldap \
     python3-requests \
-    # TODO: Remove the special version pin once the regular base image is used again.
     univention-keycloak-client \
     && apt-get autoremove --assume-yes
 
