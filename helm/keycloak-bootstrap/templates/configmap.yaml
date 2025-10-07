@@ -25,6 +25,7 @@ data:
   LDAP_BASE_DN: {{ include "keycloak-bootstrap.ldap.baseDn" . | quote }}
   LDAP_URI: {{ include "keycloak-bootstrap.ldap.connection.uri" . | quote }}
   SAML_SERVICE_PROVIDER_HOSTNAME: {{ include "keycloak-bootstrap.saml.serviceProviderHostname" . | quote }}
+  USER_FEDERATION_LDAP_IMPORT_USERS: {{ .Values.bootstrap.userFederation.ldapImportUsers | quote }}
 ...
 
 ---

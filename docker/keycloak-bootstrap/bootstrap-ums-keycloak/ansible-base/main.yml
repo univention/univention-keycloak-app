@@ -58,6 +58,9 @@
           --no-kerberos \
           --no-saml-assertion-request \
           --enable-user-events \
+          {% if global_user_federation_ldap_import_users %}
+          --import-users \
+          {% endif %}
           --cors-frame-ancestors="https://{{ global_subdomain_portal }}.{{ global_domain }}"
       # yamllint enable rule:line-length
 

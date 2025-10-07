@@ -28,6 +28,8 @@
     global_ldap_bind_dn: "{{ lookup('ansible.builtin.env', 'LDAP_BIND_DN') }}"
     global_ldap_base_dn: "{{ lookup('ansible.builtin.env', 'LDAP_BASE_DN') }}"
     global_ldap_uri: "{{ lookup('ansible.builtin.env', 'LDAP_URI') }}"
+    global_user_federation_ldap_import_users: >-
+      {{lookup('ansible.builtin.env', 'USER_FEDERATION_LDAP_IMPORT_USERS') | bool }}
 
 - name: "Global: Assert environment variables are non-empty strings"
   ansible.builtin.assert:
@@ -92,6 +94,8 @@
         global_ldap_uri | type_debug == 'AnsibleUnsafeText'"
       - >-
         "global_ldap_uri | length > 0"
+      - >-
+        "global_user_federation_ldap_import_users | type_debug == 'bool'"
     fail_msg: "One or more environment variables are empty or not defined as strings."
 
 - name: "Global: Assert variables from YAML files are arrays"

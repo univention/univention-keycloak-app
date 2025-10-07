@@ -32,6 +32,7 @@ helm install my-release ${CI_PROJECT_NAME}/keycloak-bootstrap
 | bootstrap.loginLinks | list | `[]` |  |
 | bootstrap.twoFactorAuthentication.enabled | bool | `false` | Enable Keycloak's built-in 2FA support |
 | bootstrap.twoFactorAuthentication.group | string | `""` | LDAP group DN which membership enables 2FA for users |
+| bootstrap.userFederation.ldapImportUsers | bool | `true` | Enable the option "Import Users" for the user federation LDAP provider. This option only takes effect on the first deployment. |
 | cleanup.deletePodsOnSuccess | bool | `false` | Keep Pods/Job logs after successful run. |
 | cleanup.keepPVCOnDelete | bool | `false` | Keep persistence on delete of this release. |
 | config.debug.enabled | bool | `false` | Enable debug output of included Ansible scripts |

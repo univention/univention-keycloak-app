@@ -286,6 +286,10 @@ bootstrap:
     enabled: false
     # -- LDAP group DN which membership enables 2FA for users
     group: ""
+  userFederation:
+    # -- Enable the option "Import Users" for the user federation LDAP provider.
+    # This option only takes effect on the first deployment.
+    ldapImportUsers: true
 
 # keycloak-bootstrap configuration.
 config:
