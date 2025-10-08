@@ -1,7 +1,7 @@
 [Application]
 ID = keycloak
 Code = 3O
-Version = 26.3.3-ucs2
+Version = 26.3.5-ucs1
 Name = Keycloak
 DockerScriptRestoreDataAfterSetup =
 DockerScriptStoreData =

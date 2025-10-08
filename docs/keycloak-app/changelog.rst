@@ -16,11 +16,19 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
-Version 26.3.3-ucs2
+Version 26.3.5-ucs1
 ===================
-Released: 29. Sep 2025
+
+Released: 14. Oct 2025
+
 * This version updates the ACL that control the access
   to the database password.
+
+* The app updates to :program:`Keycloak` version 26.3.5
+  (https://www.keycloak.org/docs/26.3.5/release_notes).
+  (https://www.keycloak.org/2025/09/keycloak-2635-released).
+
+* This version fixes CVE-2025-58057 and CVE-2025-58056
 
 Version 26.3.3-ucs1
 ===================
