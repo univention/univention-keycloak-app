@@ -1,13 +1,5 @@
 #!/bin/bash
-
 # if missing, append / to $KEYCLOAK_SERVER_SSO_PATH
+# https://www.keycloak.org/observability/health#_healthcheck
 URI="${KEYCLOAK_SERVER_SSO_PATH%/}/"
-
-# https://github.com/keycloak/keycloak/issues/17273#issuecomment-1456572972
-exec 3<>/dev/tcp/localhost/9000
-echo -e "HEAD ${URI}health/ready HTTP/1.1\nhost: localhost:9000\n" >&3
-timeout --preserve-status 1 cat <&3 | grep -q "HTTP/1.1 200 OK"
-ERROR=$?
-exec 3<&-
-exec 3>&-
-exit $ERROR
+{ printf "HEAD ${URI}health/ready HTTP/1.0\r\n\r\n" >&0; grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000
