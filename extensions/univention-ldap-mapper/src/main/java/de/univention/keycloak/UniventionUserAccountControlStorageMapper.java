@@ -15,6 +15,8 @@ import org.keycloak.storage.ldap.mappers.LDAPOperationDecorator;
 import org.keycloak.storage.ldap.mappers.PasswordUpdateCallback;
 import org.keycloak.storage.ldap.mappers.TxAwareLDAPUserModelDelegate;
 import org.keycloak.storage.ldap.mappers.msad.LDAPServerPolicyHintsDecorator;
+import org.keycloak.utils.KeycloakSessionUtil;
+import org.keycloak.models.KeycloakSession;
 
 import javax.naming.AuthenticationException;
 import java.text.SimpleDateFormat;
@@ -101,16 +103,16 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
 
         if (accountAttributesHelper.isAccountDisabled()) {
             logger.debugf("Disabled user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
-            this.session.setAttribute(ERROR_DETAIL, "accountDisabled");
+            this.getSession().setAttribute(ERROR_DETAIL, "accountDisabled");
         } else if (accountAttributesHelper.isAccountExpired()) {
             logger.debugf("Expired user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
-            this.session.setAttribute(ERROR_DETAIL, "accountExpired");
+            this.getSession().setAttribute(ERROR_DETAIL, "accountExpired");
         } else if (accountAttributesHelper.isPasswordChangeNeeded()) {
             addPasswordChangeAction(user);
             return true;
         } else if (accountAttributesHelper.isAccountLocked()) {
             logger.debugf("Locked user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
-            this.session.setAttribute(ERROR_DETAIL, "accountLocked");
+            this.getSession().setAttribute(ERROR_DETAIL, "accountLocked");
         }
 
         return false;
@@ -120,7 +122,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         // User needs to change his Univention password. Allow him to login, but add UPDATE_PASSWORD required action to authenticationSession
         if (user.getRequiredActionsStream().noneMatch(action -> Objects.equals(action, UniventionUpdatePassword.ID))) {
             // This usually happens when 49 was returned, which means that "shadowMax" is set to some positive value, which is older than Univention password expiration policy.
-            AuthenticationSessionModel authSession = session.getContext().getAuthenticationSession();
+            AuthenticationSessionModel authSession = this.getSession().getContext().getAuthenticationSession();
             if (authSession != null) {
                 if (authSession.getRequiredActions().stream().noneMatch(action -> Objects.equals(action, UniventionUpdatePassword.ID))) {
                     logger.debugf("Adding requiredAction UPDATE_PASSWORD to the authenticationSession of user %s", user.getUsername());
@@ -162,8 +164,12 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         return e;
     }
 
+    protected KeycloakSession getSession() {
+        return KeycloakSessionUtil.getKeycloakSession();
+    }
+
     protected String getRealmName() {
-        RealmModel realm = session.getContext().getRealm();
+        RealmModel realm = this.getSession().getContext().getRealm();
         return (realm != null) ? realm.getName() : "null";
     }
 
