@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.8...v0.3.0) (2025-10-13)
+
+
+### Features
+
+* **app:** update to Keycloak 26.3.5 ([fb0cc3f](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/fb0cc3f4a63ea7dc53c0375286d6e8df3a9add85)), closes [#58249](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/58249) [univention/dev/ucs#2849](https://git.knut.univention.de/univention/dev/ucs/issues/2849)
+
+
+### Bug Fixes
+
+* **app:** Change in health endpoint - Issue univention/dev/ucs[#2849](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/2849) ([eeddb2f](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/eeddb2f3cfa7ce70a2ca26f2ff67914d8ddc7ea7))
+* **app:** do not replicate DB password to replica and memberserver ([1fb9b3b](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/1fb9b3b4c96276c43330dcda5393cbe3701ecd20)), closes [#58249](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/58249) [univention/dev/ucs#2849](https://git.knut.univention.de/univention/dev/ucs/issues/2849) [univention/dev/ucs#2849](https://git.knut.univention.de/univention/dev/ucs/issues/2849)
+* **app:** session is no longer a class variable - Issue univention/dev/ucs[#2849](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/2849) ([7301252](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/730125227a7dcc47661c33c6ff07a8b7f29a8cf8))
+
 ## [0.2.8](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.7...v0.2.8) (2025-09-29)
 
 
