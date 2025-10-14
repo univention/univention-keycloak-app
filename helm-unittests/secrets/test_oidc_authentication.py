@@ -9,7 +9,7 @@ from univention.testing.helm.auth_flavors.secret_generation import \
 
 class SettingsTestOidcSecret:
     secret_name = "release-name-keycloak-bootstrap-oidc-rp-umc-server"
-    prefix_mapping = {"oidc.rp.umcserver.clientSecret": "auth"}
+    prefix_mapping = {"oidc.relyingParty.umcServer.clientSecret": "auth"}
 
     # Used by AuthSecretGenerationUser and AuthUsernameViaEnv only
     sub_path_env_password = "env[?@name=='UMC_OIDC_CLIENT_SECRET']"

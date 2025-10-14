@@ -302,12 +302,12 @@ config:
 
 # -- Configuration for Open ID Connect Clients
 oidc:
-  rp:
-    umcserver:
+  relyingParty:
+    umcServer:
       clientSecret:
         password: null
         existingSecret:
-          name: ""
+          name: null
           keyMapping:
             password: null
 ...
