@@ -124,14 +124,14 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "credentials" "context" .)}}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword")}}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword" "context" .)}}
             - name: "KC_DB_USERNAME"
               value: {{ tpl (required "postgresql.auth.username is required" .Values.postgresql.auth.username) . }}
             - name: "KC_DB_PASSWORD"
               valueFrom:
                 secretKeyRef:
                   name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.auth.existingSecret "defaultNameSuffix" "postgresql-credentials" "context" .)}}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password")}}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password" "context" .)}}
             - name: "UNIVENTION_META_JSON"
               value: {{ printf "https://%s.%s/univention/meta.json" .Values.global.subDomains.portal .Values.global.domain | quote }}
           {{- with .Values.extraEnvVars }}
