@@ -95,19 +95,19 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "keycloak-credentials" "context" .)}}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword")}}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword" "context" .)}}
             - name: LDAP_BIND_DN
               value: {{ tpl (required "ldap.auth.bindDn username is required" .Values.ldap.auth.bindDn) . }}
             - name: LDAP_BIND_PW
               valueFrom:
                 secretKeyRef:
                   name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.ldap.auth.existingSecret "defaultNameSuffix" "ldap-credentials" "context" .)}}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password")}}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password" "context" .)}}
             - name: UMC_OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.oidc.relyingParty.umcServer.clientSecret.existingSecret "defaultNameSuffix" "oidc-rp-umc-server" "context" .) }}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.oidc.relyingParty.umcServer.clientSecret.existingSecret "key" "password") }}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.oidc.relyingParty.umcServer.clientSecret.existingSecret "key" "password" "context" .) }}
           {{- with .Values.extraEnvVars }}
             {{- . | toYaml | nindent 12 }}
           {{- end }}
@@ -119,7 +119,7 @@ spec:
               subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
             - mountPath: "/credentials/keycloak.secret"
               name: "keycloak-credentials-volume"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword" "context" .) }}
             - mountPath: "/tmp"
               name: "temp-dir"
             {{- if .Values.extraVolumeMounts }}
@@ -138,14 +138,14 @@ spec:
           {{- if (.Values.keycloak.auth.existingSecret).name }}
             secretName: {{ tpl .Values.keycloak.auth.existingSecret.name . }}
           {{- else }}
-            secretName: {{ include "nubus-common.secrets.name" (dict "defaultNameSuffix" "keycloak-credentials" "context" .) | quote }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "defaultNameSuffix" "keycloak-credentials" "context" .) }}
           {{- end }}
         - name:  "ldap-credentials-volume"
           secret:
           {{- if (.Values.ldap.auth.existingSecret).name }}
             secretName: {{ tpl .Values.ldap.auth.existingSecret.name . }}
           {{- else }}
-            secretName: {{ include "nubus-common.secrets.name" (dict "defaultNameSuffix" "ldap-credentials" "context" .) | quote }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "defaultNameSuffix" "ldap-credentials" "context" .) }}
           {{- end }}
         - name: "bootstrap-volume"
           configMap:
