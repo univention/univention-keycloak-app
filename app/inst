@@ -87,10 +87,13 @@ fi
 
 keycloak_db_host_dn=$(univention-ldapsearch -LLL univentionService="$app_id DB" 1.1 | sed -ne "s/^dn: //p")
 if [ -z "$keycloak_db_host_dn" ]; then
-       ucs_addServiceToLocalhost "$app_id DB" "$@"
+	ucs_addServiceToLocalhost "$app_id DB" "$@"
 else
-       keycloak_db_host=$(ucs_getAttrOfDN "cn" "$keycloak_db_host_dn")
-       univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host:/etc/keycloak.secret /etc/keycloak.secret" || die
+	local_dn="$(ucr get ldap/hostdn | tr -d '\n')"
+	if [[ "$local_dn" != "$keycloak_db_host_dn" ]]; then
+		keycloak_db_host=$(ucs_getAttrOfDN "cn" "$keycloak_db_host_dn")
+		univention-scp $machine_secret "-r $hostname\$@$keycloak_db_host:/etc/keycloak.secret /etc/keycloak.secret" || die
+	fi
 fi
 
 
