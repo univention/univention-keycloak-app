@@ -25,5 +25,5 @@ class TestChartCreatesLdapSecretAsUser(SettingsTestLdapSecret,
 class TestHandlerUsesLdapCredentialsByEnv(SettingsTestLdapSecret,
                                           AuthPasswordUsageViaEnv,
                                           AuthUsernameViaEnv):
-    workload_name = "release-name-keycloak-bootstrap-job"
+    workload_name = "release-name-keycloak-bootstrap-bootstrap-1"
     workload_kind = "Job"

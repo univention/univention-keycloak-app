@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 apiVersion: "batch/v1"
 kind: "Job"
 metadata:
-  name: {{ printf "%s-job" (include "common.names.fullname" .) }}
+  name: "{{ include "common.names.fullname" . }}-bootstrap-{{ .Release.Revision }}"
   labels:
     {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 4 }}
   {{- include "nubus-common.annotations.render" ( dict

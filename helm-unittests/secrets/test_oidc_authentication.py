@@ -22,5 +22,5 @@ class TestChartCreatesOidcSecretAsOwner(SettingsTestOidcSecret,
 
 class TestKeycloakUsesOidcCredentialsByEnv(SettingsTestOidcSecret,
                                            AuthPasswordUsageViaEnv):
-    workload_name = "release-name-keycloak-bootstrap-job"
+    workload_name = "release-name-keycloak-bootstrap-bootstrap-1"
     workload_kind = "Job"
