@@ -372,7 +372,7 @@ null
 			<td>image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"0.2.5@sha256:499006904d262bdd334b54583c359c7e34b521697d5fda32ea977d856bfa93d2"
+"0.3.0@sha256:5a24f4b57f3ce12b7343306b0d2045cf6501627eb0d34cb2be3f4994e52d62f9"
 </pre>
 </td>
 			<td>Define image tag.</td>
