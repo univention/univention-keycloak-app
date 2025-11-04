@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.3.0...v0.4.0) (2025-11-04)
+
+
+### Features
+
+* **app:** update to Keycloak 26.4.2 ([3da5543](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/3da55432a058242ebf01e4c3f6832ba979b9f239)), closes [univention/dev/projects/keycloak/keycloak-app#245](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/245)
+
+
+### Bug Fixes
+
+* **deps:** Update base image to version 5.2.3-build-20251030 ([d69ce07](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/d69ce07d24c3582b5510f391d804184b6f3923fc)), closes [univention/dev/internal/team-nubus#1486](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1486)
+
 ## [0.3.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.2.8...v0.3.0) (2025-10-13)
 
 
