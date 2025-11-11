@@ -33,6 +33,7 @@ LongDescription = <div class="col-sm-7 col-xs-12 left-col">
 	</p>
 	</div>
 PortsExclusive = 8180
+# ATTENTION: Leave 5.2-0 there for the time being: https://forge.univention.org/bugzilla/show_bug.cgi?id=58794
 SupportedUcsVersions = 5.0-10 errata1309, 5.1-0, 5.2-2 errata163, 5.2-0
 ServerRole = domaincontroller_master, domaincontroller_backup
 Database = postgresql
