@@ -23,7 +23,7 @@ variables:
 
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.44.11"
+    ref: "v1.50.0"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -70,6 +70,10 @@ push-image-external:
   parallel:
     matrix: *publish-matrix
 
+container-release-attestation:
+  parallel:
+    matrix: *publish-matrix
+
 test-udm-unit-and-integration:
   needs: []
   stage: test
@@ -106,6 +110,7 @@ test-udm-unit-and-integration:
     when: "always"
     expose_as: "docker compose server logs"
 
-sonarqube:
-  extends: .sonarqube
-  needs: []
+# TODO: Deactivate until sonarqube is properly set up
+# sonarqube:
+#   extends: .sonarqube
+#   needs: []
