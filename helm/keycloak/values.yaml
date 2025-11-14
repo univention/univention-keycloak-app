@@ -221,7 +221,7 @@ image:
   #
   pullPolicy: null
   # -- Define image tag.
-  tag: "0.4.0@sha256:bb4676d40d2b3562166311c6199d2f37e126a35f3ef66abc76cc9f9196161c46"
+  tag: "0.4.1@sha256:482f3108ce775bb028cefa763a21d7af71b3d55e2e1800724ab9cabcd60ba2c6"
 
 # -- Credentials to fetch images from private registry
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
