@@ -219,6 +219,7 @@ if dpkg -s univention-samba4 &> /dev/null; then
 	samba-tool spn add "$servicePrincipalName" "$spn_account_name"
 fi
 
+sleep 2
 rm "$keytab_path"
 kadmin -l ext --keytab="$keytab_path" "$servicePrincipal" || die
 chown "1000":"DC Backup Hosts" "$keytab_path" || die

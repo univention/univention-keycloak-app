@@ -16,6 +16,19 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.4.4-ucs1
+===================
+
+Released: 18. Nov 2025
+
+* The app updates to :program:`Keycloak` version 26.4.4
+  (https://www.keycloak.org/docs/26.4.4/release_notes).
+  (https://www.keycloak.org/2025/11/keycloak-2644-released).
+
+* This version fixes a bug where LDAP federated users with capital
+  letters in their usernames experienced login problems.
+
+
 Version 26.4.2-ucs1
 ===================
 
