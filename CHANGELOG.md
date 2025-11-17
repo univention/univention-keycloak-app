@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.4.0...v0.4.1) (2025-11-17)
+
+
+### Bug Fixes
+
+* fix broken ldap federation after 26.4.1 ([66d7b1a](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/66d7b1aca14784f4ed9b3ac7040d6f94f36b787e)), closes [univention/dev/internal/dev-issues/dev-incidents#186](https://git.knut.univention.de/univention/dev/internal/dev-issues/dev-incidents/issues/186)
+
 ## [0.4.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.3.0...v0.4.0) (2025-11-04)
 
 
