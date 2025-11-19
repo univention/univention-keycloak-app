@@ -22,7 +22,7 @@ data:
   # https://www.keycloak.org/server/caching
   KC_CACHE: "ispn"
   # https://www.keycloak.org/server/caching#_available_transport_stacks
-  KC_CACHE_STACK: "kubernetes"
+  KC_CACHE_STACK: "jdbc-ping"
   KC_METRICS_ENABLED: "true"
   KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
   KC_HTTP_ENABLED: "true"
