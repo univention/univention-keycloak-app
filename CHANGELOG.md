@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.2](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.4.1...v0.4.2) (2025-11-21)
+
+
+### Bug Fixes
+
+* **keycloak-app/changelog:** Remove link to 26.1.4 release notes ([0cb5481](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/0cb5481b9061f8f8563b9b20a223575e40b7e7fb)), closes [univention/dev/docs/organization#224](https://git.knut.univention.de/univention/dev/docs/organization/issues/224)
+* **keycloak-app:** Update redirected links ([a35c942](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/a35c942176b1f4993c09f17aa22485937260128a)), closes [univention/dev/docs/organization#224](https://git.knut.univention.de/univention/dev/docs/organization/issues/224)
+
 ## [0.4.1](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.4.0...v0.4.1) (2025-11-17)
 
 
