@@ -136,8 +136,9 @@ if "spelling" in sys.argv:
     spelling_word_list_filename = ["spelling_wordlist"]
 
 linkcheck_ignore = [
-    r"https://ucs-sso-ng.example.com/admin/",
-    r"https://ucs-sso-ng.ucs.test/",
+    r"https://ucs-sso-ng\.example\.com/admin/",
+    r"https://ucs-sso-ng\.ucs\.test/",
+    r"https://www\.keycloak\.org/docs/latest/server_development/#messages",
 ]
 linkcheck_allowed_redirects = {
     r"https://help\.univention\.com/t/\d+": r"https://help\.univention\.com/t/[\w\d-]+/\d+",
