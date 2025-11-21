@@ -1067,7 +1067,7 @@ control than just the theme.
 
 .. seealso::
 
-   `background - CSS: Cascading Style Sheets | MDN <https://developer.mozilla.org/en-US/docs/Web/CSS/background>`_
+   `background - CSS: Cascading Style Sheets | MDN <https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/background>`_
       for more information about the syntax for background values.
 
 .. _language-settings:

@@ -4,8 +4,8 @@
 
 .. _deb-admin-handbook-shell: https://www.debian.org/doc/manuals/debian-handbook/short-remedial-course.en.html#sect.shell-and-basic-commands
 .. _keycloak: https://www.keycloak.org/
-.. _mariadb-grant: https://mariadb.com/kb/en/grant/
-.. _ms-adfs: https://learn.microsoft.com/en-us/windows-server/identity/active-directory-federation-services
+.. _mariadb-grant: https://mariadb.com/docs/server/reference/sql-statements/account-management-sql-statements/grant
+.. _ms-adfs: https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/ad-fs-overview
 .. _quay-keycloak: https://quay.io/repository/keycloak/keycloak
 .. _w-openid-connect: https://en.wikipedia.org/wiki/OpenID#OpenID_Connect_(OIDC)
 .. _w-saml: https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language
