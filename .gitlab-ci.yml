@@ -57,6 +57,21 @@ include:
 container-build:
   parallel:
     matrix: *build-matrix
+  rules:
+    - changes: &software-changes
+        - app/**/*
+        - dependencies/**/*
+        - extensions/**/*
+        - files/**/*
+        - originals/**/*
+        - scripts/**/*
+        - Dockerfile
+        - docker-compose.yaml
+        - pyproject.toml
+        - renovate.json
+        - requirements.txt
+        - sonar-project.properties
+        - update-appcenter-test.sh
 
 container-malware-scan:
   parallel:
@@ -65,14 +80,20 @@ container-malware-scan:
 container-sign-external:
   parallel:
     matrix: *build-matrix
+  rules:
+    - changes: *software-changes
 
 push-image-external:
   parallel:
     matrix: *publish-matrix
+  rules:
+    - changes: *software-changes
 
 container-release-attestation:
   parallel:
     matrix: *publish-matrix
+  rules:
+    - changes: *software-changes
 
 test-udm-unit-and-integration:
   needs: []
@@ -82,7 +103,8 @@ test-udm-unit-and-integration:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: "never"
-    - when: "on_success"
+    - changes: *software-changes
+      when: "on_success"
   before_script:
     - cd extensions/tests
     # Allow that the Docker API version is negotiated between client and server
@@ -109,7 +131,6 @@ test-udm-unit-and-integration:
     expire_in: "1 day"
     when: "always"
     expose_as: "docker compose server logs"
-
 # TODO: Deactivate until sonarqube is properly set up
 # sonarqube:
 #   extends: .sonarqube
