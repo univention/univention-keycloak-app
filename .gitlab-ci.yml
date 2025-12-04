@@ -12,14 +12,14 @@ variables:
   # version
   PACKAGE_REGISTRY: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/keycloak-tar"
   # Documentation build uses this variable to set the release version of the document
-  KEYCLOAK_VERSION: "26.4.4"
+  KEYCLOAK_VERSION: "26.4.6"
   # this is where we get keycloak from
   KEYCLOAK_SOURCE: "https://github.com/keycloak/keycloak/releases/download/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
   # this is where we keycloak store and use from during the image build
   KEYCLOAK_DIST: "${PACKAGE_REGISTRY}/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
   # Documentation build uses this variable to determine the artifact output directory.
   DOC_TARGET_VERSION: "${KEYCLOAK_VERSION}"
-  LATEST_RELEASED_KEYCLOAK_VERSION: "26.4.4-ucs1"
+  LATEST_RELEASED_KEYCLOAK_VERSION: "26.4.6-ucs1"
 
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"

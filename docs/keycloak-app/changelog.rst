@@ -16,6 +16,18 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.4.6-ucs1
+===================
+
+Released: 4. Dec 2025
+
+* The app updates to :program:`Keycloak` version 26.4.6
+  (https://www.keycloak.org/docs/26.4.6/release_notes).
+  (https://www.keycloak.org/2025/11/keycloak-2646-released).
+
+* This version fixes CVE-2025-13467.
+
+
 Version 26.4.4-ucs1
 ===================
 
