@@ -87,6 +87,10 @@ spec:
           {{- if .Values.resources }}
           resources: {{- include "common.tplvalues.render" (dict "value" .Values.resources "context" .) | nindent 12 }}
           {{- end }}
+          {{- with .Values.extraEnvVars }}
+          env:
+            {{- . | toYaml | nindent 10 }}
+          {{- end }}
           volumeMounts:
            - name: "config-map-keycloak-translations-volume"
              mountPath: /opt/keycloak/themes/UCS/login/messages/
