@@ -138,7 +138,7 @@ the database settings during the installation.
 
 .. warning::
 
-   Changing the database settings after the installations means loosing every
+   Changing the database settings after the installations means losing every
    existing configuration settings and session.
 
    You have to manually backup :program:`Keycloak` before and restore the
