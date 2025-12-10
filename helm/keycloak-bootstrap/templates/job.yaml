@@ -66,7 +66,8 @@ spec:
           - configMapRef:
               name: {{ printf "%s-init" (include "common.names.fullname" .) }}
         {{- with .Values.extraEnvVars }}
-          {{- . | toYaml | nindent 10 }}
+        env:
+          {{- . | toYaml | nindent 12 }}
         {{- end }}
         command: ["wait-for-keycloak.py"]
         {{- if .Values.resources }}
