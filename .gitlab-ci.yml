@@ -24,7 +24,7 @@ variables:
 
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.53.1"
+    ref: "v1.54.0"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
