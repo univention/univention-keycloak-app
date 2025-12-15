@@ -118,7 +118,7 @@ initial configuration.
 
    .. warning::
 
-      Beware, your installation looses all custom configuration settings, custom
+      Beware, your installation loses all custom configuration settings, custom
       services providers and other changes to the realm *UCS*.
 
    After you deleted the realm *UCS*, create the initial configuration with the
