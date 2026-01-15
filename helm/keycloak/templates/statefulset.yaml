@@ -137,7 +137,7 @@ spec:
                   name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.auth.existingSecret "defaultNameSuffix" "postgresql-credentials" "context" .)}}
                   key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password" "context" .)}}
             - name: "UNIVENTION_META_JSON"
-              value: {{ printf "https://%s.%s/univention/meta.json" .Values.global.subDomains.portal .Values.global.domain | quote }}
+              value: "/univention/meta.json"
           {{- with .Values.extraEnvVars }}
             {{- . | toYaml | nindent 12 }}
           {{- end }}

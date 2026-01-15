@@ -546,6 +546,24 @@ true
 			<td>The name of the kubernetes secret which contains a TLS private key and certificate. Hint: This secret is not created by this chart and must be provided.</td>
 		</tr>
 		<tr>
+			<td>ingress.umcGateway.serviceName</td>
+			<td>string</td>
+			<td><pre lang="json">
+"nubus-umc-gateway"
+</pre>
+</td>
+			<td>Name of the UMC gateway service to proxy to.</td>
+		</tr>
+		<tr>
+			<td>ingress.umcGateway.servicePort</td>
+			<td>string</td>
+			<td><pre lang="json">
+"http"
+</pre>
+</td>
+			<td>Port of the UMC gateway service.</td>
+		</tr>
+		<tr>
 			<td>keycloak</td>
 			<td>object</td>
 			<td><pre lang="json">

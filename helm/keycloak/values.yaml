@@ -296,6 +296,17 @@ ingress:
     - pathType: "Prefix"
       path: "/resources"
 
+  # UMC Gateway proxy configuration.
+  # These paths proxy requests to the UMC gateway service, allowing Keycloak's
+  # login page to fetch meta.json and other resources without CORS issues.
+  # This mirrors the behavior in UCS where the SSO VirtualHost serves /univention/
+  # directly from the local filesystem.
+  umcGateway:
+    # -- Name of the UMC gateway service to proxy to.
+    serviceName: "nubus-umc-gateway"
+    # -- Port of the UMC gateway service.
+    servicePort: "http"
+
 # -- Lifecycle to automate configuration before or after startup
 lifecycleHooks: {}
 

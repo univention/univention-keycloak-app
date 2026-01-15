@@ -40,6 +40,14 @@ spec:
             backend: {{- default (include "common.ingress.backend" (dict "serviceName" (printf "%s" (include "common.names.fullname" $)) "servicePort" "http" "context" $)) | nindent 14 }}
             {{- end }}
           {{- end }}
+          # Proxy /univention/ paths to UMC gateway for meta.json, theme.css, etc.
+          # This allows Keycloak's login page to fetch these resources without CORS.
+          - pathType: "Prefix"
+            path: "/univention/"
+            backend: {{- include "common.ingress.backend" (dict "serviceName" .Values.ingress.umcGateway.serviceName "servicePort" .Values.ingress.umcGateway.servicePort "context" $) | nindent 14 }}
+          - pathType: "Exact"
+            path: "/favicon.ico"
+            backend: {{- include "common.ingress.backend" (dict "serviceName" .Values.ingress.umcGateway.serviceName "servicePort" .Values.ingress.umcGateway.servicePort "context" $) | nindent 14 }}
 
 ...
 {{- end }}
