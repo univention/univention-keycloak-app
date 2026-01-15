@@ -8,6 +8,14 @@
 	Please see the <a href="http://docs.software-univention.de/keycloak-app/latest/changelog.html" target="_blank">Keycloak app changelog</a> for detailed information about the changes and bugfixes. Below important information about specific versions.
 </p>
 <p>
+	<b>Version: 26.3.5-ucs1</b>
+</p>
+<ul>
+	<li>
+		Since Keycloak version 26.3.5-ucs1, for security reasons we have restrict the replication rules of the postgresql password to replica servers. If you want to generate a new password for the keycloak Postgresql connection, you can follow this article <a href=https://help.univention.com/t/keycloak-replicated-its-database-passwords-needlessly-to-replication-nodes/24817</a>
+	</li>
+</ul>
+<p>
 	<b>Version: 26.1.4-ucs1</b>
 </p>
 <ul>
