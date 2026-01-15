@@ -8,6 +8,14 @@
 	Eine Übersicht zu den Änderungen und Fehlerbehebungen finden Sie im <a href="http://docs.software-univention.de/keycloak-app/latest/changelog.html" target="_blank">Keycloak App Changelog</a>. Nachfolgend finden Sie wichtige Informationen zu bestimmten Versionen.
 </p>
 <p>
+	<b>Version: 26.3.5-ucs1</b>
+</p>
+<ul>
+	<li>
+		Vor dieser Version wurde das Datenbankpasswort auch auf Replica Directory Nodes repliziert. Aus Sicherheitsgründen wurde das nun geändert. Falls ein Replica in Ihrer Domäne vorhanden ist, können Sie in <a href="https://help.univention.com/t/keycloak-replicated-its-database-passwords-needlessly-to-replication-nodes/24817" target="_blank">diesem Artikel</a> eine Anleitung finden, wie Sie das Passwort ändern.
+	</li>
+</ul>
+<p>
 	<b>Version: 26.1.4-ucs1</b>
 </p>
 <ul>

@@ -12,7 +12,7 @@
 </p>
 <ul>
 	<li>
-		Since Keycloak version 26.3.5-ucs1, for security reasons we have restrict the replication rules of the postgresql password to replica servers. If you want to generate a new password for the keycloak Postgresql connection, you can follow this article <a href=https://help.univention.com/t/keycloak-replicated-its-database-passwords-needlessly-to-replication-nodes/24817</a>
+		Prior to this version, we replicated the database password to Replica servers. This has been changed due to security considerations. If you have a Replica Directory Node in your domain, you can follow <a href="https://help.univention.com/t/keycloak-replicated-its-database-passwords-needlessly-to-replication-nodes/24817" target="_blank">this article</a> to generate a new password.
 	</li>
 </ul>
 <p>
