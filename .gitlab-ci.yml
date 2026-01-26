@@ -12,7 +12,7 @@ variables:
   # version
   PACKAGE_REGISTRY: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/keycloak-tar"
   # Documentation build uses this variable to set the release version of the document
-  KEYCLOAK_VERSION: "26.4.7"
+  KEYCLOAK_VERSION: "26.5.2"
   # this is where we get keycloak from
   KEYCLOAK_SOURCE: "https://github.com/keycloak/keycloak/releases/download/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
   # this is where we keycloak store and use from during the image build
