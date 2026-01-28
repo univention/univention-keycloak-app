@@ -101,10 +101,10 @@
 - name: "Global: Assert variables from YAML files are arrays"
   ansible.builtin.assert:
     that:
-      - "global_ldap_mappers | type_debug == 'list'"
+      - "global_ldap_mappers | type_debug == 'dict'"
       - "global_login_links | type_debug == 'list'"
       - "global_2fa | type_debug == 'dict'"
-    fail_msg: "One or more variables read from YAML files are not arrays."
+    fail_msg: "One or more variables read from YAML files are not the expected type."
 
 - name: "Set global access token"
   ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"

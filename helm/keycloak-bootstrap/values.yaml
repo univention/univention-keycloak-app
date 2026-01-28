@@ -277,8 +277,31 @@ ldap:
 
 
 bootstrap:
-  # Support for additional attributes to be mapped from the LDAP to the Keycloak user object
-  ldapMappers: []
+  # -- Configure additional LDAP attributes to map to the Keycloak User object.
+  # This is a dict where each key is the name of the mapper and the value contains
+  # the mapper configuration. The attribute name is used as both the LDAP attribute
+  # and the Keycloak user model attribute.
+  #
+  # By default, when "Import Users" is enabled in Keycloak (ldapImportUsers: true),
+  # user attributes are only imported on the first login and cached in Keycloak's
+  # database. For mutable attributes that may change in LDAP (e.g., OXContextId),
+  # set alwaysReadFromLdap to true to ensure the value is always read fresh from LDAP.
+  #
+  # Example:
+  #   ldapMappers:
+  #     OXContextId:
+  #       alwaysReadFromLdap: true
+  #     department:
+  #       alwaysReadFromLdap: false
+  #
+  # Each mapper entry supports:
+  #   alwaysReadFromLdap: (boolean, default: true) When true, the attribute value
+  #     is always read from LDAP instead of Keycloak's cache. Recommended for
+  #     attributes that may change over time.
+  #
+  # Note: This setting is only for internal use and not recommended for general usage.
+  # @default -- `{}` (empty dict)
+  ldapMappers: {}
   # Define links that are rendered on the login page of Keycloak
   loginLinks: []
   twoFactorAuthentication:

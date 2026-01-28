@@ -1,15 +1,18 @@
 # SPDX-FileCopyrightText: 2023 Univention GmbH
 # SPDX-License-Identifier: AGPL-3.0-only
 ---
-- name: "Check for mandatory values (defined)"
-  when: "ldapMapper.ldapAndUserModelAttributeName is not defined"
-  ansible.builtin.fail:
-    msg: "Mandatory key(s) for an LDAP mapper (ldapAndUserModelAttributeName) not defined: {{ ldapMapper }}"
+# ldapMapper is a dict item with 'key' (attribute name) and 'value' (config dict)
+# The value dict may contain 'alwaysReadFromLdap' (boolean, default: true)
 
-- name: "Check for mandatory values (not empty)"
-  when: "ldapMapper.ldapAndUserModelAttributeName == ''"
+- name: "Check for mandatory values (key defined)"
+  when: "ldapMapper.key is not defined"
   ansible.builtin.fail:
-    msg: "Mandatory key(s) for an LDAP mapper (ldapAndUserModelAttributeName) is empty: {{ ldapMapper }}"
+    msg: "Mandatory key for an LDAP mapper (attribute name) not defined: {{ ldapMapper }}"
+
+- name: "Check for mandatory values (key not empty)"
+  when: "ldapMapper.key == ''"
+  ansible.builtin.fail:
+    msg: "Mandatory key for an LDAP mapper (attribute name) is empty: {{ ldapMapper }}"
 
 - name: "Create ldap mapper"
   changed_when: "_ldap_mapper_create.rc == 0"
@@ -21,5 +24,6 @@
       --binduser {{ global_keycloak_username }} \
       --bindpwdfile /credentials/keycloak.secret \
     user-attribute-ldap-mapper create \
-      {{ ldapMapper.ldapAndUserModelAttributeName }}
+      {% if ldapMapper.value.alwaysReadFromLdap | default(true) | bool %}--always-read-from-ldap {% endif %}\
+      {{ ldapMapper.key }}
 ...

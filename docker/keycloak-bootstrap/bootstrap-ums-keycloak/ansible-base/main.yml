@@ -103,7 +103,7 @@
       ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"
     - name: "Looping to create additional (non default) LDAP mappers"
       ansible.builtin.include_tasks: "include_create_ldapmapper.yml"
-      loop: "{{ global_ldap_mappers }}"
+      loop: "{{ global_ldap_mappers | dict2items }}"
       loop_control:
         loop_var: "ldapMapper"
 
