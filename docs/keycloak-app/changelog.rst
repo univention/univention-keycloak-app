@@ -16,7 +16,7 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
-Version 26.5.2-ucs1
+Version 26.5.2-ucs2
 ===================
 
 Released: 30. Jan 2025
