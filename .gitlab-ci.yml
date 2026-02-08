@@ -131,7 +131,7 @@ test-udm-unit-and-integration:
     expire_in: "1 day"
     when: "always"
     expose_as: "docker compose server logs"
-# TODO: Deactivate until sonarqube is properly set up
-# sonarqube:
-#   extends: .sonarqube
-#   needs: []
+
+sonarqube:
+  extends: .sonarqube
+  needs: []
