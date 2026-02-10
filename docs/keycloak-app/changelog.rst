@@ -1,4 +1,4 @@
-.. SPDX-FileCopyrightText: 2022-2024 Univention GmbH
+.. SPDX-FileCopyrightText: 2022-2026 Univention GmbH
 ..
 .. SPDX-License-Identifier: AGPL-3.0-only
 
@@ -16,17 +16,33 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.5.3-ucs1
+===================
+
+Released: 11. Feb 2026
+
+* The app updates to :program:`Keycloak` version 26.5.3.
+  (https://www.keycloak.org/docs/26.5.3/release_notes).
+  (https://www.keycloak.org/2026/02/keycloak-2653-released).
+
+* This version fixes CVE-2026-1609, CVE-2026-1529, CVE-2026-1486, CVE-2025-14778.
+
+* This version fixes an issue where, in some environments, the Apache
+  configuration used for Keycloak interfered with Let’s Encrypt certificate
+  validation (ACME HTTP-01 challenges) by incorrectly redirecting required HTTP
+  requests.
+
+
 Version 26.5.2-ucs2
 ===================
 
-Released: 30. Jan 2025
+Released: 30. Jan 2026
 
 * The app updates to :program:`Keycloak` version 26.5.2.
-  (https://www.keycloak.org/docs/26.5.0/release_notes).
   (https://www.keycloak.org/docs/26.5.2/release_notes).
   (https://www.keycloak.org/2026/01/keycloak-2652-released).
 
-* This version fixes CVE-2025-67735, CVE-2025-66560, CVE-2025-14559, CVE-2025-14082)
+* This version fixes CVE-2025-67735, CVE-2025-66560, CVE-2025-14559, CVE-2025-14082.
 
 
 Version 26.4.7-ucs1
