@@ -3,7 +3,7 @@ version: '3.1'
 services:
   keycloak:
     container_name: keycloak
-    image: gitregistry.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/keycloak:latest
+    image: artifacts.software-univention.de/nubus-dev/images/keycloak:0.6.0-post-jlohmer-kc-26-5-4@sha256:d83a3ae9e9798bebe163761484fc2d7aae2308c26771eded40e14649a4bb412b
     # For --proxy=edge see https://www.keycloak.org/server/reverseproxy
     # For --hostname   see https://www.keycloak.org/server/hostname
 @!@
