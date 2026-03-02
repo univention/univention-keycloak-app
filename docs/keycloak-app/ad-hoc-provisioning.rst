@@ -173,7 +173,7 @@ Configure Active Directory Federation Services for ad hoc provisioning
 ======================================================================
 
 Keycloak needs a federation with the external IAM system.
-*Active Directory Federation Service* adds the needed federation capability
+`Microsoft Active Directory Federation Services <ms-adfs_>`_ adds the needed federation capability
 to Active Directory using SAML and OpenID Connect.
 
 To configure the Active Directory Federation Services to properly work with ad
@@ -260,6 +260,11 @@ hoc federation you need to configure it with the following steps:
 
 #. Click :guilabel:`OK` to apply and save the rules.
 
+After configuring *Microsoft Active Directory Federation Services* with the claims
+and relying party trust above,
+you now configure Keycloak
+to use this external identity provider.
+
 .. _ad-hoc-provisioning-create-idp:
 
 Create an identity provider for Microsoft Active Directory
@@ -267,8 +272,10 @@ Create an identity provider for Microsoft Active Directory
 
 After you created the :ref:`custom authentication flow <ad-hoc-provisioning-custom-auth-flow>`,
 Keycloak can use ad hoc provisioning on any configured federated login.
-In this section, you learn how to set up a federated login
-using a `Microsoft Active Directory Federation Services <ms-adfs_>`_.
+In this section, you configure Keycloak to act as a service provider
+that delegates federated authentication
+to an external identity provider using
+`Microsoft Active Directory Federation Services <ms-adfs_>`_ as the example.
 
 To create an identity provider for Active Directory
 that uses the ad hoc provisioning follow the next steps:
