@@ -7,12 +7,10 @@ repos:
       - id: ucr-flake8
         additional_dependencies: ["flake8==5.0.4"]
       - id: ucr-ruff
-        additional_dependencies: ["ruff==0.0.274"]
       - id: ucr-autopep8
         additional_dependencies: ["autopep8<=2.0.2"]
         stages: [ manual ]
       - id: ucr-ruff-fix
-        additional_dependencies: ["ruff==0.0.274"]
         stages: [ manual ]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
