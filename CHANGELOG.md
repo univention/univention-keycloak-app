@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.7.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.6.0...v0.7.0) (2026-03-03)
+
+
+### Features
+
+* **app:** Update Keycloak to 26.5.2 ([4df4a11](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/4df4a1193f41a33fc4ba92c459c2943659a9a79f)), closes [univention/dev/projects/keycloak/keycloak-app#250](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/250)
+* **app:** Update Keycloak to 26.5.3 ([0988829](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/0988829ce050a425b400ede703e052f6a0a53d95)), closes [univention/dev/projects/keycloak/keycloak-app#254](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/254)
+* **app:** Update Keycloak to 26.5.4 ([0a71702](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/0a717021c4e0580cd336df0669e6f5f796678df8)), closes [univention/dev/nubus-for-k8s/nubus-helm#18](https://git.knut.univention.de/univention/dev/nubus-for-k8s/nubus-helm/issues/18)
+* **app:** version bump to 26.5.2-ucs2 for re-release of app ([e9abdf9](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/e9abdf9819c464d7d202593137857e7cae7174b5)), closes [univention/dev/projects/keycloak/keycloak-app#250](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/250)
+
+
+### Bug Fixes
+
+* **apache-config:** allow ACME HTTP-01 challenges on Keycloak VirtualHost ([3944121](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/39441214d3891250d18d0797e6889d45a54d81d8)), closes [#58836](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/58836) [univention/dev/ucs#3291](https://git.knut.univention.de/univention/dev/ucs/issues/3291)
+* Trigger release with valid semantic release token ([7158882](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/7158882bb83caa97e03d9d2b02257f15acc896eb)), closes [univention/dev/nubus-for-k8s/nubus-helm#18](https://git.knut.univention.de/univention/dev/nubus-for-k8s/nubus-helm/issues/18)
+
 ## [0.6.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.5.0...v0.6.0) (2025-12-09)
 
 
