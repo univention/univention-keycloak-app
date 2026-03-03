@@ -16,6 +16,15 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+
+Version 26.5.4-ucs2
+===================
+
+Released: 9. Mar 2026
+
+* This release of the :program:`Keycloak` app includes log level settings for
+  JBoss Logging |SPI| audit events.
+
 Version 26.5.4-ucs1
 ===================
 

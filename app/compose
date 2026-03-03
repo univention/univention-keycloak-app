@@ -38,6 +38,8 @@ pwdfile="/etc/keycloak.secret"
 with open(pwdfile, 'r') as fd:
     print(fd.read().strip())@!@
       KC_LOG_LEVEL: @%@keycloak/log/level@%@
+      KC_SPI_EVENTS_LISTENER__JBOSS_LOGGING__SUCCESS_LEVEL: @%@keycloak/audit/events/success/level@%@
+      KC_SPI_EVENTS_LISTENER__JBOSS_LOGGING__ERROR_LEVEL: @%@keycloak/audit/events/error/level@%@
       PROXY_ADDRESS_FORWARDING: "true"
       X509_CA_BUNDLE: "/ca-certificates.crt"
     volumes:

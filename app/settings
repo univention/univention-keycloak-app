@@ -155,6 +155,28 @@ InitialValue = INFO
 Scope = outside
 Group = Administration settings
 
+[keycloak/audit/events/success/level]
+Type = List
+Required = False
+Description = Log level for successful audit events. Requires event logging enabled in Keycloak realm settings.
+Show = Install, Settings
+Values = DEBUG, ERROR, FATAL, INFO, TRACE, WARN
+Labels = DEBUG, ERROR, FATAL, INFO, TRACE, WARN
+InitialValue = DEBUG
+Scope = outside
+Group = Administration settings
+
+[keycloak/audit/events/error/level]
+Type = List
+Required = False
+Description = Log level for failed audit events. Requires event logging enabled in Keycloak realm settings.
+Show = Install, Settings
+Values = DEBUG, ERROR, FATAL, INFO, TRACE, WARN
+Labels = DEBUG, ERROR, FATAL, INFO, TRACE, WARN
+InitialValue = WARN
+Scope = outside
+Group = Administration settings
+
 [keycloak/password/change/endpoint]
 Type = String
 Show = Install, Settings
