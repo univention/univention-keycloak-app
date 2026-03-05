@@ -436,6 +436,75 @@ more information, consult :cite:t:`keycloak-docs`.
         - Installation and app configuration
 
 
+.. envvar:: keycloak/audit/events/success/level
+
+   Configures the log level for successful audit events
+   such as user logins, logouts, and other successful authentication operations.
+   By default, Keycloak logs these events at ``DEBUG`` level.
+   You can adjust the log level to match your monitoring needs.
+   For information audit logging,
+   see :ref:`use-case-audit-logging`.
+
+   .. note::
+
+      Promoting successful events to ``info`` level increases log volume
+      because every sign-in, sign-out, and token refresh produces a log entry.
+      In high-traffic deployments,
+      plan your log storage capacity and retention policies accordingly.
+
+   .. warning::
+
+      Audit log entries include usernames and IP addresses,
+      which are personal data under regulations such as |GDPR|.
+      Apply appropriate access controls and retention policies to your log storage.
+
+   Possible values
+      ``DEBUG``, ``ERROR``, ``FATAL``, ``INFO``, ``TRACE``, ``WARN``.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``DEBUG``
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/audit/events/error/level
+
+   Configures the log level for failed audit events
+   such as failed login attempts and other authentication errors.
+   By default, Keycloak logs these events at ``WARN`` level.
+   You can adjust the log level to match your monitoring needs.
+   For information audit logging,
+   see :ref:`use-case-audit-logging`.
+
+   .. warning::
+
+      Audit log entries include usernames and IP addresses,
+      which are personal data under regulations such as |GDPR|.
+      Apply appropriate access controls and retention policies to your log storage.
+
+   Possible values
+      ``DEBUG``, ``ERROR``, ``FATAL``, ``INFO``, ``TRACE``, ``WARN``.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``WARN``
+        - Installation and app configuration
+
+
 .. envvar:: keycloak/java/opts
 
    Defines the options that the Keycloak app appends to the *java* command.

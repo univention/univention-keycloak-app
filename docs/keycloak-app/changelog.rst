@@ -20,7 +20,7 @@ Please also consider the `upstream release notes
 Version 26.5.4-ucs2
 ===================
 
-Released: 9. Mar 2026
+Released: 10. Mar 2026
 
 * This release of the :program:`Keycloak` app includes log level settings for
   JBoss Logging |SPI| audit events.
@@ -34,7 +34,7 @@ Released: 2. Mar 2026
   (https://www.keycloak.org/docs/26.5.4/release_notes).
   (https://www.keycloak.org/2026/02/keycloak-2654-released).
 
-* This version fixes CVE-2026-1190, CVE-2026-0707, CVE-2025-5416, CVE-2026-2575, CVE-2026-2733.
+* This version fixes :uv:cve:`2026-1190`, :uv:cve:`2026-0707`, :uv:cve:`2025-5416`, :uv:cve:`2026-2575`, :uv:cve:`2026-2733`.
 
 
 Version 26.5.3-ucs1
@@ -46,7 +46,7 @@ Released: 11. Feb 2026
   (https://www.keycloak.org/docs/26.5.3/release_notes).
   (https://www.keycloak.org/2026/02/keycloak-2653-released).
 
-* This version fixes CVE-2026-1609, CVE-2026-1529, CVE-2026-1486, CVE-2025-14778.
+* This version fixes :uv:cve:`2026-1609`, :uv:cve:`2026-1529`, :uv:cve:`2026-1486`, :uv:cve:`2025-14778`.
 
 * This version fixes an issue where, in some environments, the Apache
   configuration used for Keycloak interfered with Let’s Encrypt certificate
@@ -63,7 +63,7 @@ Released: 30. Jan 2026
   (https://www.keycloak.org/docs/26.5.2/release_notes).
   (https://www.keycloak.org/2026/01/keycloak-2652-released).
 
-* This version fixes CVE-2025-67735, CVE-2025-66560, CVE-2025-14559, CVE-2025-14082.
+* This version fixes :uv:cve:`2025-67735`, :uv:cve:`2025-66560`, :uv:cve:`2025-14559`, :uv:cve:`2025-14082`.
 
 
 Version 26.4.7-ucs1
@@ -75,7 +75,7 @@ Released: 10. Dec 2025
   (https://www.keycloak.org/docs/26.4.7/release_notes).
   (https://www.keycloak.org/2025/12/keycloak-2647-released).
 
-* This version fixes CVE-2025-13467.
+* This version fixes :uv:cve:`2025-13467`.
 
 
 Version 26.4.4-ucs1
@@ -100,8 +100,8 @@ Released: 05. Nov 2025
   (https://www.keycloak.org/docs/26.4.2/release_notes).
   (https://www.keycloak.org/2025/10/keycloak-2642-released).
 
-* This version fixes CVE-2025-48924, CVE-2025-7962, and CVE-2025-11429,
-  CVE-2025-11419.
+* This version fixes :uv:cve:`2025-48924`, :uv:cve:`2025-7962`, :uv:cve:`2025-11429`,
+  :uv:cve:`2025-11419`.
 
 Version 26.3.5-ucs1
 ===================
@@ -115,7 +115,7 @@ Released: 14. Oct 2025
   (https://www.keycloak.org/docs/26.3.5/release_notes).
   (https://www.keycloak.org/2025/09/keycloak-2635-released).
 
-* This version fixes CVE-2025-58057 and CVE-2025-58056
+* This version fixes :uv:cve:`2025-58057` and :uv:cve:`2025-58056`.
 
 Version 26.3.3-ucs1
 ===================
@@ -126,7 +126,7 @@ Released: 15. Sep 2025
   (https://www.keycloak.org/docs/26.3.3/release_notes).
   (https://www.keycloak.org/2025/08/keycloak-2633-released).
 
-* This version fixes CVE-2025-8419.
+* This version fixes :uv:cve:`2025-8419`.
 
 Version 26.3.1-ucs1
 ===================
@@ -137,7 +137,7 @@ Released: 14. Aug 2025
   (https://www.keycloak.org/docs/26.3.1/release_notes).
   (https://www.keycloak.org/2025/07/keycloak-2631-released).
 
-* This version fixes CVE-2025-7365 and CVE-2025-7784.
+* This version fixes :uv:cve:`2025-7365` and :uv:cve:`2025-7784`.
 
 Version 26.2.5-ucs1
 ===================

@@ -13,3 +13,4 @@
 .. |UMC| replace:: :abbr:`UMC (Univention Management Console)`
 .. |FQDN| replace:: :abbr:`FQDN (fully qualified domain name)`
 .. |IDP| replace:: :abbr:`IdP (Identity Provider)`
+.. |GDPR| replace:: :abbr:`GDPR (General Data Protection Regulation)`

@@ -466,3 +466,50 @@ configuration. You can therefore use the standard UCR variables for the
    $ ucr set apache2/ssl/certificate="$cert_file"
    $ ucr set apache2/ssl/key="$key_file"
    $ systemctl reload apache2.service
+
+.. _use-case-audit-logging:
+
+Audit logging for Keycloak
+==========================
+
+:program:`Keycloak` emits audit events
+such as user sign-ins, sign-outs, and sign-in failures
+through its built-in ``jboss-logging`` event listener.
+By default, :program:`Keycloak` emits successful events at the ``debug`` log level
+and error events at the ``warn`` log level.
+Because the standard log output threshold is ``info``,
+successful audit events aren't visible unless you enable debug logging.
+
+This section explains how to configure :program:`Keycloak`
+to make audit events visible to centralized logging solutions
+without enabling full debug mode.
+You can adjust the log level for each event category independently
+to match your monitoring needs.
+
+Use this configuration for production deployments
+where you need to monitor user authentication events
+with centralized logging.
+
+Keycloak emits the following audit events
+at the levels you configure:
+
+:Successful events: ``LOGIN``, ``LOGOUT``, ``CODE_TO_TOKEN``, ``REFRESH_TOKEN``
+:Error events: ``LOGIN_ERROR``
+
+To adjust the audit log levels,
+sign in to the UCS management system with a username with administration rights
+and go to :menuselection:`App Center --> Keycloak --> Manage Installation --> App Settings`.
+Set the needed log level for successful and failed audit events,
+then click :guilabel:`Apply Changes`.
+
+To verify the configuration,
+sign in to the portal and review your centralized logging solution
+for audit events such as ``LOGIN``, ``LOGOUT``, or ``CODE_TO_TOKEN``.
+
+.. seealso::
+
+   :envvar:`keycloak/audit/events/success/level`
+      For the app setting reference for successful audit events log level.
+
+   :envvar:`keycloak/audit/events/error/level`
+      For the app setting reference for failed audit events log level.
