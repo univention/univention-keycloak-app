@@ -71,8 +71,8 @@ The setup consists of the following steps in the given order:
 
 .. _ad-hoc-provisioning-import-external-ca:
 
-Import external CA certificates
-===============================
+Import external CA certificates in Keycloak
+===========================================
 
 Federation involves other, for example external, server systems and requires trust.
 Certificates are a way to implement trust.
@@ -111,8 +111,8 @@ The URL depends on the deployment of your Nubus installation.
 
 .. _ad-hoc-provisioning-custom-auth-flow:
 
-Create custom authentication flow
-=================================
+Prepare custom authentication flow in Keycloak
+==============================================
 
 Authentication flows are workflows with sequences of steps
 that Keycloak follows to decide whether to go grant a user's sign-in request.
@@ -169,8 +169,8 @@ as described in the following steps:
 
 .. _ad-hoc-provisioning-adfs-configuration:
 
-Configure Active Directory Federation Services for ad hoc provisioning
-======================================================================
+Configure Active Directory Federation Services as relying party
+===============================================================
 
 Keycloak needs a federation with the external IAM system.
 `Microsoft Active Directory Federation Services <ms-adfs_>`_ adds the needed federation capability
@@ -267,8 +267,8 @@ to use this external identity provider.
 
 .. _ad-hoc-provisioning-create-idp:
 
-Create an identity provider for Microsoft Active Directory
-==========================================================
+Add Active Directory Federation Services as identity provider in Keycloak
+=========================================================================
 
 After you created the :ref:`custom authentication flow <ad-hoc-provisioning-custom-auth-flow>`,
 Keycloak can use ad hoc provisioning on any configured federated login.
@@ -350,8 +350,8 @@ that uses the ad hoc provisioning follow the next steps:
 
 .. _ad-hoc-provisioning-mappers:
 
-Mappers for the identity provider
-=================================
+Configure attribute mapping in Keycloak
+=======================================
 
 The identity provider needs the following mapper configuration to work properly
 with Nubus in the UCS appliance and the Kubernetes deployments:
