@@ -372,7 +372,7 @@ null
 			<td>image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"0.8.0-pre-rowino-audit-logging@sha256:ac013f27496e99fd1d8b42d8d517c80f453b0ddc42f7271000d9fdc7cae8a96b"
+"0.8.0-pre-main@sha256:ab0725540244e03689317f1eea0e427c959599eabd6a0b3d9962ab6f5d4cf9c0"
 </pre>
 </td>
 			<td>Define image tag.</td>
