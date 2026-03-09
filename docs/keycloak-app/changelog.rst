@@ -17,10 +17,16 @@ Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
 
-Version 26.5.4-ucs2
+Version 26.5.5-ucs1
 ===================
 
 Released: 10. Mar 2026
+
+* The app updates to :program:`Keycloak` version 26.5.5.
+  (https://www.keycloak.org/docs/26.5.5/release_notes).
+  (https://www.keycloak.org/2026/03/keycloak-2655-released).
+
+* This version fixes :uv:cve:`2026-3047`, :uv:cve:`2026-3009`, :uv:cve:`2026-2603`, :uv:cve:`2026-2092`.
 
 * This release of the :program:`Keycloak` app includes log level settings for
   JBoss Logging |SPI| audit events.
