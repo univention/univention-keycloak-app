@@ -3,17 +3,10 @@
 
 
 include:
-  - project: univention/infrastructure/docker-services
-    file:
-      - pre-commit.yml
   - project: "univention/dev/nubus-for-k8s/common-ci"
     ref: "v1.44.0"
     file:
       - "defaults/stages.yaml"
-
-pre-commit:
-  stage: lint
-  extends: .pre-commit
 
 # download keycloak archive and store in gitlab
 mirror-keycloak:
@@ -36,6 +29,7 @@ mirror-keycloak:
       fi
 
 generate-config:
+  needs: []
   stage: prepare
   image:
     name: docker-registry.knut.univention.de/knut/deb-builder

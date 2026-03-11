@@ -1,4 +1,335 @@
-# changelog
+# Changelog
+
+## [0.21.2](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.21.1...v0.21.2) (2026-02-25)
+
+
+### Bug Fixes
+
+* **deps:** Update nubus/images/wait-for-dependency Docker tag to v0.36.6 ([5080a69](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/5080a69c5e351b5824b470d578c22d1a42f4327b)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.21.1](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.21.0...v0.21.1) (2026-02-24)
+
+
+### Bug Fixes
+
+* **deps:** Update gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base Docker tag to v5.2.4-build.20260223 ([83b6275](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/83b62756c8cfc939545ee1af1e5d2e9fd4c0fc52)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.21.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.20.6...v0.21.0) (2026-02-23)
+
+
+### Features
+
+* Support fetching mapped LDAP attributes in Keycloak ([aeaac7e](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/aeaac7e21017c1cb2863d43e1d2dbd36bfb6c29a)), closes [univention/dev/internal/team-nubus#1549](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1549)
+
+
+### Bug Fixes
+
+* **Dockerfile:** update base image version ([842d035](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/842d0355298d0ad27dcf2a66e87534d2733a896c)), closes [univention/dev/internal/team-nubus#1549](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1549)
+
+## [0.20.6](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.20.5...v0.20.6) (2026-02-11)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.55.3 ([a435fcc](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/a435fcca967cdb953be9cdd7bc2aa417e42507ec)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.20.5](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.20.4...v0.20.5) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.55.2 ([db29ccc](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/db29cccd1872f403f435aa982e9bcdf2e6be8360)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.20.4](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.20.3...v0.20.4) (2026-01-16)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.55.1 ([0b3e2fa](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/0b3e2fab141aa039c88f70241fa0cc8d4d26702f)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.20.3](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.20.2...v0.20.3) (2026-01-14)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.54.2 ([699455b](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/699455b149ee4a574cf11cf8c327b46fa3e3a46a)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.20.2](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.20.1...v0.20.2) (2026-01-13)
+
+
+### Bug Fixes
+
+* Bump image to errata 299 ([6b6cc56](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/6b6cc56d1e60175a8eeb7a4a04d3605cd27b3f30)), closes [univention/dev/internal/team-nubus#1518](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1518)
+
+## [0.20.1](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.20.0...v0.20.1) (2025-12-23)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.54.1 ([99cf2f5](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/99cf2f5ed8a5027d95b7dc873e41891c88bd4f24)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.20.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.20...v0.20.0) (2025-12-10)
+
+
+### Features
+
+* **helm:** Add component-specific extraEnvVars support ([bff6b4b](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/bff6b4bd26aa4ac771930405006b39520c50a7ac)), closes [univention/dev/internal/team-nubus#977](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/977)
+
+## [0.19.20](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.19...v0.19.20) (2025-12-10)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.54.0 ([070555f](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/070555f0bd479058c057f664bbeaa0b302f8e952)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.19](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.18...v0.19.19) (2025-12-03)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.53.1 ([bd108ab](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/bd108abb3cd0859d86517e989dd4ff5fd835426a)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.18](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.17...v0.19.18) (2025-12-02)
+
+
+### Bug Fixes
+
+* bump image to errata 298 ([bb8b812](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/bb8b81288ed52a4c87b329c59019d2be40b75c94)), closes [univention/dev/internal/team-nubus#1543](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1543)
+
+## [0.19.17](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.16...v0.19.17) (2025-11-29)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.53.0 ([a1c249e](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/a1c249e9d7b503569d825f182e725bf45b7dc24d)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.16](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.15...v0.19.16) (2025-11-28)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.52.1 ([db746c1](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/db746c1cb4c5405dec1207045bb2e6bdcd740c97)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.15](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.14...v0.19.15) (2025-11-27)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.52.0 ([1de55d9](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/1de55d928df34e3fddca14f609888324b8b06d55)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.14](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.13...v0.19.14) (2025-11-21)
+
+
+### Bug Fixes
+
+* bump wait-for-dependency ([a2912d5](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/a2912d5188f24fde4982547cd3973eba91d44c64)), closes [univention/dev/internal/team-nubus#1476](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1476)
+
+## [0.19.13](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.12...v0.19.13) (2025-11-20)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.50.3 ([31d3a29](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/31d3a29dadce1da54385c3a2d53ca385d0a67d46)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.51.0 ([82e144c](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/82e144c9015d4ef36e61e36ee9803f9ba0b18525)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.12](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.11...v0.19.12) (2025-11-18)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.50.2 ([43821f8](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/43821f8191fc72cb8ff2caadea39fd79da8a2ed7)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.11](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.10...v0.19.11) (2025-11-12)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.50.0 ([2681b2b](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/2681b2b772a7f680e974fbaf1ee4d49bdfbc5843)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.10](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.9...v0.19.10) (2025-11-04)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.48.0 ([6a15b43](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/6a15b4302bb7d7c226535ed926b8f814e2663167)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.9](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.8...v0.19.9) (2025-11-04)
+
+
+### Bug Fixes
+
+* **deps:** Update gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base Docker tag to v5.2.3-build.20251030 ([98dcf5b](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/98dcf5b2304a3fa4381b58dca6d41c72c355f70d)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.8](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.7...v0.19.8) (2025-11-01)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.47.0 ([da5f43e](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/da5f43e949f57f5b0534f67decba01c44542657d)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.7](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.6...v0.19.7) (2025-10-29)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.46.1 ([0d169c0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/0d169c03138228c03726a85555146a993a7ffdbb)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.6](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.5...v0.19.6) (2025-10-29)
+
+
+### Bug Fixes
+
+* **deps:** Update gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base Docker tag to v5.2.3-build.20251024 ([841b189](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/841b189baf6ef9a3f320d01ee4d5dd4d46e34530)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.5](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.4...v0.19.5) (2025-10-29)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.46.0 ([e6779ec](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/e6779ec8e77cf433a647a7614e822ef1651a5b6c)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.4](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.3...v0.19.4) (2025-10-25)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.45.2 ([8c7556e](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/8c7556ea46615948fddeb981caeeabf9f21980f3)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.3](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.2...v0.19.3) (2025-10-24)
+
+
+### Bug Fixes
+
+* **deps:** Update gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base Docker tag to v5.2.3-build.20251023 ([18f37b6](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/18f37b6adf962e91795c873ab56b4ab559a154f5)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.2](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.1...v0.19.2) (2025-10-23)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.45.1 ([bcd1235](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/bcd1235ca0989febaf83faf6a0ce842f65456930)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.1](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.19.0...v0.19.1) (2025-10-22)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.45.0 ([6dbb20d](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/6dbb20d2f92227f61413e4543e469b984d684628)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.19.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.18.0...v0.19.0) (2025-10-17)
+
+
+### Features
+
+* add toggle for enabling importing users from LDAP into Keycloak ([25e5054](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/25e505406693005d4aa4486e83af2524c72344cf)), closes [univention/dev/internal/team-nubus#1448](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1448)
+
+
+### Bug Fixes
+
+* bump ucs-base-image ([346c4cb](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/346c4cb2ed2524ae627422180879907953e52314)), closes [univention/dev/internal/team-nubus#1448](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1448)
+
+## [0.18.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.17.9...v0.18.0) (2025-10-15)
+
+
+### Features
+
+* adjust to common behavior / add tests for annotations, labels and image configuration ([ad78dd7](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/ad78dd7af15cf9da41b67ab70c2a2ead99fcb193)), closes [univention/dev/internal/team-nubus#1398](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1398)
+* generate keycloak secret / add tests on secrets ([7a4e35d](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/7a4e35d5417e5615ae648f7dbc4731b06e55fc5c)), closes [univention/dev/internal/team-nubus#1398](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1398)
+* generate ldap secret / add tests on secrets ([03dfe00](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/03dfe00cb6fad1bfaaa436c66198e0d3528180a9)), closes [univention/dev/internal/team-nubus#1398](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1398)
+* generate oidc secret / add tests on secrets ([a9cf280](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/a9cf28047c9dcb65cd1a4eee0c99ed00987e6b28)), closes [univention/dev/internal/team-nubus#1398](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1398)
+
+
+### Bug Fixes
+
+* ensure bootstrap job name stays same as before ([cffa18a](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/cffa18a28cf871a85599c03ff6e33d5d06de1a25)), closes [univention/dev/internal/team-nubus#1398](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1398)
+* use normal ucs-base base image which includes a correct version of univention-keycloak now ([6b06182](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/6b061821337d14c54ed1dbbf40cd461d5e5f8e71)), closes [univention/dev/internal/team-nubus#1398](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1398)
+
+## [0.17.9](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.17.8...v0.17.9) (2025-10-15)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.44.11 ([aaf4cd5](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/aaf4cd5bab42f3d8264c383a5cb14ca81317b4c8)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.17.8](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.17.7...v0.17.8) (2025-10-14)
+
+
+### Bug Fixes
+
+* **deps:** Update gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base Docker tag to v5.2.3-build.20251009 ([4a1b27f](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/4a1b27f0f8010dd5db1f6a64d403f881da878d5e)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.17.7](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.17.6...v0.17.7) (2025-10-02)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.44.9 ([94ab07e](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/94ab07e857b4196816bb08105c91b265a81ca746)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.17.6](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.17.5...v0.17.6) (2025-10-01)
+
+
+### Bug Fixes
+
+* remove pined version of univention-keycloak-client ([d526bb2](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/d526bb20538012e4e070545d52f777dee6ff1af9)), closes [univention/dev/internal/team-nubus#1424](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1424)
+
+## [0.17.5](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.17.4...v0.17.5) (2025-09-18)
+
+
+### Bug Fixes
+
+* Make the Keycloak client name static and not dynamic ([d5a18cd](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/d5a18cd4e67549622e0a76a03bb4fe59d994290b)), closes [univention/dev/internal/team-nubus#1435](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1435)
+* pin the new version ([1b212b0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/1b212b0c373b57e41134ae58b479788ca30dd59e)), closes [univention/dev/internal/team-nubus#1435](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1435)
+
+## [0.17.4](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.17.3...v0.17.4) (2025-09-17)
+
+
+### Bug Fixes
+
+* add --use-refresh-tokens to UMC OAuth 2.0 client ([a05b6f4](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/a05b6f483e3bc486884b002bd384327037f8df5f)), closes [univention/dev/internal/team-nubus#1435](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1435)
+
+## [0.17.3](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.17.2...v0.17.3) (2025-09-16)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.44.7 ([bafb645](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/bafb6453ea0295a40ad37f582909bdf280539898)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.17.2](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.17.1...v0.17.2) (2025-09-16)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.44.6 ([a7f297c](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/a7f297cc8456d92d7d83b8b534b4f5e4fbbb3830)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
+
+## [0.17.1](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.17.0...v0.17.1) (2025-09-15)
+
+
+### Bug Fixes
+
+* avoid using --force ([8ad41e6](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/8ad41e6d2f781533b9317546b4053abaaea16bfa)), closes [univention/dev/internal/dev-issues/dev-incidents#158](https://git.knut.univention.de/univention/dev/internal/dev-issues/dev-incidents/issues/158)
+* ping right version ([b9ab205](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/b9ab205bc3f9ae915c0b6b1fcf8359f9b3440a7e)), closes [univention/dev/internal/dev-issues/dev-incidents#158](https://git.knut.univention.de/univention/dev/internal/dev-issues/dev-incidents/issues/158)
+
+## [0.17.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.16.5...v0.17.0) (2025-09-12)
+
+
+### Features
+
+* **keycloak-bootstrap:** add OIDC Relying Party client for UMC ([efaed2f](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/efaed2f938d8eba4ebf5ed1450106dbd58a2e04c)), closes [univention/dev/internal/dev-issues/dev-incidents#138](https://git.knut.univention.de/univention/dev/internal/dev-issues/dev-incidents/issues/138)
+
+
+### Bug Fixes
+
+* **docker:** Bump version of keycloak client, old version is gone ([277d133](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/277d133082e220f584e0c7dade11cf84839abc34)), closes [univention/dev/internal/dev-issues/dev-incidents#138](https://git.knut.univention.de/univention/dev/internal/dev-issues/dev-incidents/issues/138)
+* **helm:** Rename some valaues/variable to make their meaning clearer ([f1f2159](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/f1f2159687faddd385bffb1bebc7cb385bd074f5)), closes [univention/dev/internal/dev-issues/dev-incidents#138](https://git.knut.univention.de/univention/dev/internal/dev-issues/dev-incidents/issues/138)
+* **keycloak-bootstrap:** Cleanup and use nubus-common as base ([93a9303](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/93a9303038ef07e0103f319920739dabb8201f82)), closes [univention/dev/internal/dev-issues/dev-incidents#138](https://git.knut.univention.de/univention/dev/internal/dev-issues/dev-incidents/issues/138)
+* **keycloak-bootstrap:** Handle secrets correctly ([9db79f9](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/9db79f93579acf2dd007c98bac3fb9ab91492b40)), closes [univention/dev/internal/dev-issues/dev-incidents#138](https://git.knut.univention.de/univention/dev/internal/dev-issues/dev-incidents/issues/138)
+
+## [0.16.5](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.16.4...v0.16.5) (2025-09-12)
+
+
+### Bug Fixes
+
+* Upgrade base image to 5.2-3 and added new custom package ([214c848](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/214c84857ab7efdf40e1320c95f36784af996bc4)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/issues/0)
 
 ## [0.16.4](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-helm-chart/compare/v0.16.3...v0.16.4) (2026-03-03)
 

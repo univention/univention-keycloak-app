@@ -28,12 +28,12 @@ include:
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
-      - "jobs/semantic-release-env.yaml"
-      - "jobs/container-build-external.yaml"
-      - "templates/sonarqube.yaml"
       - "jobs/lint-pre-commit.yaml"
       - "jobs/lint-commit-messages.yaml"
+      - "jobs/semantic-release-env.yaml"
+      - "jobs/container-build-external.yaml"
       - "jobs/package-and-publish-helm-charts-external.yaml"
+      - "templates/sonarqube.yaml"
 
   - project: "univention/infrastructure/docker-services"
     ref: "master"
@@ -52,10 +52,8 @@ include:
     DOCKERFILE_PATH: "./Dockerfile"
     KANIKO_BUILD_CONTEXT: "./"
     KANIKO_ARGS: "--cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache --build-arg KEYCLOAK_VERSION=$KEYCLOAK_VERSION --build-arg KEYCLOAK_DIST=$KEYCLOAK_DIST"
-
-.publish-matrix: &publish-matrix
-  - IMAGE_NAME:
-      - "keycloak"
+  - IMAGE_NAME: "keycloak-bootstrap"
+    KANIKO_ARGS: "--cache=false"
 
 lint-pre-commit:
   rules:
@@ -65,8 +63,9 @@ lint-pre-commit:
 container-build:
   parallel:
     matrix: *build-matrix
-  rules:
-    - changes: &software-changes
+  rules: &container-rules
+    - if: '$IMAGE_NAME == "keycloak"'
+      changes: &software-changes
         - app/**/*
         - dependencies/**/*
         - extensions/**/*
@@ -80,30 +79,27 @@ container-build:
         - requirements.txt
         - sonar-project.properties
         - update-appcenter-test.sh
+    - if: '$IMAGE_NAME != "keycloak"'
 
 container-malware-scan:
   parallel:
-    matrix: *publish-matrix
-  rules:
-    - changes: *software-changes
+    matrix: *build-matrix
+  rules: *container-rules
 
 container-sign-external:
   parallel:
     matrix: *build-matrix
-  rules:
-    - changes: *software-changes
+  rules: *container-rules
 
 push-image-external:
   parallel:
-    matrix: *publish-matrix
-  rules:
-    - changes: *software-changes
+    matrix: *build-matrix
+  rules: *container-rules
 
 container-release-attestation:
   parallel:
-    matrix: *publish-matrix
-  rules:
-    - changes: *software-changes
+    matrix: *build-matrix
+  rules: *container-rules
 
 test-udm-unit-and-integration:
   needs: []
@@ -152,6 +148,7 @@ chart-tests:
   needs: []
   script:
     - "helm dep build helm/keycloak"
+    - "helm dep build helm/keycloak-bootstrap"
     - "pytest -vv helm-unittests"
 
 ...

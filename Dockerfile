@@ -9,19 +9,23 @@ RUN --mount=type=cache,target=/root/.m2 mvn clean package --file pom.xml \
   && cp /root/.m2/repository/com/github/seancfoley/ipaddress/5.5.1/ipaddress-5.5.1.jar ./
 
 # keycloak itself
+# hadolint ignore=DL3006
 FROM docker-registry.knut.univention.de/knut/pipeline_helper AS keycloak
 ARG KEYCLOAK_DIST # downloading the archive for every pipeline job just takes to long
 ARG KEYCLOAK_VERSION
 WORKDIR /keycloak
+# hadolint ignore=DL3020
 ADD $KEYCLOAK_DIST .
 RUN tar -xvf keycloak-${KEYCLOAK_VERSION}.tar.gz && rm keycloak-${KEYCLOAK_VERSION}.tar.gz
 
 # templates and themes
+# hadolint ignore=DL3006
 FROM docker-registry.knut.univention.de/knut/pipeline_helper AS theme
 ARG KEYCLOAK_VERSION
 WORKDIR /themes
 COPY --from=keycloak /keycloak/keycloak-${KEYCLOAK_VERSION}/lib/lib/main/org.keycloak.keycloak-themes-${KEYCLOAK_VERSION}.jar .
 COPY files/themes ./
+# hadolint ignore=DL3003
 RUN unzip org.keycloak.keycloak-themes-${KEYCLOAK_VERSION}.jar "theme/base/login/template.ftl" \
  && cp theme/base/login/template.ftl UCS/login/template.ftl \
  && cp theme/base/login/template.ftl UCS/login/template.ftl.orig \
@@ -31,6 +35,7 @@ RUN unzip org.keycloak.keycloak-themes-${KEYCLOAK_VERSION}.jar "theme/base/login
  && git apply -v template.ftl.patch
 
 # copy everything together so that we can use one COPY statement for the final image
+# hadolint ignore=DL3006
 FROM docker-registry.knut.univention.de/knut/pipeline_helper AS artifacts
 ARG KEYCLOAK_VERSION
 RUN apt-get update && apt-get install -y zip

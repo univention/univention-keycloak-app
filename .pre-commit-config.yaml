@@ -5,6 +5,7 @@
 
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
+
 repos:
 
   - repo: "https://git.knut.univention.de/univention/dist/pre-commit-ucr"
@@ -72,7 +73,7 @@ repos:
       - id: "rst-inline-touching-normal"
 
   - repo: "https://github.com/pycqa/flake8"
-    rev: "5.0.4"
+    rev: "7.3.0"
     hooks:
       - id: "flake8"
 
@@ -104,6 +105,16 @@ repos:
           - "dockerfile"
           - "python"
           - "yaml"
+
+  - repo: "https://github.com/ansible/ansible-lint"
+    rev: "v25.9.0"
+    hooks:
+      - id: "ansible-lint"
+        name: "Ansible-lint"
+        args:
+          - "docker/keycloak-bootstrap/"
+        additional_dependencies:
+          - "ansible>=2.13"
 
   - repo: "https://github.com/astral-sh/ruff-pre-commit"
     rev: "v0.13.1"
@@ -202,7 +213,7 @@ repos:
         stages:
           - "manual"
 
-  - repo: "https://git.knut.univention.de/univention/customers/dataport/upx/kyverno-test-pre-commit"
+  - repo: "https://git.knut.univention.de/univention/dev/tooling/kyverno-test-pre-commit/"
     rev: "v0.5.0"
     hooks:
       - id: "kyverno-test"
