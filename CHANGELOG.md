@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.21.2...v0.22.0) (2026-03-11)
+
+
+### Features
+
+* Version bump to trigger a release ([174b997](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/174b99716cdd75ba002b450cccc86524b2823e43)), closes [univention/dev/projects/keycloak/keycloak-app#258](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/258)
+
 ## [0.7.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.6.0...v0.7.0) (2026-03-03)
 
 
