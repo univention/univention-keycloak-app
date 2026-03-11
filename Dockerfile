@@ -66,4 +66,5 @@ USER 1000
 EXPOSE 7600
 EXPOSE 8080
 EXPOSE 8443
+
 ENTRYPOINT [ "/opt/keycloak/bin/kc.sh" ]
