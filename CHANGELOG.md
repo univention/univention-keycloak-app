@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.3](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.21.2...v0.21.3) (2026-03-11)
+
+
+### Bug Fixes
+
+* Bump base-image ([4c7bbc5](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/commit/4c7bbc5cf10750981f6ea7ef5a386fd3a64a8d7d)), closes [univention/dev/internal/team-nubus#1477](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1477)
+
 ## [0.21.2](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-bootstrap/compare/v0.21.1...v0.21.2) (2026-02-25)
 
 
