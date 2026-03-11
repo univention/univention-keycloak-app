@@ -453,4 +453,3 @@ logged in before seeing the tile. See :ref:`central-portal` in
 
    `Microsoft 365 Connector <https://www.univention.com/products/univention-app-center/app-catalog/microsoft365/>`_
       in Univention App Catalog
-

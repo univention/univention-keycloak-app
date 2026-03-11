@@ -68,4 +68,3 @@ Additionally, verify the following items:
 
 * Use *Developer Tools* of your browser to see which requests fail to narrow
   down the cause of the problem.
-

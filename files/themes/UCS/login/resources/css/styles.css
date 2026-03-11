@@ -431,4 +431,3 @@ input:not(:placeholder-shown) + .pf-c-form__label, input:focus + .pf-c-form__lab
    outline-offset: 2px;
    text-decoration-thickness: 3px
 }
-

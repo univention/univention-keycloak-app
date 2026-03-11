@@ -21,4 +21,3 @@ index 584204f..730066d 100644
              errorEvent.detail(Details.REASON, me.getMessage()).error(Errors.PASSWORD_REJECTED);
 -- 
 2.25.1
-

@@ -31,4 +31,3 @@ There is also the question if Keycloak shall be used for all apps or not. Probab
 ## Decision Outcome
 
 Chosen option: TODO
-

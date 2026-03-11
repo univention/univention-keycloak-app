@@ -26,4 +26,3 @@ on the Primary Node (or really: any node will do).
 ## Decision Outcome
 
 Chosen option: TODO
-

@@ -80,4 +80,3 @@ Your feedback is welcome and highly appreciated. If you have comments,
 suggestions, or criticism, please `send your feedback
 <https://www.univention.com/feedback/?keycloak-migration=generic>`_ for document
 improvement.
-

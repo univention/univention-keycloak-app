@@ -52,4 +52,3 @@ For information about how to configure it, see :ref:`uv-keycloak-app:kerberos-au
 
 ..
    :external+uv-keycloak-app:ref:`kerberos-authentication-ipaddress`.
-

@@ -45,9 +45,3 @@
    Go to `Groups`. Click on the desired group and select `Role mapping`.
    Click `Assign role`. `Filter by client roles`.
    Then select the client role.
-
-
-
-
-
-
