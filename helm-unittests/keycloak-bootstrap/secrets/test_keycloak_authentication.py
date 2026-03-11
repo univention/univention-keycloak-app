@@ -1,10 +1,8 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2025 Univention GmbH
 
-from univention.testing.helm.auth_flavors.password_usage import \
-    AuthPasswordUsageViaEnv
-from univention.testing.helm.auth_flavors.secret_generation import \
-    AuthSecretGenerationUser
+from univention.testing.helm.auth_flavors.password_usage import AuthPasswordUsageViaEnv
+from univention.testing.helm.auth_flavors.secret_generation import AuthSecretGenerationUser
 from univention.testing.helm.auth_flavors.username import AuthUsernameViaEnv
 
 
