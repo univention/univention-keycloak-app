@@ -1,7 +1,15 @@
 
 **/.idea
+**/.claude
 *.swp
 _build/
 target/
 *.pyc
 generated-config-doc.yml
+
+**/__pycache__/
+/helm/*/charts/
+
+# kyverno test files
+helm/**/.kyverno/kyverno-test.yaml
+helm/**/.kyverno/manifest.yaml
