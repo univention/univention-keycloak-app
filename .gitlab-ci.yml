@@ -64,6 +64,7 @@ container-build:
   parallel:
     matrix: *build-matrix
   rules: &container-rules
+    - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$IMAGE_NAME == "keycloak"'
       changes: &software-changes
         - app/**/*
