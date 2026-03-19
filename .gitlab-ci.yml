@@ -40,6 +40,15 @@ include:
     file:
       - "dind.yml"
 
+  # Imports the latest ucs version from the UCS default branch
+  - project: univention/dev/ucs
+    file: .gitlab-ci/base.yml
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-aptly@jlohmer-aptly"
+    inputs:
+      # TODO: Remove when the ci-components branch has been merged
+      deb-image: "gitregistry.knut.univention.de/univention/dev/tooling/ci-components/deb-builder-5.2:branch-jlohmer-aptly"
+      pkg-dir: univention-keycloak
+
   - local: /.gitlab-ci/gitlab-ci.yml
     rules:
       - if: $SECURITY_MONITORING != "yes"
