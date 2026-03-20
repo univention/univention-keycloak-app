@@ -122,6 +122,10 @@ container-release-attestation:
   parallel:
     matrix: *build-matrix
   rules: *container-rules
+  needs:
+    - job: push-image-external
+      optional: true
+    - job: pre-semantic-release
 
 test-udm-unit-and-integration:
   needs: []
