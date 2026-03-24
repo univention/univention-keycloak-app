@@ -3,7 +3,7 @@ version: '3.1'
 services:
   keycloak:
     container_name: keycloak
-    image: docker.software-univention.de/keycloak-keycloak:26.5.5-ucs1
+    image: gitregistry.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/keycloak:main
     # For --proxy=edge see https://www.keycloak.org/server/reverseproxy
     # For --hostname   see https://www.keycloak.org/server/hostname
 @!@
