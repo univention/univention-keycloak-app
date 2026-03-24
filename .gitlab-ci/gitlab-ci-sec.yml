@@ -25,7 +25,7 @@ include:
 container_scanning:
   stage: test
   image:
-    name: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/aquasec/trivy:latest"
+    name: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/aquasec/trivy:0.69.3@sha256:7228e304ae0f610a1fad937baa463598cadac0c2ac4027cc68f3a8b997115689"
     entrypoint: [""]
   variables:
     # No need to clone the repo, we exclusively work on artifacts.  See
