@@ -1,4 +1,5 @@
-_[TOC]_
+
+[TOC]
 
 Some internal notes about testing/app release and test setups.
 
