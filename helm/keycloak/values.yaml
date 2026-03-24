@@ -206,7 +206,7 @@ image:
   # -- Container registry address. This setting has higher precedence than global.registry.
   registry: null
   # -- Container repository string.
-  repository: "nubus/images/keycloak"
+  repository: "nubus-dev/images/keycloak"
   # -- Define an ImagePullPolicy.
   #
   # Ref.: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
@@ -221,7 +221,7 @@ image:
   #
   pullPolicy: null
   # -- Define image tag.
-  tag: "0.22.0@sha256:5eaa56235befb377140e622a708281e2aed36e9b5dc508d5b6d79c3375908a1e"
+  tag: "latest"
 
 # -- Credentials to fetch images from private registry
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
