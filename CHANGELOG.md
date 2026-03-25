@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.23.1](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.23.0...v0.23.1) (2026-03-25)
+
+
+### Bug Fixes
+
+* Bump Keycloak to 26.5.6 ([64a206f](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/64a206fa32bfa490cee4ff85778aec2d6b9d5d8d)), closes [univention/dev/projects/keycloak/keycloak-app#259](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/259) [univention/dev/projects/keycloak/keycloak-app#259](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/259)
+* **helm:** do not fix image version so common-ci can find it and set it during packaging ([850a281](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/850a28131f5fc951dad4ce538c93ec2c3f175e27)), closes [univention/dev/projects/keycloak/keycloak-app#259](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/259)
+
 ## [0.23.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.22.0...v0.23.0) (2026-03-12)
 
 
