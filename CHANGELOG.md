@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.2](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.23.1...v0.23.2) (2026-03-25)
+
+
+### Bug Fixes
+
+* **docs:** Correct order for release action items ([549b615](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/549b615cecd8fce04e177d50995ffe208e9011ca)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/0)
+
 ## [0.23.1](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.23.0...v0.23.1) (2026-03-25)
 
 
