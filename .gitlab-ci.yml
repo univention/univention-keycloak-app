@@ -80,12 +80,12 @@ container-build:
         - requirements.txt
         - sonar-project.properties
         - update-appcenter-test.sh
+        - .gitlab-ci.yml
     - if: '$IMAGE_NAME != "keycloak"'
 
 container-malware-scan:
   parallel:
     matrix: *build-matrix
-  rules: *container-rules
 
 container-sign-external:
   parallel:
