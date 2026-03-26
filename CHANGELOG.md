@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.3](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.23.2...v0.23.3) (2026-03-26)
+
+
+### Bug Fixes
+
+* **deps:** Update Base Image ([bd66523](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/bd6652396182e6240acf5ad5ba4bf857efc6f5af)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/0)
+
 ## [0.23.2](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.23.1...v0.23.2) (2026-03-25)
 
 
