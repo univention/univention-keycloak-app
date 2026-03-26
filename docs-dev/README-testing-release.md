@@ -127,7 +127,7 @@ Copy this block to the release issue and do all of them:
 1. [ ] Check released app (currently manual testing)
 1. [ ] Write mail to `app-announcement@univenton.de`. (use previous Keycloak release mails as guideline)
 1. [ ] Update Security Monitoring Jenkins jobs for [5.0](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/Apps/job/keycloak/job/AppAutotestSecurityMonitoring/configure) and [5.2](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/Apps/job/keycloak/job/AppAutotestSecurityMonitoring/configure). (Version number in General -> String Parameter -> STARTING_VERSION -> Default Value)
-1. [ ] Create a new test version in the provider portal with `gitregistry.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/keycloak:main` as image in the compose file
+1. [ ] Create a new test version in the provider portal with `gitregistry.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/keycloak:latest` as image in the compose file
 
 # Documentation
 

@@ -1,8 +1,9 @@
 # SPDX-FileCopyrightText: 2026 Univention GmbH
 # SPDX-License-Identifier: AGPL-3.0-only
 
-# buíld ad hoc federation and our extensions
-FROM maven:3.8.2-openjdk-17 AS maven
+# build ad hoc federation and our extensions
+ARG DOCKER_PROXY
+FROM ${DOCKER_PROXY}maven:3.8.2-openjdk-17 AS maven
 WORKDIR /extensions
 COPY extensions ./
 RUN --mount=type=cache,target=/root/.m2 mvn clean package --file pom.xml \

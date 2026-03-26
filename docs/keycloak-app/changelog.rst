@@ -17,16 +17,27 @@ Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
 
-Version 26.5.6-ucs1
+Version 26.5.6-ucs2
 ===================
 
-Released:
+Released: 27. Mar 2026
+
+* Version 26.5.6-ucs1 mistakenly contained an older Keycloak version.
 
 * The app updates to :program:`Keycloak` version 26.5.6.
   (https://www.keycloak.org/docs/26.5.6/release_notes).
 
 * This version fixes :uv:cve:`2026-1180`, :uv:cve:`2026-1035`, :uv:cve:`2025-14777`, :uv:cve:`2025-14082`, :uv:cve:`2026-3121`, :uv:cve:`2026-3190`, :uv:cve:`2026-3911`, :uv:cve:`2026-2366`.
 
+Version 26.5.6-ucs1
+===================
+
+Released: 25. Mar 2026
+
+* The app updates to :program:`Keycloak` version 26.5.6.
+  (https://www.keycloak.org/docs/26.5.6/release_notes).
+
+* This version fixes :uv:cve:`2026-1180`, :uv:cve:`2026-1035`, :uv:cve:`2025-14777`, :uv:cve:`2025-14082`, :uv:cve:`2026-3121`, :uv:cve:`2026-3190`, :uv:cve:`2026-3911`, :uv:cve:`2026-2366`.
 
 Version 26.5.5-ucs1
 ===================
