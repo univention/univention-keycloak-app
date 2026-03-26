@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.23.3...v0.24.0) (2026-03-26)
+
+
+### Features
+
+* **app:** Update Keycloak to 26.5.6 ([d2fceed](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/d2fceed1dbbb4e2ba653fc30f0fb5f9bdd2f1ef3)), closes [univention/dev/projects/keycloak/keycloak-app#259](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/259)
+
 ## [0.23.3](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.23.2...v0.23.3) (2026-03-26)
 
 
