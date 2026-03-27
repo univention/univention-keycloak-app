@@ -91,43 +91,49 @@ Then add the following to your `/etc/hosts`:
 10.207.63.20 ucs-sso-ng.ucs.test
 # 10.207.63.21 ucs-sso-ng.ucs.test # if we want to test keycloak on the backup
 ```
-## Branch test
 
-In jenkins we have a branch test for keycloak (UCS). Works similar to the job that creates an environment. Give it the correct `KEYCLOAK_BRANCH` name to test Your changes.
+# Maintenance and release of app and documentation
 
-# Release of App/Documentation
+##### Create new app version
+1. [ ] Update *Version* in *app/ini* file. This version string defines to which version of the app the *update-appcenter-test.sh* script pushes the App Center files located in the *app/* directory of this repo. Make sure to push to the correct app version, check if a test version of the app already exists!
+1. [ ] Execute the *update-appcenter-test.sh* script
 
-Use the script [update-appcenter-test.sh](./update-appcenter-test.sh) to upload the App Center files under [/app](./app/) from this repo to the Provider Portal to keep both sides in sync.
+##### Make your changes
+1. [ ] Implement changes and write documentation on feature branch with MR against main
+1. [ ] Prepare version bump / changelog.rst commit like it was done here: 64a206fa32bfa490cee4ff85778aec2d6b9d5d8d
+1. [ ] If the changes to the app require special action from the user, document that in the *README_UPDATE_EN* and *README_UPDATE_DE* files
 
-Copy this block to the release issue and do all of them:
 
-1. [ ] Update [docs/keycloak-app/changelog.rst](docs/keycloak-app/changelog.rst). (list CVEs in case any were fixed and add Keycloak links in case of a new Keycloak version - use previous entries as guideline). Follow the recommendation at https://keepachangelog.com/en/1.0.0/)
-1. [ ] Run [update-appcenter-test.sh](./update-appcenter-test.sh). (Uploads App Center files under [/app](./app/) from this repo to Provider Portal)
-1. [ ] Run [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/UCS-5.0-9/job/Keycloak%20Product%20Tests/)
-1. [ ] Highlight features in the documentation with [versionadded](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-versionadded),
- [versionchanged](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-versionchanged)
- or [deprecated](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-deprecated)
-   directive.
+##### Test your changes
+1. [ ] Use the [keycloak branch tests](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/view/Branch%20tests/job/Keycloak%20Branch%20Tests/) to test your changes.
+    * for manual testing [create personal keycloak env job](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/view/Personal%20environments/job/UcsKeycloakEnvironment/).
+1. [ ] If the tests look OK and the QA approved your merge request -> merge your branch into main and wait for pipeline completion
+1. [ ] Execute the *update-appcenter-test.sh* script from main
+1. [ ] Run or wait for [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/job/Keycloak%20Product%20Tests/)
 
-1. [ ] Do the following steps only in case of a new Keycloak version:
-   * [ ] Update [docs/bibliography.bib](docs/bibliography.bib). (Version numbers)
-   * [ ] Update [.gitlab-ci.yml](./.gitlab-ci.yml). (Version numbers)
-   * [ ] Generate MR for [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de) via pipeline in Keycloak repo.
 
-        How-to: In GitLab (Keycloak repo, main branch), navigate to the pipeline of your commit. Open the `doc-pipeline` stage. Execute `docs-merge-to-one-artifact` job manually. This action will automatically create a merge request in [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de). Next, find your MR [here](https://git.knut.univention.de/univention/dev/docs/docs.univention.de/-/merge_requests) and **cancel the auto-merge**. Manually update the `latest` symlink in the `keycloak-app/` directory to link to the new Keycloak version -> `ln -s 26.3.1 latest`. Add that to your MR, merge, done.
-
-   * [ ] Update [dev/docs/docs-overview-pages](https://git.knut.univention.de/univention/dev/docs/docs-overview-pages). -> [guideline](https://git.knut.univention.de/univention/dev/docs/docs-overview-pages/-/merge_requests/100/diffs). (also update translations (po files) via commands defined in `navigation/Makefile` there.)
-
+##### Release the app
+1. [ ] Check [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/job/Keycloak%20Product%20Tests/)
+1. [ ] Verify that correct app version is used in the Provider Portal
+1. [ ] Execute the *update-appcenter-test.sh* script from main
 1. [ ] Run `docker-update` of [this Jenkins job](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/Apps/job/keycloak/job/App%20Autotest%20MultiEnv/). (Uncheck all other parts of that job before running)
-    * NOTE: This job checks whether the target image already exists (e.g., `docker.software-univention.de/keycloak-keycloak:26.1.4-ucs1`) and fails in this case. So you cannot run this command twice. Unless you use the checkmark in the job "Overwrite".
-1. [ ] Release the app:
-   * **On omar**, navigate to `/var/univention/buildsystem2/mirror/appcenter`
-   * Execute `./copy_from_appcenter.test.sh 5.0 <Component ID>`. The component ID looks like this: `keycloak_20240815142626` and can be found in the Provider Portal or [here](http://appcenter-test.software-univention.de/meta-inf/5.0/keycloak/), in the name of the ini file of your app version.
-   * Execute `sudo update_mirror.sh --verbose appcenter`
-1. [ ] Check released app (currently manual testing)
+1. [ ] Run or wait for [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/job/Keycloak%20Product%20Tests/)
+1. [ ] Release:
+   * SSH to **omar**
+   * `cd /var/univention/buildsystem2/mirror/appcenter`
+   * `./copy_from_appcenter.test.sh 5.0 <Component ID>`. The component ID looks like this: `keycloak_20240815142626` and can be found in the Provider Portal or [here](http://appcenter-test.software-univention.de/meta-inf/5.0/keycloak/), in the name of the ini file of your app version.
+   * `sudo update_mirror.sh --verbose appcenter`
 1. [ ] Write mail to `app-announcement@univenton.de`. (use previous Keycloak release mails as guideline)
-1. [ ] Update Security Monitoring Jenkins jobs for [5.0](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/Apps/job/keycloak/job/AppAutotestSecurityMonitoring/configure) and [5.2](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/Apps/job/keycloak/job/AppAutotestSecurityMonitoring/configure). (Version number in General -> String Parameter -> STARTING_VERSION -> Default Value)
-1. [ ] Create a new test version in the provider portal with `gitregistry.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/keycloak:latest` as image in the compose file
+1. [ ] Update the keycloak version strings in the [security scan job](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/Apps/job/keycloak/job/AppAutotestSecurityMonitoring/configure). (Version number in General -> String Parameter -> STARTING_VERSION -> Default Value and in the description box below)
+
+
+##### Release the documentation
+1. [ ] Generate MR for [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de) via manual trigger in main pipeline in Keycloak repo.
+
+    How-to: In GitLab (Keycloak repo, main branch), navigate to the pipeline of your commit. Open the `doc-pipeline` stage. Execute `docs-merge-to-one-artifact` job manually. This action will automatically create a merge request in [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de).
+    In case of a new Keycloak version, find your MR [here](https://git.knut.univention.de/univention/dev/docs/docs.univention.de/-/merge_requests) and **cancel the auto-merge**. Manually update the `latest` symlink in the `keycloak-app/` directory to link to the new Keycloak version -> `ln -s 26.3.1 latest`. Add that to your MR, merge, done.
+
+1. [ ] Update [dev/docs/docs-overview-pages](https://git.knut.univention.de/univention/dev/docs/docs-overview-pages). -> [guideline](https://git.knut.univention.de/univention/dev/docs/docs-overview-pages/-/merge_requests/100/diffs). Then `cd navigation` and update translation files via `make docker-gettext` and `make docker-update-po`.
 
 # Documentation
 
