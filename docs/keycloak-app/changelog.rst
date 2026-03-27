@@ -17,6 +17,13 @@ Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
 
+Version 26.5.6-ucs3
+===================
+
+Released: 30 Mar 2026
+
+* The container base image has been updated to include the latest security updates.
+
 Version 26.5.6-ucs2
 ===================
 
