@@ -69,6 +69,7 @@ container-build:
       changes: &software-changes
         - app/**/*
         - dependencies/**/*
+        - docs-dev/**/*
         - extensions/**/*
         - files/**/*
         - originals/**/*
