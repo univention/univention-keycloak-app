@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.24.1](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.24.0...v0.24.1) (2026-03-30)
+
+
+### Bug Fixes
+
+* **deps:** Update Base Image ([2b95b53](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/2b95b538a1dd66885cbb7275271c87b891907bb2)), closes [#0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/0)
+* **docker:** switch from ucs-base-542 to new versioning scheme ([18b9229](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/18b92293e7b9aecfb54b3d32aa507dfbcc41d9bc)), closes [univention/dev/internal/team-horizon#27](https://git.knut.univention.de/univention/dev/internal/team-horizon/issues/27)
+
 ## [0.24.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.23.3...v0.24.0) (2026-03-26)
 
 
