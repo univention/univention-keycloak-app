@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.2](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.24.1...v0.24.2) (2026-03-31)
+
+
+### Bug Fixes
+
+* **keycloak-bootstrap:** Change from bitnami common to nubus-common to avoid subPath: "%!s(<nil>)" error ([5d0d851](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/5d0d8512bf2b148d0286a6d1e5b869ced2acafb5)), closes [univention/dev/ucs#3458](https://git.knut.univention.de/univention/dev/ucs/issues/3458)
+
 ## [0.24.1](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.24.0...v0.24.1) (2026-03-30)
 
 
