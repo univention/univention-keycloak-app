@@ -117,7 +117,7 @@ spec:
               name: "bootstrap-volume"
             - mountPath: "/credentials/ldapread.secret"
               name: "ldap-credentials-volume"
-              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password" "context" .) }}
             - mountPath: "/credentials/keycloak.secret"
               name: "keycloak-credentials-volume"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword" "context" .) }}
