@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# SPDX-FileCopyrightText: 2023-2024 Univention GmbH
+# SPDX-FileCopyrightText: 2023-2026 Univention GmbH
 
 ---
 variables:
@@ -21,6 +21,9 @@ variables:
   DOC_TARGET_VERSION: "26.x"
   # Latest released keycloak app version in the UCS AppCenter
   LATEST_RELEASED_KEYCLOAK_VERSION: "26.5.6-ucs2"
+  # UCS version used for the aptly pre-release version suffix on feature branches.
+  # Bump this when starting a new UCS release branch.
+  UCS_VERSION: "5.2-5"
 
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
@@ -40,15 +43,10 @@ include:
     file:
       - "dind.yml"
 
-  # Imports the latest ucs version from the UCS default branch
-  - project: univention/dev/ucs
-    file: .gitlab-ci/base.yml
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-aptly@jlohmer-aptly"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-aptly@2.5.1"
     inputs:
-      # TODO: Remove when the ci-components branch has been merged
-      deb-image: "gitregistry.knut.univention.de/univention/dev/tooling/ci-components/deb-builder-5.2:branch-jlohmer-aptly"
       pkg-dir: univention-keycloak
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-errata-publish@jlohmer-aptly"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-errata-build@2.5.1"
     inputs:
       debian-package: univention-keycloak
       pkg-dir: univention-keycloak
@@ -66,6 +64,8 @@ include:
     KANIKO_BUILD_CONTEXT: "./"
     KANIKO_ARGS: "--cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache --build-arg KEYCLOAK_VERSION=$KEYCLOAK_VERSION --build-arg KEYCLOAK_DIST=$KEYCLOAK_DIST"
   - IMAGE_NAME: "keycloak-bootstrap"
+    DOCKERFILE_PATH: "docker/keycloak-bootstrap/Dockerfile"
+    KANIKO_BUILD_CONTEXT: "./"
     KANIKO_ARGS: "--cache=false"
 
 lint-pre-commit:
@@ -94,8 +94,11 @@ container-build:
         - requirements.txt
         - sonar-project.properties
         - update-appcenter-test.sh
-        - .gitlab-ci.yml
-    - if: '$IMAGE_NAME != "keycloak"'
+    - if: '$IMAGE_NAME == "keycloak-bootstrap"'
+      changes:
+        - docker/keycloak-bootstrap/**/*
+        - univention-keycloak/**/*
+    - if: '$IMAGE_NAME != "keycloak" && $IMAGE_NAME != "keycloak-bootstrap"'
 
 container-malware-scan:
   parallel:
