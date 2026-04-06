@@ -15,11 +15,15 @@ RUN apt-get --assume-yes --no-install-recommends install \
     python3-keycloak \
     python3-ldap \
     python3-requests \
-    univention-keycloak-client \
     && apt-get autoremove --assume-yes
+
+# Install univention-keycloak scripts from source instead of the Debian package
+COPY univention-keycloak/scripts/univention-keycloak /usr/sbin/univention-keycloak
+COPY univention-keycloak/scripts/univention-keycloak-migration-status /usr/sbin/univention-keycloak-migration-status
+COPY univention-keycloak/scripts/fix-duplicate-uid-mappers /usr/share/univention-keycloak/fix-duplicate-uid-mappers
 
 FROM base
 
-COPY bootstrap-ums-keycloak/ /app
+COPY docker/keycloak-bootstrap/bootstrap-ums-keycloak/ /app
 
 CMD ["/app/entrypoint.sh"]
