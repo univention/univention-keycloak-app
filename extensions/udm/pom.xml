@@ -6,7 +6,8 @@
     <parent>
         <artifactId>keycloak-parent</artifactId>
         <groupId>org.keycloak</groupId>
-        <version>26.1.4</version>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>de.univention</groupId>
@@ -71,6 +72,7 @@
         <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging</artifactId>
+            <version>3.6.2.Final</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
