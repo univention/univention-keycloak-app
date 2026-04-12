@@ -16,11 +16,15 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
-
-Version 26.5.6-ucs3
+Version 26.6.1-ucs1
 ===================
 
-Released: 30 Mar 2026
+Released: 20. Apr 2026
+
+* The app updates to :program:`Keycloak` version 26.6.1.
+  (https://www.keycloak.org/docs/26.6.1/release_notes/).
+
+* This version fixes :uv:cve:`2025-14083`, :uv:cve:`2026-1002`, :uv:cve:`2026-3429`, :uv:cve:`2026-4634` :uv:cve:`2026-4636`, :uv:cve:`2026-3872`, :uv:cve:`2026-4282`, :uv:cve:`2026-4366`, :uv:cve:`2026-4633`.
 
 * The container base image has been updated to include the latest security updates.
 
