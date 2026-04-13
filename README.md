@@ -65,3 +65,4 @@ For latest version of the documentation, see [Univention Keycloak app documentat
 * Test, pipelines, releases, tips & tricks - [docs-dev/README-testing-release.md](docs-dev/README-testing-release.md)
 * Legacy app authorization - [docs-dev/README-appauth.md](docs-dev/README-appauth.md)
 * Themes and templates - [docs-dev/README-themes-template.md](docs-dev/README-themes-template.md)
+* Building the univention-keycloak Debian package - [docs-dev/README-debian-package.md](docs-dev/README-debian-package.md)
