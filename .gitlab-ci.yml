@@ -21,6 +21,7 @@ variables:
   DOC_TARGET_VERSION: "${KEYCLOAK_VERSION}"
   # Latest released keycloak app version in the UCS AppCenter
   LATEST_RELEASED_KEYCLOAK_VERSION: "26.5.5-ucs1"
+  RENOVATE_USER_ID: "1393"
 
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
@@ -108,9 +109,11 @@ test-udm-unit-and-integration:
   stage: test
   extends: .dind
   image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:29.0.2"
-  rules:
+  rules: &rules_dind
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: "never"
+    - if: '$GITLAB_USER_ID == $RENOVATE_USER_ID && $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /Renovate run dind/'
+      when: "manual"
     - changes: *software-changes
       when: "on_success"
   before_script:
