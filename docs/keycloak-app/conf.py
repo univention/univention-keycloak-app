@@ -42,8 +42,9 @@ def read_version_from_ci() -> str:
     with open("../../.gitlab-ci.yml") as f:
         ci = yaml.safe_load(f)
         return ci.get(
-            "variables", {"KEYCLOAK_VERSION": "18.0.0"},
-        ).get("KEYCLOAK_VERSION")
+            "variables",
+            {"DOC_TARGET_VERSION": "26.x"},
+        ).get("DOC_TARGET_VERSION")
 
 
 release = read_version_from_ci()
