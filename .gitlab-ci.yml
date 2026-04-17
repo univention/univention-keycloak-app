@@ -18,7 +18,7 @@ variables:
   # this is where we keycloak store and use from during the image build
   KEYCLOAK_DIST: "${PACKAGE_REGISTRY}/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
   # Documentation build uses this variable to determine the artifact output directory.
-  DOC_TARGET_VERSION: "${KEYCLOAK_VERSION}"
+  DOC_TARGET_VERSION: "26.x"
   # Latest released keycloak app version in the UCS AppCenter
   LATEST_RELEASED_KEYCLOAK_VERSION: "26.5.6-ucs2"
 
@@ -154,5 +154,3 @@ chart-tests:
     - "helm dep build helm/keycloak"
     - "helm dep build helm/keycloak-bootstrap"
     - "pytest -vv helm-unittests"
-
-...
