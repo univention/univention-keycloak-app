@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.25.0](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.24.2...v0.25.0) (2026-04-17)
+
+
+### Features
+
+* **app:** Bump Keycloak to 26.6.1 ([c279816](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/c27981697238fc41c1f23d5ab795ea83e9883ea2)), closes [univention/dev/projects/keycloak/keycloak-app#261](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/261)
+
+
+### Bug Fixes
+
+* **extensions:** Replace deprecated PropertyNamingStrategy with PropertyNamingStrategies ([796e4d8](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/commit/796e4d8fed85f6bf9506f45d5288f3f189d7fdd1)), closes [univention/dev/projects/keycloak/keycloak-app#261](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/issues/261)
+
 ## [0.24.2](https://git.knut.univention.de/univention/dev/projects/keycloak/keycloak-app/compare/v0.24.1...v0.24.2) (2026-03-31)
 
 
