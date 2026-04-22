@@ -99,6 +99,10 @@ push-image-external:
   rules: *container-rules
 
 container-release-attestation:
+  needs:
+    - job: push-image-external
+      optional: true
+    - job: pre-semantic-release
   parallel:
     matrix: *build-matrix
   rules: *container-rules
