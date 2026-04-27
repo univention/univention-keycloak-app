@@ -43,10 +43,10 @@ include:
     file:
       - "dind.yml"
 
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-aptly@2.5.1"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-aptly@2.5.2"
     inputs:
       pkg-dir: univention-keycloak
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-errata-build@2.5.1"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-errata-build@2.5.2"
     inputs:
       debian-package: univention-keycloak
       pkg-dir: univention-keycloak
