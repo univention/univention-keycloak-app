@@ -25,4 +25,5 @@ Univention Keycloak app documentation
    :maxdepth: 1
 
    changelog
+   docs-changelog
    bibliography
