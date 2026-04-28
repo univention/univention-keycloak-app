@@ -128,11 +128,16 @@ Then add the following to your `/etc/hosts`:
 
 
 ##### Release the documentation
+
+###### Minor and patch releases
+
 1. [ ] Generate MR for [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de) via manual trigger in main pipeline in Keycloak repo.
+   > In GitLab (Keycloak repo, main branch), navigate to the pipeline of your commit. Open the `doc-pipeline` stage. Execute `docs-merge-to-one-artifact` job manually. This action will automatically create a merge request in [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de).
 
-    How-to: In GitLab (Keycloak repo, main branch), navigate to the pipeline of your commit. Open the `doc-pipeline` stage. Execute `docs-merge-to-one-artifact` job manually. This action will automatically create a merge request in [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de).
-    In case of a new Keycloak version, find your MR [here](https://git.knut.univention.de/univention/dev/docs/docs.univention.de/-/merge_requests) and **cancel the auto-merge**. Manually update the `latest` symlink in the `keycloak-app/` directory to link to the new Keycloak version -> `ln -s 26.3.1 latest`. Add that to your MR, merge, done.
+###### Major releases
 
+1. [ ] Generate MR for [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de) via manual trigger in main pipeline in Keycloak repo. (see above)
+1. [ ] Find your MR [here](https://git.knut.univention.de/univention/dev/docs/docs.univention.de/-/merge_requests) and **cancel the auto-merge**. Manually update the `latest` symlink in the `keycloak-app/` directory to link to the new Keycloak version -> `ln -s 26.3.1 latest`. Add that to your MR, merge, done.
 1. [ ] Update [dev/docs/docs-overview-pages](https://git.knut.univention.de/univention/dev/docs/docs-overview-pages). -> [guideline](https://git.knut.univention.de/univention/dev/docs/docs-overview-pages/-/merge_requests/100/diffs). Then `cd navigation` and update translation files via `make docker-gettext` and `make docker-update-po`.
 
 # Documentation
