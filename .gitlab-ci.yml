@@ -48,7 +48,7 @@ include:
 
 .build-matrix: &build-matrix
   - IMAGE_NAME: "keycloak"
-    DOCKERFILE_PATH: "./Dockerfile"
+    DOCKERFILE_PATH: "docker/keycloak/Dockerfile"
     KANIKO_BUILD_CONTEXT: "./"
     KANIKO_ARGS: "--cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache --build-arg KEYCLOAK_VERSION=$KEYCLOAK_VERSION --build-arg KEYCLOAK_DIST=$KEYCLOAK_DIST"
   - IMAGE_NAME: "keycloak-bootstrap"
