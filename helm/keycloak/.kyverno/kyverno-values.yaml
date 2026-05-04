@@ -2,8 +2,11 @@
 # SPDX-FileCopyrightText: 2025 Univention GmbH
 ---
 
+global:
+  imagePullPolicy: "IfNotPresent"
 image:
   registry: "registry.kyverno.test"
-  imagePullPolicy: "kyverno"
+  pullPolicy: "kyverno"
+  tag: "0.0.1@sha256:d0f02b847daad4cae834bcd29266ba30bfc806034a9aac2811e3f66bfd6ecec8"
 
 ...

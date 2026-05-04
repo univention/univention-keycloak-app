@@ -5,9 +5,8 @@ from univention.testing.helm.best_practice.image_configuration import ImageConfi
 
 
 class TestImageConfiguration(ImageConfiguration):
-
     def adjust_values(self, values: dict):
-        if "image" in values:
-            image = values["image"]
-            values["waitForDependency"] = {"image": image}
+        if 'image' in values:
+            image = values['image']
+            values['waitForDependency'] = {'image': image}
         return values

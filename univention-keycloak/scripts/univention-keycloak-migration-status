@@ -20,7 +20,7 @@ from univention.udm import UDM
 from univention.udm.exceptions import NoObject
 
 
-GUIDE_URL = "<https://docs.software-univention.de/keycloak-migration/index.html>"
+GUIDE_URL = '<https://docs.software-univention.de/keycloak-migration/index.html>'
 
 
 def create_ldif(objects, opt):
@@ -33,7 +33,7 @@ def create_ldif(objects, opt):
 
 def delete_objects(sso_obj):
     lo, _ = univention.admin.uldap.getAdminConnection()
-    for dn, obj in sso_obj:
+    for dn, _ in sso_obj:
         try:
             lo.delete(dn)
             print(f'\t  Deleted {dn}')
@@ -43,8 +43,7 @@ def delete_objects(sso_obj):
 
 def keycloak_installed_in_domain():
     lo, _ = univention.admin.uldap.getMachineConnection()
-    obj = lo.search(filter_format('(univentionService=%s)', ["keycloak"]))
-    return obj
+    return lo.search(filter_format('(univentionService=%s)', ['keycloak']))
 
 
 def get_sso_client_objects():
@@ -72,7 +71,7 @@ def fix_uri_setting(opt, new_value):
     # create policy
     if is_primary() and ucr.is_true('ucs/server/sso/uri/autopolicy', True):
         mod = UDM.admin().version(2).get('policies/registry')
-        policy_name = "sso_uri_domainwide_setting"
+        policy_name = 'sso_uri_domainwide_setting'
         ldap_base = ucr.get('ldap/base')
         position = f'cn=config-registry,cn=policies,{ldap_base}'
         mod = UDM.admin().version(2).get('policies/registry')
@@ -110,9 +109,9 @@ def check_uri_setting():
 def delete_sso_objects(opt, sso_obj):
     if opt.delete:
         print(
-            "\n\t  Do you really want to delete the objects?"
-            "\n\t  SSO with SimpleSAMLphp or Kopano Connect will no longer work!"
-            f"\n\t  In case you are unsure please read the migration guide: {GUIDE_URL}",
+            '\n\t  Do you really want to delete the objects?'
+            '\n\t  SSO with SimpleSAMLphp or Kopano Connect will no longer work!'
+            f'\n\t  In case you are unsure please read the migration guide: {GUIDE_URL}',
         )
         if opt.force or input('\nI want to remove all SSO objects: (y/N)').lower() == 'y':
             create_ldif(sso_obj, opt)
@@ -122,58 +121,57 @@ def delete_sso_objects(opt, sso_obj):
 
 
 def migration_complete(opt):
-    migrated = {"sso_objects": False, "uri_setting": False}
+    migrated = {'sso_objects': False, 'uri_setting': False}
 
     sso_obj = None if not is_primary() else get_sso_client_objects()
     if not sso_obj:
-        migrated["sso_objects"] = True
+        migrated['sso_objects'] = True
 
     uri_setting = check_uri_setting()
     if uri_setting:
-        migrated["uri_setting"] = True
+        migrated['uri_setting'] = True
 
     print('Checking Keycloak migration status ...')
     if not all(migrated.values()):
         print(
-            "\nStarting with UCS 5.2 the Keycloak app replaces SimpleSAMLphp"
-            "\nand the Kopano Konnect app as the default identity provider in UCS."
-            "\nBefore the update to 5.2 can start, this domain has to be migrated"
-            "\nto Keycloak."
-            "\n\nThis migration has not happend yet!"
-            "\n\nThe following old SimpleSAMLphp/Kopano Konnect objects have been found:\n",
+            '\nStarting with UCS 5.2 the Keycloak app replaces SimpleSAMLphp'
+            '\nand the Kopano Konnect app as the default identity provider in UCS.'
+            '\nBefore the update to 5.2 can start, this domain has to be migrated'
+            '\nto Keycloak.'
+            '\n\nThis migration has not happend yet!'
+            '\n\nThe following old SimpleSAMLphp/Kopano Konnect objects have been found:\n',
             file=sys.stderr,
         )
         print(
-            "\nPlease read the UCS 5.2 release notes <https://docs.software-univention.de/release-notes/5.2-0/en/index.html>"
-            f"\nand the Keycloak migration guide: {GUIDE_URL}"
-            "\nfor how to migrate your domain to Keycloak.",
+            '\nPlease read the UCS 5.2 release notes <https://docs.software-univention.de/release-notes/5.2-0/en/index.html>'
+            f'\nand the Keycloak migration guide: {GUIDE_URL}'
+            '\nfor how to migrate your domain to Keycloak.',
             file=sys.stderr,
         )
 
-    if not migrated["sso_objects"]:
+    if not migrated['sso_objects']:
         print(
-            "\n\t- The following old SimpleSAMLphp/Kopano Konnect objects have been found."
-            "\n\t  They need to be removed before the update can happen:\n",
+            '\n\t- The following old SimpleSAMLphp/Kopano Konnect objects have been found.\n\t  They need to be removed before the update can happen:\n',
             file=sys.stderr,
         )
-        for dn, obj in sso_obj:
-            print(f"\t\t* {dn}", file=sys.stderr)
+        for dn, _ in sso_obj:
+            print(f'\t\t* {dn}', file=sys.stderr)
         # fix it
         if delete_sso_objects(opt, sso_obj):
-            migrated["sso_objects"] = True
+            migrated['sso_objects'] = True
     elif is_primary():
-        print("\n\t - Found no old udm sso objects")
+        print('\n\t - Found no old udm sso objects')
 
-    if not migrated["uri_setting"]:
+    if not migrated['uri_setting']:
         print(
-            "\n\t - The UCR variable \"ucs/server/sso/uri\" is not set.\n"
-            "\n\t   Starting with UCS 5.2 the Single-Sign On settings have been changed"
-            "\n\t   Instead of keycloak/server/sso/fqdn and keycloak/server/sso/path"
-            "\n\t   the new UCR variable ucs/server/sso/uri has to be set on all hosts in the domain"
-            "\n\t   while keycloak/server/sso/fqdn and keycloak/server/sso/path will be only relevant"
-            "\n\t   for the Keycloak app itself."
-            "\n\t   Even though ucs/server/sso/uri is not used in UCS 5.0 yet,"
-            "\n\t   please set ucs/server/sso/uri before upgrading to 5.2",
+            '\n\t - The UCR variable "ucs/server/sso/uri" is not set.\n'
+            '\n\t   Starting with UCS 5.2 the Single-Sign On settings have been changed'
+            '\n\t   Instead of keycloak/server/sso/fqdn and keycloak/server/sso/path'
+            '\n\t   the new UCR variable ucs/server/sso/uri has to be set on all hosts in the domain'
+            '\n\t   while keycloak/server/sso/fqdn and keycloak/server/sso/path will be only relevant'
+            '\n\t   for the Keycloak app itself.'
+            '\n\t   Even though ucs/server/sso/uri is not used in UCS 5.0 yet,'
+            '\n\t   please set ucs/server/sso/uri before upgrading to 5.2',
             file=sys.stderr,
         )
         kc_sso_fqdn = ucr.get('keycloak/server/sso/fqdn')
@@ -181,20 +179,20 @@ def migration_complete(opt):
         if kc_sso_fqdn:
             new_value = f'https://{kc_sso_fqdn}{kc_sso_path}'
             print(
-                "\n\t   Since keycloak/server/sso/fqdn is set on the machine, you can"
-                "\n\t   run this script using the --create-sso-uri-setting option"
-                f"\n\t   to change this setting automatically to {new_value}."
-                "\n\t   Additionally, if ucs/server/sso/uri/autopolicy is true, it will create"
-                "\n\t   a UCR policy to distribute this setting in the domain."
-                f"\n\n\t   In case you are unsure please read the migration guide: {GUIDE_URL}\n",
+                '\n\t   Since keycloak/server/sso/fqdn is set on the machine, you can'
+                '\n\t   run this script using the --create-sso-uri-setting option'
+                f'\n\t   to change this setting automatically to {new_value}.'
+                '\n\t   Additionally, if ucs/server/sso/uri/autopolicy is true, it will create'
+                '\n\t   a UCR policy to distribute this setting in the domain.'
+                f'\n\n\t   In case you are unsure please read the migration guide: {GUIDE_URL}\n',
                 file=sys.stderr,
             )
 
             # fix it
             if fix_uri_setting(opt, new_value):
-                migrated["uri_setting"] = True
+                migrated['uri_setting'] = True
     else:
-        print(f"\n\t - ucs/server/sso/uri ({ucr.get('ucs/server/sso/uri')}) exists or is not relevant")
+        print(f'\n\t - ucs/server/sso/uri ({ucr.get("ucs/server/sso/uri")}) exists or is not relevant')
 
     if all(migrated.values()):
         print('\nMigration to Keycloak complete.')

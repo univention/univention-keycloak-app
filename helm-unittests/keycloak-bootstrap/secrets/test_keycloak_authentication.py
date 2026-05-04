@@ -7,25 +7,22 @@ from univention.testing.helm.auth_flavors.username import AuthUsernameViaEnv
 
 
 class SettingsTestKeycloakSecret:
-    secret_name = "release-name-keycloak-bootstrap-keycloak-credentials"
-    prefix_mapping = {"keycloak.auth": "auth"}
+    secret_name = 'release-name-keycloak-bootstrap-keycloak-credentials'
+    prefix_mapping = {'keycloak.auth': 'auth'}
 
     # Used by AuthSecretGenerationUser only
-    path_password = "stringData.adminPassword"
+    path_password = 'stringData.adminPassword'
 
     # Used by AuthSecretGenerationUser and AuthUsernameViaEnv only
     sub_path_env_password = "env[?@name=='KEYCLOAK_PASSWORD']"
     sub_path_env_username = "env[?@name=='KEYCLOAK_USERNAME']"
-    secret_default_key = "adminPassword"
+    secret_default_key = 'adminPassword'
 
 
-class TestChartCreatesKeycloakSecretAsUser(SettingsTestKeycloakSecret,
-                                           AuthSecretGenerationUser):
+class TestChartCreatesKeycloakSecretAsUser(SettingsTestKeycloakSecret, AuthSecretGenerationUser):
     pass
 
 
-class TestHandlerUsesKeycloakCredentialsByEnv(SettingsTestKeycloakSecret,
-                                              AuthPasswordUsageViaEnv,
-                                              AuthUsernameViaEnv):
-    workload_name = "release-name-keycloak-bootstrap-bootstrap-1"
-    workload_kind = "Job"
+class TestHandlerUsesKeycloakCredentialsByEnv(SettingsTestKeycloakSecret, AuthPasswordUsageViaEnv, AuthUsernameViaEnv):
+    workload_name = 'release-name-keycloak-bootstrap-bootstrap-1'
+    workload_kind = 'Job'

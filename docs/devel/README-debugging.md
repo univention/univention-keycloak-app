@@ -42,7 +42,7 @@ To run the *Quarkus* process from your **IDE**, which allows you to set breakpoi
 
 1. Use your **IDE** to open the folder where you cloned the Keycloak source code.
 2. Update the **Maven** dependencies. Usually, this means right-clicking `pom.xml` and selecting **Maven -> Reload project**.
-3. Run the `main` function located in:  
+3. Run the `main` function located in:
    `quarkus/server/src/main/java/org/keycloak/quarkus/_private/IDELauncher.java`
 
 **Troubleshooting:**

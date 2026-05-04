@@ -21,8 +21,8 @@ from datetime import date
 
 # -- Project information -----------------------------------------------------
 
-project = "Migration guide: SimpleSAMLPHP to Keycloak"
-copyright = '2023-{}, Univention GmbH'.format(date.today().year)
+project = 'Migration guide: SimpleSAMLPHP to Keycloak'
+copyright = f'2023-{date.today().year}, Univention GmbH'
 author = 'Univention GmbH'
 html_show_copyright = True
 language = 'en'
@@ -35,31 +35,31 @@ html_title = project
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinx_copybutton",
-    "sphinxcontrib.spelling",
-    "univention_sphinx_extension",
-    "sphinx_sitemap",
-    "sphinx_last_updated_by_git",
-    "sphinxcontrib.inkscapeconverter",
-    "sphinx.ext.intersphinx",
-    "sphinxcontrib.bibtex",
-    "sphinx_inline_tabs",
+    'sphinx_copybutton',
+    'sphinxcontrib.spelling',
+    'univention_sphinx_extension',
+    'sphinx_sitemap',
+    'sphinx_last_updated_by_git',
+    'sphinxcontrib.inkscapeconverter',
+    'sphinx.ext.intersphinx',
+    'sphinxcontrib.bibtex',
+    'sphinx_inline_tabs',
 ]
 
 suppress_warnings = ['git.too_shallow']
-git_last_updated_timezone = "Europe/Berlin"
+git_last_updated_timezone = 'Europe/Berlin'
 
-bibtex_bibfiles = ["../bibliography.bib"]
-bibtex_encoding = "utf-8"
-bibtex_default_style = "unsrt"
-bibtex_reference_style = "label"
+bibtex_bibfiles = ['../bibliography.bib']
+bibtex_encoding = 'utf-8'
+bibtex_default_style = 'unsrt'
+bibtex_reference_style = 'label'
 
 # For more configuration options of Sphinx-copybutton, see the documentation
 # https://sphinx-copybutton.readthedocs.io/en/latest/index.html
-copybutton_prompt_text = r"\$ |> "
+copybutton_prompt_text = r'\$ |> '
 copybutton_prompt_is_regexp = True
-copybutton_line_continuation_character = "\\"
-copybutton_here_doc_delimiter = "EOT"
+copybutton_line_continuation_character = '\\'
+copybutton_here_doc_delimiter = 'EOT'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -79,13 +79,13 @@ html_theme = 'univention_sphinx_book_theme'
 doc_base = os.path.basename(os.path.dirname(__file__))
 
 html_theme_options = {
-    "pdf_download_filename": f"{doc_base}.pdf",
-    "show_source_license": True,
-    "typesense_search": True,
-    "typesense_document": doc_base,
-    "typesense_document_version": "latest",
-    "univention_matomo_tracking": True,
-    "univention_docs_deployment": True,
+    'pdf_download_filename': f'{doc_base}.pdf',
+    'show_source_license': True,
+    'typesense_search': True,
+    'typesense_document': doc_base,
+    'typesense_document_version': 'latest',
+    'univention_matomo_tracking': True,
+    'univention_docs_deployment': True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -95,16 +95,16 @@ html_static_path = []  # value is usally ['_static']
 
 numfig = True
 
-if "spelling" in sys.argv:
-    spelling_lang = "en"
+if 'spelling' in sys.argv:
+    spelling_lang = 'en'
     spelling_show_suggestions = True
-    spelling_word_list_filename = ["spelling_wordlist"]
+    spelling_word_list_filename = ['spelling_wordlist']
 
 linkcheck_ignore = [
     r'https://ucs-sso-ng.example.com/admin/',
 ]
 
-root_doc = "contents"
+root_doc = 'contents'
 
 rst_epilog = """
 .. include:: /../links.txt
@@ -113,21 +113,20 @@ rst_epilog = """
 """
 
 intersphinx_mapping = {
-    "uv-manual": ("https://docs.software-univention.de/manual/5.0/en", None),
-    "uv-keycloak-app": (
-        "https://docs.software-univention.de/keycloak-app/latest/",
+    'uv-manual': ('https://docs.software-univention.de/manual/5.0/en', None),
+    'uv-keycloak-app': (
+        'https://docs.software-univention.de/keycloak-app/latest/',
         None,
     ),
 }
 
 latex_engine = 'lualatex'
 latex_show_pagerefs = True
-latex_show_urls = "footnote"
-latex_documents = [
-    (root_doc, f'{doc_base}.tex', project, author, "manual", False)]
+latex_show_urls = 'footnote'
+latex_documents = [(root_doc, f'{doc_base}.tex', project, author, 'manual', False)]
 latex_elements = {
-    "papersize": "a4paper",
-    "babel": "\\usepackage{babel}",
+    'papersize': 'a4paper',
+    'babel': '\\usepackage{babel}',
 }
 
 # See Univention Sphinx Extension for its options.
@@ -138,5 +137,5 @@ univention_feedback = True
 univention_pdf_show_source_license = True
 univention_doc_basename = doc_base
 
-sitemap_url_scheme = "{link}"
-html_baseurl = f"https://docs.software-univention.de/{doc_base}/"
+sitemap_url_scheme = '{link}'
+html_baseurl = f'https://docs.software-univention.de/{doc_base}/'

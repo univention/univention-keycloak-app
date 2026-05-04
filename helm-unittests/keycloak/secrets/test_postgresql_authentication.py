@@ -7,8 +7,8 @@ from univention.testing.helm.auth_flavors.username import AuthUsernameViaEnv
 
 
 class SettingsTestPostgresqlSecret:
-    secret_name = "release-name-keycloak-postgresql-credentials"
-    prefix_mapping = {"postgresql.auth": "auth"}
+    secret_name = 'release-name-keycloak-postgresql-credentials'
+    prefix_mapping = {'postgresql.auth': 'auth'}
 
     # Used by AuthSecretGenerationUser and AuthUsernameViaEnv only
     sub_path_env_password = "env[?@name=='KC_DB_PASSWORD']"
@@ -20,5 +20,5 @@ class TestChartCreatesPostgresqlSecretAsUser(SettingsTestPostgresqlSecret, AuthS
 
 
 class TestKeycloakUsesPostgresqlCredentialsByEnv(SettingsTestPostgresqlSecret, AuthPasswordUsageViaEnv, AuthUsernameViaEnv):
-    workload_name = "release-name-keycloak"
-    workload_kind = "StatefulSet"
+    workload_name = 'release-name-keycloak'
+    workload_kind = 'StatefulSet'

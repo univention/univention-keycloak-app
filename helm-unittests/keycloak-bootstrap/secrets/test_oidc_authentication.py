@@ -6,19 +6,17 @@ from univention.testing.helm.auth_flavors.secret_generation import AuthSecretGen
 
 
 class SettingsTestOidcSecret:
-    secret_name = "release-name-keycloak-bootstrap-oidc-rp-umc-server"
-    prefix_mapping = {"oidc.relyingParty.umcServer.clientSecret": "auth"}
+    secret_name = 'release-name-keycloak-bootstrap-oidc-rp-umc-server'
+    prefix_mapping = {'oidc.relyingParty.umcServer.clientSecret': 'auth'}
 
     # Used by AuthSecretGenerationUser and AuthUsernameViaEnv only
     sub_path_env_password = "env[?@name=='UMC_OIDC_CLIENT_SECRET']"
 
 
-class TestChartCreatesOidcSecretAsOwner(SettingsTestOidcSecret,
-                                        AuthSecretGenerationOwner):
-    derived_password = "de98d48eb2ede8dfd7806f788289cec648ab79c7"
+class TestChartCreatesOidcSecretAsOwner(SettingsTestOidcSecret, AuthSecretGenerationOwner):
+    derived_password = 'de98d48eb2ede8dfd7806f788289cec648ab79c7'
 
 
-class TestKeycloakUsesOidcCredentialsByEnv(SettingsTestOidcSecret,
-                                           AuthPasswordUsageViaEnv):
-    workload_name = "release-name-keycloak-bootstrap-bootstrap-1"
-    workload_kind = "Job"
+class TestKeycloakUsesOidcCredentialsByEnv(SettingsTestOidcSecret, AuthPasswordUsageViaEnv):
+    workload_name = 'release-name-keycloak-bootstrap-bootstrap-1'
+    workload_kind = 'Job'
