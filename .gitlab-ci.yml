@@ -3,12 +3,6 @@
 
 ---
 variables:
-  SECURITY_MONITORING:
-    value: "no"
-    options:
-      - "yes"
-      - "no"
-    description: "Set to yes if you want to run the security monitoring jobs"
   # version
   PACKAGE_REGISTRY: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/keycloak-tar"
   # Documentation build uses this variable to set the release version of the document
@@ -19,8 +13,6 @@ variables:
   KEYCLOAK_DIST: "${PACKAGE_REGISTRY}/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz"
   # Documentation build uses this variable to determine the artifact output directory.
   DOC_TARGET_VERSION: "26.x"
-  # Latest released keycloak app version in the UCS AppCenter
-  LATEST_RELEASED_KEYCLOAK_VERSION: "26.5.6-ucs2"
   # UCS version used for the aptly pre-release version suffix on feature branches.
   # Bump this when starting a new UCS release branch.
   UCS_VERSION: "5.2-5"
@@ -53,11 +45,6 @@ include:
       pkg-dir: univention-keycloak
 
   - local: /.gitlab-ci/gitlab-ci.yml
-    rules:
-      - if: $SECURITY_MONITORING != "yes"
-  - local: /.gitlab-ci/gitlab-ci-sec.yml
-    rules:
-      - if: $SECURITY_MONITORING == "yes"
 
 .build-matrix: &build-matrix
   - IMAGE_NAME: "keycloak"
@@ -68,11 +55,6 @@ include:
     DOCKERFILE_PATH: "docker/keycloak-bootstrap/Dockerfile"
     KANIKO_BUILD_CONTEXT: "./"
     KANIKO_ARGS: "--cache=false"
-
-lint-pre-commit:
-  rules:
-    - if: $SECURITY_MONITORING == "yes"
-      when: never
 
 container-build:
   parallel:
