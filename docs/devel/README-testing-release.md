@@ -92,27 +92,26 @@ Then add the following to your `/etc/hosts`:
 # 10.207.63.21 ucs-sso-ng.ucs.test # if we want to test keycloak on the backup
 ```
 
-# Maintenance and release of app and documentation
+# Maintenance and release of the Keycloak UCS app, Keycloak for N4K and the documentation
 
-## Create new app version
+## Release for UCS
+### Create new app version
 1. [ ] Update *Version* in *app/ini* file. This version string defines to which version of the app the *update-appcenter-test.sh* script pushes the App Center files located in the *app/* directory of this repo. Make sure to push to the correct app version, check if a test version of the app already exists!
 1. [ ] Execute the *update-appcenter-test.sh* script
 
-## Make your changes
+### Make your changes
 1. [ ] Implement changes and write documentation on feature branch with MR against main
 1. [ ] Prepare version bump / changelog.rst commit like it was done here: 64a206fa32bfa490cee4ff85778aec2d6b9d5d8d
 1. [ ] If the changes to the app require special action from the user, document that in the *README_UPDATE_EN* and *README_UPDATE_DE* files
 
-
-## Test your changes
+### Test your changes
 1. [ ] Use the [keycloak branch tests](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/view/Branch%20tests/job/Keycloak%20Branch%20Tests/) to test your changes.
     * for manual testing [create personal keycloak env job](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/view/Personal%20environments/job/UcsKeycloakEnvironment/).
 1. [ ] If the tests look OK and the QA approved your merge request -> merge your branch into main and wait for pipeline completion
 1. [ ] Execute the *update-appcenter-test.sh* script from main
 1. [ ] Run or wait for [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/job/Keycloak%20Product%20Tests/)
 
-
-## Release the app
+### Release the app
 1. [ ] Check [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/job/Keycloak%20Product%20Tests/)
 1. [ ] Verify that correct app version is used in the Provider Portal
 1. [ ] Execute the *update-appcenter-test.sh* script from main
@@ -126,6 +125,9 @@ Then add the following to your `/etc/hosts`:
 1. [ ] Write mail to `app-announcement@univenton.de`. (use previous Keycloak release mails as guideline)
 1. [ ] Update the keycloak version strings in the [security scan job](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/Apps/job/keycloak/job/AppAutotestSecurityMonitoring/configure). (Version number in General -> String Parameter -> STARTING_VERSION -> Default Value and in the description box below)
 
+## Release for N4K
+
+1. [ ] Follow [these instructions](https://univention.gitpages.knut.univention.de/dev/internal/dev-handbook/work-env/nubus-chart-bump.html) to release Keycloak for N4K.
 
 ## Release the documentation
 
