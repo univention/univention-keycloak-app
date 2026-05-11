@@ -24,6 +24,7 @@ variables:
   # UCS version used for the aptly pre-release version suffix on feature branches.
   # Bump this when starting a new UCS release branch.
   UCS_VERSION: "5.2-5"
+  RENOVATE_USER_ID: "1393"
 
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
