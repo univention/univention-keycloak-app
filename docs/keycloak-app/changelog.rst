@@ -16,6 +16,44 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+
+Version 26.6.2-ucs1
+===================
+
+Released: 3. Jun 2026
+
+* Fixed an issue where Let's Encrypt certificate renewal failed with a 403
+  error because Apache denied access to the ACME challenge directory.
+
+* Fixed an issue where the join script failed to copy the Keycloak database
+  secret when the database runs on the same host and password-based SSH
+  authentication is disabled.
+
+* Fixed the join script to correctly register UMC SAML service providers for
+  UCS nodes that belong to a different DNS zone than the primary domain.
+
+* The app updates to :program:`Keycloak` version 26.6.2:
+  https://www.keycloak.org/docs/26.6.2/release_notes/
+
+* This version fixes the following CVEs:
+
+  * :uv:cve:`2026-33871`
+  * :uv:cve:`2026-33870`
+  * :uv:cve:`2026-4628`
+  * :uv:cve:`2026-37980`
+  * :uv:cve:`2026-5588`
+  * :uv:cve:`2026-6856`
+  * :uv:cve:`2026-7307`
+  * :uv:cve:`2026-7504`
+  * :uv:cve:`2026-7571`
+  * :uv:cve:`2026-7507`
+  * :uv:cve:`2026-37982`
+  * :uv:cve:`2026-37979`
+  * :uv:cve:`2026-37978`
+  * :uv:cve:`2026-4630`
+  * :uv:cve:`2026-37981`
+
+
 Version 26.6.1-ucs1
 ===================
 
