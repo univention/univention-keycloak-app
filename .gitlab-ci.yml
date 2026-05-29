@@ -61,7 +61,7 @@ container-build:
     matrix: *build-matrix
   rules: &container-rules
     - if: '$CI_COMMIT_BRANCH == "main"'
-    - if: '$IMAGE_NAME == "keycloak"'
+    - if: '$IMAGE_NAME == "keycloak" || $IMAGE_NAME == "keycloak-bootstrap"'
       changes: &software-changes
         - app/**/*
         - dependencies/**/*
@@ -77,8 +77,6 @@ container-build:
         - requirements.txt
         - sonar-project.properties
         - update-appcenter-test.sh
-    - if: '$IMAGE_NAME == "keycloak-bootstrap"'
-      changes:
         - docker/keycloak-bootstrap/**/*
         - univention-keycloak/**/*
     - if: '$IMAGE_NAME != "keycloak" && $IMAGE_NAME != "keycloak-bootstrap"'
