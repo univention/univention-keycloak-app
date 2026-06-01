@@ -1,3 +1,10 @@
+univention-keycloak (3.6.1) unstable; urgency=medium
+
+  * Bug #59517: add compatibility for Python3 Keycloak Client API
+    changes
+
+ -- Florian Best <best@univention.de>  Fri, 19 Jun 2026 12:57:21 +0200
+
 univention-keycloak (3.6.0) unstable; urgency=medium
 
   * Bug #59324: UCS 5.2-6 version bump
