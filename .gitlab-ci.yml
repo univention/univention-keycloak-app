@@ -17,16 +17,22 @@ variables:
   # Bump this when starting a new UCS release branch.
   UCS_VERSION: "5.2-5"
   RENOVATE_USER_ID: "1393"
+  # Opt in to common-ci's release-tag pipeline (protected-vX.Y.Z rule in
+  # nubus-workflow, gated on this).
+  TAGGED_RELEASE: "true"
 
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.61.0"
+    ref: "v1.64.0"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
       - "jobs/lint-pre-commit.yaml"
       - "jobs/lint-commit-messages.yaml"
-      - "jobs/semantic-release-env.yaml"
+      # Release only from a protected vX.Y.Z tag (tagged-release) instead of
+      # auto-releasing from main via semantic-release. The opt-in workflow rule
+      # lives in nubus-workflow, enabled by TAGGED_RELEASE below.
+      - "templates/tagged-release.yaml"
       - "jobs/container-build-external.yaml"
       - "jobs/package-and-publish-helm-charts-external.yaml"
       - "templates/sonarqube.yaml"
@@ -44,7 +50,46 @@ include:
       debian-package: univention-keycloak
       pkg-dir: univention-keycloak
 
+  # App Center release: create_app_version / update_appcenter / do_release etc.
+  # On a feature branch (MR) creating the version is manual (see the
+  # create_app_version override below); on a protected vX.Y.Z tag it is the real
+  # release. The App Center Version comes from the tag (templated into ini.jinja).
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/app-release@2.5.2"
+    inputs:
+      app_id: "keycloak"
+      ucs_base_version: "5.0"
+      changelog_link: "https://docs.software-univention.de/keycloak-app/latest/"
+      mail_recipient: "app-announcement@univention.de"
+      mail_sender: "nubus-core@univention.de"
+      author_alias: "Nubus Core Team"
+      chat_destination: "#keycloak"
+      appcenter_file_dir: "appcenter/"
+      release_tag_prefix: "v"
+      build_stage: "package"
+      release_stage: "publish"
+      cleanup_stage: ".post"
+      additional_update_appcenter_needs:
+        - job: "container-build"
+          parallel:
+            matrix:
+              - IMAGE_NAME: "keycloak"
+                DOCKERFILE_PATH: "docker/keycloak/Dockerfile"
+                KANIKO_BUILD_CONTEXT: "./"
+                KANIKO_ARGS: "--cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache --build-arg KEYCLOAK_VERSION=$KEYCLOAK_VERSION --build-arg KEYCLOAK_DIST=$KEYCLOAK_DIST"
+          optional: true
+
   - local: /.gitlab-ci/gitlab-ci.yml
+
+# Version stamp via common-ci's .tagged-release template. Releases come only from
+# a protected vX.Y.Z tag; every other ref is a "<base>-post-<slug>" dev build
+# published to nubus-dev only. Job name kept as "pre-semantic-release" because
+# container-release-attestation depends on it for RELEASE_VERSION.
+# INITIAL_VERSION floors the base at the current Keycloak app version so the next
+# release tag (v26.6.2) does not regress below the App Center's 26.6.1-ucs1.
+pre-semantic-release:
+  extends: .tagged-release
+  variables:
+    INITIAL_VERSION: "26.6.1"
 
 .build-matrix: &build-matrix
   - IMAGE_NAME: "keycloak"
@@ -60,10 +105,13 @@ container-build:
   parallel:
     matrix: *build-matrix
   rules: &container-rules
+    # Build/sign/push the images on a release tag so the tagged-release pipeline
+    # has them to publish (to nubus) and reference in the App Center version.
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
     - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$IMAGE_NAME == "keycloak" || $IMAGE_NAME == "keycloak-bootstrap"'
       changes: &software-changes
-        - app/**/*
+        - appcenter/**/*
         - dependencies/**/*
         - docs-dev/**/*
         - extensions/**/*
@@ -76,7 +124,6 @@ container-build:
         - renovate.json
         - requirements.txt
         - sonar-project.properties
-        - update-appcenter-test.sh
         - docker/keycloak-bootstrap/**/*
         - univention-keycloak/**/*
     - if: '$IMAGE_NAME != "keycloak" && $IMAGE_NAME != "keycloak-bootstrap"'
@@ -159,3 +206,21 @@ chart-tests:
     - "helm dep build helm/keycloak"
     - "helm dep build helm/keycloak-bootstrap"
     - "pytest -vv helm-unittests"
+
+# Feature branches: creating the App Center version is MANUAL (one click on
+# create_app_version; update_appcenter follows automatically as it needs it).
+# On a vX.Y.Z tag it is automatic (the release); on main it refreshes staging.
+# Rules mirror the app-release component, with the MR case set to manual (and the
+# per-rule ENVIRONMENT_NAME kept so the environment/on_stop still resolve).
+create_app_version:
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+      variables:
+        ENVIRONMENT_NAME: "release-app/${APP_ID}_$CI_COMMIT_TAG"
+    - if: '$CI_MERGE_REQUEST_ID'
+      when: "manual"
+      variables:
+        ENVIRONMENT_NAME: "branch-app/${APP_ID}_$CI_COMMIT_REF_SLUG"
+    - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
+      variables:
+        ENVIRONMENT_NAME: "staging-app/${APP_ID}_999.0.0-staging"

@@ -116,7 +116,7 @@ ussl_path="/etc/univention/ssl"
 keycloak_template_path=/etc/univention/templates/files/etc/apache2/sites-available/univention-keycloak.conf
 echo "Installing univention-keycloak apache template"
 	cat <<%EOF >"$keycloak_template_path"
-%KEYCLOAK-TEMPLATE-APACHE%
+{{ "files/conffiles/univention-keycloak.conf" | source }}
 %EOF
 chmod 644 "$keycloak_template_path"
 
@@ -125,7 +125,7 @@ mkdir -p /var/lib/univention-appcenter/apps/keycloak/conf/
 keycloak_acl_path=/var/lib/univention-appcenter/apps/keycloak/conf/67keycloak.acl
 echo "Installing Keycloak data/settings acl"
 	cat <<%EOF >"$keycloak_acl_path"
-%KEYCLOAK-ACL%
+{{ "files/conffiles/67keycloak.acl" | source }}
 %EOF
 chmod 644 "$keycloak_acl_path"
 
@@ -133,7 +133,7 @@ chmod 644 "$keycloak_acl_path"
 keycloak_info_path=/etc/univention/templates/info/univention-keycloak.info
 echo "Installing Keycloak apache template info"
 	cat <<%EOF >"$keycloak_info_path"
-%KEYCLOAK-INFO-APACHE%
+{{ "files/conffiles/univention-keycloak.info" | source }}
 %EOF
 chmod 644 "$keycloak_info_path"
 
@@ -142,10 +142,10 @@ keycloak_translation_info_path_de=/etc/univention/templates/info/messages_de.pro
 keycloak_translation_info_path_en=/etc/univention/templates/info/messages_en.properties.info
 echo "Installing Keycloak translation template info"
 	cat <<%EOF >"$keycloak_translation_info_path_de"
-%KEYCLOAK-LOGIN-TRANSLATION-INFO-DE%
+{{ "files/conffiles/messages_de.properties.info" | source }}
 %EOF
 	cat <<%EOF >"$keycloak_translation_info_path_en"
-%KEYCLOAK-LOGIN-TRANSLATION-INFO-EN%
+{{ "files/conffiles/messages_en.properties.info" | source }}
 %EOF
 chmod 644 "$keycloak_translation_info_path_de"
 chmod 644 "$keycloak_translation_info_path_en"
@@ -156,10 +156,10 @@ keycloak_translation_login_path_en=/etc/univention/templates/files/var/lib/unive
 mkdir -p /etc/univention/templates/files/var/lib/univention-appcenter/apps/keycloak/conf/UCS/login/messages/
 echo "Installing Keycloak transaltion template"
 	cat <<%EOF >"$keycloak_translation_login_path_de"
-%KEYCLOAK-LOGIN-TRANSLATION-DE%
+{{ "files/conffiles/messages_de.properties" | source }}
 %EOF
 	cat <<%EOF >"$keycloak_translation_login_path_en"
-%KEYCLOAK-LOGIN-TRANSLATION-EN%
+{{ "files/conffiles/messages_en.properties" | source }}
 %EOF
 chmod 644 "$keycloak_translation_login_path_de"
 chmod 644 "$keycloak_translation_login_path_en"
@@ -171,7 +171,7 @@ postgresql_keycloak_template_path=/etc/univention/templates/files/etc/postgresql
 mkdir -p "$(dirname "$postgresql_keycloak_template_path")"
 echo "Installing 50-keycloak postgresql 11 template"
 	cat <<%EOF >"$postgresql_keycloak_template_path"
-%POSTGRESQL-KEYCLOAK-TEMPLATE%
+{{ "files/conffiles/50-keycloak" | source }}
 %EOF
 chmod 644 "$postgresql_keycloak_template_path"
 
@@ -180,7 +180,7 @@ postgresql_keycloak_template_path=/etc/univention/templates/files/etc/postgresql
 mkdir -p "$(dirname "$postgresql_keycloak_template_path")"
 echo "Installing 50-keycloak postgresql 15 template"
 	cat <<%EOF >"$postgresql_keycloak_template_path"
-%POSTGRESQL-KEYCLOAK-TEMPLATE%
+{{ "files/conffiles/50-keycloak" | source }}
 %EOF
 chmod 644 "$postgresql_keycloak_template_path"
 
@@ -188,15 +188,15 @@ chmod 644 "$postgresql_keycloak_template_path"
 pg_keycloak_info_path=/etc/univention/templates/info/50-keycloak.info
 echo "Installing 50-keycloak postgresql template info"
 	cat <<%EOF >"$pg_keycloak_info_path"
-%POSTGRESQL-KEYCLOAK-INFO%
+{{ "files/conffiles/50-keycloak.info" | source }}
 %EOF
 chmod 644 "$pg_keycloak_info_path"
 
 # keycloak ispn configuration template
 keycloak_template_ispn_conf_path=/var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping-template.xml
 echo "Installing keycloak ispn configuration template"
-base64 -d <<%EOF >"$keycloak_template_ispn_conf_path"
-%KEYCLOAK-ISPN-TEMPLATE-CONF%
+cat <<'%EOF' >"$keycloak_template_ispn_conf_path"
+{{ "files/cache-ispn-jdbc-ping.xml" | source }}
 %EOF
 chmod 644 "$keycloak_template_ispn_conf_path"
 
