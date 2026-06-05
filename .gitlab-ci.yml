@@ -213,6 +213,12 @@ chart-tests:
 # Rules mirror the app-release component, with the MR case set to manual (and the
 # per-rule ENVIRONMENT_NAME kept so the environment/on_stop still resolve).
 create_app_version:
+  # Auto-expire the per-MR test version after 3 days (merges with the component's
+  # environment name/url/on_stop). GitLab then stops the environment, triggering
+  # delete_app_version to remove the temporary App Center version even if the MR
+  # is still open. The component has no input for this, so we set it here.
+  environment:
+    auto_stop_in: "3 days"
   rules:
     - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
       variables:
