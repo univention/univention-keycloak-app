@@ -16,6 +16,37 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.6.3-ucs1
+===================
+
+Released: 11. Jun 2026
+
+* Fixed determination of account lock status during authentication.
+  Login failures caused by locked accounts are now correctly identified when
+  the account lock bit is set in ``krb5KDCFlags``, regardless of other flag values.
+
+* The app updates to :program:`Keycloak` version 26.6.3:
+  https://www.keycloak.org/docs/26.6.3/release_notes/
+
+* This version fixes the following CVEs:
+
+  * :uv:cve:`2026-4800`
+  * :uv:cve:`2026-4874`
+  * :uv:cve:`2026-37977`
+  * :uv:cve:`2026-7500`
+  * :uv:cve:`2026-42581`
+  * :uv:cve:`2026-8922`
+  * :uv:cve:`2026-8830`
+  * :uv:cve:`2026-9088`
+  * :uv:cve:`2026-9087`
+  * :uv:cve:`2026-9802`
+  * :uv:cve:`2026-9794`
+  * :uv:cve:`2026-9791`
+  * :uv:cve:`2026-0707`
+  * :uv:cve:`2026-9801`
+  * :uv:cve:`2026-9803`
+  * :uv:cve:`2026-9704`
+  * :uv:cve:`2026-9792`
 
 Version 26.6.2-ucs1
 ===================
