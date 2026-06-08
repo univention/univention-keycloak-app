@@ -96,11 +96,11 @@ Then add the following to your `/etc/hosts`:
 
 ## Release for UCS
 
-<!-- FIXME: vX.Y.Z-ucsN should also be supported ? -->
-Releases are driven by GitLab CI. Pushing a **protected `vX.Y.Z` tag** on `main`
-builds and publishes the image, creates the App Center version and, after a
-manual confirmation, promotes it to the **production** App Center, then announces
-it and creates a GitLab release.
+Releases are driven by GitLab CI. Pushing a **protected `vX.Y.Z` tag** (or
+**`vX.Y.Z-ucsN`** to re-release the same Keycloak version with a new App Center
+revision) on `main` builds and publishes the image, creates the App Center
+version and, after a manual confirmation, promotes it to the **production** App
+Center, then announces it and creates a GitLab release.
 
 > The old `update-appcenter-test.sh` script,
 > the `docker-update` Jenkins job and the manual `omar` steps are **no longer used**.
@@ -136,12 +136,12 @@ Keycloak version the image is built from.
 ### Release the app
 1. [ ] Check the [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/job/Keycloak%20Product%20Tests/) are green.
 1. [ ] Make sure `KEYCLOAK_VERSION` in `.gitlab-ci.yml` is the version you are releasing and that `main` is at the commit you want to release.
-1. [ ] Create and push a **protected** `vX.Y.Z` tag on the `main` commit, matching the version (e.g. `v26.6.2`):
+1. [ ] Create and push a **protected** `vX.Y.Z` tag on the `main` commit, matching the version (e.g. `v26.6.2`). To re-release the same Keycloak version with a new App Center revision, use a `-ucsN` suffix (`v26.6.2-ucs1`, `v26.6.2-ucs2`, ...):
    ```
    git tag -a v26.6.2 -m "Keycloak 26.6.2"
    git push origin v26.6.2
    ```
-1. [ ] The tag pipeline automatically builds and pushes the image to the public `nubus` registry, creates App Center version `X.Y.Z` and uploads it to the **test** App Center.
+1. [ ] The tag pipeline automatically builds and pushes the image to the public `nubus` registry, creates App Center version `X.Y.Z` (or `X.Y.Z-ucsN`) and uploads it to the **test** App Center.
 1. [ ] Verify the version in the Provider Portal.
 1. [ ] Trigger the manual **`do_release`** job in the tag pipeline to promote the app to the **production** App Center (it runs the `copy_from_appcenter.test.sh` + `update_mirror.sh` steps on `omar` for you - no manual SSH needed). Confirm the manual **`check_release`** job when prompted.
 1. [ ] The `create_gitlab_release` job creates the GitLab release, and `send_mail` / `send_chat_message` announce it to `app-announcement@univention.de` and the `#keycloak` channel automatically.
