@@ -77,6 +77,9 @@ include:
                 KANIKO_BUILD_CONTEXT: "./"
                 KANIKO_ARGS: "--cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache --build-arg KEYCLOAK_VERSION=$KEYCLOAK_VERSION --build-arg KEYCLOAK_DIST=$KEYCLOAK_DIST"
           optional: true
+        # So update_appcenter inherits RELEASE_VERSION + PUBLIC_RELEASE (dotenv),
+        # used by compose.jinja to point at the published nubus/nubus-dev image.
+        - pre-semantic-release
 
   - local: /.gitlab-ci/gitlab-ci.yml
 
