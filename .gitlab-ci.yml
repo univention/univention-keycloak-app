@@ -130,11 +130,12 @@ container-build:
   parallel:
     matrix: *build-matrix
   rules: &container-rules
-    # Build/sign/push the images on a release tag so the tagged-release pipeline
-    # has them to publish (to nubus) and reference in the App Center version.
+    # On a release tag and on main, build/sign/push BOTH images regardless of
+    # what changed: the chart publish needs both image digests. On feature
+    # branches, build only the image whose own sources changed.
     - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(-ucs[0-9]+)?$/'
     - if: '$CI_COMMIT_BRANCH == "main"'
-    - if: '$IMAGE_NAME == "keycloak" || $IMAGE_NAME == "keycloak-bootstrap"'
+    - if: '$IMAGE_NAME == "keycloak"'
       changes: &software-changes
         - appcenter/**/*
         - dependencies/**/*
@@ -149,13 +150,15 @@ container-build:
         - renovate.json
         - requirements.txt
         - sonar-project.properties
+    - if: '$IMAGE_NAME == "keycloak-bootstrap"'
+      changes: &bootstrap-changes
         - docker/keycloak-bootstrap/**/*
         - univention-keycloak/**/*
-    - if: '$IMAGE_NAME != "keycloak" && $IMAGE_NAME != "keycloak-bootstrap"'
 
 container-malware-scan:
   parallel:
     matrix: *build-matrix
+  rules: *container-rules
 
 container-sign-external:
   parallel:
@@ -222,11 +225,22 @@ test-udm-unit-and-integration:
 sonarqube:
   extends: .sonarqube
   needs: []
+  # Analyse only when code changes (keycloak or bootstrap sources). On tag
+  # pipelines rules:changes is always true, so releases are analysed too.
+  rules:
+    - changes: *software-changes
+    - changes: *bootstrap-changes
 
 chart-tests:
   image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.0"
   stage: "test"
   needs: []
+  # Run only when the charts change. On tag pipelines rules:changes is always
+  # true, so the chart is still tested on a release.
+  rules:
+    - changes:
+        - helm/**/*
+        - helm-unittests/**/*
   script:
     - "helm dep build helm/keycloak"
     - "helm dep build helm/keycloak-bootstrap"

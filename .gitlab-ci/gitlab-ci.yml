@@ -31,6 +31,11 @@ mirror-keycloak:
 generate-config:
   needs: []
   stage: prepare
+  # Only needed to feed doc-pipeline, so gate it on the same docs changes.
+  rules:
+    - changes:
+        - "docs/keycloak-app/**/*"
+        - "docs/keycloak-migration/**/*"
   image:
     name: docker-registry.knut.univention.de/knut/deb-builder
     entrypoint: [""]
