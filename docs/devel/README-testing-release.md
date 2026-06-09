@@ -112,7 +112,7 @@ digest to pin the exact image
 (`artifacts.software-univention.de/{nubus,nubus-dev}/images/keycloak:<version>@sha256:...`;
 tag only when no image is built in the pipeline).
 `KEYCLOAK_VERSION` in `.gitlab-ci.yml` is still needed: it is the upstream
-Keycloak version the image is built from. 
+Keycloak version the image is built from.
 
 > `UCS_VERSION` is **not** part of this release process;
 > it only sets the aptly pre-release suffix for the separate `univention-keycloak` Debian package.
