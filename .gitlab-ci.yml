@@ -132,7 +132,7 @@ container-build:
   rules: &container-rules
     # Build/sign/push the images on a release tag so the tagged-release pipeline
     # has them to publish (to nubus) and reference in the App Center version.
-    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(-ucs[0-9]+)?$/'
     - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$IMAGE_NAME == "keycloak" || $IMAGE_NAME == "keycloak-bootstrap"'
       changes: &software-changes
@@ -245,7 +245,7 @@ create_app_version:
   environment:
     auto_stop_in: "3 days"
   rules:
-    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(-ucs[0-9]+)?$/'
       variables:
         ENVIRONMENT_NAME: "release-app/${APP_ID}_$CI_COMMIT_TAG"
     - if: '$CI_MERGE_REQUEST_ID'
