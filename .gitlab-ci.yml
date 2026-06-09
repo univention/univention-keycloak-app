@@ -116,6 +116,23 @@ pre-semantic-release:
     INITIAL_VERSION: "26.6.1"
     # Match the workflow/app-release pattern: also accept "vX.Y.Z-nubusN" tags.
     RELEASE_TAG_PATTERN: '^v[0-9]+\.[0-9]+\.[0-9]+(-nubus[0-9]+)?$'
+  # On a release tag, the tag's X.Y.Z must equal KEYCLOAK_VERSION in this file,
+  # otherwise the tag was cut against the wrong commit or the bump was forgotten.
+  # Failing here blocks the release: the build/publish/App Center jobs need this
+  # job's RELEASE_VERSION dotenv, so they cannot proceed without it.
+  before_script:
+    - |
+      set -eu
+      if printf '%s' "${CI_COMMIT_TAG:-}" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+(-nubus[0-9]+)?$'; then
+        TAG_VERSION="${CI_COMMIT_TAG#v}"      # strip the leading "v"
+        TAG_VERSION="${TAG_VERSION%%-nubus*}"  # strip any "-nubusN" suffix
+        if [ "${TAG_VERSION}" != "${KEYCLOAK_VERSION}" ]; then
+          echo "ERROR: release tag '${CI_COMMIT_TAG}' (version ${TAG_VERSION}) does not match KEYCLOAK_VERSION '${KEYCLOAK_VERSION}' in .gitlab-ci.yml."
+          echo "Bump KEYCLOAK_VERSION to ${TAG_VERSION}, or re-tag the correct commit."
+          exit 1
+        fi
+        echo "Release tag ${CI_COMMIT_TAG} matches KEYCLOAK_VERSION ${KEYCLOAK_VERSION}."
+      fi
 
 .build-matrix: &build-matrix
   - IMAGE_NAME: "keycloak"

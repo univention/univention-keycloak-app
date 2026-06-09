@@ -80,6 +80,7 @@ Still manual / out of scope:
 - Make `create_app_version` **manual on MRs** (per the acceptance criteria).
 - Add a protected-tag **workflow rule** so tag pipelines start.
 - Support **`vX.Y.Z-nubusN`** tags (re-releasing the same Keycloak version), kept as a keycloak-local exception.
+- Guard the release: a release tag's `X.Y.Z` must match `KEYCLOAK_VERSION` in `.gitlab-ci.yml`, else the pipeline fails fast.
 
 ---
 
@@ -140,6 +141,5 @@ The App Center `compose` in the PoC references that published image. This replac
 
 ## Open Questions
 
-- Should we enforce that the version in `main`'s commit tag matches the `KEYCLOAK_VERSION` in `.gitlab-ci.yml`?
 - In N4K, do we need to mention anything on the release-notes regarding the chart's huge version bump?
 - Decide whether to upstream the `vX.Y.Z-nubusN` tag support into common-ci or keep it as a keycloak-local exception.

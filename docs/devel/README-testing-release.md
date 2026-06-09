@@ -136,7 +136,7 @@ Keycloak version the image is built from.
 
 ### Release the app
 1. [ ] Check the [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/job/Keycloak%20Product%20Tests/) are green.
-1. [ ] Make sure `KEYCLOAK_VERSION` in `.gitlab-ci.yml` is the version you are releasing and that `main` is at the commit you want to release.
+1. [ ] Make sure `KEYCLOAK_VERSION` in `.gitlab-ci.yml` is the version you are releasing and that `main` is at the commit you want to release. The release pipeline fails fast if the tag's `X.Y.Z` does not match `KEYCLOAK_VERSION`.
 1. [ ] Create and push a **protected** `vX.Y.Z` tag on the `main` commit, matching the version (e.g. `v26.6.2`). To re-release the same Keycloak version with a new App Center revision, use a `-nubusN` suffix (`v26.6.2-nubus1`, `v26.6.2-nubus2`, ...):
    ```
    git tag -a v26.6.2 -m "Keycloak 26.6.2"
