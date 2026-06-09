@@ -107,9 +107,10 @@ Center, then announces it and creates a GitLab release.
 
 The App Center files now live in `appcenter/` as templates: the `Version` is
 injected from the tag (`ini.jinja` → `Version = {{ APP_VERSION }}`), and the
-`compose` image is pinned by content digest to the published image
-`artifacts.software-univention.de/{nubus,nubus-dev}/images/keycloak@sha256:...`
-(falling back to the `:<version>` tag when no image is built in the pipeline).
+`compose` image keeps the readable `:<version>` tag and appends the content
+digest to pin the exact image
+(`artifacts.software-univention.de/{nubus,nubus-dev}/images/keycloak:<version>@sha256:...`;
+tag only when no image is built in the pipeline).
 `KEYCLOAK_VERSION` in `.gitlab-ci.yml` is still needed: it is the upstream
 Keycloak version the image is built from. 
 

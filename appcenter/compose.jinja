@@ -4,10 +4,11 @@ services:
   keycloak:
     container_name: keycloak
     # Published image from the pipeline: public "nubus" project on a release,
-    # private "nubus-dev" otherwise. Pinned by content digest (exported by the
-    # update_appcenter job from the build artifact); falls back to the
-    # RELEASE_VERSION tag when no image was built in this pipeline.
-    image: {{ EXTERNAL_PUBLIC_IMAGE_REGISTRY if PUBLIC_RELEASE else EXTERNAL_PRIVATE_IMAGE_REGISTRY }}/keycloak{{ ('@' ~ KEYCLOAK_IMAGE_DIGEST) if KEYCLOAK_IMAGE_DIGEST else (':' ~ RELEASE_VERSION) }}
+    # private "nubus-dev" otherwise. The RELEASE_VERSION tag is kept as a readable
+    # label; the content digest (exported by the update_appcenter job from the
+    # build artifact) is appended to pin the exact image. Docker pulls by digest
+    # when both are present. No digest (no image built this pipeline) -> tag only.
+    image: {{ EXTERNAL_PUBLIC_IMAGE_REGISTRY if PUBLIC_RELEASE else EXTERNAL_PRIVATE_IMAGE_REGISTRY }}/keycloak:{{ RELEASE_VERSION }}{{ ('@' ~ KEYCLOAK_IMAGE_DIGEST) if KEYCLOAK_IMAGE_DIGEST else '' }}
     # For --proxy=edge see https://www.keycloak.org/server/reverseproxy
     # For --hostname   see https://www.keycloak.org/server/hostname
 @!@
