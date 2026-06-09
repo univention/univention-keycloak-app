@@ -270,3 +270,22 @@ create_app_version:
     - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
       variables:
         ENVIRONMENT_NAME: "staging-app/${APP_ID}_999.0.0-staging"
+
+# Pin the App Center compose image to the built image's content digest. The
+# kaniko build exposes it as the artifact "digests/<image>"; this job already
+# pulls the keycloak build's artifacts via additional_update_appcenter_needs, so
+# we just read it and export KEYCLOAK_IMAGE_DIGEST for compose.jinja. The same
+# digest exists in nubus/nubus-dev (skopeo copies with --preserve-digests). If no
+# keycloak image was built this pipeline (e.g. an MR not touching the image
+# sources), the digest is empty and compose.jinja falls back to RELEASE_VERSION.
+update_appcenter:
+  before_script:
+    - |
+      KEYCLOAK_IMAGE_DIGEST=""
+      if [ -f "${CI_PROJECT_DIR}/digests/keycloak" ]; then
+        KEYCLOAK_IMAGE_DIGEST="$(cat "${CI_PROJECT_DIR}/digests/keycloak")"
+        echo "Pinning App Center compose image to keycloak@${KEYCLOAK_IMAGE_DIGEST}"
+      else
+        echo "No keycloak digest artifact; compose will use the RELEASE_VERSION tag"
+      fi
+      export KEYCLOAK_IMAGE_DIGEST

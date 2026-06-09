@@ -76,7 +76,7 @@ Still manual / out of scope:
 
 - Replace `semantic-release` with **`tagged-release`** (new common-ci template) for versioning.
 - Port `app/` to a templated **`appcenter/`** dir: `ini.jinja` (`Version = {{ APP_VERSION }}`), `compose.jinja`, and `preinst.jinja` using the component's `| source` filter (no `sed`/`base64` pre-job).
-- Point the App Center `compose` at the **published** image (`artifacts.software-univention.de/{nubus,nubus-dev}/images/keycloak:<version>`) instead of `gitregistry...:latest`.
+- Point the App Center `compose` at the **published** image (`artifacts.software-univention.de/{nubus,nubus-dev}/images/keycloak`) instead of `gitregistry...:latest`, **pinned by content digest** (`@sha256:...`) exported from the build.
 - Make `create_app_version` **manual on MRs** (per the acceptance criteria).
 - Add a protected-tag **workflow rule** so tag pipelines start.
 - Support **`vX.Y.Z-nubusN`** tags (re-releasing the same Keycloak version), kept as a keycloak-local exception.
@@ -140,7 +140,6 @@ The App Center `compose` in the PoC references that published image. This replac
 
 ## Open Questions
 
-- Should we ping the image `sha` in the App Center compose?
 - Should we enforce that the version in `main`'s commit tag matches the `KEYCLOAK_VERSION` in `.gitlab-ci.yml`?
 - In N4K, do we need to mention anything on the release-notes regarding the chart's huge version bump?
 - Decide whether to upstream the `vX.Y.Z-nubusN` tag support into common-ci or keep it as a keycloak-local exception.
