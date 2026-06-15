@@ -115,7 +115,7 @@ Then add the following to your `/etc/hosts`:
 1. [ ] Check [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/job/Keycloak%20Product%20Tests/)
 1. [ ] Verify that correct app version is used in the Provider Portal
 1. [ ] Execute the *update-appcenter-test.sh* script from main
-1. [ ] Run `docker-update` of [this Jenkins job](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/Apps/job/keycloak/job/App%20Autotest%20MultiEnv/). (Uncheck all other parts of that job before running)
+1. [ ] Run `docker-update` of [this Jenkins job](https://jenkins2022.knut.univention.de/job/UCS-5.0/job/Apps/job/keycloak/job/App%20Autotest%20MultiEnv/). (Uncheck all other parts of that job before running). Set the parameter `MAIN_APP_VERSION` in Configure -> General -> String Parameter -> Default Value to the Keycloak version being released
 1. [ ] Run or wait for [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/job/Keycloak%20Product%20Tests/)
 1. [ ] Release:
    * SSH to **omar**
