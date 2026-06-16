@@ -2601,11 +2601,18 @@ def create_user_attribute_ldap_mapper(opt: Namespace) -> None:
 
     provider_id = session.get_user_storage_provider_id()
     existing_mappers = session.get_user_storage_ldap_mappers(provider_id)
+    always_read = getattr(opt, 'always_read_from_ldap', False)
     if opt.attributename in [x['name'] for x in existing_mappers]:
-        print(f'LDAP provider mapper {opt.attributename} already exists.')
+        modify_component(
+            session,
+            {
+                'name': opt.attributename,
+                'parentId': provider_id,
+                'config': {'always.read.value.from.ldap': ['true' if always_read else 'false']},
+            },
+        )
+        print(f'LDAP provider mapper {opt.attributename} updated (always.read.value.from.ldap={"true" if always_read else "false"}).')
     else:
-        # Determine if the value should always be read from LDAP (not cached)
-        always_read = getattr(opt, 'always_read_from_ldap', False)
         payload = {
             'name': opt.attributename,
             'parentId': provider_id,
@@ -3395,7 +3402,7 @@ def init_keycloak_ucs(opt):
             'startTls': ['false' if opt.no_starttls else 'true'],
             'connectionPooling': ['false' if not opt.no_starttls else 'true'],
             'usersDn': [opt.ldap_base],
-            'cachePolicy': ['MAX_LIFESPAN'],
+            'cachePolicy': ['NO_CACHE' if opt.import_users else 'MAX_LIFESPAN'],
             'maxLifespan': ['300000'],
             'useKerberosForPasswordAuthentication': ['false'],
             'importEnabled': ['true' if opt.import_users else 'false'],

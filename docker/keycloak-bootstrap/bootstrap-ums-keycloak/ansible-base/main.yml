@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 Univention GmbH
+# SPDX-FileCopyrightText: 2023-2026 Univention GmbH
 # SPDX-License-Identifier: AGPL-3.0-only
 ---
 - name: "Keycloak Bootstrap"
@@ -63,6 +63,35 @@
           {% endif %}
           --cors-frame-ancestors="https://{{ global_subdomain_portal }}.{{ global_domain }}"
       # yamllint enable rule:line-length
+
+    # Runs every deploy (init is skipped on existing realms) to fix the stale uid
+    # claim after a username case change on upgraded installs. Needs both
+    # NO_CACHE and uid always-read; only touches cache behaviour.
+    - name: "Disable the imported-user cache on the LDAP federation"
+      when: "global_user_federation_ldap_import_users"
+      changed_when: "_ldap_federation_cache.rc == 0"
+      register: "_ldap_federation_cache"
+      ansible.builtin.shell: |
+        univention-keycloak \
+          --keycloak-url {{ global_keycloak_url }} \
+          --realm {{ global_keycloak_realm }} \
+          --binduser {{ global_keycloak_username }} \
+          --bindpwdfile /credentials/keycloak.secret \
+        ldap-federation set \
+          --name ldap-provider \
+          --config cachePolicy=NO_CACHE
+
+    - name: "Always read the uid mapper from LDAP"
+      when: "global_user_federation_ldap_import_users"
+      changed_when: "_ldap_mapper_always_read.rc == 0"
+      register: "_ldap_mapper_always_read"
+      ansible.builtin.shell: |
+        univention-keycloak \
+          --keycloak-url {{ global_keycloak_url }} \
+          --realm {{ global_keycloak_realm }} \
+          --binduser {{ global_keycloak_username }} \
+          --bindpwdfile /credentials/keycloak.secret \
+        user-attribute-ldap-mapper create --always-read-from-ldap uid
 
     - name: "Create OIDC Relying Party"
       changed_when: "_oidc_rp_init.rc == 0"
