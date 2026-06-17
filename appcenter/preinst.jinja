@@ -184,6 +184,15 @@ echo "Installing 50-keycloak postgresql 15 template"
 %EOF
 chmod 644 "$postgresql_keycloak_template_path"
 
+# postgresql 17 template
+postgresql_keycloak_template_path=/etc/univention/templates/files/etc/postgresql/17/main/pg_hba.conf.d/50-keycloak.conf
+mkdir -p "$(dirname "$postgresql_keycloak_template_path")"
+echo "Installing 50-keycloak postgresql 17 template"
+	cat <<%EOF >"$postgresql_keycloak_template_path"
+{{ "files/conffiles/50-keycloak" | source }}
+%EOF
+chmod 644 "$postgresql_keycloak_template_path"
+
 # postgresql template info
 pg_keycloak_info_path=/etc/univention/templates/info/50-keycloak.info
 echo "Installing 50-keycloak postgresql template info"

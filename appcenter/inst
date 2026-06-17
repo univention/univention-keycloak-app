@@ -106,6 +106,7 @@ systemctl restart apache2
 [ -x /usr/sbin/univention-config-registry ] && univention-config-registry register 50-keycloak || true
 ucr commit /etc/postgresql/11/main/pg_hba.conf
 ucr commit /etc/postgresql/15/main/pg_hba.conf
+ucr commit /etc/postgresql/17/main/pg_hba.conf
 service postgresql reload  # don't restart here to not interrupt the keycloak init process
 
 sso_hostname="$(echo "$keycloak_server_sso_fqdn"  | cut -d '.' -f 1)"
