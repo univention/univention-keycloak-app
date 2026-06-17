@@ -513,3 +513,73 @@ for audit events such as ``LOGIN``, ``LOGOUT``, or ``CODE_TO_TOKEN``.
 
    :envvar:`keycloak/audit/events/error/level`
       For the app setting reference for failed audit events log level.
+
+
+.. _use-case-metrics-monitoring:
+
+Monitoring Keycloak with metrics
+================================
+
+:program:`Keycloak` exposes health check and Prometheus metrics endpoints
+on its management port (container port ``9000``).
+The Keycloak app enables these endpoints by default,
+but does *not* publish the management port externally unless you configure it.
+Set :envvar:`keycloak/management/port` to a host port
+to make the endpoints available to an external monitoring system.
+
+The management port serves the following endpoints:
+
+:Health: ``/health``, ``/health/ready``, ``/health/live``
+:Metrics: ``/metrics``
+
+The default metrics cover the Java Virtual Machine, HTTP server requests,
+the database connection pool, and the caches.
+You can additionally enable *user event metrics*
+to obtain counters for user events such as logins and logouts
+per realm and client, which power capacity-planning dashboards.
+
+To configure metrics,
+sign in to the UCS management system with a username with administration rights
+and go to :menuselection:`App Center --> Keycloak --> Manage Installation --> App Settings`.
+Adjust the metrics settings as needed,
+then click :guilabel:`Apply Changes`.
+
+Alternatively, enable user event metrics
+with a small set of events and tags on the command line:
+
+.. code-block:: console
+   :caption: Enable user event metrics for Keycloak
+   :name: use-case-metrics-enable-user-events
+
+   $ univention-app configure keycloak \
+       --set keycloak/event/metrics/user/enabled=true \
+       --set keycloak/event/metrics/user/tags=clientId,realm \
+       --set keycloak/event/metrics/user/events=login,logout \
+       --set keycloak/management/port=9000
+
+By default the management port is not published.
+Set :envvar:`keycloak/management/port` to a host port, for example ``9000``,
+to publish it (or a different port to avoid conflicts);
+leave it empty to keep the endpoints unpublished
+and expose them only through a controlled reverse proxy.
+
+.. warning::
+
+   The management endpoints are served over plain HTTP without authentication
+   and the ``/metrics`` endpoint can expose sensitive operational data.
+   Restrict access to the published port with the host firewall
+   or a reverse proxy with access control.
+
+To consume the metrics,
+point your Prometheus server at the ``/metrics`` endpoint
+and import the official
+`Keycloak Grafana dashboards <https://github.com/keycloak/keycloak-grafana-dashboard>`_
+for ready-made visualizations.
+
+.. seealso::
+
+   :envvar:`keycloak/event/metrics/user/enabled`
+      For enabling user event metrics.
+
+   :envvar:`keycloak/management/port`
+      For configuring the published management port.

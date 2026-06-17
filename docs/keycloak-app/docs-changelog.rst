@@ -24,6 +24,15 @@ Year 2026
      - Chapter or topic
      - Change
 
+   * - 11. Jun 2026
+     - :ref:`app-settings` and use cases
+     - Document Keycloak metrics configuration.
+       Add configuration variables for user event metrics,
+       HTTP request histograms, and service level objectives,
+       and for the published management port.
+       Add a use case guide for monitoring Keycloak
+       with Prometheus and Grafana.
+
    * - 10. Mar 2026
      - :ref:`app-settings` and use cases
      - Document audit event log level configuration.

@@ -505,6 +505,148 @@ more information, consult :cite:t:`keycloak-docs`.
         - Installation and app configuration
 
 
+.. envvar:: keycloak/event/metrics/user/enabled
+
+   Enables Prometheus metrics derived from user events,
+   such as logins and logouts per realm and client.
+   Enabling this setting turns on the Keycloak ``user-event-metrics`` feature.
+   The metrics are exposed on the management endpoint,
+   see :ref:`use-case-metrics-monitoring`.
+
+   .. note::
+
+      User event metrics can produce high cardinality.
+      Limit the collected events and tags with
+      :envvar:`keycloak/event/metrics/user/events` and
+      :envvar:`keycloak/event/metrics/user/tags`
+      to control storage and query cost.
+
+   Possible values
+      ``true``, ``false``.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``false``
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/event/metrics/user/tags
+
+   Comma-separated list of tags collected for user event metrics.
+   Only effective when :envvar:`keycloak/event/metrics/user/enabled` is ``true``.
+   Possible tag values are ``realm``, ``idp``, and ``clientId``.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``clientId,realm``
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/event/metrics/user/events
+
+   Comma-separated list of events collected for user event metrics,
+   for example ``login,logout``.
+   Only effective when :envvar:`keycloak/event/metrics/user/enabled` is ``true``.
+   See :cite:t:`keycloak-docs-event-metrics` for the list of available events.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``login,logout``
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/http/metrics/histograms/enabled
+
+   Enables a histogram with default buckets
+   for the duration of HTTP server requests.
+
+   Possible values
+      ``true``, ``false``.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``false``
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/http/metrics/slos
+
+   Service level objectives for HTTP server request metrics,
+   as a comma-separated list of values in milliseconds,
+   for example ``5,10,25,50,250,500,1000,2500,5000,10000``.
+   Leave the value empty to keep Keycloak's default histogram buckets.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - empty
+        - Installation and app configuration
+
+
+.. envvar:: keycloak/management/port
+
+   Publishes the Keycloak management endpoints (health checks and metrics)
+   on this host port.
+   By default the port is *not* published;
+   set a port number such as ``9000`` to enable external access.
+   Leave the value empty to keep the endpoints reachable only inside the
+   container or through a reverse proxy.
+   For information on monitoring,
+   see :ref:`use-case-metrics-monitoring`.
+
+   .. warning::
+
+      The management endpoints are served over plain HTTP without authentication.
+      Restrict access to the published port with the host firewall
+      or a reverse proxy with access control.
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - empty
+        - Installation and app configuration
+
+
 .. envvar:: keycloak/java/opts
 
    Defines the options that the Keycloak app appends to the *java* command.
