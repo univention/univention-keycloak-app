@@ -24,6 +24,21 @@ data:
   # https://www.keycloak.org/server/caching#_available_transport_stacks
   KC_CACHE_STACK: "jdbc-ping"
   KC_METRICS_ENABLED: "true"
+  {{- if .Values.config.userEventMetrics.enabled }}
+  KC_EVENT_METRICS_USER_ENABLED: "true"
+  {{- with .Values.config.userEventMetrics.tags }}
+  KC_EVENT_METRICS_USER_TAGS: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.config.userEventMetrics.events }}
+  KC_EVENT_METRICS_USER_EVENTS: {{ . | quote }}
+  {{- end }}
+  {{- end }}
+  {{- if .Values.config.httpMetrics.histograms }}
+  KC_HTTP_METRICS_HISTOGRAMS_ENABLED: "true"
+  {{- end }}
+  {{- with .Values.config.httpMetrics.slos }}
+  KC_HTTP_METRICS_SLOS: {{ . | quote }}
+  {{- end }}
   KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
   KC_HTTP_ENABLED: "true"
   KC_PROXY_HEADERS: "xforwarded"

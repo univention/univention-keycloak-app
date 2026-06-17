@@ -108,7 +108,11 @@ spec:
           {{- range .Values.extraStartupArgs }}
             - {{ . | quote }}
           {{- end }}
-          {{- with .Values.keycloak.features.enabled }}
+          {{- $features := .Values.keycloak.features.enabled | default list }}
+          {{- if and .Values.config.userEventMetrics.enabled (not (has "user-event-metrics" $features)) }}
+          {{-   $features = append $features "user-event-metrics" }}
+          {{- end }}
+          {{- with $features }}
             - "--features={{ join "," . }}"
           {{- end }}
           {{- with .Values.keycloak.features.disabled }}

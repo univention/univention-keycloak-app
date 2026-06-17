@@ -113,6 +113,24 @@ false
 			<td>Hostname. Ref.: https://www.keycloak.org/server/hostname Default: {{ .Values.global.subDomains.keycloak }}.{{ .Values.global.domain }}</td>
 		</tr>
 		<tr>
+			<td>config.httpMetrics.histograms</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enable a histogram with default buckets for the duration of HTTP server requests.</td>
+		</tr>
+		<tr>
+			<td>config.httpMetrics.slos</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Service level objectives in milliseconds (comma-separated), e.g.    "5,10,25,50,250,500,1000,2500,5000,10000". Empty keeps Keycloak defaults.</td>
+		</tr>
+		<tr>
 			<td>config.logLevel</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -129,6 +147,33 @@ false
 </pre>
 </td>
 			<td>Proxy mode. Ref.: https://www.keycloak.org/server/reverseproxy</td>
+		</tr>
+		<tr>
+			<td>config.userEventMetrics.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Create metrics based on user events.</td>
+		</tr>
+		<tr>
+			<td>config.userEventMetrics.events</td>
+			<td>string</td>
+			<td><pre lang="json">
+"login,logout"
+</pre>
+</td>
+			<td>Comma-separated events collected for user event metrics.</td>
+		</tr>
+		<tr>
+			<td>config.userEventMetrics.tags</td>
+			<td>string</td>
+			<td><pre lang="json">
+"clientId,realm"
+</pre>
+</td>
+			<td>Comma-separated tags collected for user event metrics (realm, idp, clientId).</td>
 		</tr>
 		<tr>
 			<td>containerSecurityContext.allowPrivilegeEscalation</td>

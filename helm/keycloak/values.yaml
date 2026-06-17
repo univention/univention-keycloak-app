@@ -143,6 +143,25 @@ config:
   # Ref.: https://www.keycloak.org/server/configuration-metrics
   enableMetrics: true
 
+  # User event metrics (e.g. login/logout counters per realm and client).
+  # Enabling this also turns on the Keycloak "user-event-metrics" feature.
+  # Ref.: https://www.keycloak.org/observability/event-metrics
+  userEventMetrics:
+    # -- Create metrics based on user events.
+    enabled: false
+    # -- Comma-separated tags collected for user event metrics (realm, idp, clientId).
+    tags: "clientId,realm"
+    # -- Comma-separated events collected for user event metrics.
+    events: "login,logout"
+
+  # HTTP server request metrics tuning.
+  httpMetrics:
+    # -- Enable a histogram with default buckets for the duration of HTTP server requests.
+    histograms: false
+    # -- Service level objectives in milliseconds (comma-separated), e.g.
+    #    "5,10,25,50,250,500,1000,2500,5000,10000". Empty keeps Keycloak defaults.
+    slos: ""
+
   # -- Set log level
   # Ref.: https://docs.software-univention.de/keycloak-app/latest/configuration.html#envvar-keycloak-log-level
   logLevel: "INFO"

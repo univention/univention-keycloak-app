@@ -22,14 +22,36 @@ db_kind = ucr.get('kc/db/kind')
 db_xa = ucr.get('kc/db/xa')
 command = f"start --hostname={kc_fqdn} --http-relative-path={sso_path} --http-enabled=true --proxy-headers xforwarded --cache-config-file=cache-ispn-jdbc-ping.xml --db={db_kind} --transaction-xa-enabled={db_xa} --health-enabled=true --metrics-enabled=true"
 
-# optional args
+#################
+# optional args #
+#################
+
+# themeing cache
 if ucr.is_true("keycloak/disable/theme/caching", False):
     command = f"{command} --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false"
 
+# ssf features
 if ucr.is_true("keycloak/server/feature/ssf", False):
     command = f"{command} --feature-ssf=enabled"
 
+# Optional metrics tuning (Bug #58175). All endpoints stay disabled by default;
+# the flags below are only emitted when the corresponding UCR variable is set.
+if ucr.is_true("keycloak/http/metrics/histograms/enabled", False):
+    command = f"{command} --http-metrics-histograms-enabled=true"
+slos = ucr.get("keycloak/http/metrics/slos")
+if slos:
+    command = f"{command} --http-metrics-slos={slos}"
+if ucr.is_true("keycloak/event/metrics/user/enabled", False):
+    command = f"{command} --feature-user-event-metrics enabled --event-metrics-user-enabled=true"
+    user_tags = ucr.get("keycloak/event/metrics/user/tags")
+    if user_tags:
+        command = f"{command} --event-metrics-user-tags={user_tags}"
+    user_events = ucr.get("keycloak/event/metrics/user/events")
+    if user_events:
+        command = f"{command} --event-metrics-user-events={user_events}"
+
 print(f"    command: {command}")
+
 @!@
     # see https://forge.univention.org/bugzilla/show_bug.cgi?id=55360
     security_opt:
@@ -60,6 +82,16 @@ with open(pwdfile, 'r') as fd:
       # - 127.0.0.1:8180:8080
       - 8180:8180
       - 7600:7600
+      # Keycloak management port (health + metrics endpoints), Bug #58175.
+      # Opt-in: not published by default. Set keycloak/management/port to a port
+      # number (e.g. 9000) to publish it on the host; leave it empty/unset to
+      # keep the endpoints reachable only inside the container or via a reverse
+      # proxy (keycloak-observability-proxy). Reachable only where the firewall permits.
+@!@
+mgmt_port = configRegistry.get('keycloak/management/port', '').strip()
+if mgmt_port:
+    print(f'      - {mgmt_port}:9000')
+@!@
     healthcheck:
       test: /opt/keycloak/bin/keycloak-healthcheck || exit 1
       interval: "2s"
