@@ -15,7 +15,7 @@ variables:
   DOC_TARGET_VERSION: "26.x"
   # UCS version used for the aptly pre-release version suffix on feature branches.
   # Bump this when starting a new UCS release branch.
-  UCS_VERSION: "5.2-5"
+  UCS_VERSION: "5.2-6"
   RENOVATE_USER_ID: "1393"
 
 # keycloak defines its own workflow (this REPLACES the shared nubus-workflow) so
