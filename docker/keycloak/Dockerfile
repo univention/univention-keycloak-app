@@ -35,6 +35,20 @@ RUN unzip org.keycloak.keycloak-themes-${KEYCLOAK_VERSION}.jar "theme/base/login
  && cd UCS/login \
  && git apply -v template.ftl.patch
 
+# patch the LDAP federation provider: restore service-account connection reuse,
+# broken by Keycloak commit 128384ca15 which re-binds per operation
+# Recompile the patched class and swap it into the federation jar.
+# Ref: originals/ldap/ and files/ldap-federation/LDAPContextManager.java.patch.
+ARG DOCKER_PROXY
+FROM ${DOCKER_PROXY}maven:3.8.2-openjdk-17 AS federation
+ARG KEYCLOAK_VERSION
+WORKDIR /federation
+COPY --from=keycloak /keycloak/keycloak-${KEYCLOAK_VERSION}/lib/lib ./lib
+COPY files/ldap-federation/LDAPContextManager.java ./
+RUN javac -classpath "lib/main/*:lib/boot/*" -d classes LDAPContextManager.java \
+ && cp lib/main/org.keycloak.keycloak-ldap-federation-${KEYCLOAK_VERSION}.jar ./patched-federation.jar \
+ && jar uf patched-federation.jar -C classes org/keycloak/storage/ldap/idm/store/ldap/LDAPContextManager.class
+
 # copy everything together so that we can use one COPY statement for the final image
 # hadolint ignore=DL3006
 FROM docker-registry.knut.univention.de/knut/pipeline_helper AS artifacts
@@ -45,6 +59,7 @@ COPY dependencies/*.jar /opt/keycloak/providers/
 COPY files/cache-ispn-jdbc-ping.xml /opt/keycloak/conf/cache-ispn-jdbc-ping.xml
 COPY files/keycloak-healthcheck /opt/keycloak/bin/
 COPY --from=keycloak /keycloak/keycloak-${KEYCLOAK_VERSION} /opt/keycloak
+COPY --from=federation /federation/patched-federation.jar /opt/keycloak/lib/lib/main/org.keycloak.keycloak-ldap-federation-${KEYCLOAK_VERSION}.jar
 COPY --from=theme /themes /opt/keycloak/themes/
 COPY --from=maven /extensions/lib/univention-app-authenticator-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-ldap-mapper-*.jar /opt/keycloak/providers/
