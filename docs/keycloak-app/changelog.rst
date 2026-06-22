@@ -16,6 +16,35 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.6.3-ucs2
+=====================
+
+Released: TBD
+
+* The app's container image is now pulled from
+  ``artifacts.software-univention.de`` instead of ``docker.software-univention.de``.
+  Operators who restrict outbound traffic with a firewall or proxy must, before upgrading,
+  allow both ``artifacts.software-univention.de`` and ``s3.de-west-1.psmanaged.com``:
+  the registry answers image blob downloads with an HTTP 307 redirect to the
+  latter (its S3 backing storage), so pulls fail if only the registry host is
+  reachable. See `Allowing artifacts.software-univention.de in firewalls and
+  proxies <https://help.univention.com/t/allowing-artifacts-software-univention-de-in-firewalls-and-proxies/25333>`__
+  for guidance.
+
+* The published :program:`Keycloak` container images now ship supply chain
+  security metadata: a Cosign signature, a Software Bill of Materials (SBOM),
+  and Vulnerability Exploitability eXchange (VEX) information. See the Nubus
+  Kubernetes operation guide on `supply chain security
+  <https://docs.software-univention.de/nubus-kubernetes-operation/1.x/en/supply-chain-security.html>`__
+  for how to consume and process it:
+
+  * `Verify container images
+    <https://docs.software-univention.de/nubus-kubernetes-operation/1.x/en/supply-chain-security.html#verify-container-images>`__
+  * `View SBOM information
+    <https://docs.software-univention.de/nubus-kubernetes-operation/1.x/en/supply-chain-security.html#view-sbom-information>`__
+  * `View VEX information
+    <https://docs.software-univention.de/nubus-kubernetes-operation/1.x/en/supply-chain-security.html#view-vex-information>`__
+
 Version 26.6.3-ucs1
 ===================
 
