@@ -19,7 +19,7 @@ Please also consider the `upstream release notes
 Version 26.6.3-ucs2
 =====================
 
-Released: TBD
+Released: 25. Jun 2026
 
 * The app's container image is now pulled from
   ``artifacts.software-univention.de`` instead of ``docker.software-univention.de``.
@@ -44,6 +44,18 @@ Released: TBD
     <https://docs.software-univention.de/nubus-kubernetes-operation/1.x/en/supply-chain-security.html#view-sbom-information>`__
   * `View VEX information
     <https://docs.software-univention.de/nubus-kubernetes-operation/1.x/en/supply-chain-security.html#view-vex-information>`__
+
+* Fixed a regression in the LDAP user federation that flooded the LDAP server
+  with ``BIND`` requests. Since :program:`Keycloak` 26.6.0, the federation
+  service-account connection re-authenticated on every operation instead of
+  reusing a single pooled, already-bound connection, so each login of an
+  LDAP-backed user triggered several additional binds and could overload the
+  LDAP server. The service account now binds once and reuses the pooled
+  connection. This affects only Nubus for Kubernetes deployments, which connect
+  to LDAP with connection pooling enabled and without StartTLS. Traditional UCS
+  deployments use StartTLS without pooling and aren't affected. Back-ported from
+  upstream
+  `keycloak/keycloak#50201 <https://github.com/keycloak/keycloak/issues/50201>`_.
 
 Version 26.6.3-ucs1
 ===================
