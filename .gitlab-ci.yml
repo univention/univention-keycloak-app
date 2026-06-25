@@ -19,9 +19,10 @@ variables:
   RENOVATE_USER_ID: "1393"
 
 # keycloak defines its own workflow (this REPLACES the shared nubus-workflow) so
-# it can release from "vX.Y.Z" AND "vX.Y.Z-ucsN" tags. The App Center re-releases
-# the same upstream Keycloak version as -ucs1/-ucs2/..., which common-ci's shared
-# rule (plain vX.Y.Z only) does not allow. This is a keycloak-only exception, so
+# it can release from "vX.Y.Z" AND "vX.Y.Z-nubusN" tags. The App Center can
+# re-release the same upstream Keycloak version with a new Nubus revision as
+# -nubus1/-nubus2/..., which common-ci's shared rule (plain vX.Y.Z only) does not
+# allow. This is a keycloak-only exception, so
 # we keep the workaround here rather than loosening the shared nubus-workflow.
 # Based on nubus-workflow (v1.64.0) plus the release-tag rule. Feature branches
 # run only a merge request pipeline, no separate branch pipeline.
@@ -33,8 +34,8 @@ workflow:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
     - if: '$CI_PIPELINE_SOURCE == "schedule-release"'
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    # Release pipeline: a protected "vX.Y.Z" or "vX.Y.Z-ucsN" tag.
-    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(-ucs[0-9]+)?$/ && $CI_COMMIT_REF_PROTECTED == "true"'
+    # Release pipeline: a protected "vX.Y.Z" or "vX.Y.Z-nubusN" tag.
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(-nubus[0-9]+)?$/ && $CI_COMMIT_REF_PROTECTED == "true"'
     - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$CI_PIPELINE_SOURCE == "web"'
 
@@ -81,8 +82,8 @@ include:
       chat_destination: "#keycloak"
       appcenter_file_dir: "appcenter/"
       release_tag_prefix: "v"
-      # Allow re-releasing the same Keycloak version as -ucsN (e.g. v26.6.2-ucs1).
-      release_tag_constraint: '[0-9]+\.[0-9]+\.[0-9]+(-ucs[0-9]+)?'
+      # Allow re-releasing the same Keycloak version as -nubusN (e.g. v26.6.2-nubus1).
+      release_tag_constraint: '[0-9]+\.[0-9]+\.[0-9]+(-nubus[0-9]+)?'
       build_stage: "package"
       release_stage: "publish"
       cleanup_stage: ".post"
@@ -111,8 +112,8 @@ pre-semantic-release:
   extends: .tagged-release
   variables:
     INITIAL_VERSION: "26.6.1"
-    # Match the workflow/app-release pattern: also accept "vX.Y.Z-ucsN" tags.
-    RELEASE_TAG_PATTERN: '^v[0-9]+\.[0-9]+\.[0-9]+(-ucs[0-9]+)?$'
+    # Match the workflow/app-release pattern: also accept "vX.Y.Z-nubusN" tags.
+    RELEASE_TAG_PATTERN: '^v[0-9]+\.[0-9]+\.[0-9]+(-nubus[0-9]+)?$'
   # On a release tag, the tag's X.Y.Z must equal KEYCLOAK_VERSION in this file,
   # otherwise the tag was cut against the wrong commit or the bump was forgotten.
   # Failing here blocks the release: the build/publish/App Center jobs need this
@@ -120,9 +121,9 @@ pre-semantic-release:
   before_script:
     - |
       set -eu
-      if printf '%s' "${CI_COMMIT_TAG:-}" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+(-ucs[0-9]+)?$'; then
+      if printf '%s' "${CI_COMMIT_TAG:-}" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+(-nubus[0-9]+)?$'; then
         TAG_VERSION="${CI_COMMIT_TAG#v}"      # strip the leading "v"
-        TAG_VERSION="${TAG_VERSION%%-ucs*}"  # strip any "-ucsN" suffix
+        TAG_VERSION="${TAG_VERSION%%-nubus*}"  # strip any "-nubusN" suffix
         if [ "${TAG_VERSION}" != "${KEYCLOAK_VERSION}" ]; then
           echo "ERROR: release tag '${CI_COMMIT_TAG}' (version ${TAG_VERSION}) does not match KEYCLOAK_VERSION '${KEYCLOAK_VERSION}' in .gitlab-ci.yml."
           echo "Bump KEYCLOAK_VERSION to ${TAG_VERSION}, or re-tag the correct commit."
@@ -148,7 +149,7 @@ container-build:
     # On a release tag and on main, build/sign/push BOTH images regardless of
     # what changed: the chart publish needs both image digests. On feature
     # branches, build only the image whose own sources changed.
-    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(-ucs[0-9]+)?$/'
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(-nubus[0-9]+)?$/'
     - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$IMAGE_NAME == "keycloak"'
       changes: &software-changes
@@ -281,7 +282,7 @@ create_app_version:
   environment:
     auto_stop_in: "3 days"
   rules:
-    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(-ucs[0-9]+)?$/'
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(-nubus[0-9]+)?$/'
       variables:
         ENVIRONMENT_NAME: "release-app/${APP_ID}_$CI_COMMIT_TAG"
     - if: '$CI_MERGE_REQUEST_ID'
