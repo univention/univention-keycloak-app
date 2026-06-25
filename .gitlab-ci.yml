@@ -75,7 +75,7 @@ include:
     inputs:
       app_id: "keycloak"
       ucs_base_version: "5.0"
-      changelog_link: "https://docs.software-univention.de/keycloak-app/latest/"
+      changelog_link: "https://docs.software-univention.de/keycloak-app/latest/changelog.html"
       mail_recipient: "app-announcement@univention.de"
       mail_sender: "nubus-core@univention.de"
       author_alias: "Nubus Core Team"
