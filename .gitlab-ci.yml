@@ -79,7 +79,6 @@ include:
       mail_recipient: "app-announcement@univention.de"
       mail_sender: "nubus-core@univention.de"
       author_alias: "Nubus Core Team"
-      chat_destination: "#keycloak"
       appcenter_file_dir: "appcenter/"
       release_tag_prefix: "v"
       # Allow re-releasing the same Keycloak version as -nubusN (e.g. v26.6.2-nubus1).
@@ -312,3 +311,7 @@ update_appcenter:
         echo "No keycloak digest artifact; compose will use the RELEASE_VERSION tag"
       fi
       export KEYCLOAK_IMAGE_DIGEST
+
+send_chat_message:
+  rules:
+    - when: never
