@@ -324,38 +324,44 @@ use the following steps:
       :caption: Change *Azure Active Directory* domain authentication to use *Keycloak*
       :name: migration-365-connector-windows-change
 
-      # CHANGE this according to your setup/environemt
-      $sso_url = "replace with SSO_URL"
-      $signing_cert = "replace with KEYCLOAK_CERTIFICATE"
-      $domain = "YOUR AZURE DOMAIN NAME"
-      $username = "YOUR AZURE DOMAIN ADMIN"
-      $password = "PASSWORD OF YOUR AZURE DOMAIN ADMIN"
-      $realm = "REALM OF CHOICE (usually ucs)"
-      # CHANGE end
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-      $issuer_uri = "$sso_url/realms/$realm"
-      $logon_uri = "$sso_url/realms/$realm/protocol/saml"
-      $passive_logon_uri = "$sso_url/realms/$realm/protocol/saml"
-      $logoff_uri = "$sso_url/realms/$realm/protocol/saml"
-      $pass = ConvertTo-SecureString -String "$password" -AsPlainText -Force
-      $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $username, $pass
+      # Change variables
 
-      Install-Module PowerShellGet -Force
-      Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-      Install-Module Microsoft.Graph -Scope AllUsers -Repository PSGallery -Force
-      Install-Module Microsoft.Graph.Beta -Repository PSGallery -Force
+      $entraDomain = 'YOUR AZURE DOMAIN NAME'
+      $keycloakBaseUrl = 'YOUR KEYCLOAK SSO_URL'
+      $keycloakRealm = 'REALM OF CHOICE (usually ucs)'
+      $displayName = 'DISPLAYNAME OF CHOICE (usually UCS Keycloak)'
+      $samlSigningCertificate = 'YOUR KEYCLOAK CERTIFICATE'
 
-      Connect-MgGraph -Scopes "Domain.ReadWrite.All", "Directory.ReadWrite.All" -ClientSecretCredential "$credential";
-      Set-MgDomainAuthentication -DomainId "$domain" -AuthenticationMethod Managed;
-      Set-MgDomainAuthentication -DomainId "$domain" -AuthenticationMethod Federated -FederationBrandName "UCS" `
-         -ActiveSignInUri "$logon_uri" `
-         -PassiveSignInUri "$passive_logon_uri" `
-         -SigningCertificate "$signing_cert" `
-         -IssuerUri "$issuer_uri" `
-         -LogOffUri "$logoff_uri" `
-         -PreferredAuthenticationProtocol "SAMLP"
-      Get-MgDomain
-      Pause
+      # End change
+
+      $keycloakBaseUrl = $keycloakBaseUrl.TrimEnd('/')
+
+      $samlIssuerUri = "$keycloakBaseUrl/realms/$keycloakRealm"
+      $samlSignInUri = "$keycloakBaseUrl/realms/$keycloakRealm/protocol/saml"
+      $samlSignOutUri = "$keycloakBaseUrl/realms/$keycloakRealm/protocol/saml"
+
+      Connect-MgGraph -Scopes "Domain.ReadWrite.All", "Directory.ReadWrite.All", "Directory.AccessAsUser.All"
+
+      Update-MgDomain -DomainId $entraDomain -AuthenticationType Managed
+
+      New-MgDomainFederationConfiguration `
+      -DomainId $entraDomain `
+      -DisplayName $displayName `
+      -ActiveSignInUri $samlSignInUri `
+      -PassiveSignInUri $samlSignInUri `
+      -SigningCertificate $samlSigningCertificate `
+      -IssuerUri $samlIssuerUri `
+      -SignOutUri $samlSignOutUri `
+      -PreferredAuthenticationProtocol "saml" `
+      -FederatedIdpMfaBehavior "acceptIfMfaDoneByFederatedIdp"
+
+      Get-MgDomain -DomainId $entraDomain
+
+      ECHO "Finished single sign-on configuration change"
+
+      PAUSE
 
 #. To change the link in the UCS portal entry *Microsoft 365 Login* for the
    |IDP| initiated single sign-on, run the following commands on your UCS
