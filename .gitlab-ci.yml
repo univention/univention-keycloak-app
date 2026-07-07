@@ -66,6 +66,7 @@ include:
     inputs:
       debian-package: univention-keycloak
       pkg-dir: univention-keycloak
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/ai-review@2.8.0"
 
   # App Center release: create_app_version / update_appcenter / do_release etc.
   # On a feature branch (MR) creating the version is manual (see the
