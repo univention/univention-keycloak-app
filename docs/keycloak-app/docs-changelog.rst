@@ -24,6 +24,10 @@ Year 2026
      - Chapter or topic
      - Change
 
+   * - 09. Jul 2026
+     - :ref:`app-changelog`
+     - Add changelog entry for version ``26.7.0``.
+
    * - 05. Jun 2026
      - :ref:`app-changelog`
      - Add changelog entry for version ``26.6.3``.

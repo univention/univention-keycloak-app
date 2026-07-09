@@ -16,6 +16,34 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.7.0-ucs1
+===================
+
+Released: DD. Jul 2026
+
+* The app updates to :program:`Keycloak` version 26.7.0:
+  https://www.keycloak.org/docs/26.7.0/release_notes/
+
+* The interim back-port of the LDAP user-federation connection-reuse fix,
+  added in the previous release, is now included in upstream
+  :program:`Keycloak`, so the downstream patch was removed with no change
+  in behavior.
+
+* This version fixes the following CVEs:
+
+  * :uv:cve:`2026-9796`
+  * :uv:cve:`2026-9689`
+  * :uv:cve:`2026-9798`
+  * :uv:cve:`2026-11986`
+  * :uv:cve:`2026-9099`
+  * :uv:cve:`2026-9083`
+  * :uv:cve:`2026-9086`
+  * :uv:cve:`2026-9705`
+  * :uv:cve:`2026-9795`
+  * :uv:cve:`2026-9799`
+  * :uv:cve:`2026-9800`
+  * :uv:cve:`2026-11800`
+
 Version 26.6.3-ucs2
 =====================
 
