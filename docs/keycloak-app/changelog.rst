@@ -19,7 +19,7 @@ Please also consider the `upstream release notes
 Version 26.7.0-ucs1
 ===================
 
-Released: DD. Jul 2026
+Released: 14. Jul 2026
 
 * The app updates to :program:`Keycloak` version 26.7.0:
   https://www.keycloak.org/docs/26.7.0/release_notes/

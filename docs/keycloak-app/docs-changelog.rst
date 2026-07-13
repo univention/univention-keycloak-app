@@ -24,22 +24,6 @@ Year 2026
      - Chapter or topic
      - Change
 
-   * - 09. Jul 2026
-     - :ref:`app-changelog`
-     - Add changelog entry for version ``26.7.0``.
-
-   * - 05. Jun 2026
-     - :ref:`app-changelog`
-     - Add changelog entry for version ``26.6.3``.
-
-   * - 29. May 2026
-     - :ref:`app-changelog`
-     - Add changelog entry for version ``26.6.2``.
-
-   * - 22. Apr 2026
-     - :ref:`app-changelog`
-     - Add changelog entry for version ``26.6.1``.
-
    * - 10. Mar 2026
      - :ref:`app-settings` and use cases
      - Document audit event log level configuration.
