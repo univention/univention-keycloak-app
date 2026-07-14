@@ -41,7 +41,7 @@ workflow:
 
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.64.0"
+    ref: "v1.66.2"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -50,7 +50,7 @@ include:
       # Release only from a protected tag (see the workflow block above) instead
       # of auto-releasing from main via semantic-release.
       - "templates/tagged-release.yaml"
-      - "jobs/container-build-external.yaml"
+      - "jobs/container-build-external-buildkit.yaml"
       - "jobs/package-and-publish-helm-charts-external.yaml"
       - "templates/sonarqube.yaml"
 
@@ -92,8 +92,8 @@ include:
             matrix:
               - IMAGE_NAME: "keycloak"
                 DOCKERFILE_PATH: "docker/keycloak/Dockerfile"
-                KANIKO_BUILD_CONTEXT: "./"
-                KANIKO_ARGS: "--cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache --build-arg KEYCLOAK_VERSION=$KEYCLOAK_VERSION --build-arg KEYCLOAK_DIST=$KEYCLOAK_DIST"
+                BUILD_CONTEXT: "./"
+                BUILD_ARGS: "--opt build-arg:KEYCLOAK_VERSION=$KEYCLOAK_VERSION --opt build-arg:KEYCLOAK_DIST=$KEYCLOAK_DIST"
           optional: true
         # So update_appcenter inherits RELEASE_VERSION + PUBLIC_RELEASE (dotenv),
         # used by compose.jinja to point at the published nubus/nubus-dev image.
@@ -134,12 +134,11 @@ pre-semantic-release:
 .build-matrix: &build-matrix
   - IMAGE_NAME: "keycloak"
     DOCKERFILE_PATH: "docker/keycloak/Dockerfile"
-    KANIKO_BUILD_CONTEXT: "./"
-    KANIKO_ARGS: "--cache=true --cache-repo=$CI_REGISTRY_IMAGE/cache --build-arg KEYCLOAK_VERSION=$KEYCLOAK_VERSION --build-arg KEYCLOAK_DIST=$KEYCLOAK_DIST"
+    BUILD_CONTEXT: "./"
+    BUILD_ARGS: "--opt build-arg:KEYCLOAK_VERSION=$KEYCLOAK_VERSION --opt build-arg:KEYCLOAK_DIST=$KEYCLOAK_DIST"
   - IMAGE_NAME: "keycloak-bootstrap"
     DOCKERFILE_PATH: "docker/keycloak-bootstrap/Dockerfile"
-    KANIKO_BUILD_CONTEXT: "./"
-    KANIKO_ARGS: "--cache=false"
+    BUILD_CONTEXT: "./"
 
 container-build:
   parallel:
