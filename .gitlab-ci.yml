@@ -143,46 +143,18 @@ pre-semantic-release:
 container-build:
   parallel:
     matrix: *build-matrix
-  rules: &container-rules
-    # On a release tag and on main, build/sign/push BOTH images regardless of
-    # what changed: the chart publish needs both image digests. On feature
-    # branches, build only the image whose own sources changed.
-    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(-nubus[0-9]+)?$/'
-    - if: '$CI_COMMIT_BRANCH == "main"'
-    - if: '$IMAGE_NAME == "keycloak"'
-      changes: &software-changes
-        - appcenter/**/*
-        - dependencies/**/*
-        - docs-dev/**/*
-        - extensions/**/*
-        - files/**/*
-        - originals/**/*
-        - scripts/**/*
-        - Dockerfile
-        - docker-compose.yaml
-        - pyproject.toml
-        - renovate.json
-        - requirements.txt
-        - sonar-project.properties
-    - if: '$IMAGE_NAME == "keycloak-bootstrap"'
-      changes: &bootstrap-changes
-        - docker/keycloak-bootstrap/**/*
-        - univention-keycloak/**/*
 
 container-malware-scan:
   parallel:
     matrix: *build-matrix
-  rules: *container-rules
 
 container-sign-external:
   parallel:
     matrix: *build-matrix
-  rules: *container-rules
 
 push-image-external:
   parallel:
     matrix: *build-matrix
-  rules: *container-rules
 
 container-release-attestation:
   needs:
@@ -191,11 +163,6 @@ container-release-attestation:
     - job: pre-semantic-release
   parallel:
     matrix: *build-matrix
-  rules: *container-rules
-  needs:
-    - job: push-image-external
-      optional: true
-    - job: pre-semantic-release
 
 test-udm-unit-and-integration:
   needs: []
@@ -207,8 +174,6 @@ test-udm-unit-and-integration:
       when: "never"
     - if: '$GITLAB_USER_ID == $RENOVATE_USER_ID && $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /Renovate run dind/'
       when: "manual"
-    - changes: *software-changes
-      when: "on_success"
   before_script:
     - cd extensions/tests
     # Allow that the Docker API version is negotiated between client and server
@@ -241,9 +206,6 @@ sonarqube:
   needs: []
   # Analyse only when code changes (keycloak or bootstrap sources). On tag
   # pipelines rules:changes is always true, so releases are analysed too.
-  rules:
-    - changes: *software-changes
-    - changes: *bootstrap-changes
 
 chart-tests:
   image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.0"
