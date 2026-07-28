@@ -127,11 +127,13 @@ Keycloak version the image is built from.
 ### Test your changes
 
 1. [ ] To test the app from the App Center, run the manual **`create_app_version`** job on your MR pipeline.
-   It creates a temporary test version `0.0.0-MR-<iid>` in the **test** App Center
+   It creates a temporary test version `0.0.0-<branch-slug>` in the **test** App Center
    (pointing at the `nubus-dev` image built for your branch) and `update_appcenter` uploads the app files.
+   The `<branch-slug>` is the same slug the branch package repository uses (see [README-debian-package.md](README-debian-package.md)),
+   so the branch name is all you need to install both.
    Install/test it on a test UCS. The version is removed automatically when the MR is closed/merged (or after 3 days).
 1. [ ] Use the [keycloak branch tests](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/view/Branch%20tests/job/Keycloak%20Branch%20Tests/) to test your changes.
-    * Set the **`KEYCLOAK_APPVERSION`** job parameter to the test App Center version created above (`0.0.0-MR-<iid>`) so the test installs that version from the test App Center.
+    * Set the **`KEYCLOAK_APPVERSION`** job parameter to the test App Center version created above (`0.0.0-<branch-slug>`) so the test installs that version from the test App Center.
     * for manual testing [create personal keycloak env job](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/view/Personal%20environments/job/UcsKeycloakEnvironment/).
 1. [ ] Once tests are green and QA approved the MR, merge into `main` and wait for the pipeline. The `main` pipeline keeps the `999.0.0-staging` App Center version up to date.
 1. [ ] Run or wait for the [keycloak product tests](https://jenkins2022.knut.univention.de/job/UCS-5.2/job/UCS-5.2-5/job/Keycloak%20Product%20Tests/).

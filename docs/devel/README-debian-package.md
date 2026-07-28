@@ -30,6 +30,7 @@ apt-get install univention-keycloak-client
 ```
 
 The branch slug is the GitLab-slugified branch name (e.g., `feat/my-change` becomes `feat-my-change`).
+The App Center test version of the branch uses the same slug (`0.0.0-<branch-slug>`, see [README-testing-release.md](README-testing-release.md)).
 
 To clean up the Aptly repo, trigger the **`aptly-remove`** job manually in the pipeline (`.post` stage). Repos auto-expire after 6 months.
 

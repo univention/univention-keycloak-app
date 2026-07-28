@@ -71,9 +71,10 @@ include:
   # On a feature branch (MR) creating the version is manual (see the
   # create_app_version override below); on a protected vX.Y.Z-nubusN tag it is the real
   # release. The App Center Version comes from the tag (templated into ini.jinja).
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/app-release@2.5.2"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/app-release@2.10.0"
     inputs:
       app_id: "keycloak"
+      app_version_from_branch_name: true
       ucs_base_version: "5.0"
       changelog_link: "https://docs.software-univention.de/keycloak-app/latest/changelog.html"
       mail_recipient: "app-announcement@univention.de"
