@@ -19,7 +19,7 @@ variables:
   RENOVATE_USER_ID: "1393"
 
 # keycloak defines its own workflow (this REPLACES the shared nubus-workflow) so
-# it can release from "vX.Y.Z" AND "vX.Y.Z-nubusN" tags. The App Center can
+# it can release from "vX.Y.Z-nubusN" tags. The App Center can
 # re-release the same upstream Keycloak version with a new Nubus revision as
 # -nubus1/-nubus2/..., which common-ci's shared rule (plain vX.Y.Z only) does not
 # allow. This is a keycloak-only exception, so
@@ -34,8 +34,8 @@ workflow:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
     - if: '$CI_PIPELINE_SOURCE == "schedule-release"'
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    # Release pipeline: a protected "vX.Y.Z" or "vX.Y.Z-nubusN" tag.
-    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(-nubus[0-9]+)?$/ && $CI_COMMIT_REF_PROTECTED == "true"'
+    # Release pipeline: a protected "vX.Y.Z-nubusN" tag.
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+-nubus[0-9]+$/ && $CI_COMMIT_REF_PROTECTED == "true"'
     - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$CI_PIPELINE_SOURCE == "web"'
 
@@ -69,7 +69,7 @@ include:
 
   # App Center release: create_app_version / update_appcenter / do_release etc.
   # On a feature branch (MR) creating the version is manual (see the
-  # create_app_version override below); on a protected vX.Y.Z tag it is the real
+  # create_app_version override below); on a protected vX.Y.Z-nubusN tag it is the real
   # release. The App Center Version comes from the tag (templated into ini.jinja).
   - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/app-release@2.5.2"
     inputs:
@@ -102,7 +102,7 @@ include:
   - local: /.gitlab-ci/gitlab-ci.yml
 
 # Version stamp via common-ci's .tagged-release template. Releases come only from
-# a protected vX.Y.Z tag; every other ref is a "<base>-post-<slug>" dev build
+# a protected vX.Y.Z-nubusN tag; every other ref is a "<base>-post-<slug>" dev build
 # published to nubus-dev only. Job name kept as "pre-semantic-release" because
 # container-release-attestation depends on it for RELEASE_VERSION.
 # INITIAL_VERSION floors the base at the current Keycloak app version so the next
@@ -111,8 +111,8 @@ pre-semantic-release:
   extends: .tagged-release
   variables:
     INITIAL_VERSION: "26.6.1"
-    # Match the workflow/app-release pattern: also accept "vX.Y.Z-nubusN" tags.
-    RELEASE_TAG_PATTERN: '^v[0-9]+\.[0-9]+\.[0-9]+(-nubus[0-9]+)?$'
+    # Match the workflow/app-release pattern: only accept "vX.Y.Z-nubusN" tags.
+    RELEASE_TAG_PATTERN: '^v[0-9]+\.[0-9]+\.[0-9]+-nubus[0-9]+$'
   # On a release tag, the tag's X.Y.Z must equal KEYCLOAK_VERSION in this file,
   # otherwise the tag was cut against the wrong commit or the bump was forgotten.
   # Failing here blocks the release: the build/publish/App Center jobs need this
@@ -231,7 +231,7 @@ publish-chart-external:
 
 # Feature branches: creating the App Center version is MANUAL (one click on
 # create_app_version; update_appcenter follows automatically as it needs it).
-# On a vX.Y.Z tag it is automatic (the release); on main it refreshes staging.
+# On a vX.Y.Z-nubusN tag it is automatic (the release); on main it refreshes staging.
 # Rules mirror the app-release component, with the MR case set to manual (and the
 # per-rule ENVIRONMENT_NAME kept so the environment/on_stop still resolve).
 create_app_version:
