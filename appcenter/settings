@@ -262,3 +262,11 @@ InitialValue = univentionSourceIAM
 Scope = outside, inside
 Description = UDM property referencing the source IAM
 Group = Ad-hoc federation
+
+[keycloak/server/feature/ssf]
+Type = Bool
+InitialValue = False
+Scope = outside
+Show = Settings
+Description = Whether or not to enable the experimental Shared Signals Framework (SSF) feature in Keycloak.
+Group = Administration settings

@@ -20,13 +20,16 @@ if not sso_path:
     sso_path = '/'
 db_kind = ucr.get('kc/db/kind')
 db_xa = ucr.get('kc/db/xa')
-disable_theme_caching = ""
-if ucr.is_true("keycloak/disable/theme/caching", False):
-    disable_theme_caching = "--spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false"
+command = f"start --hostname={kc_fqdn} --http-relative-path={sso_path} --http-enabled=true --proxy-headers xforwarded --cache-config-file=cache-ispn-jdbc-ping.xml --db={db_kind} --transaction-xa-enabled={db_xa} --health-enabled=true --metrics-enabled=true"
 
-print(f'''
-    command: start --hostname={kc_fqdn} --http-relative-path={sso_path} --http-enabled=true --proxy-headers xforwarded --cache-config-file=cache-ispn-jdbc-ping.xml --db={db_kind} --transaction-xa-enabled={db_xa} {disable_theme_caching} --health-enabled=true --metrics-enabled=true
-''')
+# optional args
+if ucr.is_true("keycloak/disable/theme/caching", False):
+    command = f"{command} --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false"
+
+if ucr.is_true("keycloak/server/feature/ssf", False):
+    command = f"{command} --feature-ssf=enabled"
+
+print(f"    command: {command}")
 @!@
     # see https://forge.univention.org/bugzilla/show_bug.cgi?id=55360
     security_opt:
