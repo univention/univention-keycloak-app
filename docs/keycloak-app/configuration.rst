@@ -590,6 +590,28 @@ more information, consult :cite:t:`keycloak-docs`.
         - ``true``
         - Installation and app configuration
 
+.. envvar:: keycloak/server/feature/ssf
+
+   .. versionadded:: 26.7.1-nubus1
+
+   If set to ``true`` the experimental Shared Signals Framework (SSF) feature
+   of Keycloak will be enabled.
+
+   Possible values:
+      ``true`` or ``false``
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - ``false``
+        - App configuration
+
 .. envvar:: keycloak/apache/config
 
    If set to ``true`` (default) the UCS system will create an apache
