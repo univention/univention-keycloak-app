@@ -79,6 +79,18 @@ and writes to the Docker logs. The App Center sets the Docker container's
 ``KEYCLOAK_LOGLEVEL`` environment variable to the value of
 :envvar:`keycloak/log/level`.
 
+To enable garbage collection (GC) logging and instruct the Java Virtual Machine
+to automatically write a heap dump snapshot whenever an unhandled
+``java.lang.OutOfMemoryError`` occurs, set the following options:
+
+.. code-block:: console
+
+   # make sure mapped log directory exists and is writeable for keycloak container
+   $ mkdir -p /var/lib/univention-appcenter/apps/keycloak/data/logs
+   $ chown 1000 /var/lib/univention-appcenter/apps/keycloak/data/logs
+
+   $ univention-app configure keycloak --set keycloak/java/opts/append="-Xlog:gc*,safepoint=info:file=/var/lib/univention-appcenter/apps/keycloak/data/logs/gc-%t.log:time,uptime,level,tags:filecount=10,filesize=25m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/lib/univention-appcenter/apps/keycloak/data/logs/"
+
 .. _troubleshoot-custom-fqdn:
 
 Configuration of single sign-on through external public domain

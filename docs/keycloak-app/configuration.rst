@@ -646,10 +646,27 @@ more information, consult :cite:t:`keycloak-docs`.
         - empty
         - Installation and app configuration
 
+.. envvar:: keycloak/java/opts/append
 
-.. envvar:: keycloak/java/opts
+   Sets JAVA_OPTS_APPEND, an environment variable used in Java container images
+   (like WildFly/Keycloak) to add custom JVM system properties or flags without
+   overwriting the default options.
 
-   Defines the options that the Keycloak app appends to the *java* command.
+   .. list-table::
+      :header-rows: 1
+      :widths: 2 5 5
+
+      * - Required
+        - Default value
+        - Set
+
+      * - No
+        - empty
+        - Installation and app configuration
+
+.. envvar:: keycloak/deploy/resources/limits/memory
+
+   Memory limit for the Keycloak container.
 
    .. list-table::
       :header-rows: 1
@@ -660,7 +677,7 @@ more information, consult :cite:t:`keycloak-docs`.
         - Set
 
       * - Yes
-        - ``-server -Xms1024m -Xmx1024m``
+        - ``3g``
         - Installation and app configuration
 
 .. envvar:: keycloak/server/sso/fqdn
