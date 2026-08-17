@@ -454,6 +454,35 @@ service:
       containerPort: 8443
       # -- service protocol.
       protocol: "TCP"
+    # -- Keycloak management interface serving health and metrics endpoints.
+    # Ref.: https://www.keycloak.org/server/management-interface
+    management:
+      # -- Accessible port.
+      port: 9000
+      # -- Internal port.
+      containerPort: 9000
+      # -- service protocol.
+      protocol: "TCP"
+
+# -- ServiceMonitor configuration.
+# Ref.: https://prometheus-operator.dev/docs/api-reference/api/#monitoring.coreos.com/v1.ServiceMonitor
+serviceMonitor:
+  # -- Enable creation of a Prometheus Operator ServiceMonitor for the metrics endpoint.
+  enabled: false
+  # -- Interval at which Prometheus scrapes the metrics endpoint.
+  interval: "30s"
+  # -- Timeout for a single scrape.
+  scrapeTimeout: "10s"
+  # -- Additional custom labels for the ServiceMonitor, e.g. to match a Prometheus release selector.
+  labels: {}
+  # -- Additional custom annotations for the ServiceMonitor.
+  annotations: {}
+  # -- Namespace of the ServiceMonitor. Defaults to the release namespace.
+  namespace: ""
+  # -- Metric relabelings applied to samples before ingestion.
+  metricRelabelings: []
+  # -- Relabelings applied to discovered targets before scraping.
+  relabelings: []
 
 # Service account to use.
 # Ref.: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/

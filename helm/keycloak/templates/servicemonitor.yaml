@@ -1,0 +1,40 @@
+{{/*
+SPDX-FileCopyrightText: 2026 Univention GmbH
+SPDX-License-Identifier: AGPL-3.0-only
+*/}}
+{{- if and .Values.serviceMonitor.enabled .Values.config.enableMetrics .Values.service.enabled }}
+{{- $labels := merge (deepCopy .Values.serviceMonitor.labels) (.Values.additionalLabels | default dict) }}
+---
+apiVersion: "monitoring.coreos.com/v1"
+kind: "ServiceMonitor"
+metadata:
+  name: "{{ include "common.names.fullname" . }}"
+  namespace: {{ .Values.serviceMonitor.namespace | default (include "common.names.namespace" .) | quote }}
+  labels:
+    {{- include "common.labels.standard" ( dict "customLabels" $labels "context" . ) | nindent 4 }}
+  {{- include "nubus-common.annotations.render" ( dict
+    "values" ( list .Values.serviceMonitor.annotations .Values.additionalAnnotations )
+    "context" . )
+    | nindent 2 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "common.labels.matchLabels" . | nindent 6 }}
+  namespaceSelector:
+    matchNames:
+      - {{ include "common.names.namespace" . | quote }}
+  endpoints:
+    - port: "management"
+      path: "/metrics"
+      interval: {{ .Values.serviceMonitor.interval | quote }}
+      scrapeTimeout: {{ .Values.serviceMonitor.scrapeTimeout | quote }}
+      {{- with .Values.serviceMonitor.metricRelabelings }}
+      metricRelabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.serviceMonitor.relabelings }}
+      relabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+...
+{{- end }}

@@ -1140,6 +1140,46 @@ true
 			<td>service protocol.</td>
 		</tr>
 		<tr>
+			<td>service.ports.management</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "containerPort": 9000,
+  "port": 9000,
+  "protocol": "TCP"
+}
+</pre>
+</td>
+			<td>Keycloak management interface serving health and metrics endpoints. Ref.: https://www.keycloak.org/server/management-interface</td>
+		</tr>
+		<tr>
+			<td>service.ports.management.containerPort</td>
+			<td>int</td>
+			<td><pre lang="json">
+9000
+</pre>
+</td>
+			<td>Internal port.</td>
+		</tr>
+		<tr>
+			<td>service.ports.management.port</td>
+			<td>int</td>
+			<td><pre lang="json">
+9000
+</pre>
+</td>
+			<td>Accessible port.</td>
+		</tr>
+		<tr>
+			<td>service.ports.management.protocol</td>
+			<td>string</td>
+			<td><pre lang="json">
+"TCP"
+</pre>
+</td>
+			<td>service protocol.</td>
+		</tr>
+		<tr>
 			<td>service.type</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -1183,6 +1223,96 @@ true
 </pre>
 </td>
 			<td>Additional custom labels for the ServiceAccount.</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "annotations": {},
+  "enabled": false,
+  "interval": "30s",
+  "labels": {},
+  "metricRelabelings": [],
+  "namespace": "",
+  "relabelings": [],
+  "scrapeTimeout": "10s"
+}
+</pre>
+</td>
+			<td>ServiceMonitor configuration. Ref.: https://prometheus-operator.dev/docs/api-reference/api/#monitoring.coreos.com/v1.ServiceMonitor</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.annotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Additional custom annotations for the ServiceMonitor.</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enable creation of a Prometheus Operator ServiceMonitor for the metrics endpoint.</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.interval</td>
+			<td>string</td>
+			<td><pre lang="json">
+"30s"
+</pre>
+</td>
+			<td>Interval at which Prometheus scrapes the metrics endpoint.</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.labels</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Additional custom labels for the ServiceMonitor, e.g. to match a Prometheus release selector.</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.metricRelabelings</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Metric relabelings applied to samples before ingestion.</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.namespace</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Namespace of the ServiceMonitor. Defaults to the release namespace.</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.relabelings</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Relabelings applied to discovered targets before scraping.</td>
+		</tr>
+		<tr>
+			<td>serviceMonitor.scrapeTimeout</td>
+			<td>string</td>
+			<td><pre lang="json">
+"10s"
+</pre>
+</td>
+			<td>Timeout for a single scrape.</td>
 		</tr>
 		<tr>
 			<td>startupProbe.enabled</td>

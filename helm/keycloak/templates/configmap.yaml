@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# SPDX-FileCopyrightText: 2024 Univention GmbH
+# SPDX-FileCopyrightText: 2024-2026 Univention GmbH
 
 ---
 apiVersion: "v1"
@@ -23,9 +23,12 @@ data:
   KC_CACHE: "ispn"
   # https://www.keycloak.org/server/caching#_available_transport_stacks
   KC_CACHE_STACK: "jdbc-ping"
-  KC_METRICS_ENABLED: "true"
+  KC_METRICS_ENABLED: {{ .Values.config.enableMetrics | quote }}
+  {{- if .Values.config.enableMetrics }}
+  KC_HTTP_METRICS_HISTOGRAMS_ENABLED: {{ .Values.config.httpMetrics.histograms | quote }}
+  KC_HTTP_METRICS_SLOS: {{ .Values.config.httpMetrics.slos | quote }}
+  KC_EVENT_METRICS_USER_ENABLED: {{ .Values.config.userEventMetrics.enabled | quote }}
   {{- if .Values.config.userEventMetrics.enabled }}
-  KC_EVENT_METRICS_USER_ENABLED: "true"
   {{- with .Values.config.userEventMetrics.tags }}
   KC_EVENT_METRICS_USER_TAGS: {{ . | quote }}
   {{- end }}
@@ -33,11 +36,6 @@ data:
   KC_EVENT_METRICS_USER_EVENTS: {{ . | quote }}
   {{- end }}
   {{- end }}
-  {{- if .Values.config.httpMetrics.histograms }}
-  KC_HTTP_METRICS_HISTOGRAMS_ENABLED: "true"
-  {{- end }}
-  {{- with .Values.config.httpMetrics.slos }}
-  KC_HTTP_METRICS_SLOS: {{ . | quote }}
   {{- end }}
   KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
   KC_HTTP_ENABLED: "true"

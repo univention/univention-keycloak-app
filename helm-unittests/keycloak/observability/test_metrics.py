@@ -28,9 +28,10 @@ class TestUserEventMetricsConfigMap(Base):
 
     def test_disabled_by_default(self, helm, chart_path):
         configmap = self.helm_template_file(helm, chart_path, {}, self.template_file)
-        assert 'KC_EVENT_METRICS_USER_ENABLED' not in configmap['data']
-        assert 'KC_EVENT_METRICS_USER_TAGS' not in configmap['data']
-        assert 'KC_EVENT_METRICS_USER_EVENTS' not in configmap['data']
+        data = configmap['data']
+        assert data['KC_EVENT_METRICS_USER_ENABLED'] == 'false'
+        assert 'KC_EVENT_METRICS_USER_TAGS' not in data
+        assert 'KC_EVENT_METRICS_USER_EVENTS' not in data
 
     def test_enabled_renders_env_vars(self, helm, chart_path):
         values = {
@@ -48,14 +49,24 @@ class TestUserEventMetricsConfigMap(Base):
         assert data['KC_EVENT_METRICS_USER_TAGS'] == 'realm,clientId'
         assert data['KC_EVENT_METRICS_USER_EVENTS'] == 'login,logout'
 
+    def test_enabled_omits_empty_tags_and_events(self, helm, chart_path):
+        values = {'config': {'userEventMetrics': {'enabled': True, 'tags': '', 'events': ''}}}
+        configmap = self.helm_template_file(helm, chart_path, values, self.template_file)
+        data = configmap['data']
+        # Empty values fail Keycloak config validation, so omit these keys.
+        assert data['KC_EVENT_METRICS_USER_ENABLED'] == 'true'
+        assert 'KC_EVENT_METRICS_USER_TAGS' not in data
+        assert 'KC_EVENT_METRICS_USER_EVENTS' not in data
+
 
 class TestHttpMetricsConfigMap(Base):
     template_file = 'templates/configmap.yaml'
 
-    def test_absent_by_default(self, helm, chart_path):
+    def test_rendered_with_defaults(self, helm, chart_path):
         configmap = self.helm_template_file(helm, chart_path, {}, self.template_file)
-        assert 'KC_HTTP_METRICS_HISTOGRAMS_ENABLED' not in configmap['data']
-        assert 'KC_HTTP_METRICS_SLOS' not in configmap['data']
+        data = configmap['data']
+        assert data['KC_HTTP_METRICS_HISTOGRAMS_ENABLED'] == 'false'
+        assert data['KC_HTTP_METRICS_SLOS'] == ''
 
     def test_rendered_when_configured(self, helm, chart_path):
         values = {'config': {'httpMetrics': {'histograms': True, 'slos': '5,10,25,50'}}}
@@ -63,6 +74,17 @@ class TestHttpMetricsConfigMap(Base):
         data = configmap['data']
         assert data['KC_HTTP_METRICS_HISTOGRAMS_ENABLED'] == 'true'
         assert data['KC_HTTP_METRICS_SLOS'] == '5,10,25,50'
+
+    def test_absent_when_metrics_disabled(self, helm, chart_path):
+        values = {'config': {'enableMetrics': False}}
+        configmap = self.helm_template_file(helm, chart_path, values, self.template_file)
+        data = configmap['data']
+        assert data['KC_METRICS_ENABLED'] == 'false'
+        assert 'KC_HTTP_METRICS_HISTOGRAMS_ENABLED' not in data
+        assert 'KC_HTTP_METRICS_SLOS' not in data
+        assert 'KC_EVENT_METRICS_USER_ENABLED' not in data
+        assert 'KC_EVENT_METRICS_USER_TAGS' not in data
+        assert 'KC_EVENT_METRICS_USER_EVENTS' not in data
 
 
 class TestUserEventMetricsFeature(Base):
