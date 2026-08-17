@@ -229,6 +229,23 @@ Show = Install, Settings
 Scope = outside
 Group = Administration settings
 
+[keycloak/java/opts/append]
+Type = String
+Required = False
+Description =  Sets JAVA_OPTS_APPEND, an environment variable used in Java container images (like WildFly/Keycloak) to add custom JVM system properties or flags without overwriting the default options.
+Show = Install, Settings
+Scope = outside
+Group = Administration settings
+
+[keycloak/deploy/resources/limits/memory]
+Type = String
+InitialValue = 3g
+Required = True
+Description = Memory limit for the Keycloak container
+Show = Install, Settings
+Scope = outside
+Group = Administration settings
+
 [keycloak/password/change/endpoint]
 Type = String
 Show = Install, Settings

@@ -70,8 +70,10 @@ RUN apt-get install -y --no-install-recommends --no-install-suggests openjdk-21-
  && apt-get purge -y --allow-remove-essential univention-archive-key apt
 COPY --from=artifacts --chown=keycloak /opt/keycloak /opt/keycloak
 USER 1000
+ENV KC_RUN_IN_CONTAINER=true
 EXPOSE 7600
 EXPOSE 8080
 EXPOSE 8443
+EXPOSE 9000
 
 ENTRYPOINT [ "/opt/keycloak/bin/kc.sh" ]

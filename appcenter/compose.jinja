@@ -62,6 +62,10 @@ print(f"    command: {command}")
       JGROUPS_DISCOVERY_EXTERNAL_IP: @%@hostname@%@.@%@domainname@%@
       KC_HTTPS_KEY_STORE_PASSWORD: univention
       KEYCLOAK_ADMIN: admin
+      JAVA_OPTS_APPEND: @!@
+ucr = configRegistry
+java_opts = ucr.get('keycloak/java/opts/append', '')
+print(java_opts)@!@
       KEYCLOAK_ADMIN_PASSWORD: @!@
 import os
 pwdfile="/etc/keycloak.secret"
@@ -77,6 +81,10 @@ with open(pwdfile, 'r') as fd:
       - /etc/univention/ssl/ucsCA/CAcert.pem:/etc/pki/ca-trust/extracted/pem/ucsCAcert.pem:ro
       - /var/lib/univention-appcenter/apps/keycloak/conf/UCS/login/messages/:/opt/keycloak/themes/UCS/login/messages/:ro
       #- /var/lib/univention-appcenter/apps/keycloak/data/development:/opt/jboss/keycloak/standalone/deployments/
+    deploy:
+      resources:
+        limits:
+          memory: @%@keycloak/deploy/resources/limits/memory@%@
     ports:
       # does not work, see https://forge.univention.org/bugzilla/show_bug.cgi?id=53878
       # - 127.0.0.1:8180:8080
