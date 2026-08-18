@@ -16,6 +16,25 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.7.0-nubus1
+=====================
+
+Released: 19. Aug 2026
+
+* Both, the UCS app and Kubernetes deployments, now support the configuration
+  of the :program:`Keycloak` metrics endpoint,
+  see :ref:`use-case-metrics-monitoring`.
+
+* This version of the UCS app introduces the app setting
+  :envvar:`keycloak/java/opts/append` to configure the value of
+  ``JAVA_OPTS_APPEND`` in the :program:`Keycloak` container.
+
+* This version of the UCS app introduces the app setting
+  :envvar:`keycloak/deploy/resources/limits/memory` to configure
+  the memory limit for the :program:`Keycloak` container. The default
+  is ``3g``. We strongly recommend adjusting this value based on your
+  available hardware.
+
 Version 26.7.0
 ===============
 
