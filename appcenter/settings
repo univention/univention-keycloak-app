@@ -177,58 +177,6 @@ InitialValue = WARN
 Scope = outside
 Group = Administration settings
 
-[keycloak/event/metrics/user/enabled]
-Type = Bool
-Required = False
-Description = Create Prometheus metrics from user events (e.g. logins per realm/client). Enables the Keycloak "user-event-metrics" feature. Requires metrics to be scraped from the management port.
-Show = Install, Settings
-InitialValue = false
-Scope = outside
-Group = Administration settings
-
-[keycloak/event/metrics/user/tags]
-Type = String
-Required = False
-Description = Comma-separated list of tags collected for user event metrics. Only effective when kc/event/metrics/user/enabled is true. Possible values: realm, idp, clientId.
-Show = Install, Settings
-InitialValue = clientId,realm
-Scope = outside
-Group = Administration settings
-
-[keycloak/event/metrics/user/events]
-Type = String
-Required = False
-Description = Comma-separated list of events collected for user event metrics. Only effective when kc/event/metrics/user/enabled is true. See https://www.keycloak.org/observability/event-metrics.
-Show = Install, Settings
-InitialValue = login,logout
-Scope = outside
-Group = Administration settings
-
-[keycloak/http/metrics/histograms/enabled]
-Type = Bool
-Required = False
-Description = Enable a histogram with default buckets for the duration of HTTP server requests.
-Show = Install, Settings
-InitialValue = false
-Scope = outside
-Group = Administration settings
-
-[keycloak/http/metrics/slos]
-Type = String
-Required = False
-Description = Service level objectives (comma-separated, in milliseconds) for HTTP server request metrics, e.g. 5,10,25,50,250,500,1000,2500,5000,10000. Left empty by default to keep Keycloak's default buckets.
-Show = Install, Settings
-Scope = outside
-Group = Administration settings
-
-[keycloak/management/port]
-Type = String
-Required = False
-Description = Publish the Keycloak management endpoints (health and metrics) on this host port. Empty (the default) does not publish the port; set a port number such as 9000 to enable external access. The endpoints are served over plain HTTP without authentication, so restrict access with the host firewall or a reverse proxy.
-Show = Install, Settings
-Scope = outside
-Group = Administration settings
-
 [keycloak/java/opts/append]
 Type = String
 Required = False
@@ -253,6 +201,58 @@ InitialValue = @%@hostname@%@.@%@domainname@%@
 Scope = inside
 Description = Defines the FQDN of the UCS instance used to change user password.
 Group = Administration settings
+
+[keycloak/event/metrics/user/enabled]
+Type = Bool
+Required = False
+Description = Create Prometheus metrics from user events (e.g. logins per realm/client). Enables the Keycloak "user-event-metrics" feature. Requires metrics to be scraped from the management port.
+Show = Install, Settings
+InitialValue = false
+Scope = outside
+Group = Metric settings
+
+[keycloak/event/metrics/user/tags]
+Type = String
+Required = False
+Description = Comma-separated list of tags collected for user event metrics. Only effective when kc/event/metrics/user/enabled is true. Possible values: realm, idp, clientId.
+Show = Install, Settings
+InitialValue = clientId,realm
+Scope = outside
+Group = Metric settings
+
+[keycloak/event/metrics/user/events]
+Type = String
+Required = False
+Description = Comma-separated list of events collected for user event metrics. Only effective when kc/event/metrics/user/enabled is true. See https://www.keycloak.org/observability/event-metrics.
+Show = Install, Settings
+InitialValue = login,logout
+Scope = outside
+Group = Metric settings
+
+[keycloak/http/metrics/histograms/enabled]
+Type = Bool
+Required = False
+Description = Enable a histogram with default buckets for the duration of HTTP server requests.
+Show = Install, Settings
+InitialValue = false
+Scope = outside
+Group = Metric settings
+
+[keycloak/http/metrics/slos]
+Type = String
+Required = False
+Description = Service level objectives (comma-separated, in milliseconds) for HTTP server request metrics, e.g. 5,10,25,50,250,500,1000,2500,5000,10000. Left empty by default to keep Keycloak's default buckets.
+Show = Install, Settings
+Scope = outside
+Group = Metric settings
+
+[keycloak/management/port]
+Type = String
+Required = False
+Description = Publish the Keycloak management endpoints (health and metrics) on this host port. Empty (the default) does not publish the port; set a port number such as 9000 to enable external access. The endpoints are served over plain HTTP without authentication, so restrict access with the host firewall or a reverse proxy.
+Show = Install, Settings
+Scope = outside
+Group = Metric settings
 
 [kc/db/url]
 Type = String
