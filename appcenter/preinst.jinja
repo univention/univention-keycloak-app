@@ -27,6 +27,12 @@ while [ $# -gt 0 ]; do
 	esac
 done
 
+# set the default for the appsetting for updates
+if [ -n "$old_version" ]; then
+        if dpkg --compare-versions "$old_version" lt 26.7.0-nubus1; then
+                ucr set keycloak/deploy/resources/limits/memory="3g"
+        fi
+fi
 
 if ! is_ucr_false keycloak/check-postgres-version; then
 
