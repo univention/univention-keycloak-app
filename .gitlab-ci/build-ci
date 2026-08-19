@@ -48,6 +48,7 @@ merge_one_artifact () {
     echo '      changes:'
     document_paths
     echo '      when: manual'
+    echo '      allow_failure: true'
 }
 
 review_job () {
