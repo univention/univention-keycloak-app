@@ -25,11 +25,11 @@ Released: 19. Aug 2026
   of the :program:`Keycloak` metrics endpoint,
   see :ref:`use-case-metrics-monitoring`.
 
-* This version of the UCS app introduces the app setting
+* This version of the UCS app introduces app setting
   :envvar:`keycloak/java/opts/append` to configure the value of
   ``JAVA_OPTS_APPEND`` in the :program:`Keycloak` container.
 
-* This version of the UCS app introduces the app setting
+* This version of the UCS app introduces app setting
   :envvar:`keycloak/deploy/resources/limits/memory` to configure
   the memory limit for the :program:`Keycloak` container. The default
   is ``3g``. We strongly recommend adjusting this value based on your
