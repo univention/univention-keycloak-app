@@ -26,4 +26,7 @@ FROM base
 
 COPY docker/keycloak-bootstrap/bootstrap-ums-keycloak/ /app
 
+RUN adduser --uid 1000 app
+USER app
+
 CMD ["/app/entrypoint.sh"]
