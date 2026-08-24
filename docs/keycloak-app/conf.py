@@ -121,6 +121,7 @@ linkcheck_ignore = [
     r'https://ucs-sso-ng\.example\.com/admin/',
     r'https://ucs-sso-ng\.ucs\.test/',
     r'https://www\.keycloak\.org/docs/latest/server_development/#messages',
+    rf'https://www\.keycloak\.org/docs/(?!{re.escape(read_ci_variable("KEYCLOAK_VERSION"))}/)\d+\.\d+\.\d+/release_notes/?',
 ]
 linkcheck_allowed_redirects = {
     r'https://help\.univention\.com/t/\d+': r'https://help\.univention\.com/t/[\w\d-]+/\d+',
