@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2021-2024 Univention GmbH
+# SPDX-FileCopyrightText: 2021-2026 Univention GmbH
 #
 # SPDX-License-Identifier: AGPL-3.0-only
 
@@ -48,6 +48,11 @@ extensions = [
 
 suppress_warnings = ['git.too_shallow']
 git_last_updated_timezone = 'Europe/Berlin'
+
+sys.path.insert(0, os.path.abspath('..'))
+from _common import render_bibliography  # noqa: E402  # isort: skip
+
+render_bibliography()
 
 bibtex_bibfiles = ['../bibliography.bib']
 bibtex_encoding = 'utf-8'

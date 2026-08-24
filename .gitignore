@@ -16,3 +16,6 @@ helm/**/.kyverno/manifest.yaml
 /docker-compose.override.yaml
 
 /ansible/inventory/*.yaml
+
+# Generated from docs/bibliography.bib.in by docs/keycloak-app/conf.py
+/docs/bibliography.bib

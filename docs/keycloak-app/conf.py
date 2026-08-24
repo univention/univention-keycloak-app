@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022-2024 Univention GmbH
+# SPDX-FileCopyrightText: 2022-2026 Univention GmbH
 #
 # SPDX-License-Identifier: AGPL-3.0-only
 
@@ -15,6 +15,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
+import re
 import sys
 from datetime import date
 
@@ -22,32 +23,12 @@ from datetime import date
 # -- Project information -----------------------------------------------------
 
 
-def read_version_from_ci() -> str:
-    """
-    Read the version for the documentation from the pipeline definition
+sys.path.insert(0, os.path.abspath('..'))
+from _common import read_ci_variable, render_bibliography  # noqa: E402  # isort: skip
 
-    To not maintain the documentation version in different places, just define
-    at one place and use it in different places.
+render_bibliography()
 
-    The documentation version influences the version shown in the content of
-    the document and the path of the published documentation.
-
-    :returns: The version number for the documentation as defined in the CI/CD
-        pipeline.
-
-    :rtype: str
-    """
-    import yaml
-
-    with open('../../.gitlab-ci.yml') as f:
-        ci = yaml.safe_load(f)
-        return ci.get(
-            'variables',
-            {'DOC_TARGET_VERSION': '26.x'},
-        ).get('DOC_TARGET_VERSION')
-
-
-release = read_version_from_ci()
+release = read_ci_variable('DOC_TARGET_VERSION')
 version = release
 project = f'Univention Keycloak app manual {release}'
 copyright = f'2022-{date.today().year}, Univention GmbH'

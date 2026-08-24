@@ -121,7 +121,7 @@ Keycloak version the image is built from.
 
 1. [ ] Implement changes and write documentation on a feature branch with an MR against `main`.
 1. [ ] If you are updating Keycloak, bump `KEYCLOAK_VERSION` in `.gitlab-ci.yml` to the new upstream version (the release tag below should match it).
-1. [ ] Prepare the version bump / changelog.rst commit like it was done here: 64a206fa32bfa490cee4ff85778aec2d6b9d5d8d
+1. [ ] Update `docs/keycloak-app/changelog.rst`
 1. [ ] If the changes require special action from the user, document that in `appcenter/README_UPDATE_EN` and `appcenter/README_UPDATE_DE`.
 
 ### Test your changes
