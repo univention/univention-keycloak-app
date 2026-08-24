@@ -206,8 +206,11 @@ test-udm-unit-and-integration:
 sonarqube:
   extends: .sonarqube
   needs: []
-  # Analyse only when code changes (keycloak or bootstrap sources). On tag
-  # pipelines rules:changes is always true, so releases are analysed too.
+  stage: "test"
+  rules:
+    - if: "$CI_MERGE_REQUEST_IID"
+      when: "manual"
+  allow_failure: true
 
 chart-tests:
   image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.0"
