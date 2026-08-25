@@ -52,7 +52,7 @@ except ImportError:
 DEFAULT_REALM = 'master'
 URL_ADMIN_REQUIRED_ACTIONS = URL_ADMIN_REALM + '/authentication/required-actions'
 URL_ADMIN_REQUIRED_ACTION_REGISTER = URL_ADMIN_REALM + '/authentication/register-required-action'
-DEFAULT_EXTENTIONS = ['password', 'ldapmapper', 'self-service']
+DEFAULT_EXTENSIONS = ['password', 'ldapmapper', 'self-service']
 DEFAULT_USER_STORAGE_PROVIDER_NAME = 'ldap-provider'
 DEFAULT_USER_STORAGE_PROVIDER_ID = 'ldap'
 KERBEROS_KEYTAB_PATH = '/var/lib/univention-appcenter/apps/keycloak/conf/keycloak.keytab'
@@ -1966,11 +1966,11 @@ def parse_args(args: list[str] | None = None) -> Namespace:
     operation_subparsers = parser_ext.add_subparsers(title='operation', description='valid subcommands', required=True, dest='operation')
 
     ext_register_parser = operation_subparsers.add_parser('register', help='register extension', formatter_class=ArgumentDefaultsHelpFormatter)
-    ext_register_parser.add_argument('--names', metavar='name', nargs='+', default=DEFAULT_EXTENTIONS, help='Names of extensions to be activated')
+    ext_register_parser.add_argument('--names', metavar='name', nargs='+', default=DEFAULT_EXTENSIONS, help='Names of extensions to be activated')
     ext_register_parser.set_defaults(func=register_extensions)
 
     ext_unregister_parser = operation_subparsers.add_parser('unregister', help='unregister extension', formatter_class=ArgumentDefaultsHelpFormatter)
-    ext_unregister_parser.add_argument('--names', metavar='name', nargs='+', default=DEFAULT_EXTENTIONS, help='Names of extensions to be deactivated')
+    ext_unregister_parser.add_argument('--names', metavar='name', nargs='+', default=DEFAULT_EXTENSIONS, help='Names of extensions to be deactivated')
     ext_unregister_parser.set_defaults(func=unregister_extensions)
 
     # upgrade-config
@@ -3583,7 +3583,7 @@ def init_keycloak_ucs(opt):
     modify_component(kc_admin, lastname_ldap_mapper)
 
     # register all extensions
-    opt.names = DEFAULT_EXTENTIONS
+    opt.names = DEFAULT_EXTENSIONS
     print(f'Register extenions: {" ".join(opt.names)}')
     register_extensions(opt)
 
