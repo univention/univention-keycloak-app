@@ -1,0 +1,9 @@
+Hello,
+
+The ${APP_NAME} app version ${APP_VERSION} has been released to the Univention App Center.
+
+You can find the list of changes in the changelog:
+${CHANGELOG_LINK}
+
+Best regards,
+${AUTHOR_ALIAS}
