@@ -28,14 +28,19 @@ mirror-keycloak:
         curl -s --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "${KEYCLOAK_FILE}" "${GITLAB_FILE}"
       fi
 
-generate-config:
+docs-pipeline-config:
   needs: []
-  stage: prepare
-  # Only needed to feed doc-pipeline, so gate it on the same docs changes.
+  stage: trigger
   rules:
+    - if: '$CI_COMMIT_TAG && $CI_COMMIT_REF_PROTECTED == "true"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: "manual"
+      allow_failure: true
     - changes:
-        - "docs/keycloak-app/**/*"
-        - "docs/keycloak-migration/**/*"
+      - "docs/keycloak-app/**/*"
+      - "docs/keycloak-migration/**/*"
+      when: "manual"
+      allow_failure: true
   image:
     name: docker-registry.knut.univention.de/knut/deb-builder
     entrypoint: [""]
@@ -45,18 +50,20 @@ generate-config:
     paths:
       - generated-config-doc.yml
 
-doc-pipeline:
+docs-pipeline:
   stage: trigger
   rules:
+    - if: '$CI_COMMIT_TAG && $CI_COMMIT_REF_PROTECTED == "true"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
     - changes:
       - "docs/keycloak-app/**/*"
       - "docs/keycloak-migration/**/*"
   needs:
-    - job: generate-config
+    - job: docs-pipeline-config
   trigger:
     include:
       - artifact: generated-config-doc.yml
-        job: generate-config
+        job: docs-pipeline-config
     strategy: depend
     forward:
       pipeline_variables: true

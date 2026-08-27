@@ -166,7 +166,7 @@ Generate MR for [docs.univention.de](https://git.knut.univention.de/univention/d
 Use the following steps:
 
 1. [ ] In GitLab, navigate to the Keycloak repo → `main` branch, navigate to the pipeline of your commit.
-1. [ ] Open the `doc-pipeline` child pipeline.
+1. [ ] Trigger the `docs-pipeline-config` job manually, then open the `docs-pipeline` child pipeline.
 1. [ ] Trigger the `docs-merge-to-one-artifact` job manually.
 
    This action automatically creates a merge request in [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de).
