@@ -1,3 +1,10 @@
+univention-keycloak (3.8.2) unstable; urgency=medium
+
+  * Bug #57635: Support configurable OIDC client-scope protocol mappers and
+    client assignments
+
+ -- Florian Best <best@univention.de>  Tue, 10 Nov 2026 11:43:02 +0100
+
 univention-keycloak (3.8.1) unstable; urgency=medium
 
   * Bug #60123: add "passkeys enable", "passkeys disable", "passkeys set" and

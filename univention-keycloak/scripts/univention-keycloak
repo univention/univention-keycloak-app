@@ -1113,53 +1113,133 @@ def create_client_scope(opt):
     # log into default realm in case UCS realm doesn't exist yet
     kc_admin = UniventionKeycloakAdmin(opt)
 
+    mapper_payloads = []
+
+    if opt.add_user_id_mapper:
+        mapper_payloads.append(
+            {
+                'name': 'user_id',
+                'protocol': 'openid-connect',
+                'protocolMapper': 'oidc-sub-mapper',
+                'config': {
+                    'access.token.claim': 'true',
+                    'introspection.token.claim': 'true',
+                    'lightweight.claim': 'false',
+                },
+            }
+        )
+
+    if opt.add_groups_mapper:
+        mapper_payloads.append(
+            {
+                'name': 'groups-mapper',
+                'protocol': 'openid-connect',
+                'protocolMapper': 'oidc-group-membership-mapper',
+                'config': {
+                    'claim.name': opt.add_groups_mapper,
+                    'full.path': 'false',
+                    'id.token.claim': 'true',
+                    'access.token.claim': 'true',
+                    'userinfo.token.claim': 'true',
+                },
+            }
+        )
+
+    mapper_payloads.extend(
+        {
+            'name': claim_name,
+            'protocol': 'openid-connect',
+            'protocolMapper': 'oidc-usermodel-attribute-mapper',
+            'config': {
+                'user.attribute': user_attribute,
+                'claim.name': claim_name,
+                'jsonType.label': 'String',
+                'access.token.claim': 'true',
+                'id.token.claim': 'true',
+                'userinfo.token.claim': 'true',
+            },
+        }
+        for claim_name, user_attribute in opt.user_attribute_mapper
+    )
+
+    mapper_payloads.extend(
+        {
+            'name': claim_name,
+            'protocol': 'openid-connect',
+            'protocolMapper': 'oidc-hardcoded-claim-mapper',
+            'config': {
+                'claim.name': claim_name,
+                'claim.value': claim_value,
+                'jsonType.label': 'String',
+                'access.token.claim': 'true',
+                'id.token.claim': 'true',
+                'userinfo.token.claim': 'true',
+            },
+        }
+        for claim_name, claim_value in opt.hardcoded_claim_mapper
+    )
+
+    mapper_payloads.extend(
+        {
+            'name': f'audience-{audience}',
+            'protocol': 'openid-connect',
+            'protocolMapper': 'oidc-audience-mapper',
+            'config': {
+                'included.custom.audience': audience,
+                'access.token.claim': 'true',
+                'id.token.claim': 'false',
+                'userinfo.token.claim': 'false',
+            },
+        }
+        for audience in opt.custom_access_token_audience
+    )
+
+    mapper_names = [mapper['name'] for mapper in mapper_payloads]
+    duplicate_names = sorted({name for name in mapper_names if mapper_names.count(name) > 1})
+    if duplicate_names:
+        names = ', '.join(repr(name) for name in duplicate_names)
+        raise ValueError(f'Duplicate mapper: {names}. Mapper names must be unique within a client scope.')
+
     client_scope_payload = {
         'name': opt.scope_name,
         'protocol': 'openid-connect',
     }
-
     kc_admin.create_client_scope(payload=client_scope_payload, skip_exists=True)
 
     scopes = kc_admin.get_client_scopes()
     scope_id = next((s['id'] for s in scopes if s['name'] == opt.scope_name), None)
+    if scope_id is None:
+        raise RuntimeError(f'Client scope {opt.scope_name!r} was not created or found.')
 
-    if opt.add_user_id_mapper:
-        sub_mapper_payload = {
-            'name': 'user_id',
-            'protocol': 'openid-connect',
-            'protocolMapper': 'oidc-sub-mapper',
-            'config': {
-                'access.token.claim': 'true',
-                'introspection.token.claim': 'true',
-                'lightweight.claim': 'false',
-            },
-        }
-        kc_admin.request_post(
-            f'admin/realms/{opt.realm}/client-scopes/{scope_id}/protocol-mappers/models',
-            data=json.dumps(sub_mapper_payload),
-            ignore_error_handling=True,  # TODO: really?
-        )
-        print('Added user-id attribute mapper')
+    mapper_url = f'admin/realms/{quote_path(opt.realm)}/client-scopes/{quote_path(scope_id)}/protocol-mappers/models'
+    existing = kc_admin.request_get(mapper_url)
+    existing_by_name = {mapper['name']: mapper for mapper in existing}
+    for mapper in mapper_payloads:
+        current = existing_by_name.get(mapper['name'])
+        if current is None:
+            kc_admin.request_post(mapper_url, data=json.dumps(mapper), expected_codes=[201])
+            print(f'Added mapper {mapper["name"]!r}')
+            continue
 
-    if opt.add_groups_mapper:
-        group_mapper_payload = {
-            'name': 'groups-mapper',
-            'protocol': 'openid-connect',
-            'protocolMapper': 'oidc-group-membership-mapper',
-            'config': {
-                'claim.name': opt.add_groups_mapper,
-                'full.path': 'false',
-                'id.token.claim': 'true',
-                'access.token.claim': 'true',
-                'userinfo.token.claim': 'true',
-            },
-        }
-        kc_admin.request_post(
-            f'admin/realms/{opt.realm}/client-scopes/{scope_id}/protocol-mappers/models',
-            data=json.dumps(group_mapper_payload),
-            ignore_error_handling=True,  # TODO: really?
+        updated = dict(current)
+        updated['protocolMapper'] = mapper['protocolMapper']
+        updated['config'] = dict(current.get('config', {}), **mapper['config'])
+        if updated != current:
+            kc_admin.request_put(f'{mapper_url}/{quote_path(current["id"])}', data=json.dumps(updated))
+            print(f'Updated mapper {mapper["name"]!r}')
+
+    client_ids = opt.client_id
+    for client_id in client_ids:
+        client_uuid = kc_admin.get_client_id(client_id)
+        if not client_uuid:
+            raise RuntimeError(f'Client {client_id!r} not found.')
+
+        assignment = 'default-client-scopes' if opt.assignment == 'default' else 'optional-client-scopes'
+        kc_admin.request_put(
+            f'admin/realms/{quote_path(opt.realm)}/clients/{quote_path(client_uuid)}/{assignment}/{quote_path(scope_id)}',
+            data={},
         )
-        print('Added group membership mapper')
+        print(f'Assigned scope {opt.scope_name!r} to client {client_id!r} ({opt.assignment})')
 
 
 def create_oidc_client(opt):
@@ -1888,12 +1968,39 @@ def parse_args(args: list[str] | None = None) -> Namespace:
     # client scope for OIDC
     parser_scope = subparsers.add_parser('scope', help='configure a client scope for OIDC')
     operation_subparsers = parser_scope.add_subparsers(title='operation', description='valid subcommands', required=True, dest='operation')
-    create_scope_parser = operation_subparsers.add_parser('create', help='create a new client scope in Keycloak')
+    create_scope_parser = operation_subparsers.add_parser(
+        'create',
+        help='create or update a client scope in Keycloak; mapper changes are additive',
+        description='Create or update a client scope. Specified mappers are created or updated; existing unspecified mappers are preserved.',
+    )
     create_scope_parser.add_argument('scope_name', metavar='SCOPE_NAME')
     create_scope_parser.add_argument(
         '--add-user-id-mapper', action='store_true', default=False, help='Add subject mapper to the client scope. This sends the user id as a claim in the OIDC token.'
     )
     create_scope_parser.add_argument('--add-groups-mapper', default='', help='Add a group membership mapper that sends the groups of the user as a claim in the OIDC token.')
+    create_scope_parser.add_argument(
+        '--user-attribute-mapper',
+        nargs=2,
+        action='append',
+        default=[],
+        metavar=('CLAIM_NAME', 'USER_ATTRIBUTE'),
+        help='Add a user attribute mapper. The two arguments are the token claim name and Keycloak user attribute.',
+    )
+    create_scope_parser.add_argument(
+        '--hardcoded-claim-mapper',
+        nargs=2,
+        action='append',
+        default=[],
+        metavar=('CLAIM_NAME', 'VALUE'),
+        help='Add a hardcoded claim mapper.',
+    )
+    create_scope_parser.add_argument('--custom-access-token-audience', action='append', default=[], metavar='AUDIENCE', help='Add an audience mapper for access tokens.')
+    create_scope_parser.add_argument(
+        '--assign-client', dest='client_id', action='append', default=[], help='Assign the scope to this OIDC client. May be specified more than once.'
+    )
+    create_scope_parser.add_argument(
+        '--assignment', choices=('default', 'optional'), default='default', help='How --assign-client assignments should add the scope (default: default).'
+    )
     create_scope_parser.set_defaults(func=create_client_scope)
 
     # saml cert
