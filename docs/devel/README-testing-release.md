@@ -154,6 +154,20 @@ Keycloak version the image is built from.
 
 ## Release for N4K
 
+1. [ ] Create a release notes entry for the upcoming release. If the Keycloak
+   version has changed, include any relevant CVEs from the Keycloak changelog.
+   ```
+   * Upgrade Keycloak to version 26.7.2.
+     This includes fixes for the following security findings:
+
+     * :uv:cve:`2026-45292`
+     * :uv:cve:`2026-14613`
+     * :uv:cve:`2026-59888`
+     * :uv:cve:`2026-15945`
+     * :uv:cve:`2026-17048`
+     * :uv:cve:`2026-15571`
+     * :uv:cve:`2026-18963`
+   ```
 1. [ ] Follow [these instructions](https://univention.gitpages.knut.univention.de/dev/internal/dev-handbook/work-env/nubus-chart-bump.html) to release Keycloak for N4K.
 
 ## Release the documentation
