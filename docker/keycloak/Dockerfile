@@ -41,7 +41,6 @@ FROM docker-registry.knut.univention.de/knut/pipeline_helper AS artifacts
 ARG KEYCLOAK_VERSION
 RUN apt-get update && apt-get install -y zip
 RUN touch empty && zip empty.jar empty
-COPY dependencies/*.jar /opt/keycloak/providers/
 COPY files/cache-ispn-jdbc-ping.xml /opt/keycloak/conf/cache-ispn-jdbc-ping.xml
 COPY files/keycloak-healthcheck /opt/keycloak/bin/
 COPY --from=keycloak /keycloak/keycloak-${KEYCLOAK_VERSION} /opt/keycloak
