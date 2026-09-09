@@ -63,24 +63,46 @@ spec:
       {{- if .Values.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       {{- end }}
+      # Build time options for the Keycloak build process (kc-build init container)
+      {{- $features := .Values.keycloak.features.enabled | default list }}
+      {{- if and .Values.config.userEventMetrics.enabled (not (has "user-event-metrics" $features)) }}
+      {{-   $features = append $features "user-event-metrics" }}
+      {{- end }}
       initContainers:
-        - name: prepare-write-dirs
+        - name: "seed-quarkus"
           image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ coalesce .Values.image.pullPolicy .Values.global.imagePullPolicy | quote }}
           command:
             - /bin/bash
           args:
             - -ec
-            - |
-              echo "Copying writable dirs to empty dir"
-              # In order to not break the application functionality we need to make some
-              # directories writable, so we need to copy it to an empty dir volume
-              cp -r --preserve=mode,timestamps /opt/keycloak/lib/quarkus /emptydir/app-quarkus-dir
-              # data dir does currently not exist but keep it here for reference if it might change in the future
-              #cp -r --preserve=mode,timestamps /opt/keycloak/data /emptydir/app-data-dir
-              cp -r --preserve=mode,timestamps /opt/keycloak/providers /emptydir/app-providers-dir
-              cp -r --preserve=mode,timestamps /opt/keycloak/themes /emptydir/app-themes-dir
-              echo "Copy operation completed"
+            - cp -r --preserve=mode,timestamps /opt/keycloak/lib/quarkus/. /emptydir/app-quarkus-dir/
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          {{- if .Values.resources }}
+          resources: {{- include "common.tplvalues.render" (dict "value" .Values.resources "context" .) | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: empty-dir
+              mountPath: /emptydir
+        - name: "kc-build"
+          image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ coalesce .Values.image.pullPolicy .Values.global.imagePullPolicy | quote }}
+          args:
+            - "build"
+          {{- with $features }}
+            - "--features={{ join "," . }}"
+          {{- end }}
+          {{- with .Values.keycloak.features.disabled }}
+            - "--features-disabled={{ join "," . }}"
+          {{- end }}
+          {{- if .Values.config.enableMetrics }}
+            - "--metrics-enabled=true"
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "common.names.fullname" . | quote }}
           {{- if .Values.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
@@ -89,13 +111,21 @@ spec:
           {{- end }}
           {{- with .Values.extraEnvVars }}
           env:
-            {{- . | toYaml | nindent 10 }}
+            {{- . | toYaml | nindent 12 }}
           {{- end }}
           volumeMounts:
-           - name: "config-map-keycloak-translations-volume"
-             mountPath: /opt/keycloak/themes/UCS/login/messages/
-           - name: empty-dir
-             mountPath: /emptydir
+            - name: empty-dir
+              mountPath: /opt/keycloak/lib/quarkus
+              subPath: app-quarkus-dir
+            - name: empty-dir
+              mountPath: /opt/keycloak/conf
+              subPath: app-conf-dir
+            - name: empty-dir
+              mountPath: /opt/keycloak/data
+              subPath: app-data-dir
+            - name: empty-dir
+              mountPath: /tmp
+              subPath: tmp-dir
       containers:
         - name: "main"
           {{- if .Values.containerSecurityContext.enabled }}
@@ -105,21 +135,9 @@ spec:
           imagePullPolicy: {{ coalesce .Values.image.pullPolicy .Values.global.imagePullPolicy | quote }}
           args:
             - "start"
+            - "--optimized"
           {{- range .Values.extraStartupArgs }}
             - {{ . | quote }}
-          {{- end }}
-          {{- $features := .Values.keycloak.features.enabled | default list }}
-          {{- if and .Values.config.userEventMetrics.enabled (not (has "user-event-metrics" $features)) }}
-          {{-   $features = append $features "user-event-metrics" }}
-          {{- end }}
-          {{- with $features }}
-            - "--features={{ join "," . }}"
-          {{- end }}
-          {{- with .Values.keycloak.features.disabled }}
-            - "--features-disabled={{ join "," . }}"
-          {{- end }}
-          {{- if .Values.config.enableMetrics }}
-            - "--metrics-enabled=true"
           {{- end }}
           # Find the available variables here: https://github.com/univention/univention-keycloak-app/blob/main/app/settings
           envFrom:
@@ -189,20 +207,19 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/keycloak/conf
-              subPath: app-conf-dir
-            - name: empty-dir
-              mountPath: /opt/keycloak/lib/quarkus
-              subPath: app-quarkus-dir
-            - name: empty-dir
               mountPath: /opt/keycloak/data
               subPath: app-data-dir
             - name: empty-dir
-              mountPath: /opt/keycloak/providers
-              subPath: app-providers-dir
+              mountPath: /opt/keycloak/conf
+              subPath: app-conf-dir
+              readOnly: true
             - name: empty-dir
-              mountPath: /opt/keycloak/themes
-              subPath: app-themes-dir
+              mountPath: /opt/keycloak/lib/quarkus
+              subPath: app-quarkus-dir
+              readOnly: true
+            - name: "config-map-keycloak-translations-volume"
+              mountPath: /opt/keycloak/themes/UCS/login/messages
+              readOnly: true
           {{- if .Values.extraVolumeMounts }}
           {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" .) | nindent 12 }}
           {{- end }}

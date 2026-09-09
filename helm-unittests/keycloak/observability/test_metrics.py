@@ -13,10 +13,10 @@ Covers ``config.userEventMetrics`` and ``config.httpMetrics``:
 from univention.testing.helm.base import Base
 
 
-def _main_container_args(statefulset: dict) -> list:
-    containers = statefulset['spec']['template']['spec']['containers']
-    main = next(c for c in containers if c['name'] == 'main')
-    return main.get('args', [])
+def _build_container_args(statefulset: dict) -> list:
+    init_containers = statefulset['spec']['template']['spec']['initContainers']
+    build = next(c for c in init_containers if c['name'] == 'kc-build')
+    return build.get('args', [])
 
 
 def _feature_flags(args: list) -> list:
@@ -92,13 +92,13 @@ class TestUserEventMetricsFeature(Base):
 
     def test_feature_absent_by_default(self, helm, chart_path):
         statefulset = self.helm_template_file(helm, chart_path, {}, self.template_file)
-        for flag in _feature_flags(_main_container_args(statefulset)):
+        for flag in _feature_flags(_build_container_args(statefulset)):
             assert 'user-event-metrics' not in flag
 
     def test_feature_added_when_enabled(self, helm, chart_path):
         values = {'config': {'userEventMetrics': {'enabled': True}}}
         statefulset = self.helm_template_file(helm, chart_path, values, self.template_file)
-        flags = _feature_flags(_main_container_args(statefulset))
+        flags = _feature_flags(_build_container_args(statefulset))
         assert flags, 'no --features flag rendered'
         assert 'user-event-metrics' in flags[0]
 
@@ -108,6 +108,6 @@ class TestUserEventMetricsFeature(Base):
             'keycloak': {'features': {'enabled': ['token-exchange', 'user-event-metrics']}},
         }
         statefulset = self.helm_template_file(helm, chart_path, values, self.template_file)
-        flags = _feature_flags(_main_container_args(statefulset))
+        flags = _feature_flags(_build_container_args(statefulset))
         assert len(flags) == 1, 'expected exactly one --features flag'
         assert flags[0].count('user-event-metrics') == 1
