@@ -53,5 +53,4 @@ data:
   CACHE_OWNERS_AUTH_SESSIONS_COUNT: {{ .Values.replicaCount | quote }}
   # Needed for the headless service
   PROXY_ADDRESS_FORWARDING: "true"
-  JAVA_OPTS_APPEND: {{ printf "-Djgroups.dns.query=%s.%s.svc.cluster.local" (include "common.names.fullname" . ) ( include "common.names.namespace" . ) }}
 ...

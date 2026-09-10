@@ -424,9 +424,9 @@ service:
 
   # -- Choose the kind of Service, one of "ClusterIP", "NodePort" or "LoadBalancer".
   type: "ClusterIP"
-  # This creates a headless service. Instead of load balancing, it creates a
-  # DNS A record for each pod. This allows Infinispan to discover each other
-  # via the DNS. See in combination with `KC_CACHE_STACK=kubernetes`.
+  # This creates a headless service, which gives each pod a stable DNS A record
+  # instead of load balancing across them. This provides direct pod-to-pod
+  # addressing for the Infinispan (JGroups) cluster transport.
   clusterIP: "None"
 
   # Define the ports of Service.
