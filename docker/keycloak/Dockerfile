@@ -48,7 +48,6 @@ COPY --from=maven /extensions/lib/univention-app-authenticator-*.jar /opt/keyclo
 COPY --from=maven /extensions/lib/univention-ldap-mapper-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-condition-ipaddress-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-user-attribute-nameid-mapper-base64-*.jar /opt/keycloak/providers/
-COPY --from=maven /extensions/lib/univention-condition-ipaddress-*.jar /opt/keycloak/providers
 COPY --from=maven /extensions/ipaddress-5.5.1.jar /opt/keycloak/providers
 COPY --from=maven /extensions/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
 RUN cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.jdbc.ojdbc11-*.jar \
