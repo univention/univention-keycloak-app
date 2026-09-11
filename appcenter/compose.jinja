@@ -78,7 +78,6 @@ for name, value in extra:
       KC_CACHE_EMBEDDED_NETWORK_EXTERNAL_ADDRESS: @%@hostname@%@.@%@domainname@%@
       KC_CACHE_EMBEDDED_NETWORK_BIND_PORT: "7600"
       KC_CACHE_EMBEDDED_NETWORK_EXTERNAL_PORT: "7600"
-      KC_HTTPS_KEY_STORE_PASSWORD: univention
       KEYCLOAK_ADMIN: admin
       JAVA_OPTS_APPEND: @!@
 print(configRegistry.get('keycloak/java/opts/append', ''))@!@
