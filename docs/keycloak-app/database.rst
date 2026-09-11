@@ -157,8 +157,7 @@ have to use the following steps:
         --set username="database-username" \
         --set uri="jdbc:mariadb://database-server:3306/database-name" \
         --set password="database-password" \
-        --set driver="org.mariadb.jdbc.Driver" \
-        --set ping_datatype="VARBINARY(255)"
+        --set driver="org.mariadb.jdbc.Driver"
 
 #. Re-configure one of the :program:`Keycloak` instances and verify that it works:
 

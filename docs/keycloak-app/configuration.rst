@@ -300,7 +300,6 @@ To create a backup, run the *export* action as in the following steps:
 
    $ univention-app shell keycloak /opt/keycloak/bin/kc.sh export \
    --db=$(ucr get kc/db/kind) \
-   --db-driver=$(ucr get kc/db/driver) \
    --transaction-xa-enabled=$(ucr get kc/db/xa) \
    --dir /var/lib/univention-appcenter/apps/keycloak/data/myexport
 
@@ -313,7 +312,6 @@ as in the following step:
 
    $ univention-app shell keycloak /opt/keycloak/bin/kc.sh import \
    --db=$(ucr get kc/db/kind) \
-   --db-driver=$(ucr get kc/db/driver) \
    --transaction-xa-enabled=$(ucr get kc/db/xa) \
    --dir /var/lib/univention-appcenter/apps/keycloak/data/myexport
 

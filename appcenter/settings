@@ -298,22 +298,6 @@ InitialValue = false
 Description = Database xa transactions flag (e.g true/false)
 Group = Database settings
 
-[kc/db/driver]
-Type = String
-Required = False
-Show = Install, Settings
-Scope = inside
-Description = Database infinispan driver
-Group = Database settings
-
-[kc/db/ping/datatype]
-Type = String
-Required = False
-Show = Install, Settings
-Scope = inside
-Description = Datatype for ping_data value in the database (Mariadb compatibility)
-Group = Database settings
-
 [keycloak/federation/remote/identifier]
 Type = String
 Required = True

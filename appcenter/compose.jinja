@@ -20,7 +20,7 @@ if not sso_path:
     sso_path = '/'
 db_kind = ucr.get('kc/db/kind')
 db_xa = ucr.get('kc/db/xa')
-command = f"start --hostname={kc_fqdn} --http-relative-path={sso_path} --http-enabled=true --proxy-headers xforwarded --cache-config-file=cache-ispn-jdbc-ping.xml --db={db_kind} --transaction-xa-enabled={db_xa} --health-enabled=true --metrics-enabled=true"
+command = f"start --hostname={kc_fqdn} --http-relative-path={sso_path} --http-enabled=true --proxy-headers xforwarded --cache=ispn --cache-stack=jdbc-ping --db={db_kind} --transaction-xa-enabled={db_xa} --health-enabled=true --metrics-enabled=true"
 
 #################
 # optional args #
@@ -75,7 +75,9 @@ for name, value in extra:
     print(f"      {name}: {json.dumps(value)}")
 @!@
       KC_HTTP_PORT: "8180"
-      JGROUPS_DISCOVERY_EXTERNAL_IP: @%@hostname@%@.@%@domainname@%@
+      KC_CACHE_EMBEDDED_NETWORK_EXTERNAL_ADDRESS: @%@hostname@%@.@%@domainname@%@
+      KC_CACHE_EMBEDDED_NETWORK_BIND_PORT: "7600"
+      KC_CACHE_EMBEDDED_NETWORK_EXTERNAL_PORT: "7600"
       KC_HTTPS_KEY_STORE_PASSWORD: univention
       KEYCLOAK_ADMIN: admin
       JAVA_OPTS_APPEND: @!@

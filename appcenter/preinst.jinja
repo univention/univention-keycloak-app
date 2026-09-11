@@ -207,12 +207,4 @@ echo "Installing 50-keycloak postgresql template info"
 %EOF
 chmod 644 "$pg_keycloak_info_path"
 
-# keycloak ispn configuration template
-keycloak_template_ispn_conf_path=/var/lib/univention-appcenter/apps/keycloak/conf/cache-ispn-jdbc-ping-template.xml
-echo "Installing keycloak ispn configuration template"
-cat <<'%EOF' >"$keycloak_template_ispn_conf_path"
-{{ "files/cache-ispn-jdbc-ping.xml" | source }}
-%EOF
-chmod 644 "$keycloak_template_ispn_conf_path"
-
 exit 0
