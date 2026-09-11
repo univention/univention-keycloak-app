@@ -65,6 +65,9 @@ public class UniventionUpdatePassword extends UpdatePassword {
     public static final String SuccessMsgID = "fwMessageSuccess";
     public static final String SuccessMsgKey = "pwdChangeSuccessMsg";
 
+    private static final int CONNECT_TIMEOUT_MILLIS = 10_000;
+    private static final int READ_TIMEOUT_MILLIS = 30_000;
+
     private static final Logger logger = Logger.getLogger(UniventionUpdatePassword.class);
     private final KeycloakSession session;
 
@@ -95,6 +98,8 @@ public class UniventionUpdatePassword extends UpdatePassword {
         try {
             final URL url = new URL(String.format("https://%s/univention/auth", System.getenv("KEYCLOAK_PASSWORD_CHANGE_ENDPOINT")));
             HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+            con.setConnectTimeout(CONNECT_TIMEOUT_MILLIS);
+            con.setReadTimeout(READ_TIMEOUT_MILLIS);
             con.setRequestProperty("Content-Type", "application/json");
             con.setRequestMethod("POST");
             con.setRequestProperty("Accept", "application/json; q=1, */*");

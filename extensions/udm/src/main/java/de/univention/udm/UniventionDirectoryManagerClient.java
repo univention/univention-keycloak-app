@@ -36,6 +36,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Base64;
 
 import org.apache.http.client.utils.URIBuilder;
@@ -46,6 +47,9 @@ import de.univention.udm.models.UserSearchParams;
 import de.univention.udm.models.UserSearchResult;
 
 public class UniventionDirectoryManagerClient {
+    private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(10);
+    private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(30);
+
     private final HttpClient client;
     private final String baseUrl;
     private final String credentials;
@@ -57,7 +61,9 @@ public class UniventionDirectoryManagerClient {
     public UniventionDirectoryManagerClient(String baseUrl, String username, String password) {
         this.baseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
         this.credentials = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
-        this.client = HttpClient.newHttpClient();
+        this.client = HttpClient.newBuilder()
+                .connectTimeout(CONNECT_TIMEOUT)
+                .build();
         this.objectMapper = new ObjectMapper();
         logger.infof("UDM REST API Client initialized with baseUrl: %s, username: %s", baseUrl, username);
     }
@@ -108,6 +114,7 @@ public class UniventionDirectoryManagerClient {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri.build())
+                    .timeout(REQUEST_TIMEOUT)
                     .header("Authorization", "Basic " + credentials)
                     .header("Accept", "application/json")
                     .GET()
@@ -170,6 +177,7 @@ public class UniventionDirectoryManagerClient {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(baseUrl + "users/user/"))
+                .timeout(REQUEST_TIMEOUT)
                 .header("Authorization", "Basic " + credentials)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
@@ -210,6 +218,7 @@ public class UniventionDirectoryManagerClient {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri.build())
+                    .timeout(REQUEST_TIMEOUT)
                     .header("Authorization", "Basic " + credentials)
                     .header("Accept", "application/json")
                     .DELETE()
