@@ -16,6 +16,38 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.7.3-nubus1
+=====================
+
+Released: 16. Sep 2026
+
+* The app updates to :program:`Keycloak` version 26.7.3:
+  https://www.keycloak.org/docs/26.7.3/release_notes/
+
+* This version fixes the following CVEs:
+
+  * :uv:cve:`2026-35563`
+  * :uv:cve:`2026-16093`
+  * :uv:cve:`2026-16072`
+  * :uv:cve:`2026-16108`
+  * :uv:cve:`2026-16105`
+  * :uv:cve:`2026-16089`
+  * :uv:cve:`2026-16104`
+  * :uv:cve:`2026-16106`
+  * :uv:cve:`2026-17059`
+  * :uv:cve:`2026-18218`
+  * :uv:cve:`2026-18215`
+  * :uv:cve:`2026-18201`
+  * :uv:cve:`2026-18209`
+  * :uv:cve:`2026-18214`
+  * :uv:cve:`2026-18571`
+  * :uv:cve:`2026-18572`
+  * :uv:cve:`2026-18573`
+  * :uv:cve:`2026-18570`
+  * :uv:cve:`2026-19729`
+  * :uv:cve:`2026-79652`
+
+
 Version 26.7.2-nubus1
 =====================
 
