@@ -80,6 +80,7 @@ include:
       changelog_link: "https://docs.software-univention.de/keycloak-app/latest/changelog.html"
       mail_recipient: "app-announcement@univention.de"
       mail_sender: "nubus-core@univention.de"
+      mail_subject: "App Center: Keycloak $APP_VERSION"
       author_alias: "Nubus Core Team"
       release_text_file: ".gitlab-ci/release_text.txt"
       appcenter_file_dir: "appcenter/"
