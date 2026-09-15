@@ -143,8 +143,8 @@ Keycloak version the image is built from.
 1. [ ] Make sure `KEYCLOAK_VERSION` in `.gitlab-ci.yml` is the version you are releasing and that `main` is at the commit you want to release. The release pipeline fails fast if the tag's `X.Y.Z` does not match `KEYCLOAK_VERSION`.
 1. [ ] Create and push a **protected** `vX.Y.Z` tag on the `main` commit, matching the version (e.g. `v26.6.2`). To re-release the same Keycloak version with a new App Center revision, use a `-nubusN` suffix (`v26.6.2-nubus1`, `v26.6.2-nubus2`, ...):
    ```
-   git tag -a v26.6.2 -m "Keycloak 26.6.2"
-   git push origin v26.6.2
+   git tag -a v26.6.2-nubus1 -m "Keycloak app 26.6.2-nubus1"
+   git push origin v26.6.2-nubus1
    ```
 1. [ ] The tag pipeline automatically builds and pushes the image to the public `nubus` registry, creates App Center version `X.Y.Z` (or `X.Y.Z-nubusN`) and uploads it to the **test** App Center.
 1. [ ] Verify the version in the Provider Portal.
