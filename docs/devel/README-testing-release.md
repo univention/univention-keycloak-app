@@ -176,15 +176,26 @@ This section is about the involved steps for releasing documentation for the Key
 
 ### Minor and patch releases
 
-Generate MR for [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de) through the manual trigger in `main` pipeline in Keycloak repo.
-Use the following steps:
+A protected release tag publishes the documentation automatically. No manual step is necessary.
+The tag pipeline runs `docs-pipeline-config`, triggers the `docs-pipeline` child pipeline, and the
+child job `docs-create-production-merge-request` opens a merge request in
+[docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de).
+The pipeline in the `docs.univention.de` repository does the merge and the deployment.
 
-1. [ ] In GitLab, navigate to the Keycloak repo → `main` branch, navigate to the pipeline of your commit.
+To verify a release:
+
+1. [ ] In GitLab, open the pipeline of the release tag in the Keycloak repo.
+1. [ ] Open the `docs-pipeline` child pipeline.
+1. [ ] Check that `docs-create-production-merge-request` is present and successful.
+
+To publish documentation without a release tag, use the `main` branch:
+
+1. [ ] In GitLab, navigate to the Keycloak repo -> `main` branch, navigate to the pipeline of your commit.
+   If the commit does not change the documentation, start a new pipeline for `main` with **Run pipeline**.
 1. [ ] Trigger the `docs-pipeline-config` job manually, then open the `docs-pipeline` child pipeline.
-1. [ ] Trigger the `docs-merge-to-one-artifact` job manually.
+1. [ ] In the child pipeline, trigger the `docs-merge-to-one-artifact` job manually.
 
-   This action automatically creates a merge request in [docs.univention.de](https://git.knut.univention.de/univention/dev/docs/docs.univention.de).
-   The pipeline in the `docs.univention.de` repository takes care of merge and deployment automatically.
+   The `docs-create-production-merge-request` job then runs and creates the merge request.
 
 ### Major releases
 
