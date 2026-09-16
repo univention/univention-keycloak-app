@@ -219,7 +219,7 @@ sonarqube:
   allow_failure: true
 
 chart-tests:
-  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.0"
+  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.21@sha256:2b5fde0de1b980c388a78883fc53d819f9116cf70be577351f6ebd33c9301518"
   stage: "test"
   needs: []
   # Run when the charts change, or when .gitlab-ci.yml does, since it pins the
