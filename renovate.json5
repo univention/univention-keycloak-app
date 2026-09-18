@@ -41,6 +41,7 @@
         "!org.keycloak:keycloak-parent"
       ],
       "groupName": "Keycloak",
+      "rebaseWhen": "behind-base-branch",
       "semanticCommitType": "fix",
       "semanticCommitScope": "keycloak",
       "prBodyNotes": [
