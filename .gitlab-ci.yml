@@ -222,12 +222,14 @@ chart-tests:
   image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.0"
   stage: "test"
   needs: []
-  # Run only when the charts change. On tag pipelines rules:changes is always
-  # true, so the chart is still tested on a release.
+  # Run when the charts change, or when .gitlab-ci.yml does, since it pins the
+  # testrunner image. On tag pipelines rules:changes is always true, so the
+  # chart is still tested on a release.
   rules:
     - changes:
         - helm/**/*
         - helm-unittests/**/*
+        - .gitlab-ci.yml
   script:
     - "helm dep build helm/keycloak"
     - "helm dep build helm/keycloak-bootstrap"
