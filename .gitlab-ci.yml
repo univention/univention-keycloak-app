@@ -283,3 +283,10 @@ update_appcenter:
 send_chat_message:
   rules:
     - when: never
+
+# GitLab derives allow_failure false for "when: manual" inside rules,
+# so this environment-stop job leaves every pipeline at status "manual"
+# and GitLab auto-merge, which waits for "success",
+# never fires on the Renovate MRs.
+aptly-remove:
+  allow_failure: true

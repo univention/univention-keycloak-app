@@ -1,6 +1,47 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>univention/dev/nubus-for-k8s/common-renovate#v1.6.1"
+    "local>univention/dev/nubus-for-k8s/common-renovate"
+  ],
+
+  "ignoreDeps": [
+    "de.univention:udm"
+  ],
+
+  "registryAliases": {
+    "$CI_SERVER_FQDN": "git.knut.univention.de"
+  },
+
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Keycloak release in .gitlab-ci.yml, read from the same Maven package as keycloak.version",
+      "managerFilePatterns": [
+        ".gitlab-ci.yml"
+      ],
+      "matchStrings": [
+        "KEYCLOAK_VERSION:\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "org.keycloak:keycloak-core",
+      "datasourceTemplate": "maven"
+    }
+  ],
+
+  "packageRules": [
+    {
+      "description": "Keycloak as one MR across .gitlab-ci.yml and the poms, excluding our own reactor parent",
+      "matchDatasources": ["maven"],
+      "matchPackageNames": [
+        "org.keycloak:*",
+        "!org.keycloak:keycloak-parent"
+      ],
+      "groupName": "Keycloak",
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "keycloak",
+      "addLabels": ["Renovate run dind"],
+      "prBodyNotes": [
+        "@jlohmer A new upstream Keycloak release is available."
+      ]
+    }
   ]
 }
