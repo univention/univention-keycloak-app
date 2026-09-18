@@ -176,8 +176,12 @@ test-udm-unit-and-integration:
   rules: &rules_dind
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: "never"
+    # Renovate MRs outside Maven keep the dind test as an opt-in button,
+    # and allow_failure keeps that button out of the pipeline status.
     - if: '$GITLAB_USER_ID == $RENOVATE_USER_ID && $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /Renovate run dind/'
       when: "manual"
+      allow_failure: true
+    - when: "on_success"
   before_script:
     - cd extensions/tests
     # Allow that the Docker API version is negotiated between client and server

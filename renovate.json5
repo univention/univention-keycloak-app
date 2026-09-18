@@ -29,6 +29,11 @@
 
   "packageRules": [
     {
+      "description": "Maven updates run the extension tests, which need the dind label to be scheduled",
+      "matchDatasources": ["maven"],
+      "addLabels": ["Renovate run dind"]
+    },
+    {
       "description": "Keycloak as one MR across .gitlab-ci.yml and the poms, excluding our own reactor parent",
       "matchDatasources": ["maven"],
       "matchPackageNames": [
@@ -38,7 +43,6 @@
       "groupName": "Keycloak",
       "semanticCommitType": "fix",
       "semanticCommitScope": "keycloak",
-      "addLabels": ["Renovate run dind"],
       "prBodyNotes": [
         "@jlohmer A new upstream Keycloak release is available."
       ]
