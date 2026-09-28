@@ -16,6 +16,15 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.7.4-nubus2
+=====================
+
+Released: 29. Sep 2026
+
+* Security Update: Updated the base Docker image to incorporate the latest
+  security patches. No functional changes were made to the application.
+
+
 Version 26.7.4-nubus1
 =====================
 
