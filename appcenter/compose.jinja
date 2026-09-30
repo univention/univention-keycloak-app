@@ -58,6 +58,22 @@ print(f"    command: {command}")
       - seccomp:/etc/docker/seccomp-systemd.json
     restart: unless-stopped
     environment:
+@!@
+# Additional expert settings
+import json
+import re
+
+PREFIX = "keycloak/environment/"
+NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+
+extra = sorted(
+      (key[len(PREFIX):], value)
+      for key, value in configRegistry.items()
+      if key.startswith(PREFIX) and NAME_RE.match(key[len(PREFIX):])
+)
+for name, value in extra:
+    print(f"      {name}: {json.dumps(value)}")
+@!@
       KC_HTTP_PORT: "8180"
       JGROUPS_DISCOVERY_EXTERNAL_IP: @%@hostname@%@.@%@domainname@%@
       KC_HTTPS_KEY_STORE_PASSWORD: univention
