@@ -123,4 +123,11 @@ https://www.keycloak.org/docs/latest/server_admin/#assigning-permissions-using-r
   note = "[Online; accessed 25-April-2023]"
 }
 
+@Manual{uv-ucs-operation,
+  title = {Nubus for UCS 5.2 - Operation Manual},
+  organization = {Univention GmbH},
+  year = {2026},
+  url = {https://docs.software-univention.de/ucs-operation/5.2/en},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}

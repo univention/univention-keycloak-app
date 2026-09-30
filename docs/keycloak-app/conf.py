@@ -138,6 +138,7 @@ rst_epilog = """
 intersphinx_mapping = {
     'uv-manual': ('https://docs.software-univention.de/manual/5.2/en', None),
     'uv-nubus-kubernetes-operation': ('https://docs.software-univention.de/nubus-kubernetes-operation/1.x/en/', None),
+    'uv-nubus-ucs-operation': ('https://docs.software-univention.de/ucs-operation/5.2/en', None),
 }
 
 latex_engine = 'lualatex'

@@ -1929,3 +1929,83 @@ these certificates will be imported.
 .. important::
 
    Follow the steps above on all your servers where the Keycloak app is installed.
+
+.. _additional-settings:
+
+Configure additional Keycloak settings
+======================================
+
+In addition to predefined configuration settings,
+app settings on UCS, and Helm Chart values in Nubus for Kubernetes,
+Nubus Keycloak lets you set any Keycloak option as an environment variable
+for flexible configuration of important Keycloak settings.
+
+.. important::
+
+   Changing these configurations requires a deep understanding of Keycloak
+   because incorrect configuration can affect Keycloak's performance,
+   functionality, and stability.
+   Therefore, Univention can't support every combination of settings.
+   If you aren't sure whether the settings that you selected are supported,
+   contact our support team to review them before deploying to production.
+
+.. tab-set::
+
+   .. tab-item:: Nubus for UCS
+      :sync: UCS
+
+      Nubus for UCS adds any UCR variable that you set on the host
+      in the form of :samp:`keycloak/environment/{ENV_VAR_NAME}={VALUE}`
+      as an environment variable :samp:`{ENV_VAR_NAME}` to the Keycloak container.
+      You can also use UCR policies to manage these additional Keycloak
+      settings across the UCS domain. For more information, see
+      :ref:`uv-nubus-ucs-operation:system-administration-ucr-policy`
+      in the :cite:t:`uv-ucs-operation`.
+
+      Use the following steps to configure additional settings:
+
+      #. Set the UCR variable.
+
+         For example, :numref:`additional-settings-ucs-example-listing`
+         sets the environment variable ``KC_DB_POOL_MAX_SIZE`` to ``20``
+         in the Keycloak container.
+
+         .. code-block:: console
+            :caption: Define the UCR variable to set ``KC_DB_POOL_MAX_SIZE``
+            :name: additional-settings-ucs-example-listing
+
+            $ ucr set keycloak/environment/KC_DB_POOL_MAX_SIZE=20
+
+      #. To apply the additional configuration, run the command in
+         :numref:`additional-settings-ucs-apply-settings-listing`.
+
+         .. code-block:: console
+            :caption: Apply additional settings to the Keycloak container
+            :name: additional-settings-ucs-apply-settings-listing
+
+            $ univention-app configure keycloak --run-script settings
+
+   .. tab-item:: Nubus for Kubernetes
+      :sync: kubernetes
+
+      To add environment variables to the Keycloak containers in Nubus for Kubernetes,
+      follow these steps:
+
+      #. Add the environment variable to the Helm Chart value
+         :external+uv-nubus-kubernetes-operation:envvar:`keycloak.extraEnvVars`
+         in your :file:`custom_values.yaml` file.
+         For example, see :numref:`additional-settings-kubernetes-example-listing`.
+
+
+         .. code-block:: yaml
+            :caption: Define an environment variable for the Keycloak container
+            :name: additional-settings-kubernetes-example-listing
+
+            keycloak:
+              extraEnvVars:
+                - name: KC_DB_POOL_MAX_SIZE
+                  value: "20"
+
+      #. To apply the changes, follow the instructions in
+         :external+uv-nubus-kubernetes-operation:ref:`nubus-configuration-apply`
+         in :cite:t:`uv-nubus-kubernetes-operation`.
