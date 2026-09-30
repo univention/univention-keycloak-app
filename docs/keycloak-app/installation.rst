@@ -74,28 +74,30 @@ steps:
 #. Choose between default and custom settings and run the appropriate
    installation command.
 
-   .. tab:: Default settings
+   .. tab-set::
 
-      For installation with default settings, run:
+      .. tab-item:: Default settings
 
-      .. code-block::
+         For installation with default settings, run:
 
-         $ univention-app install keycloak
+         .. code-block::
 
-   .. tab:: Custom settings
+            $ univention-app install keycloak
 
-      To pass customized settings to the app during installation, run the
-      following command:
+      .. tab-item:: Custom settings
 
-      .. code-block::
+         To pass customized settings to the app during installation, run the
+         following command:
 
-         $ univention-app install --set $SETTING_KEY=$SETTING_VALUE keycloak
+         .. code-block::
 
-      .. caution::
+            $ univention-app install --set $SETTING_KEY=$SETTING_VALUE keycloak
 
-         Some settings don't allow changes after installation. To overwrite
-         their default values, set them before the installation. For a
-         reference, see :ref:`app-settings`.
+         .. caution::
+
+            Some settings don't allow changes after installation. To overwrite
+            their default values, set them before the installation. For a
+            reference, see :ref:`app-settings`.
 
 
 .. _installation-initial-configuration:
@@ -167,18 +169,20 @@ With the following commands you can obtain the URLs to the metadata information.
 Some services comfortably take the URL and configure the authentication
 automatically.
 
-.. tab:: OIDC
+.. tab-set::
 
-   To download the metadata information for |OIDC|, run the following command:
+   .. tab-item:: OIDC
 
-   .. code-block::
+      To download the metadata information for |OIDC|, run the following command:
 
-      $ wget "$(univention-keycloak get-keycloak-base-url)/realms/ucs/.well-known/openid-configuration"
+      .. code-block::
 
-.. tab:: SAML
+         $ wget "$(univention-keycloak get-keycloak-base-url)/realms/ucs/.well-known/openid-configuration"
 
-   To download the metadata information for |SAML|, run the following command:
+   .. tab-item:: SAML
 
-   .. code-block::
+      To download the metadata information for |SAML|, run the following command:
 
-      $ wget "$(univention-keycloak get-keycloak-base-url)/realms/ucs/protocol/saml/descriptor"
+      .. code-block::
+
+         $ wget "$(univention-keycloak get-keycloak-base-url)/realms/ucs/protocol/saml/descriptor"

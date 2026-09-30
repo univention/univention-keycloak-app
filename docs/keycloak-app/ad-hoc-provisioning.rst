@@ -93,21 +93,23 @@ You perform the steps described in this section and the followings sections
 in the *Keycloak Admin Console*.
 The URL depends on the deployment of your Nubus installation.
 
-.. tab:: Nubus for UCS appliance
+.. tab-set::
 
-   Nubus for UCS appliance is an environment with Nubus on Univention Corporate Server (UCS).
-   For ad hoc provisioning with Keycloak,
-   you use the :program:`Keycloak` app from the App Center.
+   .. tab-item:: Nubus for UCS
 
-   Administrators in the UCS appliance installation follow the steps described in :ref:`keycloak-admin-console`.
+      Nubus for UCS appliance is an environment with Nubus on Univention Corporate Server (UCS).
+      For ad hoc provisioning with Keycloak,
+      you use the :program:`Keycloak` app from the App Center.
 
-.. tab:: Nubus for Kubernetes
+      Administrators in the UCS appliance installation follow the steps described in :ref:`keycloak-admin-console`.
 
-   Nubus for Kubernetes is an environment Nubus installed in a Kubernetes cluster.
-   It includes :program:`Keycloak` as identity provider.
+   .. tab-item:: Nubus for Kubernetes
 
-   Operators in the Nubus for Kubernetes installation follow the steps described in
-   :external+uv-nubus-kubernetes-operation:ref:`conf-ad-hoc-provisioning`.
+      Nubus for Kubernetes is an environment Nubus installed in a Kubernetes cluster.
+      It includes :program:`Keycloak` as identity provider.
+
+      Operators in the Nubus for Kubernetes installation follow the steps described in
+      :external+uv-nubus-kubernetes-operation:ref:`conf-ad-hoc-provisioning`.
 
 .. _ad-hoc-provisioning-custom-auth-flow:
 

@@ -48,59 +48,71 @@ following steps on the system where you installed Keycloak:
    ``https://ucs-sso-ng.example.org/realms/ucs/protocol/saml/descriptor``. This
    step tells the portal to use Keycloak as IDP.
 
-   .. tab:: UMC
+   .. tab-set::
 
-      Sign in to the UCS management system and then go to :menuselection:`System
-      --> Univention Configuration Registry` and search for the variable
-      :envvar:`umc/saml/idp-server` and set the value as described before.
+      .. tab-item:: UMC
+         :sync: umc
 
-   .. tab:: Console
+         Sign in to the UCS management system and then go to :menuselection:`System
+         --> Univention Configuration Registry` and search for the variable
+         :envvar:`umc/saml/idp-server` and set the value as described before.
 
-      Open a shell on the UCS system as superuser ``root`` where you installed
-      Keycloak and run the following command:
+      .. tab-item:: Console
+         :sync: console
 
-      .. code-block:: console
+         Open a shell on the UCS system as superuser ``root`` where you installed
+         Keycloak and run the following command:
 
-         $ ucr set \
-         umc/saml/idp-server=\
-         "https://ucs-sso-ng.$(hostname -d)/realms/ucs/protocol/saml/descriptor"
+         .. code-block:: console
+
+            $ ucr set \
+            umc/saml/idp-server=\
+            "https://ucs-sso-ng.$(hostname -d)/realms/ucs/protocol/saml/descriptor"
 
 #. Modify the portal to use SAML for login:
 
-   .. tab:: UMC
+   .. tab-set::
 
-      In the UCS management system go to :menuselection:`Domain --> Portal -->
-      login-saml`. On the tab *General* in the section *Advanced* activate the
-      :guilabel:`Activated` checkbox.
+      .. tab-item:: UMC
+         :sync: umc
 
-   .. tab:: Console
+         In the UCS management system go to :menuselection:`Domain --> Portal -->
+         login-saml`. On the tab *General* in the section *Advanced* activate the
+         :guilabel:`Activated` checkbox.
 
-      Open a shell on the UCS system as superuser ``root`` where you installed
-      Keycloak and run the following command:
+      .. tab-item:: Console
+         :sync: console
 
-      .. code-block:: console
+         Open a shell on the UCS system as superuser ``root`` where you installed
+         Keycloak and run the following command:
 
-         $ udm portals/entry modify \
-         --dn "cn=login-saml,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
-         --set activated=TRUE
+         .. code-block:: console
+
+            $ udm portals/entry modify \
+            --dn "cn=login-saml,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
+            --set activated=TRUE
 
 #. To activate the changes, restart the LDAP server ``slapd`` within a maintenance
    window.
 
-   .. tab:: UMC
+   .. tab-set::
 
-      In the UCS management system go to :menuselection:`System --> System
-      Services`. Search for ``slapd`` and click to select the service. Then
-      click :guilabel:`Restart`.
+      .. tab-item:: UMC
+         :sync: umc
 
-   .. tab:: Console
+         In the UCS management system go to :menuselection:`System --> System
+         Services`. Search for ``slapd`` and click to select the service. Then
+         click :guilabel:`Restart`.
 
-      Open a shell on the UCS system as superuser ``root`` where you installed
-      Keycloak and run the following command:
+      .. tab-item:: Console
+         :sync: console
 
-      .. code-block:: console
+         Open a shell on the UCS system as superuser ``root`` where you installed
+         Keycloak and run the following command:
 
-         $ service slapd restart
+         .. code-block:: console
+
+            $ service slapd restart
 
 .. note::
 
@@ -1477,39 +1489,43 @@ for example in the UCS portal.
 To enable the web browser to send the :program:`Kerberos` tickets, you must
 change the following settings:
 
-.. tab:: Mozilla Firefox
+.. tab-set::
 
-   Open a tab and enter ``about:config`` in the address bar to open the
-   Firefox configuration. Search for ``network.negotiate-auth.trusted-uris`` and
-   add the |FQDN| of your :program:`Keycloak` server, which is
-   :samp:`ucs-sso-ng.{[Domain name]}` by default.
+   .. tab-item:: Mozilla Firefox
 
-.. tab:: Microsoft Edge
+      Open a tab and enter ``about:config`` in the address bar to open the
+      Firefox configuration. Search for ``network.negotiate-auth.trusted-uris`` and
+      add the |FQDN| of your :program:`Keycloak` server, which is
+      :samp:`ucs-sso-ng.{[Domain name]}` by default.
 
-   For Microsoft Edge on Windows, you need to configure Kerberos authentication
-   in the general settings of the operating system. Open the *Control Panel* and
-   move to :menuselection:`Security --> Local Intranet --> Sites --> Advanced`.
-   Add the |FQDN| of your :program:`Keycloak` server, :samp:`ucs-sso-ng.{[Domain
-   name]}` by default, to the list of ``Websites``.
+   .. tab-item:: Microsoft Edge
+
+      For Microsoft Edge on Windows, you need to configure Kerberos authentication
+      in the general settings of the operating system. Open the *Control Panel* and
+      move to :menuselection:`Security --> Local Intranet --> Sites --> Advanced`.
+      Add the |FQDN| of your :program:`Keycloak` server, :samp:`ucs-sso-ng.{[Domain
+      name]}` by default, to the list of ``Websites``.
 
 If you install the :program:`Active Directory-compatible Domain Controller` app
 *after* installing :program:`Keycloak`, you need to run the following command on
 the Primary Directory Node. It ensures that the Kerberos authentication also works
 with the :program:`Active Directory-compatible Domain Controller`:
 
-.. tab:: until UCS 5.0
+.. tab-set::
 
-   .. code-block:: console
+   .. tab-item:: until UCS 5.0
 
-      $ eval "$(ucr shell keycloak/server/sso/fqdn)"
-      $ samba-tool spn add "HTTP/$keycloak_server_sso_fqdn" "krbkeycloak"
+      .. code-block:: console
 
-.. tab:: starting with UCS 5.2
+         $ eval "$(ucr shell keycloak/server/sso/fqdn)"
+         $ samba-tool spn add "HTTP/$keycloak_server_sso_fqdn" "krbkeycloak"
 
-   .. code-block:: console
+   .. tab-item:: starting with UCS 5.2
 
-      $ fqdn="$(ucr get ucs/server/sso/uri | sed -e 's,https://,,' -e 's,/.*,,')"
-      $ samba-tool spn add "HTTP/$fqdn" "krbkeycloak"
+      .. code-block:: console
+
+         $ fqdn="$(ucr get ucs/server/sso/uri | sed -e 's,https://,,' -e 's,/.*,,')"
+         $ samba-tool spn add "HTTP/$fqdn" "krbkeycloak"
 
 Per default, :program:`Keycloak` tries to use :program:`Kerberos`. If no
 :program:`Kerberos` ticket is available, *Keycloak* falls back to username and

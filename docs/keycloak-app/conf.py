@@ -52,7 +52,7 @@ extensions = [
     'sphinxcontrib.inkscapeconverter',
     'sphinx.ext.intersphinx',
     'sphinxcontrib.bibtex',
-    'sphinx_inline_tabs',
+    'sphinx_design',
 ]
 
 suppress_warnings = ['git.too_shallow']
