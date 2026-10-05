@@ -16,6 +16,17 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.7.4-nubus3
+=====================
+
+Released: 6. Oct 2026
+
+* This app version allows administrators to pass any Keycloak option as an
+  environment variable to the Keycloak container by setting UCR variables in the
+  form of :samp:`keycloak/environment/{ENV_VAR_NAME}={VALUE}`. For more
+  information, see :ref:`additional-settings`.
+
+
 Version 26.7.4-nubus2
 =====================
 
