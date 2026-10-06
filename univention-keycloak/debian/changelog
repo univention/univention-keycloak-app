@@ -1,8 +1,12 @@
-univention-keycloak (3.7.0) UNRELEASED; urgency=medium
+univention-keycloak (3.7.0) unstable; urgency=medium
 
+  [ Marius Meschter ]
   * Bug #59722: UCS 5.2-7 version bump
 
- -- Marius Meschter <marius.meschter@univention.de>  Fri, 11 Sep 2026 10:39:02 +0200
+  [ Felix Botner ]
+  * Bug #60006: Add better audience mapper support for OIDC clients
+
+ -- Felix Botner <botner@univention.de>  Tue, 06 Oct 2026 10:56:05 +0200
 
 univention-keycloak (3.6.2) unstable; urgency=medium
 

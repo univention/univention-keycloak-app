@@ -1359,6 +1359,7 @@ def create_oidc_client(opt):
         'authorizationServicesEnabled': '',
     }
 
+    # DEPRECATED
     if opt.add_audience_mapper:
         client_payload_oidc['protocolMappers'].append(
             {
@@ -1412,7 +1413,9 @@ def create_oidc_client(opt):
     if opt.add_guardian_management_mappers:
         client_payload_oidc['protocolMappers'] += DEFAULT_GUARDIAN_MANAGEMENT_MAPPERS
 
-    for i, audience in enumerate(opt.access_token_audience):
+    # opt.access_token_audience can be removed once we delete the parameter
+    client_access_token_audience = opt.client_access_token_audience or opt.access_token_audience
+    for i, audience in enumerate(client_access_token_audience):
         client_payload_oidc['protocolMappers'].append(
             {
                 'name': f'access-audience-{i}',
@@ -1427,7 +1430,24 @@ def create_oidc_client(opt):
             },
         )
 
-    for i, audience in enumerate(opt.id_token_audience):
+    for i, audience in enumerate(opt.custom_access_token_audience):
+        client_payload_oidc['protocolMappers'].append(
+            {
+                'name': f'custom-access-audience-{i}',
+                'protocol': 'openid-connect',
+                'protocolMapper': 'oidc-audience-mapper',
+                'consentRequired': False,
+                'config': {
+                    'included.custom.audience': audience,
+                    'id.token.claim': 'false',
+                    'access.token.claim': 'true',
+                },
+            },
+        )
+
+    # opt.id_token_audience can be removed once we delete the parameter
+    client_id_token_audience = opt.client_id_token_audience or opt.id_token_audience
+    for i, audience in enumerate(client_id_token_audience):
         client_payload_oidc['protocolMappers'].append(
             {
                 'name': f'id-audience-{i}',
@@ -1436,6 +1456,21 @@ def create_oidc_client(opt):
                 'consentRequired': False,
                 'config': {
                     'included.client.audience': audience,
+                    'id.token.claim': 'true',
+                    'access.token.claim': 'false',
+                },
+            },
+        )
+
+    for i, audience in enumerate(opt.custom_id_token_audience):
+        client_payload_oidc['protocolMappers'].append(
+            {
+                'name': f'custom-id-audience-{i}',
+                'protocol': 'openid-connect',
+                'protocolMapper': 'oidc-audience-mapper',
+                'consentRequired': False,
+                'config': {
+                    'included.custom.audience': audience,
                     'id.token.claim': 'true',
                     'access.token.claim': 'false',
                 },
@@ -1790,9 +1825,25 @@ def parse_args(args: list[str] | None = None) -> Namespace:
     create_oidc_parser.add_argument('--service-accounts-enabled', action='store_true')
     create_oidc_parser.add_argument('--no-frontchannel-logout', action='store_true', default=False)
     create_oidc_parser.add_argument('--auth-browser-flow', help="Override realm authentication flow bindings for 'Browser Flow'.", default=None)
-    create_oidc_parser.add_argument('--add-audience-mapper', action='store_true', default=False, help='Add a audience mapper to add audience to access token.')
-    create_oidc_parser.add_argument('--access-token-audience', action='append', default=[], help='Add audiences to Access Tokens.')
-    create_oidc_parser.add_argument('--id-token-audience', action='append', default=[], help='Add audiences to ID Tokens.')
+
+    co_group = create_oidc_parser.add_mutually_exclusive_group()
+    co_group.add_argument('--client-access-token-audience', action='append', default=[], help='Add audiences to Access Tokens, for audience as existing client id.')
+    co_group.add_argument('--access-token-audience', action='append', default=[], help='DEPRECATED, use --access-token-audience* instead, add audiences to Access Tokens.')
+    create_oidc_parser.add_argument('--custom-access-token-audience', action='append', default=[], help='Add audiences to Access Tokens, for any audience literal.')
+    create_oidc_parser.add_argument(
+        '--add-audience-mapper', action='store_true', default=False, help='DEPRECATED, use --access-token-audience* instead, add a audience mapper to add audience to access token.'
+    )
+    create_oidc_parser.add_argument(
+        '--audience-to-map',
+        default='',
+        help='DEPRECATED, use --access-token-audience* instead, option to configure the audience that will be used if --add-audience-mapper is used and you need a different one from the default value.',
+    )
+
+    co_group = create_oidc_parser.add_mutually_exclusive_group()
+    co_group.add_argument('--client-id-token-audience', action='append', default=[], help='Add audiences to ID Tokens, for audience as existing client id.')
+    co_group.add_argument('--id-token-audience', action='append', default=[], help='DEPRECATED, use --access-token-audience* instead, add audiences to ID Tokens.')
+    create_oidc_parser.add_argument('--custom-id-token-audience', action='append', default=[], help='Add audiences to ID Tokens, for any audience literal.')
+
     create_oidc_parser.add_argument(
         '--frontchannel-logout-url', help='URL for frontchannel logout that will cause the client to log itself out when a logout request is sent to this realm.'
     )
@@ -1844,11 +1895,6 @@ def parse_args(args: list[str] | None = None) -> Namespace:
     )
     create_oidc_parser.add_argument('--web-origins', action='append', default=[], help='Allowed CORS Origins.')
     create_oidc_parser.add_argument('--admin-url', default='', help='URL for the admin url field in the client, this points to the admin interface of the client.')
-    create_oidc_parser.add_argument(
-        '--audience-to-map',
-        default='',
-        help='Option to configure the audience that will be used if --add-audience-mapper is used and you need a different one from the default value.',
-    )
     create_oidc_parser.add_argument(
         '--add-ics-mappers', action='store_true', default=False, help='Creates the mappers needed for the Intercom Service client instead of all the default mappers.'
     )
