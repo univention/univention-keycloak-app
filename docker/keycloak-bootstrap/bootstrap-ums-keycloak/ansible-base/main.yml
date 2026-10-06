@@ -111,7 +111,7 @@
           --description="Univention Management Console OIDC Client" \
           --direct-access-grants \
           --access-token-lifespan="300" \
-          --access-token-audience="ldaps://{{ global_domain }}/" \
+          --custom-access-token-audience="ldaps://{{ global_domain }}/" \
           --id-token-audience="https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/" \
           --redirect-uri="https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/*" \
           --redirect-uri="http://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/*" \
