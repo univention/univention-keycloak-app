@@ -13,6 +13,8 @@ univention-keycloak (3.7.0) unstable; urgency=medium
     created with --add-ics-mappers
   * Bug #60006: Keep the mappers of other options when --add-ics-mappers
     is used
+  * Bug #60006: Add --ics-username-claim and --ics-unique-claim to set the
+    claim names of the Intercom Service mappers
 
  -- Felix Botner <botner@univention.de>  Tue, 06 Oct 2026 10:56:05 +0200
 

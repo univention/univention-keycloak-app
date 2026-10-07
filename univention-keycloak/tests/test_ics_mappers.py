@@ -97,3 +97,26 @@ def test_ics_mappers_keep_additional_audiences(cli: ModuleType, monkeypatch: pyt
 
     audiences = [m['config']['included.client.audience'] for m in audience_mappers(mappers)]
     assert audiences == ['intercom', 'ncoidc', 'xwikioidc']
+
+
+def claims(mappers: list[dict[str, Any]]) -> dict[str, str]:
+    """
+    Map the LDAP attribute of each user attribute mapper to its claim name.
+
+    Args:
+        mappers: Protocol mapper payloads.
+
+    Returns:
+        The claim name for each mapped user attribute.
+    """
+    return {m['config']['user.attribute']: m['config']['claim.name'] for m in mappers if 'user.attribute' in m['config']}
+
+
+def test_ics_mappers_default_claims(cli: ModuleType, monkeypatch: pytest.MonkeyPatch) -> None:
+    assert claims(created_mappers(cli, monkeypatch)) == {'uid': 'phoenixusername', 'entryUUID': 'entryuuid'}
+
+
+def test_ics_mappers_custom_claims(cli: ModuleType, monkeypatch: pytest.MonkeyPatch) -> None:
+    mappers = created_mappers(cli, monkeypatch, '--ics-username-claim', 'username', '--ics-unique-claim', 'useruuid')
+
+    assert claims(mappers) == {'uid': 'username', 'entryUUID': 'useruuid'}

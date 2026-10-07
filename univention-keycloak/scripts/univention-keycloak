@@ -71,12 +71,14 @@ LOGIN_LINKS = 12
 #  * entryUUID -> entryUUID
 
 
-def ics_mappers(client_id: str) -> list[dict[str, Any]]:
+def ics_mappers(client_id: str, username_claim: str = 'phoenixusername', unique_claim: str = 'entryuuid') -> list[dict[str, Any]]:
     """
     Return the protocol mappers of an Intercom Service client.
 
     Args:
         client_id: Client ID of the Intercom Service client. The audience mapper adds it to the access token.
+        username_claim: Name of the claim with the username (LDAP attribute uid).
+        unique_claim: Name of the claim with the unique user ID (LDAP attribute entryUUID).
 
     Returns:
         The protocol mapper payloads for the Keycloak admin API.
@@ -93,7 +95,7 @@ def ics_mappers(client_id: str) -> list[dict[str, Any]]:
                 'user.attribute': 'uid',
                 'id.token.claim': 'true',
                 'access.token.claim': 'true',
-                'claim.name': 'phoenixusername',
+                'claim.name': username_claim,
                 'jsonType.label': 'String',
                 'lightweight.claim': False,
                 'multivalued': False,
@@ -126,7 +128,7 @@ def ics_mappers(client_id: str) -> list[dict[str, Any]]:
                 'user.attribute': 'entryUUID',
                 'id.token.claim': 'true',
                 'access.token.claim': 'true',
-                'claim.name': 'entryuuid',
+                'claim.name': unique_claim,
                 'jsonType.label': 'String',
                 'lightweight.claim': False,
                 'multivalued': False,
@@ -1283,7 +1285,7 @@ def create_oidc_client(opt):
 
     # Replace the default mappers before the options below add their mappers
     if opt.add_ics_mappers:
-        client_payload_oidc['protocolMappers'] = ics_mappers(opt.client_id)
+        client_payload_oidc['protocolMappers'] = ics_mappers(opt.client_id, opt.ics_username_claim, opt.ics_unique_claim)
 
     # DEPRECATED
     if opt.add_audience_mapper:
@@ -1818,6 +1820,8 @@ def parse_args(args: list[str] | None = None) -> Namespace:
     create_oidc_parser.add_argument(
         '--add-ics-mappers', action='store_true', default=False, help='Creates the mappers needed for the Intercom Service client instead of all the default mappers.'
     )
+    create_oidc_parser.add_argument('--ics-username-claim', default='phoenixusername', help='Name of the claim with the username, if --add-ics-mappers is used.')
+    create_oidc_parser.add_argument('--ics-unique-claim', default='entryuuid', help='Name of the claim with the unique user ID (entryUUID), if --add-ics-mappers is used.')
     create_oidc_parser.add_argument(
         '--force',
         action='store_true',
