@@ -70,59 +70,70 @@ LOGIN_LINKS = 12
 #  * displayName -> displayName
 #  * entryUUID -> entryUUID
 
-DEFAULT_ICS_MAPPERS = [
-    {
-        'protocol': 'openid-connect',
-        'protocolMapper': 'oidc-usermodel-attribute-mapper',
-        'name': 'phoenixusername_temp',
-        'consentRequired': False,
-        'config': {
-            'introspection.token.claim': 'true',
-            'userinfo.token.claim': 'true',
-            'user.attribute': 'uid',
-            'id.token.claim': 'true',
-            'access.token.claim': 'true',
-            'claim.name': 'phoenixusername',
-            'jsonType.label': 'String',
-            'lightweight.claim': False,
-            'multivalued': False,
-            'aggregate.attrs': False,
+
+def ics_mappers(client_id: str) -> list[dict[str, Any]]:
+    """
+    Return the protocol mappers of an Intercom Service client.
+
+    Args:
+        client_id: Client ID of the Intercom Service client. The audience mapper adds it to the access token.
+
+    Returns:
+        The protocol mapper payloads for the Keycloak admin API.
+    """
+    return [
+        {
+            'protocol': 'openid-connect',
+            'protocolMapper': 'oidc-usermodel-attribute-mapper',
+            'name': 'phoenixusername_temp',
+            'consentRequired': False,
+            'config': {
+                'introspection.token.claim': 'true',
+                'userinfo.token.claim': 'true',
+                'user.attribute': 'uid',
+                'id.token.claim': 'true',
+                'access.token.claim': 'true',
+                'claim.name': 'phoenixusername',
+                'jsonType.label': 'String',
+                'lightweight.claim': False,
+                'multivalued': False,
+                'aggregate.attrs': False,
+            },
         },
-    },
-    {
-        'protocol': 'openid-connect',
-        'protocolMapper': 'oidc-audience-mapper',
-        'name': 'intercom-audience',
-        'consentRequired': False,
-        'config': {
-            'included.client.audience': 'opendesk-intercom',
-            'id.token.claim': 'false',
-            'access.token.claim': 'true',
-            'introspection.token.claim': 'true',
-            'userinfo.token.claim': 'false',
-            'included.custom.audience': '',
-            'lightweight.claim': False,
+        {
+            'protocol': 'openid-connect',
+            'protocolMapper': 'oidc-audience-mapper',
+            'name': 'intercom-audience',
+            'consentRequired': False,
+            'config': {
+                'included.client.audience': client_id,
+                'id.token.claim': 'false',
+                'access.token.claim': 'true',
+                'introspection.token.claim': 'true',
+                'userinfo.token.claim': 'false',
+                'included.custom.audience': '',
+                'lightweight.claim': False,
+            },
         },
-    },
-    {
-        'protocol': 'openid-connect',
-        'protocolMapper': 'oidc-usermodel-attribute-mapper',
-        'name': 'entryuuid_temp',
-        'consentRequired': False,
-        'config': {
-            'introspection.token.claim': 'true',
-            'userinfo.token.claim': 'true',
-            'user.attribute': 'entryUUID',
-            'id.token.claim': 'true',
-            'access.token.claim': 'true',
-            'claim.name': 'entryuuid',
-            'jsonType.label': 'String',
-            'lightweight.claim': False,
-            'multivalued': False,
-            'aggregate.attrs': False,
+        {
+            'protocol': 'openid-connect',
+            'protocolMapper': 'oidc-usermodel-attribute-mapper',
+            'name': 'entryuuid_temp',
+            'consentRequired': False,
+            'config': {
+                'introspection.token.claim': 'true',
+                'userinfo.token.claim': 'true',
+                'user.attribute': 'entryUUID',
+                'id.token.claim': 'true',
+                'access.token.claim': 'true',
+                'claim.name': 'entryuuid',
+                'jsonType.label': 'String',
+                'lightweight.claim': False,
+                'multivalued': False,
+                'aggregate.attrs': False,
+            },
         },
-    },
-]
+    ]
 
 
 def change_current_realm(connection, realm_name: str) -> None:
@@ -1375,7 +1386,7 @@ def create_oidc_client(opt):
 
     # This clears the default mappers and leave the ICS only
     if opt.add_ics_mappers:
-        client_payload_oidc['protocolMappers'] = DEFAULT_ICS_MAPPERS
+        client_payload_oidc['protocolMappers'] = ics_mappers(opt.client_id)
 
     if opt.client_secret:
         client_payload_oidc['secret'] = opt.client_secret
