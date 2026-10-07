@@ -11,6 +11,8 @@ univention-keycloak (3.7.0) unstable; urgency=medium
   [ Jaime Conde ]
   * Bug #60006: Use the client ID as audience of Intercom Service clients
     created with --add-ics-mappers
+  * Bug #60006: Keep the mappers of other options when --add-ics-mappers
+    is used
 
  -- Felix Botner <botner@univention.de>  Tue, 06 Oct 2026 10:56:05 +0200
 

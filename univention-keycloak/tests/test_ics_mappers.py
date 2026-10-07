@@ -50,7 +50,18 @@ def test_ics_mappers_return_new_objects(cli: ModuleType) -> None:
     assert cli.ics_mappers('intercom')[1]['config']['included.client.audience'] == 'intercom'
 
 
-def test_create_oidc_client_with_ics_mappers(cli: ModuleType, monkeypatch: pytest.MonkeyPatch) -> None:
+def created_mappers(cli: ModuleType, monkeypatch: pytest.MonkeyPatch, *args: str) -> list[dict[str, Any]]:
+    """
+    Run "oidc/rp create intercom --add-ics-mappers" without Keycloak and return the mappers it sends.
+
+    Args:
+        cli: The loaded univention-keycloak module.
+        monkeypatch: The pytest monkeypatch fixture.
+        *args: Additional arguments for "oidc/rp create".
+
+    Returns:
+        The protocol mappers of the client payload.
+    """
     create_or_update_client = MagicMock()
     monkeypatch.setattr(cli, 'UniventionKeycloakAdmin', MagicMock())
     monkeypatch.setattr(cli, 'create_or_update_client', create_or_update_client)
@@ -66,11 +77,23 @@ def test_create_oidc_client_with_ics_mappers(cli: ModuleType, monkeypatch: pytes
             '--add-ics-mappers',
             '--host-fqdn',
             'id.example.test',
+            *args,
         ]
     )
 
     cli.create_oidc_client(opt)
 
-    payload = create_or_update_client.call_args.args[1]
-    (mapper,) = audience_mappers(payload['protocolMappers'])
+    return create_or_update_client.call_args.args[1]['protocolMappers']
+
+
+def test_create_oidc_client_with_ics_mappers(cli: ModuleType, monkeypatch: pytest.MonkeyPatch) -> None:
+    (mapper,) = audience_mappers(created_mappers(cli, monkeypatch))
+
     assert mapper['config']['included.client.audience'] == 'intercom'
+
+
+def test_ics_mappers_keep_additional_audiences(cli: ModuleType, monkeypatch: pytest.MonkeyPatch) -> None:
+    mappers = created_mappers(cli, monkeypatch, '--client-access-token-audience', 'ncoidc', '--client-access-token-audience', 'xwikioidc')
+
+    audiences = [m['config']['included.client.audience'] for m in audience_mappers(mappers)]
+    assert audiences == ['intercom', 'ncoidc', 'xwikioidc']

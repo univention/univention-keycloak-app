@@ -1281,6 +1281,10 @@ def create_oidc_client(opt):
         'authorizationServicesEnabled': '',
     }
 
+    # Replace the default mappers before the options below add their mappers
+    if opt.add_ics_mappers:
+        client_payload_oidc['protocolMappers'] = ics_mappers(opt.client_id)
+
     # DEPRECATED
     if opt.add_audience_mapper:
         client_payload_oidc['protocolMappers'].append(
@@ -1383,10 +1387,6 @@ def create_oidc_client(opt):
                 },
             },
         )
-
-    # This clears the default mappers and leave the ICS only
-    if opt.add_ics_mappers:
-        client_payload_oidc['protocolMappers'] = ics_mappers(opt.client_id)
 
     if opt.client_secret:
         client_payload_oidc['secret'] = opt.client_secret
