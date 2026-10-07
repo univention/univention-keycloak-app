@@ -101,57 +101,39 @@
     <build>
         <finalName>univention-authenticator</finalName>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.6.1</version>
-            </plugin>
+            <!--
+                The udm client library is shaded into the jar. The shade plugin
+                writes the jar to lib/ itself, so copy-resources is disabled to
+                keep only the shaded jar in lib/.
+            -->
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
-                <version>6.2.0.Final</version>
                 <configuration>
                     <skip>false</skip>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.6.2</version>
-                <configuration>
-                </configuration>
+                <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <finalName>univention-authenticator</finalName>
-                            <shadedArtifactAttached>true</shadedArtifactAttached>
-                            <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                            <artifactSet>
-                                <includes>
-                                    <include>org.keycloak/univention-authenticator:*</include>
-                                    <include>de.univention:udm</include>
-                                </includes>
-                                <excludes>
-                                    <!--exclude>org*</exclude-->
-                                    <exclude>com*</exclude>
-                                    <exclude>io*</exclude>
-                                </excludes>
-                            </artifactSet>
-                        </configuration>
+                        <id>copy-resources</id>
+                        <phase>none</phase>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <configuration>
+                    <artifactSet>
+                        <includes>
+                            <include>${project.groupId}:${project.artifactId}</include>
+                            <include>de.univention:udm</include>
+                        </includes>
+                    </artifactSet>
+                </configuration>
             </plugin>
         </plugins>
     </build>

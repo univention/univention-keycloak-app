@@ -49,5 +49,5 @@ KC_LOG_LEVEL=INFO /opt/keycloak/bin/kc.sh start --features=admin-fine-grained-au
 
 Copy the jar built in the previous section into the container
 ```sh
-kubectl -n namespace cp extensions/univention-authenticator/target/univention-authenticator-25.0.6-jar-with-dependencies.jar nubus-keycloak-0:/opt/keycloak/providers
+kubectl -n namespace cp extensions/lib/univention-authenticator-1.0.jar nubus-keycloak-0:/opt/keycloak/providers
 ```

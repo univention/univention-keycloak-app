@@ -3,6 +3,7 @@
 *.swp
 _build/
 target/
+extensions/lib/
 *.pyc
 generated-config-doc.yml
 
