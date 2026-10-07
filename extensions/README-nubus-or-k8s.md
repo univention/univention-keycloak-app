@@ -13,14 +13,16 @@ mount the `extensions` directory
 and execute the same commands as the Dockerfile does.
 
 Run the build container:
-`docker run --rm -it --volume ./:/app/ maven:3.8.2-openjdk-17 -- bash`
+`docker run --rm -it --volume ./:/app/ maven:3.10-eclipse-temurin-17 -- bash`
 
 Build the .jar files
 ```sh
 cd /app/extensions
-mvn clean package --file udm && mvn install -DskipITs --file udm
-mvn clean package --file univention-authenticator && mvn clean package --file pom.xml
+mvn clean package
 ```
+
+Maven builds `udm` before `univention-authenticator` on its own.
+All provider jars end up in `extensions/lib/`.
 
 ## Test deployment
 

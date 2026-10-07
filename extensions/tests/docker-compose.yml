@@ -3,7 +3,7 @@
 
 services:
   test:
-    image: maven:3.9-eclipse-temurin-17
+    image: maven:3.10-eclipse-temurin-17
     command: "mvn verify"
     working_dir: /app
     volumes:

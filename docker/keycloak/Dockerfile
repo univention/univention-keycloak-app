@@ -3,7 +3,7 @@
 
 # build ad hoc federation and our extensions
 ARG DOCKER_PROXY
-FROM ${DOCKER_PROXY}maven:3.8.2-openjdk-17 AS maven
+FROM ${DOCKER_PROXY}maven:3.10-eclipse-temurin-17 AS maven
 WORKDIR /extensions
 COPY extensions ./
 RUN --mount=type=cache,target=/root/.m2 mvn clean package --file pom.xml
