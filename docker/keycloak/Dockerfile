@@ -6,8 +6,7 @@ ARG DOCKER_PROXY
 FROM ${DOCKER_PROXY}maven:3.8.2-openjdk-17 AS maven
 WORKDIR /extensions
 COPY extensions ./
-RUN --mount=type=cache,target=/root/.m2 mvn clean package --file pom.xml \
-  && cp /root/.m2/repository/com/github/seancfoley/ipaddress/5.5.1/ipaddress-5.5.1.jar ./
+RUN --mount=type=cache,target=/root/.m2 mvn clean package --file pom.xml
 
 # keycloak itself
 # hadolint ignore=DL3006
@@ -48,7 +47,6 @@ COPY --from=maven /extensions/lib/univention-app-authenticator-*.jar /opt/keyclo
 COPY --from=maven /extensions/lib/univention-ldap-mapper-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-condition-ipaddress-*.jar /opt/keycloak/providers/
 COPY --from=maven /extensions/lib/univention-user-attribute-nameid-mapper-base64-*.jar /opt/keycloak/providers/
-COPY --from=maven /extensions/ipaddress-5.5.1.jar /opt/keycloak/providers
 COPY --from=maven /extensions/univention-authenticator/target/univention-authenticator-*-jar-with-dependencies.jar /opt/keycloak/providers/
 RUN cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.jdbc.ojdbc11-*.jar \
  && cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.nls.orai18n-*.jar \
