@@ -5,6 +5,8 @@ univention-keycloak (3.7.0) unstable; urgency=medium
 
   [ Felix Botner ]
   * Bug #60006: Add better audience mapper support for OIDC clients
+  * Bug #60006: Add fix-audience-mappers to move audiences that are no client
+    ID to included.custom.audience, run once on update
 
  -- Felix Botner <botner@univention.de>  Tue, 06 Oct 2026 10:56:05 +0200
 
