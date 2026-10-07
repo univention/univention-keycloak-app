@@ -1306,6 +1306,9 @@ def create_oidc_client(opt):
             },
         )
 
+    if opt.add_guardian_management_mappers or opt.add_guardian_audience_mapper:
+        print('WARNING: --add-guardian-management-mappers and --add-guardian-audience-mapper are deprecated and have no effect anymore', file=sys.stderr)
+
     # opt.access_token_audience can be removed once we delete the parameter
     client_access_token_audience = opt.client_access_token_audience or opt.access_token_audience
     for i, audience in enumerate(client_access_token_audience):
@@ -1802,13 +1805,13 @@ def parse_args(args: list[str] | None = None) -> Namespace:
         '--add-guardian-management-mappers',
         action='store_true',
         default=False,
-        help='DEPRECATED, add the mappers needed for the guardian management API. This cannot be used together with --add-guardian-audience-mapper.',
+        help='DEPRECATED, has no effect anymore.',
     )
     guardian_mapper_group.add_argument(
         '--add-guardian-audience-mapper',
         action='store_true',
         default=False,
-        help='DEPRECATED, add the guardian audience mapper. This cannot be used together with --add-guardian-management-mappers.',
+        help='DEPRECATED, has no effect anymore.',
     )
     create_oidc_parser.add_argument('--add-dn-mapper', action='store_true', default=False, help="Add the LDAP DN mapped into the access token claim 'dn'.")
     create_oidc_parser.set_defaults(func=create_oidc_client)
