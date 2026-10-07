@@ -4,8 +4,7 @@
 services:
   test:
     image: maven:3.9-eclipse-temurin-17
-    # TODO: Make the univention-ldap-mapper tests run in the container
-    command: "mvn verify -pl '!univention-ldap-mapper'"
+    command: "mvn verify"
     working_dir: /app
     volumes:
       - ../:/app/
