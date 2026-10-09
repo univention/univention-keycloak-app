@@ -104,6 +104,7 @@
           --binduser {{ global_keycloak_username }} \
           --bindpwdfile /credentials/keycloak.secret \
         oidc/rp create \
+          --force \
           --app-url "https://{{ global_subdomain_portal }}.{{ global_domain }}/univention/oidc/" \
           --host-fqdn "{{ global_subdomain_portal }}.{{ global_domain }}" \
           --client-secret "{{ global_umc_oidc_client_secret }}" \
