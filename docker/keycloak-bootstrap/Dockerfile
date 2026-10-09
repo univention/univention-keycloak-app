@@ -21,6 +21,7 @@ RUN apt-get --assume-yes --no-install-recommends install \
 COPY univention-keycloak/scripts/univention-keycloak /usr/sbin/univention-keycloak
 COPY univention-keycloak/scripts/univention-keycloak-migration-status /usr/sbin/univention-keycloak-migration-status
 COPY univention-keycloak/scripts/fix-duplicate-uid-mappers /usr/share/univention-keycloak/fix-duplicate-uid-mappers
+COPY univention-keycloak/scripts/fix-audience-mappers /usr/share/univention-keycloak/fix-audience-mappers
 
 FROM base
 
