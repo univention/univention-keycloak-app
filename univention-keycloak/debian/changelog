@@ -1,3 +1,9 @@
+univention-keycloak (3.7.1) unstable; urgency=medium
+
+  * Bug #60006: version bump
+
+ -- Felix Botner <botner@univention.de>  Mon, 12 Oct 2026 09:17:18 +0200
+
 univention-keycloak (3.7.0) unstable; urgency=medium
 
   [ Marius Meschter ]
