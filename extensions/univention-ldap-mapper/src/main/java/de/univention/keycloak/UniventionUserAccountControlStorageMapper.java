@@ -42,6 +42,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
     public static final String SELF_SERVICE_EMAIL_VERIFIED = "univentionPasswordRecoveryEmailVerified";
     public static final String SELF_SERVICE_REGISTERED = "univentionRegisteredThroughSelfService";
     public static final String LDAP_PASSWORD_POLICY_HINTS_ENABLED = "ldap.password.policy.hints.enabled";
+    public static final String ACCOUNT_STATE_REASON = "univentionAccountStateReason";
     private static final Pattern AUTH_EXCEPTION_REGEX = Pattern.compile("^(?=.*LDAP: error code ([0-9]+))(?!.*Invalid Credentials).*");
     private static final Pattern ACCOUNT_EXPIRED_REGEX = Pattern.compile(".*((password expired)|(The password has expired\\.)|(account expired)).*");
     private static final Logger logger = Logger.getLogger(UniventionUserAccountControlStorageMapper.class);
@@ -266,6 +267,26 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
             return false;
         }
 
+        /**
+         * Finds the message key that explains why the account must not log in.
+         *
+         * <p>A required password change is not a reason, because the user must still reach the password change form.</p>
+         *
+         * @return The message key, or empty if the account can log in.
+         */
+        public Optional<String> findDisabledReason() {
+            if (isAccountDisabled()) {
+                return Optional.of("accountDisabled");
+            }
+            if (isAccountExpired()) {
+                return Optional.of("accountExpired");
+            }
+            if (isAccountLocked()) {
+                return Optional.of("accountLocked");
+            }
+            return Optional.empty();
+        }
+
         public boolean isAccountVerifiedThroughSelfService() {
             if (attributes.containsKey(SELF_SERVICE_EMAIL_VERIFIED) && attributes.containsKey(SELF_SERVICE_REGISTERED)) {
                     final String verified = attributes.get(SELF_SERVICE_EMAIL_VERIFIED).iterator().next();
@@ -327,7 +348,12 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
 
         @Override
         public boolean isEnabled() {
-            return !accountAttributesHelper.isAccountDisabled();
+            final Optional<String> reason = accountAttributesHelper.findDisabledReason();
+            reason.ifPresent(r -> {
+                UniventionUserAccountControlStorageMapper.logger.debugf("User '%s' in realm '%s' is not enabled: %s", getUsername(), getRealmName(), r);
+                getSession().setAttribute(ACCOUNT_STATE_REASON, r);
+            });
+            return reason.isEmpty();
         }
 
         @Override
