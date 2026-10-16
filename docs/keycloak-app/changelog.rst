@@ -16,6 +16,74 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.8.1-nubus1
+=====================
+
+Released: 23. Oct 2026
+
+* **Keycloak: Audience mappers for OIDC clients**
+  Keycloak 26.8.1 silently ignores OIDC audience mappers
+  that use the ``Included Client Audience`` setting
+  with a value that does not match the client ID of an existing
+  and enabled Keycloak client.
+
+  Make sure you have updated to UCS 5.2-7 errata level 638
+  or UCS 5.0-10 errata level 1503
+  to get the necessary tooling before updating the Keycloak app.
+
+  Before updating to this app version,
+  check all OIDC clients for broken audience mappers
+  on the UCS system by running the following command:
+
+  .. code-block:: console
+
+     /usr/share/univention-keycloak/fix-audience-mappers --dry-run
+
+  If the dry run reports broken audience mappers,
+  repair them by running the same command without the ``--dry-run`` flag
+  before starting the update.
+
+  For more information, see https://help.univention.com/t/25737.
+
+* The app updates to :program:`Keycloak` version 26.8.1:
+  https://www.keycloak.org/docs/26.8.1/release_notes/
+
+* This version fixes the following CVEs:
+
+  * :uv:cve:`2026-16103`
+  * :uv:cve:`2026-18206`
+  * :uv:cve:`2026-18203`
+  * :uv:cve:`2026-18207`
+  * :uv:cve:`2026-18208`
+  * :uv:cve:`2026-18211`
+  * :uv:cve:`2026-18217`
+  * :uv:cve:`2025-66021`
+  * :uv:cve:`2026-89298`
+  * :uv:cve:`2026-88770`
+  * :uv:cve:`2026-84939`
+  * :uv:cve:`2026-8798`
+  * :uv:cve:`2026-13505`
+  * :uv:cve:`2026-93999`
+  * :uv:cve:`2026-15943`
+  * :uv:cve:`2026-18569`
+  * :uv:cve:`2026-82968`
+  * :uv:cve:`2026-94001`
+  * :uv:cve:`2026-94000`
+  * :uv:cve:`2026-94218`
+  * :uv:cve:`2026-94215`
+  * :uv:cve:`2026-94213`
+  * :uv:cve:`2026-94217`
+  * :uv:cve:`2026-96446`
+  * :uv:cve:`2026-96445`
+  * :uv:cve:`2026-97177`
+  * :uv:cve:`2026-95503`
+  * :uv:cve:`2026-97311`
+  * :uv:cve:`2026-97846`
+  * :uv:cve:`2026-101333`
+  * :uv:cve:`2026-91777`
+  * :uv:cve:`2026-103884`
+  * :uv:cve:`2026-107121`
+
 Version 26.7.4-nubus3
 =====================
 

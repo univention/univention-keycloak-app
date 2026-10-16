@@ -8,6 +8,14 @@
 	Eine Übersicht zu den Änderungen und Fehlerbehebungen finden Sie im <a href="http://docs.software-univention.de/keycloak-app/latest/changelog.html" target="_blank">Keycloak App Changelog</a>. Nachfolgend finden Sie wichtige Informationen zu bestimmten Versionen.
 </p>
 <p>
+	<b>Version: 26.8.1-nubus1</b>
+</p>
+<ul>
+	<li>
+		Keycloak ignoriert nun OIDC Audience Mapper, deren <i>Included Client Audience</i> kein vorhandener, aktivierter Client ist. Prüfen Sie vor dem Update Ihre Clients mit <b>/usr/share/univention-keycloak/fix-audience-mappers --dry-run</b> (setzt UCS 5.2-7 errata level 638 oder UCS 5.0-10 errata level 1503 voraus) und reparieren Sie sie, indem Sie denselben Befehl ohne <b>--dry-run</b> ausführen. Details finden Sie in <a href="https://help.univention.com/t/25737" target="_blank" rel="noopener noreferrer">diesem Artikel</a>.
+	</li>
+</ul>
+<p>
 	<b>Version: 26.3.5-ucs1</b>
 </p>
 <ul>
