@@ -28,6 +28,15 @@ public class PasswordChangeNeededTest {
     }
 
     @Test
+    public void shadowLastChangeIsZero() {
+        Map<String, Set<String>> attributes = new HashMap<>();
+        attributes.put(SHADOW_LAST_CHANGE, Collections.singleton("0"));
+        final UniventionUserAccountControlStorageMapper.AccountAttributesHelper helper = new UniventionUserAccountControlStorageMapper.AccountAttributesHelper(attributes);
+
+        assertTrue(helper.isPasswordChangeNeeded());
+    }
+
+    @Test
     public void shadowLastChangeExpired() {
         final Instant expireAt = Instant.now().plus(-1, ChronoUnit.DAYS);
         final Long shadowLastChange = expireAt.getEpochSecond() / 86400 - 1;

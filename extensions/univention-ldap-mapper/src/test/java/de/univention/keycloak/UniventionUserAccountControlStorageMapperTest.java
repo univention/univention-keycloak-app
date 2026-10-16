@@ -91,13 +91,14 @@ public class UniventionUserAccountControlStorageMapperTest {
 
     @Test
     public void ldapNotError49() {
+        // only LDAP error 49 (Invalid Credentials) triggers processAuthError
         final AuthenticationException exc = new AuthenticationException("[LDAP: error code 80 - implementation specific]");
         UniventionUserAccountControlStorageMapper spyMapper = Mockito.spy(mapper);
 
         final boolean res = spyMapper.onAuthenticationFailure(ldapUser, user, exc, realm);
         assertFalse(res);
 
-        Mockito.verify(spyMapper, times(1)).processAuthError(user, attrs);
+        Mockito.verify(spyMapper, times(0)).processAuthError(user, attrs);
     }
 
     @Test

@@ -45,18 +45,20 @@ public class AccountLockedTest {
     }
 
     @Test
-    public void krb5KdcFlagsIsNot254() {
+    public void krb5KdcFlagsBit17IsNotSet() {
+        // bit 17 clear: value has no bit 17 → 0 produces false
         Map<String, Set<String>> attributes = new HashMap<>();
-        attributes.put(KRB5_KDC_FLAGS, Collections.singleton("255"));
+        attributes.put(KRB5_KDC_FLAGS, Collections.singleton("0"));
         final AccountAttributesHelper helper = new AccountAttributesHelper(attributes);
 
         assertFalse(helper.isAccountLocked());
     }
 
     @Test
-    public void krb5KdcFlagsIs254() {
+    public void krb5KdcFlagsBit17IsSet() {
+        // bit 17 set: value = 131072 (1 << 17)
         Map<String, Set<String>> attributes = new HashMap<>();
-        attributes.put(KRB5_KDC_FLAGS, Collections.singleton("254"));
+        attributes.put(KRB5_KDC_FLAGS, Collections.singleton(String.valueOf(1 << 17)));
         final AccountAttributesHelper helper = new AccountAttributesHelper(attributes);
 
         assertTrue(helper.isAccountLocked());

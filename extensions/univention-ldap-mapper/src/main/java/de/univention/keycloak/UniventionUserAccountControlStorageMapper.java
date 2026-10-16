@@ -212,9 +212,15 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         }
 
         public boolean isAccountDisabled() {
+            // TODO: this is a LDAP schema violation of UDM - we should change it in the future
             if (attributes.containsKey(SHADOW_EXPIRE)) {
                 final long shadowExpire = Long.parseLong(attributes.get(SHADOW_EXPIRE).iterator().next());
                 if (1 == shadowExpire) {
+                    return true;
+                }
+            }
+            if (attributes.containsKey(KRB5_KDC_FLAGS)) {
+                if ((Long.parseLong(attributes.get(KRB5_KDC_FLAGS).iterator().next()) & (1 << 7)) == (1 << 7)) {
                     return true;
                 }
             }
@@ -252,7 +258,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
                 }
             }
             if (attributes.containsKey(KRB5_KDC_FLAGS)) {
-                if ((Long.parseLong(attributes.get(KRB5_KDC_FLAGS).iterator().next()) & (1 << 7)) == (1 << 7)) {
+                if ((Long.parseLong(attributes.get(KRB5_KDC_FLAGS).iterator().next()) & (1 << 17)) == (1 << 17)) {
                     return true;
                 }
             }
@@ -273,6 +279,13 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         }
 
         public boolean isPasswordChangeNeeded() {
+
+            if (attributes.containsKey(SHADOW_LAST_CHANGE)) {
+                final long shadowLastChange = Long.parseLong(attributes.get(SHADOW_LAST_CHANGE).iterator().next());
+                if (shadowLastChange == 0) {
+                    return true;
+                }
+            }
             if (attributes.containsKey(SHADOW_MAX) && attributes.containsKey(SHADOW_LAST_CHANGE)) {
                 final long shadowMax = Long.parseLong(attributes.get(SHADOW_MAX).iterator().next());
                 final long shadowLastChange = Long.parseLong(attributes.get(SHADOW_LAST_CHANGE).iterator().next());
