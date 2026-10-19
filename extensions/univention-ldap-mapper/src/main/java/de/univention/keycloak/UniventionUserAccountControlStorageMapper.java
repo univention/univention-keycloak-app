@@ -42,7 +42,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
     public static final String SELF_SERVICE_EMAIL_VERIFIED = "univentionPasswordRecoveryEmailVerified";
     public static final String SELF_SERVICE_REGISTERED = "univentionRegisteredThroughSelfService";
     public static final String LDAP_PASSWORD_POLICY_HINTS_ENABLED = "ldap.password.policy.hints.enabled";
-    public static final String ACCOUNT_STATE_REASON = "univentionAccountStateReason";
+    public static final String ERROR_DETAIL = "errorDetail";
     private static final Pattern AUTH_EXCEPTION_REGEX = Pattern.compile("^(?=.*LDAP: error code ([0-9]+))(?!.*Invalid Credentials).*");
     private static final Pattern ACCOUNT_EXPIRED_REGEX = Pattern.compile(".*((password expired)|(The password has expired\\.)|(account expired)).*");
     private static final Logger logger = Logger.getLogger(UniventionUserAccountControlStorageMapper.class);
@@ -100,8 +100,6 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
 
     protected boolean processAuthError(UserModel user, Map<String, Set<String>> attributes) {
         final AccountAttributesHelper accountAttributesHelper = new AccountAttributesHelper(attributes);
-        final String ERROR_DETAIL = "errorDetail";
-
         if (accountAttributesHelper.isAccountDisabled()) {
             logger.debugf("Disabled user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
             this.getSession().setAttribute(ERROR_DETAIL, "accountDisabled");
@@ -351,7 +349,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
             final Optional<String> reason = accountAttributesHelper.findDisabledReason();
             reason.ifPresent(r -> {
                 UniventionUserAccountControlStorageMapper.logger.debugf("User '%s' in realm '%s' is not enabled: %s", getUsername(), getRealmName(), r);
-                getSession().setAttribute(ACCOUNT_STATE_REASON, r);
+                getSession().setAttribute(ERROR_DETAIL, r);
             });
             return reason.isEmpty();
         }
