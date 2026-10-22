@@ -168,7 +168,8 @@ div.kc-logo-text span {
     margin: 0;
 }
 
-#cancelWebAuthnAIA {
+#cancelWebAuthnAIA,
+#authenticateWebAuthnButton {
     width: 100%;
     height: 100%;
     padding: 0.85rem 1rem;
@@ -180,11 +181,39 @@ div.kc-logo-text span {
     transition: background-color var(--portal-transition-duration);
 }
 
-#cancelWebAuthnAIA:hover {
+#authenticateWebAuthnButton {
+    display: block;
+    box-sizing: border-box;
+    text-align: center;
+    text-decoration: none;
+}
+
+.kc-passkey-separator {
+    margin: 0.5rem 0;
+    text-align: center;
+    color: var(--font-color-contrast-middle);
+    cursor: default;
+    user-select: none;
+}
+
+.kc-passkey-separator::before {
+    content: "\2014\00a0";
+}
+
+.kc-passkey-separator::after {
+    content: "\00a0\2014";
+}
+
+#cancelWebAuthnAIA:hover,
+#authenticateWebAuthnButton:hover,
+#authenticateWebAuthnButton:focus {
+    color: var(--button-text-color, var(--font-color-contrast-high));
+    text-decoration: none;
     background-color: var(--button-bgc-hover);
 }
 
-#cancelWebAuthnAIA:active {
+#cancelWebAuthnAIA:active,
+#authenticateWebAuthnButton:active {
     background-color: var(--button-bgc-active);
 }
 
