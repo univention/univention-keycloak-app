@@ -40,8 +40,10 @@ workflow:
     - if: '$CI_PIPELINE_SOURCE == "web"'
 
 include:
+  # first, so that the stages of the common-ci included below win over its older ones
+  - local: /.gitlab-ci/gitlab-ci.yml
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.68.2"
+    ref: "v1.69.2"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -103,7 +105,7 @@ include:
         # used by compose.jinja to point at the published nubus/nubus-dev image.
         - pre-semantic-release
 
-  - local: /.gitlab-ci/gitlab-ci.yml
+  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.69.2"
 
 # Version stamp via common-ci's .tagged-release template. Releases come only from
 # a protected vX.Y.Z-nubusN tag; every other ref is a "<base>-post-<slug>" dev build
@@ -162,11 +164,19 @@ push-image-external:
 
 container-release-attestation:
   needs:
+    - job: container-build
     - job: push-image-external
       optional: true
     - job: pre-semantic-release
   parallel:
     matrix: *build-matrix
+
+sbom-upload:
+  parallel:
+    matrix: *build-matrix
+  rules:
+    # the component's release rule matches only "vX.Y.Z" tags
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+-nubus[0-9]+$/ && $CI_COMMIT_REF_PROTECTED == "true"'
 
 test-udm-unit-and-integration:
   needs: []
