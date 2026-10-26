@@ -19,7 +19,7 @@ Please also consider the `upstream release notes
 Version 26.8.1-nubus1
 =====================
 
-Released: 23. Oct 2026
+Released: 26. Oct 2026
 
 * **Keycloak: Audience mappers for OIDC clients**
   Keycloak 26.8.1 silently ignores OIDC audience mappers
