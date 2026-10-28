@@ -24,9 +24,15 @@ textarea.pf-c-form-control {
 .login-pf-page .pf-c-alert__icon {
     margin-top: 4px;
 }
+.login-pf-page .pf-m-info .pf-c-alert__icon {
+    color: var(--bgc-error);
+}
 .login-pf-page .pf-c-alert.pf-m-inline {
     --pf-c-alert--BoxShadow: none;
-    --pf-c-alert--BackgroundColor: transparent;
+    background-color: transparent;
+}
+.login-pf-page .pf-c-alert.pf-m-info {
+    border-top-color: var(--bgc-error);
 }
 
 .login-pf-page .pf-c-input-group {
