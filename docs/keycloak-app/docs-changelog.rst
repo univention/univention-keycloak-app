@@ -24,6 +24,12 @@ Year 2026
      - Chapter or topic
      - Change
 
+   * - 25. Nov 2026
+     - :ref:`app-database-production`
+     - Add recommendations for the database connection pool
+       in production environments.
+       Document that Keycloak doesn't support MariaDB :spelling:word:`Galera` Cluster anymore.
+
    * - 19. Nov 2026
      - :ref:`passkeys-portal-entry`
      - Add a warning that the portal entry for passkey registration

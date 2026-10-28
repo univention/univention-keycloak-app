@@ -1,4 +1,4 @@
-.. SPDX-FileCopyrightText: 2022-2024 Univention GmbH
+.. SPDX-FileCopyrightText: 2022-2026 Univention GmbH
 ..
 .. SPDX-License-Identifier: AGPL-3.0-only
 
@@ -37,11 +37,17 @@ if there is a need to use an already existing or clustered database.
    as described in :ref:`app-database-change-before`,
    to use the database cluster instead of the local single database instance.
 
-   Examples:
-      For :program:`PostgreSQL` or :program:`MariaDB` you need to set up your own database cluster
-      and cover the topics high availability, load balancing, and replication.
-      Describing this setup is beyond the scope of this document.
+   Describing the setup of a database cluster,
+   for example with :program:`PostgreSQL`
+   is beyond the scope of this document.
 
+   Since version 26.8.0, :program:`Keycloak` doesn't support *MariaDB Galera Cluster* anymore.
+   For more information,
+   see `Galera Cluster considerations <https://www.keycloak.org/server/db#galera-cluster-considerations>`_.
+
+   For recommendations on how to configure the database connection
+   of :program:`Keycloak` in production environments,
+   see :ref:`app-database-production`.
 .. _app-database-custom:
 
 Custom database
@@ -163,3 +169,227 @@ have to use the following steps:
       $ univention-app configure keycloak
 
 #. Re-configure the rest of the :program:`Keycloak` instances.
+
+.. _app-database-production:
+
+Recommendations for production environments
+===========================================
+
+The default database connection settings for the :program:`Keycloak` app
+work well for a single :program:`Keycloak` instance with a dedicated database.
+If several :program:`Keycloak` instances share one database,
+or the database server also serves other applications,
+you need to adjust some settings to keep the setup stable under load.
+
+This section covers only the settings that need adjustment in such setups.
+For details about configuring a database for :program:`Keycloak`,
+see the official guide `Configuring the database <https://www.keycloak.org/server/db>`_.
+
+In this section, you configure the settings as environment variables
+for the :program:`Keycloak` app container,
+as described in :ref:`additional-settings`.
+Use the same values on all :program:`Keycloak` instances
+that connect to the same database.
+On Nubus for UCS, you can use a UCR policy
+to distribute the settings to all systems with the :program:`Keycloak` app.
+
+.. _app-database-production-pool:
+
+Database connection pool configuration
+--------------------------------------
+
+Each :program:`Keycloak` instance maintains its own pool of database connections.
+The following environment variables control the size of the pool:
+
+.. envvar:: KC_DB_POOL_MAX_SIZE
+
+   The maximum number of connections
+   that one :program:`Keycloak` instance opens to the database.
+
+   :Default: ``100``
+
+.. envvar:: KC_DB_POOL_MIN_SIZE
+
+   The number of connections that the pool keeps open,
+   even if the :program:`Keycloak` app doesn't use them.
+
+   :Default: The pool doesn't keep any idle connections open.
+
+.. envvar:: KC_DB_POOL_INITIAL_SIZE
+
+   The number of connections that the :program:`Keycloak` instance opens at startup.
+
+   :Default: The :program:`Keycloak` app doesn't open any connections in advance.
+
+.. _app-database-production-pool-guidelines:
+
+Database connection pool guidelines
+-----------------------------------
+
+Choose the pool size according to the following guidelines.
+
+.. _app-database-production-pool-guidelines-below-connection-limit:
+
+Stay below the connection limit
+   The database server accepts only a limited number of connections.
+   The ``max_connections`` setting on the database server defines the limit.
+   For example, :program:`PostgreSQL` uses ``100`` connections by default.
+   :program:`MariaDB` uses ``151`` connections.
+   To query the effective value, connect to the database server
+   with a SQL client, such as :command:`psql` for :program:`PostgreSQL`
+   or :command:`mariadb` for :program:`MariaDB`.
+   Then run the command for your database:
+
+   .. tab-set::
+
+      .. tab-item:: PostgreSQL
+         :sync: postgres
+
+         .. code-block:: sql
+            :caption: Query the connection limit in :program:`PostgreSQL`
+
+            SHOW max_connections;
+
+      .. tab-item:: MariaDB / MySQL
+         :sync: mariadb
+
+         .. code-block:: sql
+            :caption: Query the connection limit in :program:`MariaDB` and :program:`MySQL`
+
+            SHOW VARIABLES LIKE 'max_connections';
+
+   The combined pool sizes of all :program:`Keycloak` instances
+   must never exceed the connection limit of the database.
+   Otherwise, the database refuses new connections under load,
+   and :program:`Keycloak` fails to process requests.
+   Use the following rule to check the combined number of connections.
+   Allow for connection slots reserved by the database
+   and additional capacity for operational needs.
+   The variables in this rule have the following meanings:
+
+   * :math:`n` is the number of :program:`Keycloak` instances.
+
+   * :math:`s` is the value of :envvar:`KC_DB_POOL_MAX_SIZE`.
+
+   * :math:`c` is the number of connections from all other database clients.
+
+   * :math:`r` is the number of reserved slots and additional connections
+     for operational needs.
+
+   * :math:`m` is the database connection limit, ``max_connections``.
+
+   .. math::
+      :name: app-database-production-pool-guidelines-below-connection-limit-math
+
+      n \times s + c + r \leq m
+
+   Consider the following aspects:
+
+   * Count all :program:`Keycloak` instances that connect to the database.
+
+     .. tab-set::
+
+        .. tab-item:: Nubus for UCS
+           :sync: ucs
+
+           On Nubus for UCS, these are all systems with the :program:`Keycloak` app installed.
+
+        .. tab-item:: Nubus for Kubernetes
+           :sync: kubernetes
+
+           In Nubus for Kubernetes,
+           use the maximum number of replicas that you allow after scaling.
+           Consider instances that you might add later.
+
+   * Reserve connections for all other clients of the database server,
+     such as other applications, backup jobs, monitoring,
+     and administrators.
+
+   * A single :program:`Keycloak` instance
+     with the default :envvar:`KC_DB_POOL_MAX_SIZE` value of ``100``
+     already exhausts the default connection limit of a :program:`PostgreSQL` server.
+     You must reduce the value as soon as you run more than one instance
+     on a database with the default connection limit.
+
+   Example
+     For three :program:`Keycloak` instances,
+     a :program:`PostgreSQL` server with ``max_connections`` set to ``100``
+     allows a pool size of ``25`` per instance.
+     The three instances then use up to ``75`` connections,
+     which leaves ``25`` connections for other clients,
+     reserved slots, and additional operational capacity.
+
+.. _app-database-production-pool-guidelines-fixed-size:
+
+Use a database connection pool with a fixed size
+   Set :envvar:`KC_DB_POOL_INITIAL_SIZE`, :envvar:`KC_DB_POOL_MIN_SIZE`, and :envvar:`KC_DB_POOL_MAX_SIZE`
+   to the same value, as recommended in `Concepts for database connection pools <https://www.keycloak.org/high-availability/multi-cluster/concepts-database-connections>`_.
+
+   With the default settings, the pool starts empty,
+   opens connections on demand, and closes them again when idle.
+   During peaks, :program:`Keycloak` then has to open many connections at once,
+   which delays requests and puts additional load on the database.
+
+   Example
+      To configure a pool with a fixed size of ``25`` connections,
+      set the following environment variables on each :program:`Keycloak` instance:
+
+      .. tab-set::
+
+         .. tab-item:: Nubus for UCS
+            :sync: ucs
+
+            .. code-block:: console
+               :caption: Configure a fixed pool size on UCS
+
+               $ ucr set \
+                   keycloak/environment/KC_DB_POOL_INITIAL_SIZE=25 \
+                   keycloak/environment/KC_DB_POOL_MIN_SIZE=25 \
+                   keycloak/environment/KC_DB_POOL_MAX_SIZE=25
+               $ univention-app configure keycloak --run-script settings
+
+         .. tab-item:: Nubus for Kubernetes
+            :sync: kubernetes
+
+            .. code-block:: yaml
+               :caption: Configure a fixed pool size in Nubus for Kubernetes
+
+               keycloak:
+                 extraEnvVars:
+                   - name: KC_DB_POOL_INITIAL_SIZE
+                     value: "25"
+                   - name: KC_DB_POOL_MIN_SIZE
+                     value: "25"
+                   - name: KC_DB_POOL_MAX_SIZE
+                     value: "25"
+
+      To find out whether the pool size fits your load,
+      monitor the metrics of the database connection pool,
+      as described in `Database Metrics <https://www.keycloak.org/observability/metrics-for-troubleshooting-database>`_.
+      If ``agroal_awaiting_count`` is regularly greater than ``0``,
+      or ``agroal_active_count`` regularly reaches the pool size,
+      the pool is too small.
+      Increase the pool size only if the database has enough capacity.
+      Otherwise, scale the database first.
+
+      For instructions about how to apply the settings,
+      see :ref:`additional-settings`.
+
+.. _app-database-production-pool-guidelines-not-too-small:
+
+Don't make the database connection pool too small
+   If all connections of the pool are in use,
+   requests wait for a free connection.
+   If no connection becomes available in time,
+   :program:`Keycloak` cancels the request with an error.
+   By default, a request waits up to 20 seconds.
+
+   :program:`Keycloak` processes requests with up to 50 worker threads,
+   or four times the number of CPU cores, whichever is higher.
+   Not every request needs a database connection,
+   because :program:`Keycloak` keeps a large part of its data in its cache.
+   Therefore, the pool can be considerably smaller than the number of worker threads.
+   The :program:`Keycloak` reference deployment
+   `Deploying Keycloak for HA with the Operator <https://www.keycloak.org/high-availability/multi-cluster/deploy-keycloak-kubernetes>`_
+   uses a pool size of ``30`` per instance,
+   which is a reasonable starting point.
