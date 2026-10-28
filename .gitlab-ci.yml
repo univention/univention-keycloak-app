@@ -43,7 +43,7 @@ include:
   # first, so that the stages of the common-ci included below win over its older ones
   - local: /.gitlab-ci/gitlab-ci.yml
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.69.2"
+    ref: "v1.69.3"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -105,7 +105,7 @@ include:
         # used by compose.jinja to point at the published nubus/nubus-dev image.
         - pre-semantic-release
 
-  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.69.2"
+  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.69.3"
 
 # Version stamp via common-ci's .tagged-release template. Releases come only from
 # a protected vX.Y.Z-nubusN tag; every other ref is a "<base>-post-<slug>" dev build
