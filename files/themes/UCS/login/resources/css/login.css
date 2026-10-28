@@ -323,7 +323,63 @@ div.kc-logo-text span {
 
 #kc-form-options .checkbox {
     margin-top: 0;
-    color: #72767b;
+    color: var(--font-color-contrast-high);
+}
+
+.login-pf-page .checkbox label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 0;
+}
+
+.login-pf-page input[type="checkbox"] {
+    --local-border-color: var(--font-color-contrast-low);
+    --local-background-color: transparent;
+    appearance: none;
+    position: relative;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: var(--font-size-3);
+    height: var(--font-size-3);
+    margin: 0;
+    border: 2px solid var(--local-border-color);
+    border-radius: 2px;
+    background-color: var(--local-background-color);
+    cursor: pointer;
+    transition: background-color 250ms, border-color 250ms;
+}
+
+.login-pf-page input[type="checkbox"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--local-border-color);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / 100% no-repeat;
+    opacity: 0;
+    transition: opacity 250ms;
+}
+
+.login-pf-page input[type="checkbox"]:checked {
+    --local-border-color: var(--color-accent);
+}
+
+.login-pf-page input[type="checkbox"]:checked::before {
+    opacity: 1;
+}
+
+.login-pf-page input[type="checkbox"]:hover {
+    --local-background-color: var(--bgc-checkbox-hover);
+}
+
+.login-pf-page input[type="checkbox"]:focus-visible {
+    --local-background-color: var(--bgc-checkbox-focus);
+}
+
+.login-pf-page input[type="checkbox"]:disabled {
+    --local-border-color: var(--font-color-contrast-low);
+    opacity: 0.4;
+    cursor: default;
 }
 
 #kc-terms-text {
