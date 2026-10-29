@@ -61,20 +61,20 @@ include:
     file:
       - "dind.yml"
 
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-aptly@2.5.2"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-aptly@2.25.0"
     inputs:
       pkg-dir: univention-keycloak
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-errata-build@2.5.2"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-errata-build@2.25.0"
     inputs:
       debian-package: univention-keycloak
       pkg-dir: univention-keycloak
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/ai-review@2.8.0"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/ai-review@2.25.0"
 
   # App Center release: create_app_version / update_appcenter / do_release etc.
   # On a feature branch (MR) creating the version is manual (see the
   # create_app_version override below); on a protected vX.Y.Z-nubusN tag it is the real
   # release. The App Center Version comes from the tag (templated into ini.jinja).
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/app-release@2.10.0"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/app-release@2.25.0"
     inputs:
       app_id: "keycloak"
       app_version_from_branch_name: true
