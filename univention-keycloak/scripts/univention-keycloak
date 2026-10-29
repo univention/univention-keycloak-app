@@ -1962,6 +1962,39 @@ def parse_args(args: list[str] | None = None) -> Namespace:
     fa_parser_opp.add_argument('--ldap-base', required=no_ucr_available, default=ldap_base)
     fa_parser_opp.set_defaults(func=enable_2fa)
 
+    passkeys_parser = subparsers.add_parser('passkeys', help='manage passkeys (WebAuthn passwordless) as an alternative to password authentication')
+    operation_subparsers = passkeys_parser.add_subparsers(title='operation', description='valid subcommands', required=True, dest='operation')
+    # options of "passkeys enable" and "passkeys set"
+    passkeys_options_parser = ArgumentParser(add_help=False)
+    same_authenticator_group = passkeys_options_parser.add_mutually_exclusive_group()
+    same_authenticator_group.add_argument(
+        '--avoid-same-authenticator-registration',
+        dest='avoid_same_authenticator_registration',
+        action='store_const',
+        const=True,
+        help='prevent registering more than one passkey on the same authenticator',
+    )
+    same_authenticator_group.add_argument(
+        '--allow-same-authenticator-registration',
+        dest='avoid_same_authenticator_registration',
+        action='store_const',
+        const=False,
+        help='allow registering more than one passkey on the same authenticator',
+    )
+    passkeys_enable_parser = operation_subparsers.add_parser(
+        'enable', help='enable passkeys and change the given options of the WebAuthn passwordless policy.', parents=[passkeys_options_parser]
+    )
+    passkeys_enable_parser.set_defaults(func=enable_passkeys)
+    passkeys_disable_parser = operation_subparsers.add_parser('disable', help='disable passkeys')
+    passkeys_disable_parser.set_defaults(func=disable_passkeys)
+    passkeys_set_parser = operation_subparsers.add_parser(
+        'set', help='change the given options of the WebAuthn passwordless policy without enabling or disabling passkeys', parents=[passkeys_options_parser]
+    )
+    passkeys_set_parser.set_defaults(func=set_passkeys)
+    passkeys_get_parser = operation_subparsers.add_parser('get', help='get the passkey related WebAuthn passwordless policy')
+    passkeys_get_parser.add_argument('--json', help='Print json output', default=False, action='store_true')
+    passkeys_get_parser.set_defaults(func=get_passkeys)
+
     parser_ext = subparsers.add_parser('extension', help='manage extensions')
     operation_subparsers = parser_ext.add_subparsers(title='operation', description='valid subcommands', required=True, dest='operation')
 
@@ -2851,6 +2884,67 @@ def enable_2fa(opt):
 
     # change authentication binding to conditional 2fa flow
     kc_admin.update_realm(opt.realm, {'browserFlow': flow_name})
+
+
+def _get_passkeys_policy(kc_admin: UniventionKeycloakAdmin, realm: str) -> dict:
+    return {key: value for key, value in kc_admin.get_realm(realm).items() if key.startswith('webAuthnPolicyPasswordless')}
+
+
+def _update_passkeys_policy(kc_admin: UniventionKeycloakAdmin, realm: str, policy: dict, changes: dict) -> None:
+    # Keycloak only applies the passwordless policy if the RP entity name is part of the payload
+    # and then rebuilds the whole policy from the payload, resetting omitted settings to their defaults.
+    # So always send the complete current policy with the changes applied.
+    policy.update(changes)
+    kc_admin.update_realm(realm, policy)
+
+
+def _passkeys_option_changes(opt: Namespace) -> dict:
+    # only change the options that are given, all others keep their current value
+    changes = {}
+    if opt.avoid_same_authenticator_registration is not None:
+        changes['webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister'] = opt.avoid_same_authenticator_registration
+    return changes
+
+
+def enable_passkeys(opt: Namespace) -> None:
+    kc_admin = UniventionKeycloakAdmin(opt)
+    policy = _get_passkeys_policy(kc_admin, opt.realm)
+    enabled = policy.get('webAuthnPolicyPasswordlessPasskeysEnabled')
+    changes = _passkeys_option_changes(opt)
+    if enabled:
+        if not changes:
+            print(f'Passkeys are already enabled in realm {opt.realm}')
+            return
+        print(f'Changing the passkey options in realm {opt.realm} ...')
+    else:
+        print(f'Enabling passkeys in realm {opt.realm} ...')
+        changes = {'webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister': True, **changes, 'webAuthnPolicyPasswordlessPasskeysEnabled': True}
+    _update_passkeys_policy(kc_admin, opt.realm, policy, changes)
+
+
+def set_passkeys(opt: Namespace) -> None:
+    changes = _passkeys_option_changes(opt)
+    if not changes:
+        print('Nothing to change, no option given')
+        return
+    print(f'Changing the passkey options in realm {opt.realm} ...')
+    kc_admin = UniventionKeycloakAdmin(opt)
+    _update_passkeys_policy(kc_admin, opt.realm, _get_passkeys_policy(kc_admin, opt.realm), changes)
+
+
+def disable_passkeys(opt: Namespace) -> None:
+    kc_admin = UniventionKeycloakAdmin(opt)
+    policy = _get_passkeys_policy(kc_admin, opt.realm)
+    if not policy.get('webAuthnPolicyPasswordlessPasskeysEnabled'):
+        print(f'Passkeys are already disabled in realm {opt.realm}')
+        return
+    print(f'Disabling passkeys in realm {opt.realm} ...')
+    _update_passkeys_policy(kc_admin, opt.realm, policy, {'webAuthnPolicyPasswordlessPasskeysEnabled': False})
+
+
+def get_passkeys(opt: Namespace) -> None:
+    kc_admin = UniventionKeycloakAdmin(opt)
+    _print_json(opt.json, _get_passkeys_policy(kc_admin, opt.realm))
 
 
 def create_or_replace_realm_role(kc_admin, realm, role):
