@@ -24,6 +24,13 @@ Year 2026
      - Chapter or topic
      - Change
 
+   * - 02. Nov 2026
+     - :ref:`passkeys`
+     - Add the configuration of passkey authentication.
+       Describe how to activate and deactivate passkey authentication.
+       Describe how to activate and deactivate the portal entry for passkey
+       registration.
+
    * - 11. Jun 2026
      - :ref:`app-settings` and use cases
      - Document Keycloak metrics configuration.

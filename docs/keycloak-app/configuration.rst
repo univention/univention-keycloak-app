@@ -411,6 +411,276 @@ Deactivate two-factor authentication for domain administrators
 
 #. Remove ``2FA role`` from *Assigned roles*.
 
+.. _passkeys:
+
+Passkey authentication
+======================
+
+A passkey is a Web Authentication (WebAuthn) credential
+that users store on an authenticator,
+such as a mobile phone, a security key, or a password manager.
+Passkey authentication is an authentication method
+that grants users access to a service
+after they sign in with a passkey instead of a password.
+The authenticator asks users to confirm the sign-in,
+for example with a PIN or biometrics.
+
+After you activate passkey authentication
+and the portal entry for passkey registration,
+users can register a passkey in the Univention Portal
+through the user menu in the sidebar
+and sign in with it.
+Users can still sign in with their username and password
+after you activate passkey authentication.
+
+For information about configuring passkey authentication in Nubus for UCS
+and using it with multifactor authentication,
+see the following sections:
+
+* :ref:`passkeys-enable`
+* :ref:`passkeys-portal-entry`
+* :ref:`passkeys-disable`
+* :ref:`passkeys-2fa`
+
+For instructions in a Nubus for Kubernetes environment,
+see :external+uv-nubus-kubernetes-operation:ref:`conf-keycloak-passkeys`
+in :cite:t:`uv-nubus-kubernetes-operation`.
+
+.. seealso::
+
+   `Passkeys <https://www.keycloak.org/docs/latest/server_admin/index.html#passkeys_server_administration_guide>`__
+      in the Keycloak Server Administration Guide for more information about
+      passkeys in Keycloak.
+
+.. _passkeys-enable:
+
+Activate passkey authentication
+-------------------------------
+
+To activate passkey authentication,
+use the following steps:
+
+#. Open a shell as superuser ``root``
+   on the Nubus for UCS system where you installed the :program:`Keycloak` app
+   and run the command in :numref:`passkeys-enable-listing`.
+
+   .. code-block:: console
+      :caption: Enable passkeys in :program:`Keycloak`
+      :name: passkeys-enable-listing
+
+      $ univention-keycloak passkeys enable
+
+#. To verify the configuration,
+   run the command in :numref:`passkeys-enable-verify-listing`
+   and make sure that
+   ``webAuthnPolicyPasswordlessPasskeysEnabled`` has the value ``true``:
+
+   .. code-block:: console
+      :caption: Verify passkey configuration for the :program:`Keycloak` app
+      :name: passkeys-enable-verify-listing
+
+      $ univention-keycloak passkeys get
+
+When the command activates passkey authentication,
+it also activates the *Avoid same authenticator registration* setting
+in the *WebAuthn Passwordless Policy* in :program:`Keycloak`.
+Users then can't register more than one passkey on the same authenticator.
+
+To let users register more than one passkey on the same authenticator,
+add the option ``--allow-same-authenticator-registration``
+to :command:`univention-keycloak passkeys enable`.
+You can also use the command with this option
+if passkey authentication is already active.
+
+The :command:`univention-keycloak passkeys` command
+also shows and changes the settings of the *WebAuthn Passwordless Policy*.
+For the available commands and options,
+run :command:`univention-keycloak passkeys --help`.
+By default, the commands apply to the UCS realm.
+For other realms, see :command:`univention-keycloak --help`.
+
+.. _passkeys-portal-entry:
+
+Activate the portal entry for passkey registration
+--------------------------------------------------
+
+In Nubus for UCS,
+the *Portal* provides the entry *Register Passkey*
+in the user menu of the sidebar.
+When users click the entry,
+they register a passkey in a dialog
+and then return to the *Portal*.
+You can activate and deactivate the entry
+either on the command line or in the *Portal* management module.
+
+Nubus for UCS creates the entry on the
+:external+uv-ucs-operation:term:`Primary Directory Node` in the deactivated state.
+After you activate passkey authentication
+as described in :ref:`passkeys-enable`,
+activate the portal entry using one of the following methods.
+
+.. tab-set::
+
+   .. tab-item:: UMC
+      :sync: umc
+
+      To activate the portal entry in the *Portal* management module
+      on the Primary Directory Node,
+      use the following steps:
+
+      #. Sign in to the *Management UI* with an administrative user account.
+
+      #. Open :menuselection:`Domain --> Portal`.
+
+      #. Open the portal entry ``register_passkey``.
+
+      #. On the *General* tab, in the *Advanced* section,
+         activate the portal entry by selecting the :guilabel:`Activated` checkbox
+         and save the entry.
+
+   .. tab-item:: Console
+      :sync: console
+
+      To activate the portal entry
+      on the Primary Directory Node through the console,
+      use the following steps:
+
+      #. Open a console on the Primary Directory Node as superuser ``root``.
+
+      #. Run the command in :numref:`passkeys-portal-entry-listing`.
+
+         .. code-block:: console
+            :caption: Activate the portal entry for passkey registration
+            :name: passkeys-portal-entry-listing
+
+            $ udm portals/entry modify \
+              --dn "cn=register_passkey,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
+              --set activated=TRUE
+
+.. _passkeys-disable:
+
+Deactivate passkey authentication
+---------------------------------
+
+To deactivate passkey authentication,
+open a console as superuser ``root``
+on the Nubus for UCS system where you installed Keycloak
+and run the command in :numref:`passkeys-disable-listing`.
+
+.. code-block:: console
+   :caption: Deactivate passkey authentication
+   :name: passkeys-disable-listing
+
+   $ univention-keycloak passkeys disable
+
+After you deactivate passkey authentication,
+users can't sign in with a passkey anymore.
+Users keep the passkeys that they already registered.
+If you activate passkey authentication again,
+then users can sign in with their existing passkeys.
+
+To also deactivate the portal entry for passkey registration,
+use one of the following methods.
+
+.. tab-set::
+
+   .. tab-item:: UMC
+      :sync: umc
+
+      To deactivate the entry in the *Portal* management module
+      on the Primary Directory Node,
+      use the following steps:
+
+      #. Sign in to the *Management UI* with an administrative user account.
+
+      #. Open :menuselection:`Domain --> Portal`.
+
+      #. Open the portal entry ``register_passkey``.
+
+      #. On the *General* tab, in the *Advanced* section,
+         clear the :guilabel:`Activated` checkbox and save the entry.
+
+   .. tab-item:: Console
+      :sync: console
+
+      To also deactivate the portal entry for passkey registration,
+      run the command in :numref:`passkeys-disable-portal-entry-listing`
+      on the Primary Directory Node as superuser ``root``.
+
+      .. code-block:: console
+         :caption: Deactivate portal entry for passkey registration
+         :name: passkeys-disable-portal-entry-listing
+
+         $ udm portals/entry modify \
+           --dn "cn=register_passkey,cn=entry,cn=portals,cn=univention,$(ucr get ldap/base)" \
+           --set activated=FALSE
+
+.. _passkeys-2fa:
+
+Passkeys and two-factor authentication
+--------------------------------------
+
+If you activate passkey authentication and
+activate |2FA| as described in :ref:`2fa-enable-groups`,
+users need to enter the |OTP| only when they sign in with their password.
+When users sign in with a passkey,
+they don't need to enter the |OTP|.
+
+The command :command:`univention-keycloak 2fa enable`
+creates the authentication flow ``2fa-browser``.
+In this flow, the condition ``Condition - credential``
+skips the |OTP| for users who sign in with a passkey.
+
+To also ask for the |OTP| when users sign in with a passkey,
+use the following steps:
+
+#. Sign in to the *Keycloak Admin Console*
+   as described in :ref:`keycloak-admin-console`.
+
+#. In the *Keycloak Admin Console*, navigate to the realm ``ucs``.
+
+#. Select *Authentication* and open the flow ``2fa-browser``.
+
+#. In the row for ``Condition - credential``,
+   set the *Requirement* to :guilabel:`Disabled`.
+
+.. important::
+
+   Each time :command:`univention-keycloak 2fa enable` runs,
+   it creates the flow ``2fa-browser`` again,
+   and the condition ``Condition - credential`` is active again.
+   After you run the command,
+   set the *Requirement* of ``Condition - credential`` to ``Disabled`` again.
+
+.. _passkeys-known-issues:
+
+Known issues
+------------
+
+The passkey setup has the following limitations:
+
+Delayed account status check
+   In Nubus for UCS,
+   the :program:`Keycloak` app doesn't import the users from the LDAP directory.
+   Instead, :program:`Keycloak` caches the user accounts that it reads
+   from the LDAP directory for 5 minutes.
+   The cache also applies to the account status check during sign-in.
+
+   If you deactivate or lock a user account,
+   it can take up to 5 minutes for :program:`Keycloak` to reflect the change.
+   During this time, the user can still sign in,
+   for example with a passkey.
+
+Passkeys after a change of the FQDN
+   Passkeys bind to the |FQDN| of the :program:`Keycloak` app.
+   The app setting :envvar:`keycloak/server/sso/fqdn` specifies this |FQDN|.
+   If you change the |FQDN|,
+   for example as described in :ref:`use-case-reconfigure-sso`,
+   users can't sign in with their existing passkeys anymore
+   and need to register a new passkey.
+   They can sign in with their username and password
+   and register a new passkey through the *Portal*.
+
 .. _app-settings:
 
 Settings
