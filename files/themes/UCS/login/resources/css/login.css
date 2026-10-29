@@ -30,6 +30,11 @@ textarea.pf-c-form-control {
     margin-right: 0.4rem;
 }
 
+#kc-otp-login-form .form-group:has(> #otp) {
+    margin-left: 0;
+    margin-right: 0;
+}
+
 .login-pf-page .pf-c-alert__title {
     font-size: var(--font-size-body);
     font-weight: normal;
@@ -291,7 +296,7 @@ div.kc-logo-text span {
     min-height: 0;
 }
 
-.login-pf-page:has(#registerWebAuthn, #kc-webauthn-settings-form, #kc-decline) #umcLoginLinks {
+.login-pf-page:has(#registerWebAuthn, #kc-webauthn-settings-form, #kc-decline, #otp) #umcLoginLinks {
     display: none;
 }
 

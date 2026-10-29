@@ -24,14 +24,10 @@
             </#if>
 
             <div class="${properties.kcFormGroupClass!}">
-                <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="otp" class="${properties.kcLabelClass!}">${msg("loginOtpOneTime")}</label>
-                </div>
-
-            <div class="${properties.kcInputWrapperClass!}">
-                <input id="otp" name="otp" autocomplete="one-time-code" type="text" class="${properties.kcInputClass!}"
+                <input id="otp" name="otp" autocomplete="one-time-code" type="text" class="${properties.kcInputClass!}" placeholder=""
                        autofocus aria-invalid="<#if messagesPerField.existsError('totp')>true</#if>"
                        dir="ltr" />
+                <label for="otp" class="${properties.kcLabelClass!}">${msg("loginOtpOneTime")}</label>
 
                 <#if messagesPerField.existsError('totp')>
                     <span id="input-error-otp-code" class="${properties.kcInputErrorMessageClass!}"
@@ -40,7 +36,6 @@
                     </span>
                 </#if>
             </div>
-        </div>
 
             <div class="${properties.kcFormGroupClass!}">
                 <div id="kc-form-options" class="${properties.kcFormOptionsClass!}">
