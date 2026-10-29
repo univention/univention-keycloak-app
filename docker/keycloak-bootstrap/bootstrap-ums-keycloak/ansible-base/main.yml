@@ -19,6 +19,9 @@
         - name: "Debug output for global_2fa"
           ansible.builtin.debug:
             var: "global_2fa"
+        - name: "Debug output for global_passkeys"
+          ansible.builtin.debug:
+            var: "global_passkeys"
         - name: "Debug output"
           ansible.builtin.find:
             paths: "/app"
@@ -160,5 +163,19 @@
         2fa enable \
           --group-2fa="{{ global_2fa.group }}" \
           --ldap-base="{{ global_ldap_base_dn }}"
+
+    - name: "Set global access token for passkeys"
+      ansible.builtin.include_tasks: "../ansible-shared/set_global_accesstoken.yml"
+    - name: "Enable or disable passkeys"
+      when: "global_passkeys.enabled is defined and global_passkeys.enabled is not none"
+      changed_when: "_passkeys.rc == 0 and 'already' not in _passkeys.stdout"
+      register: "_passkeys"
+      ansible.builtin.shell: |
+        univention-keycloak \
+          --keycloak-url {{ global_keycloak_url }} \
+          --realm {{ global_keycloak_realm }} \
+          --binduser {{ global_keycloak_username }} \
+          --bindpwdfile /credentials/keycloak.secret \
+        passkeys {{ 'enable' if global_passkeys.enabled | bool else 'disable' }}
 
 ...

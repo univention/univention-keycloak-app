@@ -6,6 +6,7 @@
     global_ldap_mappers: "{{ lookup('file', '/bootstrap/ldap.mappers.yaml') | from_yaml }}"
     global_login_links: "{{ lookup('file', '/bootstrap/loginlinks.yaml') | from_yaml }}"
     global_2fa: "{{ lookup('file', '/bootstrap/2fa.yaml') | from_yaml }}"
+    global_passkeys: "{{ lookup('file', '/bootstrap/passkeys.yaml') | from_yaml }}"
     global_hide_sensitive_output: "{{ lookup('ansible.builtin.env', 'HIDE_SENSITIVE_OUTPUT', default=true) }}"
 
 - name: "Global: Set sensitive variables"
@@ -67,6 +68,7 @@
       - global_ldap_mappers is mapping
       - global_login_links is sequence and global_login_links is not string
       - global_2fa is mapping
+      - global_passkeys is mapping
     fail_msg: "One or more variables read from YAML files are not the expected type."
 
 - name: "Set global access token"

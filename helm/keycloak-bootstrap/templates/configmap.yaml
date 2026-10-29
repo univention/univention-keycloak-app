@@ -58,6 +58,8 @@ data:
   {{- end }}
   2fa.yaml: |
     {{- .Values.bootstrap.twoFactorAuthentication | toYaml | nindent 4 }}
+  passkeys.yaml: |
+    {{- .Values.bootstrap.passkeys | toYaml | nindent 4 }}
 ...
 
 ---

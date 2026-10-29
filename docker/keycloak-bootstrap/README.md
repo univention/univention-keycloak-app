@@ -34,6 +34,7 @@ is placed in `/app/values.yaml`.
 The following actions are supported at the moment:
 - Initialize UMS configuration
 - Enable 2FA
+- Enable or disable passkeys
 - Configure additional LDAP mappers
 - Configure links on the login page
 

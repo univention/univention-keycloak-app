@@ -309,6 +309,11 @@ bootstrap:
     enabled: false
     # -- LDAP group DN which membership enables 2FA for users
     group: ""
+  passkeys:
+    # -- (bool) Enable (`true`) or disable (`false`) passkeys (WebAuthn passwordless) as an alternative to
+    # password authentication. When not set, the bootstrap leaves the passkey setting in Keycloak unchanged.
+    # @default -- `nil` (unchanged)
+    enabled: null
   userFederation:
     # -- Enable the option "Import Users" for the user federation LDAP provider.
     # This option only takes effect on the first deployment.
