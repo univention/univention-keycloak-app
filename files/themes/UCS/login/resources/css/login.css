@@ -16,6 +16,20 @@ textarea.pf-c-form-control {
     height: auto;
 }
 
+.featherIcon {
+    width: 1em;
+    height: 1em;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+#kc-login .featherIcon {
+    margin-right: 0.4rem;
+}
+
 .login-pf-page .pf-c-alert__title {
     font-size: var(--font-size-body);
     font-weight: normal;
