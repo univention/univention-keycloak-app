@@ -244,6 +244,35 @@ div.kc-logo-text span {
     background-color: var(--button-bgc-active);
 }
 
+#kc-error-message #backToApplication,
+#kc-error-message #backToLogin {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--border-radius-interactable, 0.25rem);
+    font-size: var(--font-size-3);
+    line-height: 1.33333;
+    text-align: center;
+    text-decoration: none;
+    color: var(--button-text-color, var(--font-color-contrast-high));
+    background-color: var(--button-bgc);
+    transition: background-color var(--portal-transition-duration);
+}
+
+#kc-error-message #backToApplication:hover,
+#kc-error-message #backToApplication:focus,
+#kc-error-message #backToLogin:hover,
+#kc-error-message #backToLogin:focus {
+    background-color: var(--button-bgc-hover);
+}
+
+#kc-error-message #backToApplication:active,
+#kc-error-message #backToLogin:active {
+    background-color: var(--button-bgc-active);
+}
+
 .card-pf:has(#registerWebAuthn) {
     min-height: 0;
 }
