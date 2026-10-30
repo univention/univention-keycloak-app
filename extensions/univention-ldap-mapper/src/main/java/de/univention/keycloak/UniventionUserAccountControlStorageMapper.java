@@ -101,20 +101,49 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
     protected boolean processAuthError(UserModel user, Map<String, Set<String>> attributes) {
         final AccountAttributesHelper accountAttributesHelper = new AccountAttributesHelper(attributes);
         if (accountAttributesHelper.isAccountDisabled()) {
-            logger.debugf("Disabled user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
-            this.getSession().setAttribute(ERROR_DETAIL, "accountDisabled");
+            rejectLogin(user.getUsername(), "accountDisabled");
         } else if (accountAttributesHelper.isAccountExpired()) {
-            logger.debugf("Expired user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
-            this.getSession().setAttribute(ERROR_DETAIL, "accountExpired");
+            rejectLogin(user.getUsername(), "accountExpired");
         } else if (accountAttributesHelper.isPasswordChangeNeeded()) {
             addPasswordChangeAction(user);
             return true;
         } else if (accountAttributesHelper.isAccountLocked()) {
-            logger.debugf("Locked user '%s' attempt to login. Realm is '%s'", user.getUsername(), getRealmName());
-            this.getSession().setAttribute(ERROR_DETAIL, "accountLocked");
+            rejectLogin(user.getUsername(), "accountLocked");
         }
 
         return false;
+    }
+
+    /**
+     * Records why a user is rejected and logs it once per request.
+     *
+     * The reason is logged at INFO level during a login, so that operators can see it next to the
+     * Keycloak LOGIN_ERROR event. Other checks, for example token refresh, log it at DEBUG level.
+     *
+     * @param username the name of the rejected user
+     * @param reason the message key of the account state, for example {@code accountLocked}
+     */
+    protected void rejectLogin(String username, String reason) {
+        final KeycloakSession session = getSession();
+        if (reason.equals(session.getAttribute(ERROR_DETAIL))) {
+            return;
+        }
+        session.setAttribute(ERROR_DETAIL, reason);
+        if (isLoginRequest(session)) {
+            logger.infof("Login rejected: user=\"%s\", realm=\"%s\", reason=\"%s\"", username, getRealmName(), reason);
+        } else {
+            logger.debugf("User '%s' in realm '%s' is not enabled: %s", username, getRealmName(), reason);
+        }
+    }
+
+    /**
+     * Checks if the current request belongs to a login flow.
+     *
+     * @param session the current Keycloak session
+     * @return true if the request has an authentication session
+     */
+    protected boolean isLoginRequest(KeycloakSession session) {
+        return session.getContext().getAuthenticationSession() != null;
     }
 
     protected void addPasswordChangeAction(UserModel user) {
@@ -347,10 +376,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         @Override
         public boolean isEnabled() {
             final Optional<String> reason = accountAttributesHelper.findDisabledReason();
-            reason.ifPresent(r -> {
-                UniventionUserAccountControlStorageMapper.logger.debugf("User '%s' in realm '%s' is not enabled: %s", getUsername(), getRealmName(), r);
-                getSession().setAttribute(ERROR_DETAIL, r);
-            });
+            reason.ifPresent(r -> rejectLogin(getUsername(), r));
             return reason.isEmpty();
         }
 
