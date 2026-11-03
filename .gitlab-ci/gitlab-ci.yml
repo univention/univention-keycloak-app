@@ -12,7 +12,7 @@ include:
 mirror-keycloak:
   stage: prepare
   image:
-    name: docker-registry.knut.univention.de/knut/pipeline_helper
+    name: docker-registry.knut.univention.de/knut/pipeline_helper@sha256:dc01c2f6367b7dc6342806df87fc980cf25bda59dbc1e966f8f4fd512a8ee1b8
   script:
     - |
       export KEYCLOAK_FILE="$(basename "${KEYCLOAK_SOURCE}")"
@@ -42,7 +42,7 @@ docs-pipeline-config:
       when: "manual"
       allow_failure: true
   image:
-    name: docker-registry.knut.univention.de/knut/deb-builder
+    name: docker-registry.knut.univention.de/knut/deb-builder@sha256:b1b9f7be8795fbc3e920d9a4bb2f7dddce85d032a06d0d885a78bf5a39222c7d
     entrypoint: [""]
   script:
     - .gitlab-ci/build-ci
