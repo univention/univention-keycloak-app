@@ -11,8 +11,8 @@
                     <#if message.type = 'error'><span class="${properties.kcFeedbackErrorIcon!}"></span></#if>
                     <#if message.type = 'info'><span class="${properties.kcFeedbackInfoIcon!}"></span></#if>
                 </div>
-                <#if errorDetail?has_content && message.summary == msg("accountDisabledMessage")>
-                    <span class="${properties.kcAlertTitleClass!}">${kcSanitize(msg(errorDetail))?no_esc}</span>
+                <#if (errorDetail!accountState!"")?has_content && message.summary == msg("accountDisabledMessage")>
+                    <span class="${properties.kcAlertTitleClass!}">${kcSanitize(msg(errorDetail!accountState))?no_esc}</span>
                 <#else>
                     <span class="${properties.kcAlertTitleClass!}">${kcSanitize(message.summary)?no_esc}</span>
                 </#if>

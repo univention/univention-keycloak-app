@@ -65,8 +65,8 @@ index 0734d23..71cdd4a 100644
                        <#if message.type = 'info'><span class="${properties.kcFeedbackInfoIcon!}"></span></#if>
                    </div>
 -                      <span class="${properties.kcAlertTitleClass!}">${kcSanitize(message.summary)?no_esc}</span>
-+                      <#if errorDetail?has_content && message.summary == msg("accountDisabledMessage")>
-+                          <span class="${properties.kcAlertTitleClass!}">${kcSanitize(msg(errorDetail))?no_esc}</span>
++                      <#if (errorDetail!accountState!"")?has_content && message.summary == msg("accountDisabledMessage")>
++                          <span class="${properties.kcAlertTitleClass!}">${kcSanitize(msg(errorDetail!accountState))?no_esc}</span>
 +                      <#else>
 +                          <span class="${properties.kcAlertTitleClass!}">${kcSanitize(message.summary)?no_esc}</span>
 +                      </#if>

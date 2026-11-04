@@ -43,6 +43,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
     public static final String SELF_SERVICE_REGISTERED = "univentionRegisteredThroughSelfService";
     public static final String LDAP_PASSWORD_POLICY_HINTS_ENABLED = "ldap.password.policy.hints.enabled";
     public static final String ERROR_DETAIL = "errorDetail";
+    public static final String ACCOUNT_STATE = "accountState";
     private static final Pattern AUTH_EXCEPTION_REGEX = Pattern.compile("^(?=.*LDAP: error code ([0-9]+))(?!.*Invalid Credentials).*");
     private static final Pattern ACCOUNT_EXPIRED_REGEX = Pattern.compile(".*((password expired)|(The password has expired\\.)|(account expired)).*");
     private static final Logger logger = Logger.getLogger(UniventionUserAccountControlStorageMapper.class);
@@ -124,11 +125,30 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
      * @param reason the message key of the account state, for example {@code accountLocked}
      */
     protected void rejectLogin(String username, String reason) {
+        rejectLogin(username, reason, ERROR_DETAIL);
+    }
+
+    /**
+     * Records why a user is rejected under the given session attribute and logs it once per request.
+     *
+     * {@link #ERROR_DETAIL} is only used once the LDAP server confirmed the password, so the login form can
+     * show the reason. {@link #ACCOUNT_STATE} is used by {@code isEnabled()}, which Keycloak also calls before
+     * the password is checked, so it is only shown on pages that Keycloak renders for an already identified user.
+     *
+     * @param username the name of the rejected user
+     * @param reason the message key of the account state, for example {@code accountLocked}
+     * @param attribute the session attribute that stores the reason
+     */
+    protected void rejectLogin(String username, String reason, String attribute) {
         final KeycloakSession session = getSession();
-        if (reason.equals(session.getAttribute(ERROR_DETAIL))) {
+        if (reason.equals(session.getAttribute(attribute))) {
             return;
         }
-        session.setAttribute(ERROR_DETAIL, reason);
+        final boolean alreadyLogged = reason.equals(session.getAttribute(ERROR_DETAIL)) || reason.equals(session.getAttribute(ACCOUNT_STATE));
+        session.setAttribute(attribute, reason);
+        if (alreadyLogged) {
+            return;
+        }
         if (isLoginRequest(session)) {
             logger.infof("Login rejected: user=\"%s\", realm=\"%s\", reason=\"%s\"", username, getRealmName(), reason);
         } else {
@@ -376,7 +396,7 @@ public class UniventionUserAccountControlStorageMapper extends AbstractLDAPStora
         @Override
         public boolean isEnabled() {
             final Optional<String> reason = accountAttributesHelper.findDisabledReason();
-            reason.ifPresent(r -> rejectLogin(getUsername(), r));
+            reason.ifPresent(r -> rejectLogin(getUsername(), r, ACCOUNT_STATE));
             return reason.isEmpty();
         }
 

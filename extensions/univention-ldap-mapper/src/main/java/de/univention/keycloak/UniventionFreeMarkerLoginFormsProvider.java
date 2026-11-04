@@ -18,6 +18,10 @@ public class UniventionFreeMarkerLoginFormsProvider extends FreeMarkerLoginForms
         if (errorDetail != null) {
             this.attributes.put("errorDetail", errorDetail);
         }
+        final Object accountState = this.session.getAttribute("accountState");
+        if (accountState != null) {
+            this.attributes.put("accountState", accountState);
+        }
         return super.createResponse(page);
     }
 }
