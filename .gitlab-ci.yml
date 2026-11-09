@@ -220,6 +220,7 @@ publish-chart-external:
 # Feature branches: creating the App Center version is MANUAL (one click on
 # create_app_version; update_appcenter follows automatically as it needs it).
 # On a vX.Y.Z-nubusN tag it is automatic (the release); on main it refreshes staging.
+# The Renovate Keycloak MR (renovate/keycloak) creates it automatically, so every upstream bump gets a test version.
 # Rules mirror the app-release component, with the MR case set to manual (and the
 # per-rule ENVIRONMENT_NAME kept so the environment/on_stop still resolve).
 create_app_version:
@@ -233,6 +234,9 @@ create_app_version:
     - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(-nubus[0-9]+)?$/'
       variables:
         ENVIRONMENT_NAME: "release-app/${APP_ID}_$CI_COMMIT_TAG"
+    - if: '$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "renovate/keycloak"'
+      variables:
+        ENVIRONMENT_NAME: "branch-app/${APP_ID}_$CI_COMMIT_REF_SLUG"
     - if: '$CI_MERGE_REQUEST_ID'
       when: "manual"
       allow_failure: true
