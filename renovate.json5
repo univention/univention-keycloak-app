@@ -41,7 +41,7 @@
       "semanticCommitType": "fix",
       "semanticCommitScope": "keycloak",
       "prBodyNotes": [
-        "@jlohmer A new upstream Keycloak release is available."
+        "cc @jlohmer @fbest @ccastens @fbotner @jconde @ekipsang"
       ]
     }
   ]
