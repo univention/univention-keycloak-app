@@ -42,7 +42,7 @@ docs-pipeline-config:
       when: "manual"
       allow_failure: true
   image:
-    name: docker-registry.knut.univention.de/knut/deb-builder@sha256:b1b9f7be8795fbc3e920d9a4bb2f7dddce85d032a06d0d885a78bf5a39222c7d
+    name: docker-registry.knut.univention.de/knut/deb-builder@sha256:06c56aa629db0744cd2eab434a36851907a475b192dc236bb4a226320117ec12
     entrypoint: [""]
   script:
     - .gitlab-ci/build-ci

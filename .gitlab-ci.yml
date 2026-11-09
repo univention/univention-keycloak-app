@@ -43,7 +43,7 @@ include:
   # first, so that the stages of the common-ci included below win over its older ones
   - local: /.gitlab-ci/gitlab-ci.yml
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.70.0"
+    ref: "v1.71.0"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -61,20 +61,20 @@ include:
     file:
       - "dind.yml"
 
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-aptly@2.25.2"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-aptly@2.27.0"
     inputs:
       pkg-dir: univention-keycloak
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-errata-build@2.25.2"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-errata-build@2.27.0"
     inputs:
       debian-package: univention-keycloak
       pkg-dir: univention-keycloak
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/ai-review@2.25.2"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/ai-review@2.27.0"
 
   # App Center release: create_app_version / update_appcenter / do_release etc.
   # On a feature branch (MR) creating the version is manual (see the
   # create_app_version override below); on a protected vX.Y.Z-nubusN tag it is the real
   # release. The App Center Version comes from the tag (templated into ini.jinja).
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/app-release@2.25.2"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/app-release@2.27.0"
     inputs:
       app_id: "keycloak"
       app_version_from_branch_name: true
@@ -105,7 +105,7 @@ include:
         # used by compose.jinja to point at the published nubus/nubus-dev image.
         - pre-semantic-release
 
-  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.70.0"
+  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.71.0"
 
 # Version stamp via common-ci's .tagged-release template. Releases come only from
 # a protected vX.Y.Z-nubusN tag; every other ref is a "<base>-post-<slug>" dev build
@@ -182,7 +182,7 @@ test-udm-unit-and-integration:
   needs: []
   stage: test
   extends: .dind
-  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:29.9.2@sha256:9e79b879b177fbd72c34376a3dd3d91747da5db49e1f560f76aea59561471977"
+  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:29.9.3@sha256:08a98015fce594af7c382883bea080ea206de74402a95da9dc52b6428c8cd121"
   rules: &rules_dind
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: "never"
