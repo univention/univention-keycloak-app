@@ -43,7 +43,7 @@ include:
   # first, so that the stages of the common-ci included below win over its older ones
   - local: /.gitlab-ci/gitlab-ci.yml
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.71.0"
+    ref: "v1.72.0"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -55,11 +55,7 @@ include:
       - "jobs/container-build-external-buildkit.yaml"
       - "jobs/package-and-publish-helm-charts-external.yaml"
       - "templates/sonarqube.yaml"
-
-  - project: "univention/infrastructure/docker-services"
-    ref: "master"
-    file:
-      - "dind.yml"
+      - "templates/compose-test.yaml"
 
   - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-aptly@2.27.0"
     inputs:
@@ -105,7 +101,7 @@ include:
         # used by compose.jinja to point at the published nubus/nubus-dev image.
         - pre-semantic-release
 
-  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.71.0"
+  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.72.0"
 
 # Version stamp via common-ci's .tagged-release template. Releases come only from
 # a protected vX.Y.Z-nubusN tag; every other ref is a "<base>-post-<slug>" dev build
@@ -179,45 +175,14 @@ sbom-upload:
     - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+-nubus[0-9]+$/ && $CI_COMMIT_REF_PROTECTED == "true"'
 
 test-udm-unit-and-integration:
+  extends: ".compose-test"
   needs: []
   stage: test
-  extends: .dind
-  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:29.9.3@sha256:08a98015fce594af7c382883bea080ea206de74402a95da9dc52b6428c8cd121"
-  rules: &rules_dind
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
-      when: "never"
-    # Renovate MRs outside Maven keep the dind test as an opt-in button,
-    # and allow_failure keeps that button out of the pipeline status.
-    - if: '$GITLAB_USER_ID == $RENOVATE_USER_ID && $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /Renovate run dind/'
-      when: "manual"
-      allow_failure: true
-    - when: "on_success"
-  before_script:
-    - cd extensions/tests
-    # Allow that the Docker API version is negotiated between client and server
-    - unset DOCKER_API_VERSION
-    - export IMAGE_TAG=${RELEASE_VERSION}
-    - echo -e "\e[0Ksection_start:`date +%s`:docker_debug[collapsed=true]\r\e[0KDocker version details"
-    - echo $IMAGE_TAG
-    - docker version
-    - echo -e "\e[0Ksection_end:`date +%s`:docker_debug\r\e[0K"
-    - echo -e "\e[0Ksection_start:`date +%s`:docker_compose_config[collapsed=true]\r\e[0KDocker Compose configuration"
-    - docker compose config test
-    - echo -e "\e[0Ksection_end:`date +%s`:docker_compose_config\r\e[0K"
-    - docker compose up --no-build --quiet-pull --wait --wait-timeout 60 ldap-server udm-rest-api
+  variables:
+    COMPOSE_TEST_DIR: "extensions/tests"
+    COMPOSE_TEST_SERVICES: "ldap-server udm-rest-api"
   script:
     - docker compose run --quiet-pull test
-  after_script:
-    - docker logs ldap-server >& ldap-server.log
-    - docker logs udm-rest-api >& udm-rest-api.log
-    - docker compose down --volumes
-  artifacts:
-    paths:
-      - ldap-server.log
-      - udm-rest-api.log
-    expire_in: "1 day"
-    when: "always"
-    expose_as: "docker compose server logs"
 
 sonarqube:
   extends: .sonarqube
