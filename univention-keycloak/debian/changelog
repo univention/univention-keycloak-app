@@ -1,4 +1,4 @@
-univention-keycloak (3.8.0) unstable; urgency=medium
+univention-keycloak (3.8.1) unstable; urgency=medium
 
   * Bug #60123: add "passkeys enable", "passkeys disable", "passkeys set" and
     "passkeys get" to enable, disable, configure and show passkeys (WebAuthn
