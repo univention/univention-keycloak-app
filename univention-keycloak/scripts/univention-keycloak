@@ -138,6 +138,10 @@ def ics_mappers(client_id: str, username_claim: str = 'phoenixusername', unique_
     ]
 
 
+def quote_path(value: str) -> str:
+    return quote(value, safe='')
+
+
 def change_current_realm(connection, realm_name: str) -> None:
     # compatibility for Python3 Keycloak Client API changes (UCS 5.2: v3.3 → UCS 5.3 v5.3)
     if hasattr(connection, 'change_current_realm'):
@@ -298,7 +302,7 @@ class UniventionKeycloakAdmin(KeycloakAdmin):
         client = self.get_client(_id)
         for mapper in client.get('protocolMappers'):
             if mapper['name'] == name:
-                url = f'admin/realms/{quote(get_current_realm(self), safe="")}/clients/{quote(_id, safe="")}/protocol-mappers/models/{quote(mapper["id"], safe="")}'
+                url = f'admin/realms/{quote_path(get_current_realm(self))}/clients/{quote_path(_id)}/protocol-mappers/models/{quote_path(mapper["id"])}'
                 get_connection(self).raw_delete(url)
                 break
         else:
@@ -2868,7 +2872,7 @@ def enable_2fa(opt):
 
     # Synchronize LDAP groups to Keycloak
     get_connection(kc_admin).raw_post(
-        f'/admin/realms/{quote(opt.realm, safe="")}/user-storage/{quote(provider_id, safe="")}/mappers/{quote(mapper_id, safe="")}/sync?direction=fedToKeycloak', data={}
+        f'/admin/realms/{quote_path(opt.realm)}/user-storage/{quote_path(provider_id)}/mappers/{quote_path(mapper_id)}/sync?direction=fedToKeycloak', data={}
     )
 
     create_realm_role(kc_admin, opt.realm, realm_2fa_role)
