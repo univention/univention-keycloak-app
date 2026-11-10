@@ -1,10 +1,10 @@
 univention-keycloak (3.8.0) unstable; urgency=medium
 
-  * Add "passkeys enable", "passkeys disable", "passkeys set" and
-    "passkeys get" to enable, disable, configure and show passkeys
-    (WebAuthn passwordless) as an alternative to password authentication
-  * "passkeys enable" turns on "Avoid same authenticator registration" of
-    the WebAuthn passwordless policy when it turns passkeys on
+  * Bug #60123: add "passkeys enable", "passkeys disable", "passkeys set" and
+    "passkeys get" to enable, disable, configure and show passkeys (WebAuthn
+    passwordless) as an alternative to password authentication. "passkeys
+    enable" also turns on "Avoid same authenticator registration" of the
+    WebAuthn passwordless policy when it turns passkeys on
 
  -- Enock kipsang <enock.kipsang@univention.de>  Thu, 29 Oct 2026 11:12:45 +0300
 
