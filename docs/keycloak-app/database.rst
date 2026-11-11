@@ -38,11 +38,8 @@ if there is a need to use an already existing or clustered database.
    to use the database cluster instead of the local single database instance.
 
    Examples:
-      For :program:`PostgreSQL` you need to set up your own database cluster
+      For :program:`PostgreSQL` or :program:`MariaDB` you need to set up your own database cluster
       and cover the topics high availability, load balancing, and replication.
-      Describing this setup is beyond the scope of this document.
-
-      For :program:`MariaDB` you need to set up a *MariaDB Galera Cluster*.
       Describing this setup is beyond the scope of this document.
 
 .. _app-database-custom:
