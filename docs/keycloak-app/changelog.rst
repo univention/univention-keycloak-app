@@ -16,6 +16,18 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.8.1-nubus3
+=====================
+
+Released: 11. Nov 2026
+
+* Improved the handling of UCS account states in the LDAP user federation.
+  This includes more consistent evaluation, more specific error messages on
+  the login page, and better logging of rejected logins.
+
+* Updated the base Docker image to incorporate the latest security patches.
+
+
 Version 26.8.1-nubus1
 =====================
 
