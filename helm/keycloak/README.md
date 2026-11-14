@@ -37,7 +37,7 @@ helm uninstall keycloak
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://artifacts.software-univention.de/nubus/charts | nubus-common | 0.29.24 |
+| oci://artifacts.software-univention.de/nubus/charts | nubus-common | 0.29.25 |
 
 ## Values
 
