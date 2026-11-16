@@ -43,7 +43,7 @@ include:
   # first, so that the stages of the common-ci included below win over its older ones
   - local: /.gitlab-ci/gitlab-ci.yml
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.72.0"
+    ref: "v1.72.1"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -57,20 +57,20 @@ include:
       - "templates/sonarqube.yaml"
       - "templates/compose-test.yaml"
 
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-aptly@2.27.0"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-aptly@2.27.1"
     inputs:
       pkg-dir: univention-keycloak
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-errata-build@2.27.0"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/debian-errata-build@2.27.1"
     inputs:
       debian-package: univention-keycloak
       pkg-dir: univention-keycloak
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/ai-review@2.27.0"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/ai-review@2.27.1"
 
   # App Center release: create_app_version / update_appcenter / do_release etc.
   # On a feature branch (MR) creating the version is manual (see the
   # create_app_version override below); on a protected vX.Y.Z-nubusN tag it is the real
   # release. The App Center Version comes from the tag (templated into ini.jinja).
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/app-release@2.27.0"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/app-release@2.27.1"
     inputs:
       app_id: "keycloak"
       app_version_from_branch_name: true
@@ -101,7 +101,7 @@ include:
         # used by compose.jinja to point at the published nubus/nubus-dev image.
         - pre-semantic-release
 
-  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.72.0"
+  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.72.1"
 
 # Version stamp via common-ci's .tagged-release template. Releases come only from
 # a protected vX.Y.Z-nubusN tag; every other ref is a "<base>-post-<slug>" dev build
@@ -194,7 +194,7 @@ sonarqube:
   allow_failure: true
 
 chart-tests:
-  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.24@sha256:1f34d54d23452475db4e92a43b669b8cb1817c4837b0003b2d897d47ed2f9d35"
+  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.25@sha256:ad501511d7b3ede40c1f42fc57f48838f57ba104a432934fc4925fe0d4c53088"
   stage: "test"
   needs: []
   # Run when the charts change, or when .gitlab-ci.yml does, since it pins the
