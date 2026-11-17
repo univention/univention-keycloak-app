@@ -2229,7 +2229,7 @@ for flexible configuration of important Keycloak settings.
       as an environment variable :samp:`{ENV_VAR_NAME}` to the Keycloak container.
       You can also use UCR policies to manage these additional Keycloak
       settings across the UCS domain. For more information, see
-      :ref:`uv-nubus-ucs-operation:system-administration-ucr-policy`
+      :ref:`uv-ucs-operation:system-administration-ucr-policy`
       in the :cite:t:`uv-ucs-operation`.
 
       Use the following steps to configure additional settings:
