@@ -16,6 +16,59 @@ this project adheres to `Semantic Versioning
 Please also consider the `upstream release notes
 <https://www.keycloak.org/docs/latest/release_notes>`_.
 
+Version 26.8.2-nubus1
+=====================
+
+Released: 18. Nov 2026
+
+* Added the environment variable ``JAVA_TOOL_OPTIONS=-XX:-UseBASE64Intrinsics``
+  to the Keycloak image as a temporary mitigation
+  for the Java4Shell vulnerability :uv:cve:`2026-114938`.
+  For more information, see our help article
+  `Keycloak remote code execution vulnerability CVE-2026-114938 (Java4Shell)
+  <https://help.univention.com/t/keycloak-remote-code-execution-vulnerability-cve-2026-114938-java4shell/25938>`__.
+
+* Updated the base Docker image to incorporate the latest security patches.
+
+* The app updates to :program:`Keycloak` version 26.8.2:
+  https://www.keycloak.org/docs/26.8.2/release_notes/
+
+* This version fixes the following CVEs:
+
+  * :uv:cve:`2026-92358`
+  * :uv:cve:`2026-105305`
+  * :uv:cve:`2026-107623`
+  * :uv:cve:`2026-107889`
+  * :uv:cve:`2026-111497`
+  * :uv:cve:`2026-112201`
+  * :uv:cve:`2026-112208`
+  * :uv:cve:`2026-110932`
+  * :uv:cve:`2026-107123`
+  * :uv:cve:`2026-107124`
+  * :uv:cve:`2026-107602`
+  * :uv:cve:`2026-110931`
+  * :uv:cve:`2026-97367`
+  * :uv:cve:`2026-97174`
+  * :uv:cve:`2026-114232`
+  * :uv:cve:`2026-97847`
+  * :uv:cve:`2026-96547`
+  * :uv:cve:`2026-96457`
+  * :uv:cve:`2026-96460`
+  * :uv:cve:`2026-97848`
+  * :uv:cve:`2026-109081`
+  * :uv:cve:`2026-93998`
+  * :uv:cve:`2026-96453`
+  * :uv:cve:`2026-92857`
+  * :uv:cve:`2026-103112`
+  * :uv:cve:`2026-97175`
+  * :uv:cve:`2026-96447`
+  * :uv:cve:`2026-82965`
+  * :uv:cve:`2026-96448`
+  * :uv:cve:`2026-92855`
+  * :uv:cve:`2026-92856`
+  * :uv:cve:`2026-19688`
+  * :uv:cve:`2026-117691`
+
 Version 26.8.1-nubus3
 =====================
 
