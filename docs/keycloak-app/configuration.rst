@@ -434,7 +434,7 @@ Users can still sign in with their username and password
 after you activate passkey authentication.
 
 For information about configuring passkey authentication in Nubus for UCS
-and using it with multifactor authentication,
+and using it with multi-factor authentication,
 see the following sections:
 
 * :ref:`passkeys-enable`
@@ -443,7 +443,7 @@ see the following sections:
 * :ref:`passkeys-2fa`
 
 For instructions in a Nubus for Kubernetes environment,
-see :external+uv-nubus-kubernetes-operation:ref:`conf-keycloak-passkeys`
+see :external+uv-nubus-kubernetes-operation:ref:`conf-keycloak`
 in :cite:t:`uv-nubus-kubernetes-operation`.
 
 .. seealso::
