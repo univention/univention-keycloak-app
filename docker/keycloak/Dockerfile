@@ -66,6 +66,9 @@ RUN apt-get install -y --no-install-recommends --no-install-suggests openjdk-21-
 COPY --from=artifacts --chown=keycloak /opt/keycloak /opt/keycloak
 USER 1000
 ENV KC_RUN_IN_CONTAINER=true
+# CVE-2026-114938: the AVX-512 VBMI Base64 intrinsic corrupts memory on malformed input.
+# Not JAVA_OPTS_APPEND, because App Center and Helm users override that.
+ENV JAVA_TOOL_OPTIONS=-XX:-UseBASE64Intrinsics
 EXPOSE 7600
 EXPOSE 8080
 EXPOSE 8443
