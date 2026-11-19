@@ -504,6 +504,17 @@ For other realms, see :command:`univention-keycloak --help`.
 Activate the portal entry for passkey registration
 --------------------------------------------------
 
+.. warning::
+
+   The portal entry for passkey registration only works
+   if you configured OpenID Connect for UMC.
+   Users who sign in to the Portal with SAML can also register a passkey,
+   as long as OpenID Connect for UMC is configured.
+   For information about how to configure OpenID Connect for UMC, see
+   :external+uv-manual:ref:`central-management-umc-login-single-sign-on-oidc`
+   in :cite:t:`ucs-manual`.
+
+
 In Nubus for UCS,
 the *Portal* provides the entry *Register Passkey*
 in the user menu of the sidebar.

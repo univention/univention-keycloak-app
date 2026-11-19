@@ -24,6 +24,12 @@ Year 2026
      - Chapter or topic
      - Change
 
+   * - 19. Nov 2026
+     - :ref:`passkeys-portal-entry`
+     - Add a warning that the portal entry for passkey registration
+       requires OpenID Connect for UMC,
+       also for users who sign in to the Portal with SAML.
+
    * - 02. Nov 2026
      - :ref:`passkeys`
      - Add the configuration of passkey authentication.
