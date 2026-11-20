@@ -51,7 +51,7 @@ RUN cp empty.jar opt/keycloak/lib/lib/main/com.oracle.database.jdbc.ojdbc11-*.ja
 
 # the keycloak image
 # see https://github.com/keycloak/keycloak/tree/main/quarkus/container
-FROM gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base:5.3.0-build.20261112@sha256:519c50da25332623a7a30d911965f13cd333e4b9b1402036e5bb4dd85d98f6c6
+FROM gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base:5.3.0-build.20261119@sha256:31fc79b5eb9ccc9655383ddd86166dcf154c8e9f022c80ba176718c0b4739fd9
 # hadolint ignore=DL3005
 RUN apt-get install -y --no-install-recommends --no-install-suggests openjdk-21-jre-headless \
  && apt-get -y dist-upgrade \
