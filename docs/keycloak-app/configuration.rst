@@ -2248,11 +2248,11 @@ for flexible configuration of important Keycloak settings.
       #. Set the UCR variable.
 
          For example, :numref:`additional-settings-ucs-example-listing`
-         sets the environment variable ``KC_DB_POOL_MAX_SIZE`` to ``20``
+         sets the environment variable :envvar:`KC_DB_POOL_MAX_SIZE` to ``20``
          in the Keycloak container.
 
          .. code-block:: console
-            :caption: Define the UCR variable to set ``KC_DB_POOL_MAX_SIZE``
+            :caption: Define the UCR variable to set :envvar:`KC_DB_POOL_MAX_SIZE`
             :name: additional-settings-ucs-example-listing
 
             $ ucr set keycloak/environment/KC_DB_POOL_MAX_SIZE=20
